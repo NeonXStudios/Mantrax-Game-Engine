@@ -9,11 +9,14 @@
 #define M_PI 3.14159265358979323846264338327950288
 #endif
 
-enum type
+namespace Primitive
 {
-    CUBE,
-    SPHERE,
-    TRIANGLE,
+    enum type
+    {
+        CUBE,
+        SPHERE,
+        TRIANGLE,
+    };
 };
 
 class Drawer
@@ -54,8 +57,8 @@ public:
     int numSegments = 120;
     float radius = 0.5f;
 
-    type mesh_type;
+    Primitive::type mesh_type;
 
-    Drawer(type mesh);
+    Drawer(Primitive::type mesh);
     void update();
 };

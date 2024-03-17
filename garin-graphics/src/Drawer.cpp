@@ -1,6 +1,6 @@
 #include "Drawer.h"
 
-Drawer::Drawer(type mesh)
+Drawer::Drawer(Primitive::type mesh)
 {
     mesh_type = mesh;
 
@@ -15,7 +15,7 @@ Drawer::Drawer(type mesh)
 
     switch (mesh_type)
     {
-    case TRIANGLE:
+    case Primitive::TRIANGLE:
         vertices = {
             -0.5f, -0.5f,
             0.5f, -0.5f,
@@ -43,7 +43,7 @@ Drawer::Drawer(type mesh)
         glBindVertexArray(0);
         break;
 
-    case CUBE:
+    case Primitive::CUBE:
         vertices = {
             -0.5f, -0.5f, // Bottom left
             0.5f, -0.5f,  // Bottom right
@@ -81,7 +81,7 @@ Drawer::Drawer(type mesh)
 
         break;
 
-    case SPHERE:
+    case Primitive::SPHERE:
         for (int i = 0; i < numSegments; i++)
         {
             float theta = 2.0f * M_PI * i / numSegments;
@@ -129,20 +129,20 @@ void Drawer::update()
 {
     switch (mesh_type)
     {
-    case TRIANGLE:
+    case Primitive::TRIANGLE:
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
         break;
 
-    case CUBE:
+    case Primitive::CUBE:
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
         break;
 
-    case SPHERE:
+    case Primitive::SPHERE:
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, numSegments * 3, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);

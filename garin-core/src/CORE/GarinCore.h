@@ -9,6 +9,7 @@
 #include <camera.h>
 #include <ShaderCompiler.h>
 #include <Model.h>
+#include <UPhysics/UPhysics.h>
 
 // GARIN COMPONENTS
 #include <ModelComponent.h>
