@@ -1,0 +1,56 @@
+[
+    {
+        "components": [
+            {
+                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
+                "name": "ModelComponent"
+            }
+        ],
+        "name": "3",
+        "px": -4.0,
+        "py": 0.0,
+        "pz": 0.0,
+        "rx": 0.0,
+        "ry": 0.0,
+        "rz": 0.0,
+        "sx": 1.0,
+        "sy": 1.0,
+        "sz": 1.0
+    },
+    {
+        "components": [
+            {
+                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
+                "name": "ModelComponent"
+            }
+        ],
+        "name": "3",
+        "px": 4.0,
+        "py": 0.0,
+        "pz": 0.0,
+        "rx": 0.0,
+        "ry": 0.0,
+        "rz": 0.0,
+        "sx": 1.0,
+        "sy": 1.0,
+        "sz": 1.0
+    },
+    {
+        "components": [
+            {
+                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
+                "name": "ModelComponent"
+            }
+        ],
+        "name": "3",
+        "px": 6.0,
+        "py": 4.0,
+        "pz": 0.0,
+        "rx": 0.0,
+        "ry": 0.0,
+        "rz": 0.0,
+        "sx": 1.0,
+        "sy": 1.0,
+        "sz": 1.0
+    }
+]

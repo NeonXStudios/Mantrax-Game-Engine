@@ -1,9 +1,9 @@
 # Ruta hacia los includes
-VRGARIN = -Igarin-vr/include -Igarin-vr/src
+VRGARIN_INCLUDES = -Igarin-vr/include -Igarin-vr/src
 
 #Ruta hacia las libs
-VRGARINLIBS = -lopenxr_loader
+VRGARINLIBS = -lopenvr_api
 
-VRGARINLIBSDIR = garin-vr/libs
+VRGARINLIBSDIR = -Lgarin-vr/libs
 # Ruta hacia los mains
 VRGARINMAINS = garin-vr/src/*.cpp

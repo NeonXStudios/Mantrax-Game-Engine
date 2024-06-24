@@ -1,5 +1,5 @@
 # Ruta hacia los includes
-SCENEGARIN = -Igarin-scene/src
+SCENEGARIN = -Igarin-scene/includes
 
 # Ruta hacia los mains
 SCENEGARINMAIN = -Igarin-scene/src

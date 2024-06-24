@@ -41,6 +41,19 @@ TextureManager::TextureManager(string texture_path)
     texture_maked = textureID;
 }
 
+void TextureManager::use_texture(GLuint ID)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture_maked);
+    glUniform1i(glGetUniformLocation(ID, "sampler_texture"), 0);
+}
+
+void TextureManager::active(int texture_index)
+{
+    glActiveTexture(texture_index);
+    glBindTexture(GL_TEXTURE_2D, get_texture());
+}
+
 GLuint TextureManager::get_texture()
 {
     return texture_maked;

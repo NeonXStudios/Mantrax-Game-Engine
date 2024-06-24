@@ -1,4 +1,4 @@
-#include "GarinUI.h"
+#include "../includes/GarinUI.h"
 
 GarinUI *GarinUI::instance = nullptr;
 
@@ -19,24 +19,27 @@ void GarinUI::make_context()
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
     (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
+    // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-    // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
-    // ImGui::StyleColorsLight();
+    // ImGui::StyleColorsDark();
 
-    // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(Graphics::get_game_window(), true);
     ImGui_ImplOpenGL3_Init("#version 330");
     std::cout << "UI Context started" << std::endl;
 }
 
-void GarinUI::render_new_frame_ui_context()
+void GarinUI::render_new_frame_ui_context(bool enable_docking)
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+
+    if (enable_docking)
+    {
+        ImGui::DockSpaceOverViewport();
+    }
 }
 
 void GarinUI::render_ui_context()
@@ -50,7 +53,6 @@ GarinUI *GarinUI::get_ui_manager()
     return instance;
 }
 
-// UI IMPLEMENTS
 bool GarinUI::button(string name, glm::vec2 size)
 {
     return ImGui::Button(name.c_str(), ImVec2(size.x, size.y));
