@@ -1,4 +1,6 @@
 #pragma once
+
+#include <iostream>
 #include <GarinNatives.h>
 #include <GarinUI.h>
 

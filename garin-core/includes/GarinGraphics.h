@@ -1,12 +1,14 @@
-#ifndef GARINGRAPHICS_H
-#define GARINGRAPHICS_H
+#pragma once
 
 #include <Drawer.h>
 #include <GarinUI.h>
-#include <camera.h>
 #include <ShaderCompiler.h>
+
+#ifndef NO_INCLUDE_GRAPHICS_CLASS
 #include <Graphics.h>
+#endif
+
+#include <RenderGraphics.h>
 #include <TextureManager.h>
 #include <Model.h>
-
-#endif
+#include <camera.h>

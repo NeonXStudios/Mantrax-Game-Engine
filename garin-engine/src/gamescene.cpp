@@ -1,5 +1,13 @@
 #include "../includes/gamescene.h"
 
+#include <iostream>
+#include <cstdarg>
+#include <thread>
+
+using namespace JPH;
+using namespace JPH::literals;
+using namespace std;
+
 void gamescene::embraceTheDarkness()
 {
     ImVec4 *colors = ImGui::GetStyle().Colors;
@@ -116,6 +124,47 @@ void gamescene::on_start()
     string info = "OPEN FILE: " + configs->current_scene;
     notify->AddNotification(info, 5.0f);
 
+    RegisterDefaultAllocator();
+    Trace = TraceImpl;
+    JPH_IF_ENABLE_ASSERTS(AssertFailed = AssertFailedImpl;)
+
+    Factory::sInstance = new Factory();
+    RegisterTypes();
+
+    mTempAllocator = new TempAllocatorImpl(10 * 1024 * 1024);
+    mJobSystem = new JobSystemThreadPool(cMaxPhysicsJobs, cMaxPhysicsBarriers, thread::hardware_concurrency() - 1);
+
+    mPhysicsSystem = new PhysicsSystem();
+
+    mPhysicsSystem->Init(cMaxBodies, cNumBodyMutexes, cMaxBodyPairs, cMaxContactConstraints,
+                         mBroadPhaseLayerInterface, mObjectVsBroadPhaseLayerFilter,
+                         mObjectVsObjectLayerFilter);
+
+    MyBodyActivationListener body_activation_listener;
+    mPhysicsSystem->SetBodyActivationListener(&body_activation_listener);
+
+    MyContactListener contact_listener;
+    mPhysicsSystem->SetContactListener(&contact_listener);
+
+    mBodyInterface = &mPhysicsSystem->GetBodyInterface();
+
+    BoxShapeSettings floor_shape_settings(Vec3(100.0f, 1.0f, 100.0f));
+    floor_shape_settings.SetEmbedded();
+
+    ShapeSettings::ShapeResult floor_shape_result = floor_shape_settings.Create();
+    ShapeRefC floor_shape = floor_shape_result.Get();
+
+    BodyCreationSettings floor_settings(floor_shape, RVec3(0.0_r, -1.0_r, 0.0_r),
+                                        Quat::sIdentity(), EMotionType::Static, Layers::NON_MOVING);
+
+    Body *floor = mBodyInterface->CreateBody(floor_settings);
+    mBodyInterface->AddBody(floor->GetID(), EActivation::DontActivate);
+
+    BodyCreationSettings sphere_settings(new SphereShape(0.5f), RVec3(0.0_r, 2.0_r, 0.0_r),
+                                         Quat::sIdentity(), EMotionType::Dynamic, Layers::MOVING);
+    mSphereID = mBodyInterface->CreateAndAddBody(sphere_settings, EActivation::Activate);
+    mBodyInterface->SetLinearVelocity(mSphereID, Vec3(0.0f, -5.0f, 0.0f));
+
     // runner->on_init();
 }
 
@@ -130,6 +179,8 @@ std::string gamescene::demangle(const char *name)
 
 void gamescene::on_update(float delta_time)
 {
+    mPhysicsSystem->OptimizeBroadPhase();
+    mPhysicsSystem->Update(1.0f / 120.0f, 1, mTempAllocator, mJobSystem);
     // runner->on_tick();
 
     if (ImGui::IsMouseDown(ImGuiMouseButton_Right))

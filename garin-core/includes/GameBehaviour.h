@@ -1,6 +1,9 @@
-#ifndef GAMEBEHAVIOUR_H
-#define GAMEBEHAVIOUR_H
+#pragma once
 #include <ECS.h>
+#include <iostream>
+#include <string>
+
+using namespace std;
 
 class GameBehaviour
 {
@@ -11,4 +14,3 @@ public:
     Entity *find_object_by_name(string name);
     Entity *find_object_by_index(int index);
 };
-#endif // GAMEBEHAVIOUR_H

@@ -1,18 +1,12 @@
 #pragma once
-#define WIN32_LEAN_AND_MEAN
-#include <ECS.h>
+#define NO_INCLUDE_GRAPHICS_CLASS
+#include <GarinBehaviours.h>
+#include <GarinNatives.h>
+#include <GarinGraphics.h>
+#include <GarinComponents.h>
 #include <camera.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
-#include <vector>
-#include <string>
 
-#include <FileManager.h>
-#include <nlohmann/json.hpp>
-#include <typeinfo>
-#include <cxxabi.h>
-#include <random>
-#include <iomanip>
+#include <GLFW/glfw3.h>
 
 using namespace std;
 

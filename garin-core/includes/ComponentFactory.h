@@ -1,6 +1,8 @@
 #pragma once
-#include <GarinNatives.h>
-#include <GarinComponents.h>
+#include <ECS.h>
+#include <ModelComponent.h>
+
+class ModelComponent;
 
 class ComponentFactory
 {

@@ -1,9 +1,6 @@
 #include "../includes/scenes.h"
 #include "VarVerify.h"
 
-#include <GarinComponents.h>
-#include <GarinBehaviours.h>
-
 using namespace nlohmann;
 
 Entity *scenes::make_entity()
@@ -11,16 +8,6 @@ Entity *scenes::make_entity()
     Entity *entity_maked = new Entity();
     std::cout << "New entity created" << std::endl;
     entity_maked->objectID = IDGenerator::generate_id();
-    // entity_maked->addComponent<ModelComponent>();
-
-    // if (entity_maked->hasComponent<ModelComponent>())
-    // {
-    //     std::cout << "Model component Correctly Setup" << std::endl;
-    // }
-    // else
-    // {
-    //     std::cout << "Model component Not Setup" << std::endl;
-    // }
 
     objects_worlds.push_back(entity_maked);
 

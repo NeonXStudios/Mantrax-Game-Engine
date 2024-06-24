@@ -1,10 +1,6 @@
-#ifndef GARINCOMPONENTS_H
-#define GARINCOMPONENTS_H
+#pragma once
 
-#include <ModelComponent.h>
-#include <CSCompiler.h>
-#include <GameBehaviour.h>
-#include <TerrainGenerator.h>
-#include <ECS.h>
-
-#endif
+#include "ECS.h"
+#include "ModelComponent.h"
+#include "TerrainGenerator.h"
+#include <scenes.h>

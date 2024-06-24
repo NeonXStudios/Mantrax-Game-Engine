@@ -1,7 +1,4 @@
-#ifndef GARINIO_H
-#define GARINIO_H
+#pragma once
 
 #include <FileManager.h>
 #include <nlohmann/json.hpp>
-
-#endif

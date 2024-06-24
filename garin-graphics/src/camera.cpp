@@ -1,4 +1,4 @@
-#include "camera.h"
+#include "../includes/camera.h"
 #include <Graphics.h>
 
 void Camera::update()

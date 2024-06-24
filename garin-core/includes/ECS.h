@@ -5,8 +5,6 @@
 #include <GarinNatives.h>
 #include <GarinMaths.h>
 
-using namespace std;
-
 class Component;
 class Entity;
 class Manager;

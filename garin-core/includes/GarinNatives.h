@@ -1,7 +1,5 @@
-#ifndef GARINNATIVES_H
-#define GARINNATIVES_H
+#pragma once
 
-#include <iostream>
 #include <vector>
 #include <filesystem>
 #include <string>
@@ -16,5 +14,13 @@
 #include <bitset>
 #include <array>
 #include <unordered_map>
+#include <windows.h>
 
+#ifdef byte
+#undef byte
 #endif
+
+#include <cstddef>
+#include <iostream>
+
+using namespace std;

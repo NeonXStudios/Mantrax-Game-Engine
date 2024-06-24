@@ -1,4 +1,6 @@
 #pragma once
+#include <GarinComponents.h>
+#include <GarinBehaviours.h>
 #include <GarinNatives.h>
 
 class GameBehaviour;

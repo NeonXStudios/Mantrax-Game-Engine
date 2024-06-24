@@ -1,7 +1,7 @@
 GRAPHICS_LIBS = -lglfw3dll -lassimp
 
 # Opciones para el compilador
-GRAPHICS_FLAGS = -Igarin-graphics/includes -Igarin-graphics/src -Igarin-scene/include
+GRAPHICS_FLAGS = -Igarin-graphics/includes
 GRAPHICS_MAIN  = garin-graphics/src/*.cpp
  
 # Opciones para el enlazador

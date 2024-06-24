@@ -1,8 +1,11 @@
 #pragma once
-#include <GarinGraphics.h>
-#include <GarinComponents.h>
+#include <ECS.h>
 #include <GarinIO.h>
-#include <iostream>
+#include <GarinNatives.h>
+#include <ShaderCompiler.h>
+#include <TextureManager.h>
+#include <Model.h>
+#include <Graphics.h>
 
 class ModelComponent : public Component
 {

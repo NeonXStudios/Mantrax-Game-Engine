@@ -1,5 +1,6 @@
 #pragma once
 #include "UIComponent.h"
+#include <GarinEvents.h>
 #include <ImGuizmo.h>
 
 class SceneUI : public UIComponent

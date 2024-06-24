@@ -1,11 +1,5 @@
-#ifndef CAMERA_H
-#define CAMERA_H
-
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
+#pragma once
+#include <GarinMaths.h>
 #include <vector>
 
 class Camera
@@ -122,4 +116,3 @@ public:
     cameraPosition += speed * glm::normalize(glm::cross(Orientation, cameraUp));
   }
 };
-#endif

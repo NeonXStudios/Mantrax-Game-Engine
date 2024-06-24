@@ -1,56 +1,25 @@
 #pragma once
-#include <iostream>
-#include <thread>
-#include <chrono>
-#include <vector>
-#include <functional>
-#include <thread>
-#include <atomic>
+#define NO_INCLUDE_GRAPHICS_CLASS
+
+#ifndef GRAPHICS_CLASS
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <scenes.h>
+#include <GarinNatives.h>
+#include <RenderGraphics.h>
+#include <GarinComponents.h>
+#include <GarinMaths.h>
+#include <GarinEvents.h>
 #include <DebugGame.h>
 #include <RenderGraphics.h>
-#include <InputSystem.h>
-#include <TextureManager.h>
-// #include <scenes.h>
-#include <Drawer.h>
-#include <GarinUI.h>
 #include <camera.h>
-#include <ShaderCompiler.h>
-#include <Model.h>
-#include <ECS.h>
+#include <scenes.h>
 
-// GARIN COMPONENTS
-#include <ModelComponent.h>
-#include <CSCompiler.h>
-#include <GameBehaviour.h>
-
-// BEHAVIOURS
-#include <GameBehaviourFactory.h>
-#include <GameBehaviourRunner.h>
-#include <GameBehaviour.h>
-#include <FileManager.h>
-
-// Math libs
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-#include <glm/gtx/vector_angle.hpp>
-
-// C++ INCLUDES
-#include <iostream>
-#include <vector>
-#include <filesystem>
-#include <vector>
-#include <string>
-#include <memory>
-#include <thread>
-#include <typeinfo>
+#endif
 
 using namespace std;
+
+class scenes;
 
 class Graphics
 {

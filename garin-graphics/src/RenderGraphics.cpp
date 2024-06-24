@@ -1,4 +1,4 @@
-#include "RenderGraphics.h"
+#include "../includes/RenderGraphics.h"
 #include <iostream>
 
 void RenderGraphics::checkFramebufferStatus()
@@ -10,7 +10,7 @@ void RenderGraphics::checkFramebufferStatus()
     }
 }
 
-void RenderGraphics::checkGLError(const char* location)
+void RenderGraphics::checkGLError(const char *location)
 {
     GLenum err;
     while ((err = glGetError()) != GL_NO_ERROR)
@@ -34,8 +34,6 @@ void RenderGraphics::start()
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         std::cout << "Framebuffer is not complete!" << std::endl;
 
-
-
     glGenTextures(1, &colorAndDepthTexture);
     glBindTexture(GL_TEXTURE_2D, colorAndDepthTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1920, 1080, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
@@ -45,7 +43,6 @@ void RenderGraphics::start()
     glGenRenderbuffers(1, &depthRenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1920, 1080);
-
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -77,7 +74,7 @@ void RenderGraphics::update(std::function<void(void)> func, bool target_render)
 // Destructor to clean up resources
 RenderGraphics::~RenderGraphics()
 {
-    //glDeleteFramebuffers(1, &framebuffer);
-    //glDeleteTextures(1, &textureColorbuffer);
-    //glDeleteRenderbuffers(1, &rbo);
+    // glDeleteFramebuffers(1, &framebuffer);
+    // glDeleteTextures(1, &textureColorbuffer);
+    // glDeleteRenderbuffers(1, &rbo);
 }

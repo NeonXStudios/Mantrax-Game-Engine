@@ -1,8 +1,8 @@
-#ifndef GAMEBEHAVIOURRUNNER_H
-#define GAMEBEHAVIOURRUNNER_H
+#pragma once
 
-#include "GameRunnerCompiler.h"
-#include <GarinNatives.h>
+#include <iostream>
+#include <GameBehaviour.h>
+#include <Graphics.h>
 
 class GameBehaviourRunner
 {
@@ -34,4 +34,3 @@ public:
         }
     }
 };
-#endif

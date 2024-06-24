@@ -1,9 +1,6 @@
-#ifndef GARINBEHAVIOURS_H
-#define GARINBEHAVIOURS_H
+#pragma once
 
-#include <GameBehaviourFactory.h>
-#include <GameBehaviourRunner.h>
-#include <ComponentFactory.h>
-#include <GameBehaviour.h>
-
-#endif
+#include "GameBehaviour.h"
+#include "GameBehaviourFactory.h"
+#include "GameBehaviourRunner.h"
+#include "ComponentFactory.h"
