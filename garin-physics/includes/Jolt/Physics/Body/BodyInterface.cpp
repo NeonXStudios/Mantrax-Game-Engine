@@ -172,7 +172,10 @@ BodyID BodyInterface::CreateAndAddSoftBody(const SoftBodyCreationSettings &inSet
 {
 	const Body *b = CreateSoftBody(inSettings);
 	if (b == nullptr)
+	{
+		std::cout << "Error on create body" << std::endl;
 		return BodyID(); // Out of bodies
+	}
 	AddBody(b->GetID(), inActivationMode);
 	return b->GetID();
 }
@@ -268,7 +271,7 @@ void BodyInterface::ResetSleepTimer(const BodyID &inBodyID)
 
 TwoBodyConstraint *BodyInterface::CreateConstraint(const TwoBodyConstraintSettings *inSettings, const BodyID &inBodyID1, const BodyID &inBodyID2)
 {
-	BodyID constraint_bodies[] = { inBodyID1, inBodyID2 };
+	BodyID constraint_bodies[] = {inBodyID1, inBodyID2};
 	BodyLockMultiWrite lock(*mBodyLockInterface, constraint_bodies, 2);
 
 	Body *body1 = lock.GetBody(0);
@@ -277,12 +280,12 @@ TwoBodyConstraint *BodyInterface::CreateConstraint(const TwoBodyConstraintSettin
 	JPH_ASSERT(body1 != body2);
 	JPH_ASSERT(body1 != nullptr || body2 != nullptr);
 
-	return inSettings->Create(body1 != nullptr? *body1 : Body::sFixedToWorld, body2 != nullptr? *body2 : Body::sFixedToWorld);
+	return inSettings->Create(body1 != nullptr ? *body1 : Body::sFixedToWorld, body2 != nullptr ? *body2 : Body::sFixedToWorld);
 }
 
 void BodyInterface::ActivateConstraint(const TwoBodyConstraint *inConstraint)
 {
-	BodyID bodies[] = { inConstraint->GetBody1()->GetID(), inConstraint->GetBody2()->GetID() };
+	BodyID bodies[] = {inConstraint->GetBody1()->GetID(), inConstraint->GetBody2()->GetID()};
 	ActivateBodies(bodies, 2);
 }
 
@@ -417,8 +420,7 @@ void BodyInterface::SetPositionAndRotationWhenChanged(const BodyID &inBodyID, RV
 		Body &body = lock.GetBody();
 
 		// Check if there is enough change
-		if (!body.GetPosition().IsClose(inPosition)
-			|| !body.GetRotation().IsClose(inRotation))
+		if (!body.GetPosition().IsClose(inPosition) || !body.GetRotation().IsClose(inRotation))
 		{
 			// Update the position
 			body.SetPositionAndRotationInternal(inPosition, inRotation);
@@ -815,8 +817,7 @@ bool BodyInterface::ApplyBuoyancyImpulse(const BodyID &inBodyID, RVec3Arg inSurf
 	if (lock.Succeeded())
 	{
 		Body &body = lock.GetBody();
-		if (body.IsDynamic()
-			&& body.ApplyBuoyancyImpulse(inSurfacePosition, inSurfaceNormal, inBuoyancy, inLinearDrag, inAngularDrag, inFluidVelocity, inGravity, inDeltaTime))
+		if (body.IsDynamic() && body.ApplyBuoyancyImpulse(inSurfacePosition, inSurfaceNormal, inBuoyancy, inLinearDrag, inAngularDrag, inFluidVelocity, inGravity, inDeltaTime))
 		{
 			ActivateBodyInternal(body);
 			return true;

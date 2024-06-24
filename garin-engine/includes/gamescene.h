@@ -260,6 +260,7 @@ public:
     ObjectLayerPairFilterImpl mObjectVsObjectLayerFilter;
     BodyInterface *mBodyInterface;
     BodyID mSphereID;
+    Body *floor;
 
     void embraceTheDarkness();
 

@@ -148,17 +148,28 @@ void gamescene::on_start()
 
     mBodyInterface = &mPhysicsSystem->GetBodyInterface();
 
+    if (mBodyInterface != nullptr && mPhysicsSystem != nullptr && mJobSystem != nullptr && mTempAllocator != nullptr)
+    {
+        std::cout << "Todos los sistemas de JOLT PHYSICS fueron cargados correctamente" << std::endl;
+    }
+    else
+    {
+        std::cout << "Hubo un error durante el inicio de JOLT PHYSICS POR FAVOR VERIFICA LOS SISTEMAS" << std::endl;
+    }
+
     BoxShapeSettings floor_shape_settings(Vec3(100.0f, 1.0f, 100.0f));
     floor_shape_settings.SetEmbedded();
 
     ShapeSettings::ShapeResult floor_shape_result = floor_shape_settings.Create();
     ShapeRefC floor_shape = floor_shape_result.Get();
 
-    BodyCreationSettings floor_settings(floor_shape, RVec3(0.0_r, -1.0_r, 0.0_r),
-                                        Quat::sIdentity(), EMotionType::Static, Layers::NON_MOVING);
+    BodyCreationSettings floor_settings(floor_shape, RVec3(0.0_r, 25.0_r, 0.0_r),
+                                        Quat::sIdentity(), EMotionType::Dynamic, Layers::MOVING);
 
-    Body *floor = mBodyInterface->CreateBody(floor_settings);
-    mBodyInterface->AddBody(floor->GetID(), EActivation::DontActivate);
+    floor = mBodyInterface->CreateBody(floor_settings);
+    // floor->SetLinearVelocity(Vec3(0.0f, -0.2f, 0.0f));
+    mBodyInterface->AddBody(floor->GetID(), EActivation::Activate);
+    mBodyInterface->SetAngularVelocity(floor->GetID(), Vec3(0.0f, -0.2f, 0.0f));
 
     BodyCreationSettings sphere_settings(new SphereShape(0.5f), RVec3(0.0_r, 2.0_r, 0.0_r),
                                          Quat::sIdentity(), EMotionType::Dynamic, Layers::MOVING);
@@ -179,6 +190,7 @@ std::string gamescene::demangle(const char *name)
 
 void gamescene::on_update(float delta_time)
 {
+    get_entity_by_index(8)->get_transform()->Position.y = mBodyInterface->GetCenterOfMassPosition(floor->GetID()).GetY();
     mPhysicsSystem->OptimizeBroadPhase();
     mPhysicsSystem->Update(1.0f / 120.0f, 1, mTempAllocator, mJobSystem);
     // runner->on_tick();
