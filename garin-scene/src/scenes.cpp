@@ -3,6 +3,27 @@
 
 using namespace nlohmann;
 
+void scenes::init()
+{
+    physic_world = new PhysicsEngine();
+    physic_world->start_world_physics();
+
+    // VIRTUAL START
+    on_start();
+}
+
+void scenes::update(float delta_time)
+{
+    physic_world->update_world_physics();
+    for (Entity *ent : objects_worlds)
+    {
+        ent->update();
+    }
+
+    // VIRTUAL UPDATE
+    on_update(delta_time);
+}
+
 Entity *scenes::make_entity()
 {
     Entity *entity_maked = new Entity();

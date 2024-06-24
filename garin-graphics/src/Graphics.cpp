@@ -54,7 +54,8 @@ int Graphics::start_graphics(std::string window_name, int width, int height, boo
 
     glEnable(GL_DEPTH_TEST);
 
-    run_scene->on_start();
+    // run_scene->on_start();
+    run_scene->init();
 
     DebugGame::init_console();
 
@@ -94,11 +95,9 @@ void Graphics::update_loop()
         InputSystem::update_input();
 
         Graphics::run_scene->main_camera->update();
-        for (Entity *ent : Graphics::get_current_scene()->objects_worlds)
-        {
-            ent->update();
-        }
-        Graphics::run_scene->on_update(1.0f);
+
+        Graphics::run_scene->update(Timer::delta_time);
+        // Graphics::run_scene->on_update(1.0f);
     }
 }
 
@@ -120,6 +119,8 @@ void Graphics::render_loop()
         // Calculate delta_time
         deltaTime = currentTime - lastFrameTime;
         lastFrameTime = currentTime;
+
+        Timer::delta_time = deltaTime;
 
         renderToTexture();
 

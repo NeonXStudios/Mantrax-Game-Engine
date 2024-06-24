@@ -1,5 +1,5 @@
 #include "../includes/GameBehaviour.h"
-#include <Graphics.h>
+#include <GarinGraphics.h>
 
 Entity *GameBehaviour::find_object_by_name(string name)
 {

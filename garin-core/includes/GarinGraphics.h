@@ -1,5 +1,4 @@
 #pragma once
-
 #include <Drawer.h>
 #include <GarinUI.h>
 #include <ShaderCompiler.h>

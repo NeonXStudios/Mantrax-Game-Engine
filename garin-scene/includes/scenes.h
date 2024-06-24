@@ -5,6 +5,7 @@
 #include <GarinGraphics.h>
 #include <GarinComponents.h>
 #include <camera.h>
+#include <PhysicsEngine.h>
 
 #include <GLFW/glfw3.h>
 
@@ -17,6 +18,7 @@ public:
     Camera *main_camera;
 
     vector<Entity *> objects_worlds = vector<Entity *>();
+    PhysicsEngine *physic_world;
 
     // SCENE VIRTUALS
     virtual void on_start() {};
@@ -26,6 +28,9 @@ public:
     virtual void draw_ui() {};
 
     // SCENE FUNCTIONS
+    void init();
+    void update(float delta_time);
+
     void load_scene(std::string scene_name);
     void save_scene();
 
