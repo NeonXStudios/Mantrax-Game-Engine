@@ -8,6 +8,7 @@
 #include <vector>
 #include <optional>
 #include <ECS.h>
+#include <sstream>
 
 class AComponent
 {
@@ -61,12 +62,24 @@ public:
         return "";
     }
 
-    static std::string demangle(const char *name)
+    static std::string demangle(const char *mangled_name)
     {
-        int status = -1;
-        std::unique_ptr<char, void (*)(void *)> res{
-            abi::__cxa_demangle(name, nullptr, nullptr, &status),
-            std::free};
-        return (status == 0) ? res.get() : name;
+        // Implementación básica para fines ilustrativos
+
+        // Copia el nombre mangled para trabajar sobre él
+        std::string demangled_name = mangled_name;
+
+        // Aquí puedes aplicar las reglas específicas de MSVC para demangle el nombre
+        // Por ejemplo, remover prefijos, sufijos, convertir códigos mangled, etc.
+
+        // Implementación básica: remover prefijo de clase
+        if (demangled_name.find("class ") == 0)
+        {
+            demangled_name = demangled_name.substr(6); // Remueve "class "
+        }
+
+        // Puedes agregar más lógica según tus necesidades
+
+        return demangled_name;
     }
 };

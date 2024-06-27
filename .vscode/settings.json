@@ -92,7 +92,10 @@
     "filesystem": "cpp",
     "queue": "cpp",
     "ranges": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "coroutine": "cpp",
+    "future": "cpp",
+    "stack": "cpp"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

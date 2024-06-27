@@ -124,15 +124,6 @@ void gamescene::on_start()
     // runner->on_init();
 }
 
-std::string gamescene::demangle(const char *name)
-{
-    int status = -1;
-    std::unique_ptr<char, void (*)(void *)> res{
-        abi::__cxa_demangle(name, nullptr, nullptr, &status),
-        std::free};
-    return (status == 0) ? res.get() : name;
-}
-
 void gamescene::on_update(float delta_time)
 {
     if (InputSystem::on_key_pressed(GLFW_KEY_H))

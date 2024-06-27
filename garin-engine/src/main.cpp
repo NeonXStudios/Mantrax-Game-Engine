@@ -1,5 +1,3 @@
-#define WIN32_LEAN_AND_MEAN
-#define BUILD_DLL
 #include "../includes/gamescene.h"
 #include <windows.h>
 #include <iostream>

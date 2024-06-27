@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <glm/glm.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glad/glad.h>
 #include "ECS.h"
 #include "PerlinNoise.hpp"

@@ -1,72 +1,58 @@
-cmake_minimum_required(VERSION 3.10)
-project(GarinEngine)
+cmake_minimum_required(VERSION 3.5)
 
-# Establecer el estándar de C++
+#C++ VERSION (17, 20)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Añadir las opciones de compilación
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fPIC -Wall -Wextra -pthread -DGLM_ENABLE_EXPERIMENTAL -D_DEBUG -Wattributes")
+#PROYECT NAME
+set(proyect_name "GarinEngine")
 
-# Incluir directorios de cabeceras
-include_directories(
-    ${CMAKE_SOURCE_DIR}/garin-graphics/include
-    ${CMAKE_SOURCE_DIR}/garin-scene/include
-    ${CMAKE_SOURCE_DIR}/garin-maths/include
-    ${CMAKE_SOURCE_DIR}/garin-core/include
-    ${CMAKE_SOURCE_DIR}/garin-ui/include
-    ${CMAKE_SOURCE_DIR}/garin-physics/include
-    ${CMAKE_SOURCE_DIR}/garin-scripting/include
-    ${CMAKE_SOURCE_DIR}/garin-audio/include
-    ${CMAKE_SOURCE_DIR}/projects/test/include
-    ${CMAKE_SOURCE_DIR}/garin-vr/include
+
+project(${proyect_name} VERSION 1.0.0)
+
+
+
+add_definitions(-w)
+add_compile_options(/wd4701)
+add_definitions(-DGLM_ENABLE_EXPERIMENTAL -D_DEBUG -D_CRT_SECURE_NO_WARNINGS -DWin32_LEAN_AND_MEAN)
+
+file(GLOB SOURCES
+    #GARIN-ENGINE RUN THE GAME ENGINE
+    "garin-engine/src/*.cpp"
+    "garin-graphics/libs/glad.c"
+    "garin-core/src/*.cpp"
+    "garin-scene/src/*.cpp"
+    "garin-ui/src/*.cpp"
+    "garin-ui/includes/*.cpp"
+    "garin-vr/src/*.cpp"
+    "garin-graphics/src/*.cpp"
+    "garin-maths/src/*.cpp"
+    "garin-physics/src/*.cpp"
 )
 
-# Añadir directorios de bibliotecas
-link_directories(
-    ${CMAKE_SOURCE_DIR}/garin-graphics/lib
-    ${CMAKE_SOURCE_DIR}/garin-scene/lib
-    ${CMAKE_SOURCE_DIR}/garin-maths/lib
-    ${CMAKE_SOURCE_DIR}/garin-core/lib
-    ${CMAKE_SOURCE_DIR}/garin-ui/lib
-    ${CMAKE_SOURCE_DIR}/garin-physics/lib
-    ${CMAKE_SOURCE_DIR}/garin-scripting/lib
-    ${CMAKE_SOURCE_DIR}/garin-audio/lib
-    ${CMAKE_SOURCE_DIR}/garin-vr/lib
+add_executable(${proyect_name} ${SOURCES})
+
+target_include_directories(${proyect_name} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/garin-core/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/garin-engine/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/garin-graphics/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/garin-scene/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/garin-ui/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/garin-vr/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/garin-maths/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/garin-physics/includes
 )
 
-# Añadir los archivos fuente
-file(GLOB_RECURSE SOURCES
-    "${CMAKE_SOURCE_DIR}/garin-engine/*.cpp"
-    "${CMAKE_SOURCE_DIR}/garin-engine/EditorSystems/*.cpp"
-    "${CMAKE_SOURCE_DIR}/garin-engine/EditorSystems/ComponentsUI/*.cpp"
-    "${CMAKE_SOURCE_DIR}/garin-engine/EditorSystems/WindowsUI/*.cpp"
-    "${CMAKE_SOURCE_DIR}/garin-graphics/src/*.cpp"
-    "${CMAKE_SOURCE_DIR}/garin-core/src/*.cpp"
-    "${CMAKE_SOURCE_DIR}/garin-scene/src/*.cpp"
-    "${CMAKE_SOURCE_DIR}/garin-ui/src/*.cpp"
-    "${CMAKE_SOURCE_DIR}/garin-physics/src/*.cpp"
-    "${CMAKE_SOURCE_DIR}/garin-scripting/src/*.cpp"
-    "${CMAKE_SOURCE_DIR}/garin-audio/src/*.cpp"
-    "${CMAKE_SOURCE_DIR}/projects/test/src/*.cpp"
-    "${CMAKE_SOURCE_DIR}/garin-maths/src/*.cpp"
-    "${CMAKE_SOURCE_DIR}/garin-vr/src/*.cpp"
+file(GLOB LIBRARIES
+    #GARIN-ENGINE RUN THE GAME ENGINE
+    "garin-engine/libs/*.lib"
+    "garin-core/libs/*.lib"
+    "garin-scene/libs/*.lib"
+    "garin-ui/libs/*.lib"
+    "garin-vr/libs/*.lib"
+    "garin-graphics/libs/*.lib"
+    "garin-maths/libs/*.lib"
+    "garin-physics/libs/*.lib"
 )
 
-# Definir el ejecutable
-add_executable(GarinEngine ${SOURCES})
-
-# Enlazar las bibliotecas
-target_link_libraries(GarinEngine
-    garin-graphics
-    garin-maths
-    garin-core
-    garin-ui
-    garin-physics
-    garin-scripting
-    garin-audio
-    garin-vr
-)
-
-# Añadir limpieza
-set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "GarinEngine")
+target_link_libraries(${proyect_name} PRIVATE ${LIBRARIES})

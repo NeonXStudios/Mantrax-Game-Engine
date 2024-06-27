@@ -6,7 +6,7 @@
 #include <memory>
 #include <thread>
 #include <typeinfo>
-#include <cxxabi.h>
+
 #include <functional>
 #include <atomic>
 #include <cstdarg>
@@ -15,6 +15,7 @@
 #include <array>
 #include <unordered_map>
 #include <windows.h>
+#include <sstream>
 
 #ifdef byte
 #undef byte
