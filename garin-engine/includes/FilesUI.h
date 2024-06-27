@@ -54,6 +54,7 @@ public:
         {
             header << "#pragma once\n";
             header << "#include <GarinCore.h>\n\n";
+            header << "\n";
             header << "class " << script_name << " : public GameBehaviour\n";
             header << "{\n";
             header << "public:\n";
@@ -61,7 +62,7 @@ public:
             header << "    void on_tick() override;\n";
             header << "};\n";
             header << "\n";
-            header << "REGISTER_GAMEBEHAVIOUR_CLASS(" + script_name + ")";
+            header << "GARINCLASS(" + script_name + ")";
             header.close();
         }
 
@@ -70,6 +71,7 @@ public:
         if (source.is_open())
         {
             source << "#include \"" << script_name << ".h\"\n\n";
+            source << "\n";
             source << "void " << script_name << "::on_init()\n";
             source << "{\n";
             source << "    // Inicialización\n";

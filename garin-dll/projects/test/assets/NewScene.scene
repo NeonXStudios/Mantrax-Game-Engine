@@ -1,0 +1,128 @@
+[
+    {
+        "components": [
+            {
+                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
+                "name": "ModelComponent"
+            }
+        ],
+        "name": "a",
+        "px": -1.5380477905273438,
+        "py": 4.829702377319336,
+        "pz": 13.185166358947754,
+        "rx": 300.0,
+        "ry": 213.0,
+        "rz": 0.0,
+        "sx": 5.620010852813721,
+        "sy": 5.6199188232421875,
+        "sz": 5.620226860046387
+    },
+    {
+        "components": [
+            {
+                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
+                "name": "ModelComponent"
+            }
+        ],
+        "name": "b",
+        "px": 7.924655437469482,
+        "py": 9.437575340270996,
+        "pz": 0.0,
+        "rx": 0.0,
+        "ry": 0.0,
+        "rz": 0.0,
+        "sx": 1.0,
+        "sy": 1.0,
+        "sz": 1.0
+    },
+    {
+        "components": [
+            {
+                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
+                "name": "ModelComponent"
+            }
+        ],
+        "name": "c",
+        "px": 6.0,
+        "py": 19.0,
+        "pz": 0.0,
+        "rx": 0.0,
+        "ry": 0.0,
+        "rz": 0.0,
+        "sx": 1.0,
+        "sy": 1.0,
+        "sz": 1.0
+    },
+    {
+        "components": [
+            {
+                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
+                "name": "ModelComponent"
+            }
+        ],
+        "name": "d",
+        "px": 4.098303318023682,
+        "py": 13.843692779541016,
+        "pz": 0.0,
+        "rx": 0.0,
+        "ry": 0.0,
+        "rz": 0.0,
+        "sx": 1.0,
+        "sy": 1.0,
+        "sz": 1.0
+    },
+    {
+        "components": [
+            {
+                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
+                "name": "ModelComponent"
+            }
+        ],
+        "name": "e",
+        "px": 7.526618957519531,
+        "py": 5.434485912322998,
+        "pz": 6.652606010437012,
+        "rx": 0.0,
+        "ry": 0.0,
+        "rz": 0.0,
+        "sx": 1.0,
+        "sy": 1.0,
+        "sz": 1.0
+    },
+    {
+        "components": [
+            {
+                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
+                "name": "ModelComponent"
+            }
+        ],
+        "name": "f",
+        "px": 7.979724884033203,
+        "py": 13.858890533447266,
+        "pz": 0.0,
+        "rx": 0.0,
+        "ry": 0.0,
+        "rz": 0.0,
+        "sx": 1.0,
+        "sy": 1.0,
+        "sz": 1.0
+    },
+    {
+        "components": [
+            {
+                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
+                "name": "ModelComponent"
+            }
+        ],
+        "name": "g",
+        "px": 11.784479141235352,
+        "py": 6.315704345703125,
+        "pz": 2.6057262420654297,
+        "rx": 0.0,
+        "ry": 0.0,
+        "rz": 0.0,
+        "sx": 1.0,
+        "sy": 1.0,
+        "sz": 1.0
+    }
+]

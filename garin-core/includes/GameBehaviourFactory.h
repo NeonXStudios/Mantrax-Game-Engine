@@ -37,7 +37,7 @@ private:
 };
 
 // Macro para Registrar Clases Derivadas
-#define REGISTER_GAMEBEHAVIOUR_CLASS(ClassName)                                                                                                                    \
+#define GARINCLASS(ClassName)                                                                                                                                      \
     namespace                                                                                                                                                      \
     {                                                                                                                                                              \
         const bool registered_##ClassName =                                                                                                                        \
