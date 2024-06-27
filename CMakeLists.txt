@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # PROJECT NAME
-set(project_name "GarinEngine")
+set(project_name "Garin_Engine")
 
 # PROJECT VERSION
 project(${project_name} VERSION 1.0.0)
@@ -47,7 +47,8 @@ target_include_directories(${project_name} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-ui/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-vr/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-maths/includes
-    ${CMAKE_CURRENT_SOURCE_DIR}/garin-physics/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/garin-physics/includes/physx
+    ${CMAKE_CURRENT_SOURCE_DIR}/garin-physics/includes/
 )
 
 # GARIN-ENGINE LIBS PATH
@@ -61,6 +62,17 @@ file(GLOB LIBRARIES
     "garin-maths/libs/*.lib"
     "garin-physics/libs/*.lib"
 )
+
+# Define la ubicación de los DLLs
+file(GLOB DLLS "garin-physics/libs/*.dll")
+
+
+foreach(dll ${DLLS})
+    add_custom_command(TARGET ${project_name} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${dll}
+            $<TARGET_FILE_DIR:${project_name}>)
+endforeach()
 
 target_link_libraries(${project_name} PRIVATE ${LIBRARIES})
 

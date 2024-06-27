@@ -90,15 +90,15 @@ int Graphics::start_graphics(std::string window_name, int width, int height, boo
 
 void Graphics::update_loop()
 {
-    while (!glfwWindowShouldClose(window))
-    {
-        InputSystem::update_input();
+    // while (!glfwWindowShouldClose(window))
+    // {
+    //     InputSystem::update_input();
 
-        Graphics::run_scene->main_camera->update();
+    //     Graphics::run_scene->main_camera->update();
 
-        Graphics::run_scene->update(Timer::delta_time);
-        // Graphics::run_scene->on_update(1.0f);
-    }
+    //     Graphics::run_scene->update(Timer::delta_time);
+    //     // Graphics::run_scene->on_update(1.0f);
+    // }
 }
 
 void Graphics::render_loop()
@@ -106,6 +106,9 @@ void Graphics::render_loop()
     startTime = glfwGetTime();
     double lastFrameTime = startTime;
     double deltaTime = 0.0;
+
+    const double targetFPS = 120.0;
+    const double targetFrameTime = 1.0 / targetFPS;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -123,6 +126,20 @@ void Graphics::render_loop()
         Timer::delta_time = deltaTime;
 
         renderToTexture();
+
+        // Limitar el framerate
+        double elapsedTime = glfwGetTime() - lastFrameTime;
+        if (elapsedTime < targetFrameTime)
+        {
+            InputSystem::update_input();
+
+            Graphics::run_scene->main_camera->update();
+
+            Graphics::run_scene->update(Timer::delta_time);
+
+            double sleepTime = (targetFrameTime - elapsedTime) * 1000.0; // Convertir a milisegundos
+            std::this_thread::sleep_for(std::chrono::milliseconds((int)sleepTime));
+        }
 
         glfwSwapBuffers(Graphics::window);
     }

@@ -6,6 +6,33 @@
 class GBody : public Component
 {
 public:
+    float mass = 1;
+    float drag = 0;
+    float angularDrag = 0.05f;
+    bool automaticCenterOfMass = true;
+    bool automaticSensor = true;
+
+    float friction = 0.5f;
+
+    bool isStatic = false;
+    bool useGravity = true;
+
+    bool freezePosX = false;
+    bool freezePosY = false;
+    bool freezePosZ = false;
+
+    bool freezeRotX = false;
+    bool freezeRotY = false;
+    bool freezeRotZ = false;
+
+    bool shapeAttached;
+
+    physx::PxRigidDynamic *body;
+    physx::PxMaterial *mMaterial = NULL;
+    physx::PxPhysics *mPhysics = NULL;
+
+    bool waked;
+
     void init() override;
     void update() override;
 
