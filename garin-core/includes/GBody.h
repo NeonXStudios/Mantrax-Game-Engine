@@ -1,16 +1,14 @@
-// #pragma once
-// #include <GarinMaths.h>
-// #include <ECS.h>
-// #include <PhysicsEngine.h>
+#pragma once
+#include <ECS.h>
+#include <GarinMaths.h>
+#include <PhysicsEngine.h>
 
-// class GBody : public Component
-// {
-// public:
-//     BodyID body_id;
+class GBody : public Component
+{
+public:
+    void init() override;
+    void update() override;
 
-//     void init override();
-//     void init update();
-
-//     glm::vec3 get_body_position;
-//     glm::quat get_body_rotation;
-// };
+    glm::vec3 get_body_position();
+    glm::quat get_body_rotation();
+};

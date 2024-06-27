@@ -1,5 +1,6 @@
 #include "../includes/InspectorUI.h"
 #include "../includes/UIAdministrator.h"
+#include <GarinComponents.h>
 
 #include <GarinNatives.h>
 #include <GarinUI.h>
@@ -35,6 +36,12 @@ void InspectorUI::draw(Entity *select_obj)
             if (ImGui::Button("Render Mesh", ImVec2(buttonWidth, 20)))
             {
                 select_obj->addComponent<ModelComponent>();
+                ImGui::CloseCurrentPopup();
+            }
+
+            if (ImGui::Button("Rigid Body", ImVec2(buttonWidth, 20)))
+            {
+                select_obj->addComponent<GBody>();
                 ImGui::CloseCurrentPopup();
             }
 

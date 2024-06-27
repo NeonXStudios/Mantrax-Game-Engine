@@ -4,10 +4,6 @@
 #include <cstdarg>
 #include <thread>
 
-using namespace JPH;
-using namespace JPH::literals;
-using namespace std;
-
 void gamescene::embraceTheDarkness()
 {
     ImVec4 *colors = ImGui::GetStyle().Colors;
@@ -94,6 +90,7 @@ void gamescene::embraceTheDarkness()
 
 void gamescene::on_start()
 {
+
     runner = new GameBehaviourRunner();
     configs->load_config();
 
@@ -138,6 +135,9 @@ std::string gamescene::demangle(const char *name)
 
 void gamescene::on_update(float delta_time)
 {
+    if (InputSystem::on_key_pressed(GLFW_KEY_H))
+    {
+    }
 
     // runner->on_tick();
 

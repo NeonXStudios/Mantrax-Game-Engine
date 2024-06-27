@@ -1,5 +1,6 @@
-# Opciones para el compilador
-PHYSICS_LIB_INCLUDES =  -Igarin-physics/src/ -Igarin-physics/includes/
+PHYSICS_LIB_INCLUDES =  -Igarin-physics/src/ -Igarin-physics/includes -Igarin-physics/includes/physx/ -Igarin-physics/includes/physx/characterkinematic -Igarin-physics/includes/physx/characterkinematic -Igarin-physics/includes/physx/collision -Igarin-physics/includes/physx/common -Igarin-physics/includes/physx/common/windows -Igarin-physics/includes/physx/cooking -Igarin-physics/includes/physx/cudamanager -Igarin-physics/includes/physx/extensions -Igarin-physics/includes/physx/filebuf -Igarin-physics/includes/physx/foundation -Igarin-physics/includes/physx/foundation/windows -Igarin-physics/includes/physx/geometry -Igarin-physics/includes/physx/geomutils -Igarin-physics/includes/physx/gpu -Igarin-physics/includes/physx/pvd -Igarin-physics/includes/physx/solver -Igarin-physics/includes/physx/task -Igarin-physics/includes/physx/vehicle
 PHYSICS_LIB_CPP = garin-physics/src/*.cpp
 PHYSICS_LIBS = -Lgarin-physics/libs/
-PHYSICS_LIBS_FILES = -lJolt
+PHYSICS_LIBS_DLL = -Lgarin-physics/dll/
+PHYSICS_LIBS_FILES_DLL = -lPhysX_64 -lPhysXCommon_64 -lPhysXCooking_64 -lPhysXFoundation_64
+PHYSICS_LIBS_FILES = -lFastXml_static_64 -lLowLevel_static_64 -lLowLevelAABB_static_64 -lLowLevelDynamics_static_64 -lPhysX_64 -lPhysXCharacterKinematic_static_64 -lPhysXCommon_64 -lPhysXCooking_64 -lPhysXExtensions_static_64 -lPhysXFoundation_64 -lPhysXPvdSDK_static_64 -lPhysXTask_static_64 -lPhysXVehicle_static_64 -lSceneQuery_static_64 -lSimulationController_static_64
