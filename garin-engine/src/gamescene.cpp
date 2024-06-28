@@ -121,16 +121,14 @@ void gamescene::on_start()
     string info = "OPEN FILE: " + configs->current_scene;
     notify->AddNotification(info, 5.0f);
 
-    // runner->on_init();
+    runner = new GameBehaviourRunner();
+
+    runner->on_init();
 }
 
 void gamescene::on_update(float delta_time)
 {
-    if (InputSystem::on_key_pressed(GLFW_KEY_H))
-    {
-    }
-
-    // runner->on_tick();
+    runner->on_tick();
 
     if (ImGui::IsMouseDown(ImGuiMouseButton_Right))
     {

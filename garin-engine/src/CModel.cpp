@@ -12,79 +12,83 @@ void CModel::draw(Entity *owner)
     auto modelComponents = owner->getComponents<ModelComponent>();
     for (auto *cmap : modelComponents)
     {
-        ImGui::PushID(cmap->component_id);
-        std::string componentName = "Render Mesh";
+        EditorGUI::Draw_Component("Render Mesh", cmap->component_id, cmap, [cmap]()
+                                  { EditorGUI::Draw_Input_Field_Model<ModelComponent>("Model", cmap, &ModelComponent::model_path); });
 
-        bool enabledCTMP = cmap->enabled;
-        ImGui::Checkbox("", &enabledCTMP);
-        cmap->enabled = enabledCTMP;
+        // ImGui::PushID(cmap->component_id);
+        // std::string componentName = "Render Mesh";
 
-        ImGui::SameLine();
+        // bool enabledCTMP = cmap->enabled;
+        // ImGui::Checkbox("", &enabledCTMP);
+        // cmap->enabled = enabledCTMP;
 
-        bool treeNodeOpen = ImGui::TreeNodeEx(componentName.c_str(), ImGuiTreeNodeFlags_SpanAvailWidth);
+        // ImGui::SameLine();
 
-        ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
-        if (ImGui::Button("X"))
-        {
-            std::cout << "Trying deleting component" << std::endl;
-        }
+        // bool treeNodeOpen = ImGui::TreeNodeEx(componentName.c_str(), ImGuiTreeNodeFlags_SpanAvailWidth);
 
-        if (treeNodeOpen)
-        {
-            ImGui::Separator();
-            ImGui::Text("Model");
+        // ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+        // if (ImGui::Button("X"))
+        // {
+        //     std::cout << "Trying deleting component" << std::endl;
+        // }
 
-            std::string filePath = cmap->model_path;
+        // if (treeNodeOpen)
+        // {
 
-            size_t pos = filePath.find("assets");
-            if (pos != std::string::npos)
-            {
-                filePath = filePath.substr(pos);
-            }
+        //     // ImGui::Separator();
+        //     // ImGui::Text("Model");
 
-            std::string fileName = filePath.substr(filePath.find_last_of("/\\") + 1);
+        //     // std::string filePath = cmap->model_path;
 
-            char fileNameBuffer[256];
-            strncpy(fileNameBuffer, fileName.c_str(), sizeof(fileNameBuffer));
-            fileNameBuffer[sizeof(fileNameBuffer) - 1] = '\0';
+        //     // size_t pos = filePath.find("assets");
+        //     // if (pos != std::string::npos)
+        //     // {
+        //     //     filePath = filePath.substr(pos);
+        //     // }
 
-            float inputTextWidth = ImGui::GetContentRegionAvail().x - 60.0f;
+        //     // std::string fileName = filePath.substr(filePath.find_last_of("/\\") + 1);
 
-            ImGui::BeginGroup();
+        //     // char fileNameBuffer[256];
+        //     // strncpy(fileNameBuffer, fileName.c_str(), sizeof(fileNameBuffer));
+        //     // fileNameBuffer[sizeof(fileNameBuffer) - 1] = '\0';
 
-            ImGui::Image((void *)(intptr_t)1, ImVec2(16, 16));
-            ImGui::SameLine();
+        //     // float inputTextWidth = ImGui::GetContentRegionAvail().x - 60.0f;
 
-            ImGui::PushItemWidth(inputTextWidth);
-            ImGui::InputText("##FileName", fileNameBuffer, sizeof(fileNameBuffer), ImGuiInputTextFlags_ReadOnly);
-            ImGui::PopItemWidth();
+        //     // ImGui::BeginGroup();
 
-            ImGui::SameLine();
-            if (ImGui::Button("..."))
-            {
-                ImGui::OpenPopup("File Browser");
-            }
+        //     // ImGui::Image((void *)(intptr_t)1, ImVec2(16, 16));
+        //     // ImGui::SameLine();
 
-            ImGui::EndGroup();
+        //     // ImGui::PushItemWidth(inputTextWidth);
+        //     // ImGui::InputText("##FileName", fileNameBuffer, sizeof(fileNameBuffer), ImGuiInputTextFlags_ReadOnly);
+        //     // ImGui::PopItemWidth();
 
-            auto selectedFilePath = FileBrowser::DrawFileBrowser();
-            if (selectedFilePath.has_value())
-            {
-                std::string selectedPath = selectedFilePath.value();
-                size_t pos = selectedPath.find("assets");
-                if (pos != std::string::npos)
-                {
-                    selectedPath = selectedPath.substr(pos);
-                }
+        //     // ImGui::SameLine();
+        //     // if (ImGui::Button("..."))
+        //     // {
+        //     //     ImGui::OpenPopup("File Browser");
+        //     // }
 
-                std::cout << "SELECT FILE PATH: " << selectedPath << std::endl;
-                cmap->model_path = selectedPath;
-            }
+        //     // ImGui::EndGroup();
 
-            ImGui::Separator();
-            ImGui::TreePop();
-        }
+        //     // auto selectedFilePath = FileBrowser::DrawFileBrowser();
+        //     // if (selectedFilePath.has_value())
+        //     // {
+        //     //     std::string selectedPath = selectedFilePath.value();
+        //     //     size_t pos = selectedPath.find("assets");
+        //     //     if (pos != std::string::npos)
+        //     //     {
+        //     //         selectedPath = selectedPath.substr(pos);
+        //     //     }
 
-        ImGui::PopID();
+        //     //     std::cout << "SELECT FILE PATH: " << selectedPath << std::endl;
+        //     //     cmap->model_path = selectedPath;
+        //     // }
+
+        //     ImGui::Separator();
+        //     ImGui::TreePop();
+        // }
+
+        // ImGui::PopID();
     }
 }

@@ -6,13 +6,15 @@
 
 void MainBarUI::draw(Entity *owner)
 {
+    ShowNewScenePopup();
+
     if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("File"))
         {
             if (ImGui::MenuItem("New Scene"))
             {
-                Graphics::get_current_scene()->load_scene("NewScene");
+                show_new_scene_popup = true;
             }
 
             if (ImGui::MenuItem("Save"))

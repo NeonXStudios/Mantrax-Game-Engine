@@ -52,8 +52,12 @@ public:
         std::ofstream header(header_file);
         if (header.is_open())
         {
+
             header << "#pragma once\n";
-            header << "#include <GarinCore.h>\n\n";
+            header << "#include <GarinNatives.h>\n\n";
+            header << "#include <GarinGraphics.h>\n\n";
+            header << "#include <GarinMaths.h>\n\n";
+            header << "#include <GarinComponents.h>\n\n";
             header << "\n";
             header << "class " << script_name << " : public GameBehaviour\n";
             header << "{\n";

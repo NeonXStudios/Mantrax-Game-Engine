@@ -7,6 +7,7 @@ class GCollision : public Component
 {
 public:
     glm::vec3 boxSize = glm::vec3(1, 1, 1);
+    bool is_trigger;
 
     physx::PxPhysics *mPhysics = NULL;
     physx::PxShape *shape = NULL;

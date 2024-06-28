@@ -85,9 +85,9 @@ public:
             quaternion.y,
             quaternion.z};
 
-        ImGui::DragFloat3(EditorGUI::_labelPrefix(Name.c_str()).c_str(), v);
+        ImGui::DragFloat3(EditorGUI::_labelPrefix(Name.c_str()).c_str(), v, 0.0001f);
 
-        return glm::quat(glm::vec3(glm::radians(v[0]), glm::radians(v[1]), glm::radians(v[2])));
+        return glm::quat(glm::vec3((v[0]), (v[1]), (v[2])));
     }
 
     static bool Button(string Name, glm::vec2 size)
@@ -99,6 +99,103 @@ public:
     {
         ImGui::SliderFloat(_labelPrefix(name.c_str()).c_str(), &value, min, max);
         return value;
+    }
+
+    static void Draw_Component(string componentName, int ID, Component *component, std::function<void(void)> func)
+    {
+        ImGui::PushID(ID);
+
+        bool enabledCTMP = component->enabled;
+        ImGui::Checkbox("", &enabledCTMP);
+        component->enabled = enabledCTMP;
+
+        ImGui::SameLine();
+
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2.0f, 2.0f));
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2.0f, 2.0f));
+
+        bool treeNodeOpen = ImGui::TreeNodeEx(componentName.c_str());
+
+        ImGui::PopStyleVar(2);
+
+        ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
+        if (ImGui::Button("X"))
+        {
+            std::cout << "Trying deleting component" << std::endl;
+        }
+
+        if (treeNodeOpen)
+        {
+            ImGui::Separator();
+            // ImGui::Text(componentName.c_str());
+            float inputTextWidth = ImGui::GetContentRegionAvail().x - 60.0f;
+
+            ImGui::BeginGroup();
+
+            ImGui::SameLine();
+            func();
+            ImGui::EndGroup();
+            ImGui::Separator();
+            ImGui::TreePop();
+        }
+
+        ImGui::PopID();
+    }
+
+    template <typename T, typename MemberType>
+    static void Draw_Input_Field_Model(const std::string &Name, T *component, MemberType T::*member)
+    {
+        ImGui::Spacing();
+        ImGui::Spacing();
+
+        ImGui::Text(Name.c_str());
+
+        std::string &filePath = component->*member;
+
+        size_t pos = filePath.find("assets");
+        if (pos != std::string::npos)
+        {
+            filePath = filePath.substr(pos);
+        }
+
+        std::string fileName = filePath.substr(filePath.find_last_of("/\\") + 1);
+
+        char fileNameBuffer[256];
+        strncpy(fileNameBuffer, fileName.c_str(), sizeof(fileNameBuffer));
+        fileNameBuffer[sizeof(fileNameBuffer) - 1] = '\0';
+
+        float inputTextWidth = ImGui::GetContentRegionAvail().x - 60.0f;
+
+        ImGui::BeginGroup();
+
+        ImGui::Image((void *)(intptr_t)1, ImVec2(16, 16));
+        ImGui::SameLine();
+
+        ImGui::PushItemWidth(inputTextWidth);
+        ImGui::InputText("##FileName", fileNameBuffer, sizeof(fileNameBuffer), ImGuiInputTextFlags_ReadOnly);
+        ImGui::PopItemWidth();
+
+        ImGui::SameLine();
+        if (ImGui::Button("..."))
+        {
+            ImGui::OpenPopup("File Browser");
+        }
+
+        ImGui::EndGroup();
+
+        auto selectedFilePath = FileBrowser::DrawFileBrowser();
+        if (selectedFilePath.has_value())
+        {
+            std::string selectedPath = selectedFilePath.value();
+            size_t pos = selectedPath.find("assets");
+            if (pos != std::string::npos)
+            {
+                selectedPath = selectedPath.substr(pos);
+            }
+
+            std::cout << "SELECT FILE PATH: " << selectedPath << std::endl;
+            component->*member = selectedPath;
+        }
     }
 
     static std::string _labelPrefix(const char *const label)

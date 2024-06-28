@@ -8,9 +8,14 @@ void GBody::init()
 
     // shape = mPhysics->createShape(physx::PxBoxGeometry(halfExtent, halfExtent, halfExtent), *SceneManager::GetSceneManager()->OpenScene->mMaterial, 1);
     physx::PxVec3 position_start = physx::PxVec3(entity->get_transform()->Position.x, entity->get_transform()->Position.y, entity->get_transform()->Position.z);
-    glm::quat quat_conversion = glm::vec3(glm::radians(entity->get_transform()->Rotation.x), glm::radians(entity->get_transform()->Rotation.y), glm::radians(entity->get_transform()->Rotation.z));
+    glm::quat quat_conversion = glm::quat(glm::radians(glm::vec3(
+        entity->get_transform()->rotation.x,
+        entity->get_transform()->rotation.y,
+        entity->get_transform()->rotation.z)));
 
-    physx::PxTransform t(position_start, physx::PxQuat(quat_conversion.x, quat_conversion.y, quat_conversion.z, quat_conversion.w));
+    // Crear el PxQuat para PhysX
+    physx::PxTransform t(position_start, physx::PxQuat(
+                                             entity->get_transform()->rotation.x, entity->get_transform()->rotation.y, entity->get_transform()->rotation.z, entity->get_transform()->rotation.w));
 
     body = mPhysics->createRigidDynamic(t);
 

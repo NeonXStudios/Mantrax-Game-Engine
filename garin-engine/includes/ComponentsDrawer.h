@@ -2,6 +2,7 @@
 #include "AComponent.h"
 #include "CModel.h"
 #include "CRigidbody.h"
+#include "CCollider.h"
 #include <ECS.h>
 #include <iostream>
 #include <imgui.h>

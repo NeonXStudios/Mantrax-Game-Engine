@@ -18,5 +18,17 @@ void GCollision::update()
     glm::vec3 newsize = boxSize * entity->get_transform()->Scale;
 
     newGeometry = new physx::PxBoxGeometry(newsize.x, newsize.y, newsize.z);
+
+    // if (shape->getActor() == nullptr)
+    // {
+    //     physx::PxVec3 position_start = physx::PxVec3(entity->get_transform()->Position.x, entity->get_transform()->Position.y, entity->get_transform()->Position.z);
+
+    //     physx::PxTransform t(position_start, physx::PxQuat(
+    //                                              entity->get_transform()->rotation.x, entity->get_transform()->rotation.y, entity->get_transform()->rotation.z, entity->get_transform()->rotation.w));
+    //     shape->setLocalPose(t);
+    // }
+
+    shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, is_trigger);
+
     shape->setGeometry(*newGeometry);
 }

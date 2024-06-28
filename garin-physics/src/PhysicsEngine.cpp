@@ -34,6 +34,10 @@ void PhysicsEngine::start_world_physics()
     // create simulation
     mMaterial = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 
+    GarinCollisionEvents *collisionCallback = new GarinCollisionEvents();
+
+    mScene->setSimulationEventCallback(collisionCallback);
+
     if (mFoundation)
         std::cout << "Physic world started with PhysX" << std::endl;
 #pragma endregion

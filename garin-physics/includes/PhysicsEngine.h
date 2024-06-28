@@ -1,6 +1,7 @@
 #pragma once
 
 #include <PxPhysicsAPI.h>
+#include "GarinCollisionEvents.h"
 
 class PhysicsEngine
 {
