@@ -1,4 +1,5 @@
 #include "../includes/GBody.h"
+#include "../includes/GCollision.h"
 #include <GarinGraphics.h>
 
 void GBody::init()
@@ -6,7 +7,11 @@ void GBody::init()
     mPhysics = Graphics::get_current_scene()->physic_world->mPhysics;
 
     // shape = mPhysics->createShape(physx::PxBoxGeometry(halfExtent, halfExtent, halfExtent), *SceneManager::GetSceneManager()->OpenScene->mMaterial, 1);
-    physx::PxTransform t(physx::PxVec3(0));
+    physx::PxVec3 position_start = physx::PxVec3(entity->get_transform()->Position.x, entity->get_transform()->Position.y, entity->get_transform()->Position.z);
+
+    glm::quat quat_conversion = glm::vec3(glm::radians(entity->get_transform()->Rotation.x), glm::radians(entity->get_transform()->Rotation.y), glm::radians(entity->get_transform()->Rotation.z));
+
+    physx::PxTransform t(position_start, physx::PxQuat(quat_conversion.x, quat_conversion.y, quat_conversion.z, quat_conversion.w));
 
     // Crear un objeto dinámico
     body = mPhysics->createRigidDynamic(t);
@@ -21,14 +26,43 @@ void GBody::init()
     body->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, isStatic);
     body->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !useGravity);
 
-    body->getGlobalPose().p = physx::PxVec3(entity->get_transform()->Position.x, entity->get_transform()->Position.y, entity->get_transform()->Position.z);
-
     body->wakeUp();
 }
 
 void GBody::update()
 {
+    if (entity->hasComponent<GCollision>() && !shapeAttached)
+    {
+        body->attachShape(*entity->getComponent<GCollision>().shape);
+        shapeAttached = true;
+    }
+    else
+    {
+        if (!entity->hasComponent<GCollision>())
+        {
+            shapeAttached = false;
+        }
+    }
+
+    physx::PxQuat rotation = body->getGlobalPose().q;
+
+    double gradosX = rotation.x * (180.0 / M_PI);
+    double gradosY = rotation.y * (180.0 / M_PI);
+    double gradosZ = rotation.z * (180.0 / M_PI);
+
+    entity->get_transform()->Rotation.x = gradosX;
+    entity->get_transform()->Rotation.y = gradosY;
+    entity->get_transform()->Rotation.z = gradosZ;
+
+    body->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, isStatic);
+    body->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !useGravity);
+
     entity->get_transform()->Position = get_body_position();
+
+    if (useGravity)
+    {
+        body->wakeUp();
+    }
 }
 
 glm::vec3 GBody::get_body_position()

@@ -45,6 +45,12 @@ void InspectorUI::draw(Entity *select_obj)
                 ImGui::CloseCurrentPopup();
             }
 
+            if (ImGui::Button("Box Collider", ImVec2(buttonWidth, 20)))
+            {
+                select_obj->addComponent<GCollision>();
+                ImGui::CloseCurrentPopup();
+            }
+
             if (ImGui::Button("Procedural Terrain", ImVec2(buttonWidth, 20)))
             {
                 select_obj->addComponent<TerrainGenerator>();

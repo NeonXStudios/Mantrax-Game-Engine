@@ -119,7 +119,6 @@ void Graphics::render_loop()
         currentTime = glfwGetTime();
         lifetime = currentTime - startTime;
 
-        // Calculate delta_time
         deltaTime = currentTime - lastFrameTime;
         lastFrameTime = currentTime;
 
@@ -127,7 +126,6 @@ void Graphics::render_loop()
 
         renderToTexture();
 
-        // Limitar el framerate
         double elapsedTime = glfwGetTime() - lastFrameTime;
         if (elapsedTime < targetFrameTime)
         {
@@ -137,7 +135,7 @@ void Graphics::render_loop()
 
             Graphics::run_scene->update(Timer::delta_time);
 
-            double sleepTime = (targetFrameTime - elapsedTime) * 1000.0; // Convertir a milisegundos
+            double sleepTime = (targetFrameTime - elapsedTime) * 1000.0;
             std::this_thread::sleep_for(std::chrono::milliseconds((int)sleepTime));
         }
 

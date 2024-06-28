@@ -1,6 +1,7 @@
 #pragma once
 #include "AComponent.h"
 #include "CModel.h"
+#include "CRigidbody.h"
 #include <ECS.h>
 #include <iostream>
 #include <imgui.h>
