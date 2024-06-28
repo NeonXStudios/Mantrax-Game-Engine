@@ -38,12 +38,14 @@ void CRigidbody::draw(Entity *owner)
 
             ImGui::BeginGroup();
 
-            ImGui::Image((void *)(intptr_t)1, ImVec2(16, 16));
+            // ImGui::Image((void *)(intptr_t)1, ImVec2(16, 16));
             ImGui::SameLine();
 
             ImGui::PushItemWidth(inputTextWidth);
             bool its = cmap->isStatic;
-            ImGui::Checkbox("Is Static", &its);
+            ImGui::PushID("a1");
+            ImGui::Checkbox("", &its);
+            ImGui::PopID();
             cmap->isStatic = its;
             ImGui::PopItemWidth();
 
@@ -53,12 +55,14 @@ void CRigidbody::draw(Entity *owner)
 
             ImGui::BeginGroup();
 
-            ImGui::Image((void *)(intptr_t)1, ImVec2(16, 16));
+            // ImGui::Image((void *)(intptr_t)1, ImVec2(16, 16));
             ImGui::SameLine();
 
             ImGui::PushItemWidth(inputTextWidth);
             bool grv = cmap->useGravity;
-            ImGui::Checkbox("Use Gravity", &grv);
+            ImGui::PushID("a2");
+            ImGui::Checkbox("", &grv);
+            ImGui::PopID();
             cmap->useGravity = grv;
             ImGui::PopItemWidth();
 

@@ -8,11 +8,11 @@
 #include "EditorGUI.h"
 #include "EditorConfigs.h"
 
+#include <GarinComponents.h>
 #include <GarinBehaviours.h>
 #include <GarinMaths.h>
 #include <GarinGraphics.h>
 #include <GarinEvents.h>
-#include <GarinNatives.h>
 
 #include <TerrainGenerator.h>
 

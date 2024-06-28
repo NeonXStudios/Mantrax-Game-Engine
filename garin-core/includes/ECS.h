@@ -143,8 +143,14 @@ public:
 
 	void attachTo(TransformComponent *parent)
 	{
-		parent->childrens.push_back(this);
+		if (this->parent != nullptr)
+		{
+			auto &siblings = this->parent->childrens;
+			siblings.erase(std::remove(siblings.begin(), siblings.end(), this), siblings.end());
+		}
+
 		this->parent = parent;
+		parent->childrens.push_back(this);
 	}
 };
 

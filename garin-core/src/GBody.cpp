@@ -8,18 +8,15 @@ void GBody::init()
 
     // shape = mPhysics->createShape(physx::PxBoxGeometry(halfExtent, halfExtent, halfExtent), *SceneManager::GetSceneManager()->OpenScene->mMaterial, 1);
     physx::PxVec3 position_start = physx::PxVec3(entity->get_transform()->Position.x, entity->get_transform()->Position.y, entity->get_transform()->Position.z);
-
     glm::quat quat_conversion = glm::vec3(glm::radians(entity->get_transform()->Rotation.x), glm::radians(entity->get_transform()->Rotation.y), glm::radians(entity->get_transform()->Rotation.z));
 
     physx::PxTransform t(position_start, physx::PxQuat(quat_conversion.x, quat_conversion.y, quat_conversion.z, quat_conversion.w));
 
-    // Crear un objeto dinámico
     body = mPhysics->createRigidDynamic(t);
 
     string nameBODY = std::to_string(entity->objectID);
     body->setName(nameBODY.c_str());
 
-    // body->attachShape(*shape);
     physx::PxRigidBodyExt::updateMassAndInertia(*body, mass);
     Graphics::get_current_scene()->physic_world->mScene->addActor(*body);
 
