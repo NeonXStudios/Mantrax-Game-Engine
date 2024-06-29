@@ -13,3 +13,12 @@ void GScript::update()
     if (behaviour != nullptr)
         behaviour.get()->on_tick();
 }
+
+void GScript::clean()
+{
+    if (behaviour != nullptr)
+    {
+        behaviour.reset();
+        behaviour.release();
+    }
+}

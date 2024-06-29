@@ -309,6 +309,10 @@ public:
 		{
 			for (auto iter = it; iter != components.end(); ++iter)
 			{
+				if (Component *component = dynamic_cast<Component *>(*iter))
+				{
+					component->clean();
+				}
 				delete *iter;
 			}
 			components.erase(it, components.end());

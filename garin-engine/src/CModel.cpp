@@ -12,8 +12,8 @@ void CModel::draw(Entity *owner)
     auto modelComponents = owner->getComponents<ModelComponent>();
     for (auto *cmap : modelComponents)
     {
-        EditorGUI::Draw_Component("Render Mesh", cmap->component_id, cmap, [cmap]()
-                                  { EditorGUI::Draw_Input_Field_Model<ModelComponent>("Model", cmap, &ModelComponent::model_path); });
+        EditorGUI::Draw_Component<ModelComponent>(owner, cmap, "Render Mesh", cmap->component_id, cmap, [cmap]()
+                                                  { EditorGUI::Draw_Input_Field_Model<ModelComponent>("Model", cmap, &ModelComponent::model_path); });
 
         // ImGui::PushID(cmap->component_id);
         // std::string componentName = "Render Mesh";

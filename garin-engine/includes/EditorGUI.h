@@ -101,7 +101,8 @@ public:
         return value;
     }
 
-    static void Draw_Component(string componentName, int ID, Component *component, std::function<void(void)> func)
+    template <typename T>
+    static void Draw_Component(Entity *owner, T *cpm, string componentName, int ID, Component *component, std::function<void(void)> func)
     {
         ImGui::PushID(ID);
 
@@ -121,22 +122,24 @@ public:
         ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
         if (ImGui::Button("X"))
         {
-            // component->entity->removeComponent<Component>();
+            owner->removeComponent<T>();
         }
-
-        if (treeNodeOpen)
+        else
         {
-            ImGui::Separator();
-            // ImGui::Text(componentName.c_str());
-            float inputTextWidth = ImGui::GetContentRegionAvail().x - 60.0f;
+            if (treeNodeOpen)
+            {
+                ImGui::Separator();
+                // ImGui::Text(componentName.c_str());
+                float inputTextWidth = ImGui::GetContentRegionAvail().x - 60.0f;
 
-            ImGui::BeginGroup();
+                ImGui::BeginGroup();
 
-            ImGui::SameLine();
-            func();
-            ImGui::EndGroup();
-            ImGui::Separator();
-            ImGui::TreePop();
+                ImGui::SameLine();
+                func();
+                ImGui::EndGroup();
+                ImGui::Separator();
+                ImGui::TreePop();
+            }
         }
 
         ImGui::PopID();
