@@ -121,7 +121,7 @@ public:
         ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
         if (ImGui::Button("X"))
         {
-            std::cout << "Trying deleting component" << std::endl;
+            // component->entity->removeComponent<Component>();
         }
 
         if (treeNodeOpen)

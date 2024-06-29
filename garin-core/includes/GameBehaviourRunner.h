@@ -11,26 +11,26 @@ public:
 
     void on_init()
     {
-        behaviours = GameBehaviourFactory::instance().create_all();
+        // behaviours = GameBehaviourFactory::instance().create_all();
 
-        for (auto &behaviour : behaviours)
-        {
-            if (behaviour)
-            {
-                behaviour->on_init();
-            }
-        }
-        std::cout << "Registering behaviours" << std::endl;
+        // for (auto &behaviour : behaviours)
+        // {
+        //     if (behaviour)
+        //     {
+        //         behaviour->on_init();
+        //     }
+        // }
+        // std::cout << "Registering behaviours" << std::endl;
     }
 
     void on_tick()
     {
-        for (auto &behaviour : behaviours)
-        {
-            if (behaviour)
-            {
-                behaviour->on_tick();
-            }
-        }
+        // for (auto &behaviour : behaviours)
+        // {
+        //     if (behaviour)
+        //     {
+        //         behaviour->on_tick();
+        //     }
+        // }
     }
 };

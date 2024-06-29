@@ -3,6 +3,7 @@
 #include "CModel.h"
 #include "CRigidbody.h"
 #include "CCollider.h"
+#include "CGScript.h"
 #include <ECS.h>
 #include <iostream>
 #include <imgui.h>

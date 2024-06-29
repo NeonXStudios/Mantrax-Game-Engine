@@ -29,13 +29,6 @@ void ModelComponent::draw()
     scene_shader->setVec3("ambientLightColor", glm::vec3(0.3f, 0.3f, 0.3f));
     scene_shader->setVec3("lightDir", glm::vec3(-0.2f, -1.0f, -0.3f));
     scene_shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-    // scene_shader->setMat4("projection", Graphics::get_main_camera()->GetProjectionMatrix());
-
-    // scene_shader->setVec3("viewPos", Graphics::get_main_camera().cameraPosition);
-
-    // get_transform()->Rotation.x += 0.3;
-    // get_transform()->Rotation.y += 0.3;
-
     texture_sampler->use_texture(scene_shader->ID);
     scene_shader->setMat4("model", get_transform()->get_matrix());
 

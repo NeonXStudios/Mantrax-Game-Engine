@@ -57,6 +57,12 @@ void InspectorUI::draw(Entity *select_obj)
                 ImGui::CloseCurrentPopup();
             }
 
+            if (ImGui::Button("Game Script", ImVec2(buttonWidth, 20)))
+            {
+                select_obj->addComponent<GScript>();
+                ImGui::CloseCurrentPopup();
+            }
+
             ImGui::EndPopup();
         }
         ImGui::End();

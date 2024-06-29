@@ -33,6 +33,7 @@ file(GLOB SOURCES
     "garin-graphics/src/*.cpp"
     "garin-maths/src/*.cpp"
     "garin-physics/src/*.cpp"
+    "garin-dll/projects/test/clscpp/*.cpp"
 )
 
 # COMPILE NAME
@@ -49,6 +50,7 @@ target_include_directories(${project_name} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-maths/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-physics/includes/physx
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-physics/includes/
+    ${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/projects/test/clscpp/
 )
 
 # GARIN-ENGINE LIBS PATH

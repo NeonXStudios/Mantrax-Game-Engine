@@ -8,6 +8,7 @@
 #include "GCollision.h"
 #include "ModelComponent.h"
 #include "TerrainGenerator.h"
+#include "GScript.h"
 #include <openxr/openxr.h>
 #include <openxr/openxr_platform.h>
 #include <vr.h>
