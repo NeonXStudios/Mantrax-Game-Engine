@@ -33,8 +33,10 @@ public:
 
     bool waked;
 
+    void defines() override;
     void init() override;
     void update() override;
+    void clean() override;
 
     glm::vec3 get_body_position();
     glm::quat get_body_rotation();

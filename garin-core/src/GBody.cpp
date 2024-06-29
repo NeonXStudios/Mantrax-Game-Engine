@@ -2,8 +2,14 @@
 #include "../includes/GCollision.h"
 #include <GarinGraphics.h>
 
+void GBody::defines()
+{
+    GVAR(mass, 1.0f);
+}
+
 void GBody::init()
 {
+
     mPhysics = Graphics::get_current_scene()->physic_world->mPhysics;
 
     // shape = mPhysics->createShape(physx::PxBoxGeometry(halfExtent, halfExtent, halfExtent), *SceneManager::GetSceneManager()->OpenScene->mMaterial, 1);
@@ -22,7 +28,7 @@ void GBody::init()
     string nameBODY = std::to_string(entity->objectID);
     body->setName(nameBODY.c_str());
 
-    physx::PxRigidBodyExt::updateMassAndInertia(*body, mass);
+    physx::PxRigidBodyExt::updateMassAndInertia(*body, GETVAR(mass, float));
     Graphics::get_current_scene()->physic_world->mScene->addActor(*body);
 
     body->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, isStatic);
@@ -33,6 +39,7 @@ void GBody::init()
 
 void GBody::update()
 {
+
     if (entity->hasComponent<GCollision>() && !shapeAttached)
     {
         body->attachShape(*entity->getComponent<GCollision>().shape);
@@ -65,6 +72,13 @@ void GBody::update()
     {
         body->wakeUp();
     }
+}
+
+void GBody::clean()
+{
+    PxRigidActor *actor = body;
+    Graphics::get_current_scene()->physic_world->mScene->removeActor(*actor);
+    actor->release();
 }
 
 glm::vec3 GBody::get_body_position()

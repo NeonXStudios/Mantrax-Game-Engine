@@ -16,6 +16,10 @@
 #include <unordered_map>
 #include <windows.h>
 #include <sstream>
+#include <map>
+#include <variant>
+#include <any>
+#include <stdexcept>
 
 #ifdef byte
 #undef byte

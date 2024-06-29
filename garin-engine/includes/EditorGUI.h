@@ -123,12 +123,14 @@ public:
         if (ImGui::Button("X"))
         {
             owner->removeComponent<T>();
+            ImGui::TreePop();
         }
         else
         {
             if (treeNodeOpen)
             {
                 ImGui::Separator();
+                ImGui::Spacing();
                 // ImGui::Text(componentName.c_str());
                 float inputTextWidth = ImGui::GetContentRegionAvail().x - 60.0f;
 
@@ -136,6 +138,13 @@ public:
 
                 ImGui::SameLine();
                 func();
+                for (const auto &[key, value] : cpm->variableMap)
+                {
+                    if (value.type() == typeid(std::string))
+                    {
+                        EditorGUI::InputText(key, std::to_string(value));
+                    }
+                }
                 ImGui::EndGroup();
                 ImGui::Separator();
                 ImGui::TreePop();

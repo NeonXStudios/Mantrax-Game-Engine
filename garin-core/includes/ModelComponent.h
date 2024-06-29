@@ -11,12 +11,14 @@ class ModelComponent : public Component
 {
 public:
     string model_path;
-    Shader *scene_shader;
     TextureManager *texture_normal;
     TextureManager *texture_sampler;
+    Shader *scene_shader;
 
     Model *model = nullptr;
     Shader *get_mesh_shader();
+
+    void defines() override;
     void init() override;
     void update() override;
     void draw() override;

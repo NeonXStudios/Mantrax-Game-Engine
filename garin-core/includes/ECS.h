@@ -38,17 +38,29 @@ using ComponentArray = std::array<Component *, maxComponents>;
 class Component
 {
 public:
+	// using Variable = std::variant<int, double, float, std::string>;
+	// std::map<std::string, Variable> variableMap;
+
+	using Variable = std::any;
+	std::map<std::string, Variable> variableMap;
+
 	int component_id;
 	Entity *entity;
 	TransformComponent *transform;
 	bool enabled = true;
+
+	virtual void defines() {}
 	virtual void init() {}
 	virtual void update() {}
 	virtual void draw() {}
 	virtual void clean() {}
 	virtual std::string serialize() { return ""; }
 	virtual void deserialize(std::string g, std::string path = "") {}
-	virtual ~Component() {}
+
+	~Component()
+	{
+		variableMap.clear();
+	}
 
 	Component()
 	{
@@ -60,6 +72,12 @@ public:
 		return transform;
 	}
 };
+
+// #define G_VAR(name, value) variableMap[#name] = value
+// #define G_GET_VAR(name, type) std::get<type>(variableMap[#name])
+
+#define GVAR(name, value) variableMap[#name] = value
+#define GETVAR(name, type) std::any_cast<type>(variableMap.at(#name))
 
 class TransformComponent
 {
@@ -250,7 +268,10 @@ public:
 		componentBitset[getComponentTypeID<T>()] = true;
 
 		if (c->enabled)
+		{
+			c->defines();
 			c->init();
+		}
 		return *c;
 	}
 

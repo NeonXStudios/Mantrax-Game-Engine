@@ -2,13 +2,22 @@
 
 using namespace nlohmann;
 
+void ModelComponent::defines()
+{
+    GVAR(Model, "assets/Box.fbx");
+    GVAR(VertexShader, "assets/shaders/mesh_vertex.glsl");
+    GVAR(FragmentShader, "assets/shaders/mesh_fragment.glsl");
+    GVAR(ColorBase, "assets/Ground054_1K-PNG_Color.png");
+    GVAR(NormalMap, "assets/Ground054_1K-PNG_NormalGL.png");
+}
+
 void ModelComponent::init()
 {
-    model_path = "assets/Box.fbx";
-    scene_shader = new Shader("assets/shaders/mesh_vertex.glsl", "assets/shaders/mesh_fragment.glsl");
-    texture_sampler = new TextureManager("assets/Ground054_1K-PNG_Color.png");
-    texture_normal = new TextureManager("assets/Ground054_1K-PNG_NormalGL.png");
-    model = new Model(model_path);
+    // model_path = GETVAR(modelpath, std::string);
+    scene_shader = new Shader(GETVAR(VertexShader, const char *), GETVAR(FragmentShader, const char *));
+    texture_sampler = new TextureManager(GETVAR(ColorBase, const char *));
+    texture_normal = new TextureManager(GETVAR(NormalMap, const char *));
+    model = new Model(GETVAR(Model, const char *));
 
     texture_sampler->active(GL_TEXTURE0);
     scene_shader->setInt("sampler_texture", 0);
@@ -47,6 +56,6 @@ Shader *ModelComponent::get_mesh_shader()
 std::string ModelComponent::serialize()
 {
     json json_data;
-    json_data["modelpath"] = model_path;
+    json_data["modelpath"] = GETVAR(modelpath, std::string);
     return json_data.dump(4);
 }
