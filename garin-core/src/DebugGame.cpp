@@ -1,5 +1,9 @@
 #include "../includes/DebugGame.h"
 
+std::stringstream consoleBuffer;
+
+std::streambuf *originalStdout = nullptr;
+std::streambuf *originalStderr = nullptr;
 DebugGame *DebugGame::instance = nullptr;
 
 void DebugGame::init_console()
@@ -15,34 +19,53 @@ void DebugGame::init_console()
     }
 }
 
+void DebugGame::restore_console()
+{
+    originalStdout = std::cout.rdbuf();
+    originalStderr = std::cerr.rdbuf();
+}
+
 void DebugGame::run_debug_console()
 {
-    if (get_debug()->render_console_debug)
-    {
-        ImGui::SetNextWindowPos(ImVec2(0, 0));
-        ImGui::SetNextWindowSize(ImVec2(Graphics::get_width() / 1.1f, Graphics::get_height() / 2));
-        ImGui::Begin("Game Console", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+    // if (get_debug()->render_console_debug)
+    // {
+    //     ImGui::SetNextWindowPos(ImVec2(0, 0));
+    //     ImGui::SetNextWindowSize(ImVec2(Graphics::get_width() / 1.1f, Graphics::get_height() / 2));
+    //     ImGui::Begin("Game Console", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
-        for (Message_Type message : get_debug()->messages)
-        {
-            switch (message.msg_type)
-            {
-            case DebugGame::logger:
-                ImGui::TextColored(ImVec4(0.0f, 0.7f, 0.0f, 1.0f), (message.message + " (LOG)").c_str());
-                break;
+    //     for (Message_Type message : get_debug()->messages)
+    //     {
+    //         switch (message.msg_type)
+    //         {
+    //         case DebugGame::logger:
+    //             ImGui::TextColored(ImVec4(0.0f, 0.7f, 0.0f, 1.0f), (message.message + " (LOG)").c_str());
+    //             break;
 
-            case DebugGame::warning:
-                ImGui::TextColored(ImVec4(1.0f, 1.0f, 0, 1.0f), (message.message + " (WARNING)").c_str());
-                break;
+    //         case DebugGame::warning:
+    //             ImGui::TextColored(ImVec4(1.0f, 1.0f, 0, 1.0f), (message.message + " (WARNING)").c_str());
+    //             break;
 
-            case DebugGame::error:
-                ImGui::TextColored(ImVec4(0.7f, 0.0f, 0.0f, 1.0f), (message.message + " (ERROR)").c_str());
-                break;
-            }
-        }
+    //         case DebugGame::error:
+    //             ImGui::TextColored(ImVec4(0.7f, 0.0f, 0.0f, 1.0f), (message.message + " (ERROR)").c_str());
+    //             break;
+    //         }
+    //     }
 
-        ImGui::End();
-    }
+    //     ImGui::End();
+    // }
+
+    std::cout.rdbuf(consoleBuffer.rdbuf());
+    std::cerr.rdbuf(consoleBuffer.rdbuf());
+
+    // Crear la ventana de consola en ImGui
+    ImGui::Begin("Console");
+
+    // Mostrar el contenido del buffer de la consola
+    ImGui::TextUnformatted(consoleBuffer.str().c_str());
+
+    // Scroll automático hacia abajo
+    ImGui::SetScrollHereY(1.0f);
+    ImGui::End();
 }
 
 void DebugGame::add_message(string p_msg, msg_types msg_type)

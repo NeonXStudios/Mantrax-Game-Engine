@@ -124,6 +124,8 @@ void gamescene::on_start()
     runner = new GameBehaviourRunner();
 
     runner->on_init();
+
+    DebugGame::restore_console();
 }
 
 void gamescene::on_update(float delta_time)
@@ -172,8 +174,8 @@ void gamescene::draw_ui()
 
     if (ImGui::IsKeyDown(ImGuiKey_Backslash))
     {
-        DebugGame::active_console(!DebugGame::console_is_active());
     }
+    DebugGame::active_console(!DebugGame::console_is_active());
 
     hierarchyui->game = this;
 

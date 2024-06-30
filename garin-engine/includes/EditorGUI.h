@@ -123,32 +123,31 @@ public:
         if (ImGui::Button("X"))
         {
             owner->removeComponent<T>();
-            ImGui::TreePop();
         }
-        else
+
+        if (treeNodeOpen)
         {
-            if (treeNodeOpen)
+            ImGui::Separator();
+            ImGui::Spacing();
+            // ImGui::Text(componentName.c_str());
+            float inputTextWidth = ImGui::GetContentRegionAvail().x - 60.0f;
+
+            ImGui::BeginGroup();
+
+            ImGui::SameLine();
+            func();
+            for (const auto &[key, value] : cpm->variableMap)
             {
-                ImGui::Separator();
-                ImGui::Spacing();
-                // ImGui::Text(componentName.c_str());
-                float inputTextWidth = ImGui::GetContentRegionAvail().x - 60.0f;
-
-                ImGui::BeginGroup();
-
-                ImGui::SameLine();
-                func();
-                for (const auto &[key, value] : cpm->variableMap)
+                if (value.type() == typeid(std::string))
                 {
-                    if (value.type() == typeid(std::string))
-                    {
-                        EditorGUI::InputText(key, std::to_string(value));
-                    }
+                    std::string val = std::any_cast<std::string>(value);
+                    std::cout << "Value: " << val << std::endl;
+                    EditorGUI::InputText(key, val);
                 }
-                ImGui::EndGroup();
-                ImGui::Separator();
-                ImGui::TreePop();
             }
+            ImGui::EndGroup();
+            ImGui::Separator();
+            ImGui::TreePop();
         }
 
         ImGui::PopID();

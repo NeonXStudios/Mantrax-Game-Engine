@@ -4,20 +4,20 @@ using namespace nlohmann;
 
 void ModelComponent::defines()
 {
-    GVAR(Model, "assets/Box.fbx");
-    GVAR(VertexShader, "assets/shaders/mesh_vertex.glsl");
-    GVAR(FragmentShader, "assets/shaders/mesh_fragment.glsl");
-    GVAR(ColorBase, "assets/Ground054_1K-PNG_Color.png");
-    GVAR(NormalMap, "assets/Ground054_1K-PNG_NormalGL.png");
+    GVAR(Model, "assets/Box.fbx", std::string);
+    GVAR(VertexShader, "assets/shaders/mesh_vertex.glsl", std::string);
+    GVAR(FragmentShader, "assets/shaders/mesh_fragment.glsl", std::string);
+    GVAR(ColorBase, "assets/Ground054_1K-PNG_Color.png", std::string);
+    GVAR(NormalMap, "assets/Ground054_1K-PNG_NormalGL.png", std::string);
 }
 
 void ModelComponent::init()
 {
     // model_path = GETVAR(modelpath, std::string);
-    scene_shader = new Shader(GETVAR(VertexShader, const char *), GETVAR(FragmentShader, const char *));
-    texture_sampler = new TextureManager(GETVAR(ColorBase, const char *));
-    texture_normal = new TextureManager(GETVAR(NormalMap, const char *));
-    model = new Model(GETVAR(Model, const char *));
+    scene_shader = new Shader(GETVAR(VertexShader, std::string).c_str(), GETVAR(FragmentShader, std::string).c_str());
+    texture_sampler = new TextureManager(GETVAR(ColorBase, std::string));
+    texture_normal = new TextureManager(GETVAR(NormalMap, std::string));
+    model = new Model(GETVAR(Model, std::string));
 
     texture_sampler->active(GL_TEXTURE0);
     scene_shader->setInt("sampler_texture", 0);

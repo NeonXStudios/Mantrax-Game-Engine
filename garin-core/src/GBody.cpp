@@ -4,7 +4,7 @@
 
 void GBody::defines()
 {
-    GVAR(mass, 1.0f);
+    GVAR(mass, 1.0f, float);
 }
 
 void GBody::init()

@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <Graphics.h>
+#include <sstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -28,6 +30,7 @@ public:
     static DebugGame *get_debug();
     static void add_message(string p_msg, DebugGame::msg_types msg_type);
 
+    static void restore_console();
     static void run_debug_console();
     static void active_console(bool toggle_value);
     static bool console_is_active();
