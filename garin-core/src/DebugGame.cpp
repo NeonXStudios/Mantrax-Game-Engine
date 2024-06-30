@@ -54,9 +54,6 @@ void DebugGame::run_debug_console()
     //     ImGui::End();
     // }
 
-    std::cout.rdbuf(consoleBuffer.rdbuf());
-    std::cerr.rdbuf(consoleBuffer.rdbuf());
-
     // Crear la ventana de consola en ImGui
     ImGui::Begin("Console");
 

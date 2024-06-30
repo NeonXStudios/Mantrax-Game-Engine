@@ -13,6 +13,13 @@ void CGScript::draw(Entity *owner)
     for (auto *cmap : modelComponents)
     {
         EditorGUI::Draw_Component<GScript>(owner, cmap, "Game Script", cmap->component_id, cmap, [cmap]()
-                                           { cmap->ClassName = EditorGUI::InputText("Script Name", cmap->ClassName); });
+                                           {
+                                               cmap->ClassName = EditorGUI::InputText("Script Name", cmap->ClassName);
+
+                                               auto result = EditorGUI::Drag_Objetive("SCRIPTCLASS");
+                                               if (result.has_value())
+                                               {
+                                                   cmap->ClassName = result.value();
+                                               } });
     }
 }

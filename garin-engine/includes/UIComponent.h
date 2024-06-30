@@ -5,6 +5,7 @@
 
 #include "EditorGUI.h"
 #include <GarinNatives.h>
+#include <GarinIO.h>
 
 class UIComponent
 {

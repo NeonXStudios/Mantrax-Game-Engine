@@ -20,6 +20,7 @@
 #include <variant>
 #include <any>
 #include <stdexcept>
+#include <optional>
 
 #ifdef byte
 #undef byte

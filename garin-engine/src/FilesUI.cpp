@@ -53,3 +53,121 @@ void FilesUI::draw(Entity *owner, EditorConfigs *p_configs)
         ImGui::EndPopup();
     }
 }
+
+void FilesUI::ShowDirectoryTree(const std::filesystem::path &path)
+{
+    for (const auto &entry : std::filesystem::directory_iterator(path))
+    {
+        if (entry.is_directory())
+        {
+            if (ImGui::TreeNode(entry.path().filename().string().c_str()))
+            {
+                if (entry.path().extension().string() != ".cpp")
+                {
+                    if (ImGui::Selectable(GarinIO::GetFileNameWithoutExtension(entry.path().filename().string()).c_str(), selected_item == entry.path().string()))
+                    {
+                        selected_item = entry.path().string();
+                        // std::cout << "Directorio seleccionado: " << selected_item << std::endl;
+                    }
+
+                    if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+                    {
+                        OpenAssociatedFiles(entry.path());
+                    }
+
+                    EditorGUI::Drag("SCRIPTCLASS", GarinIO::GetFileNameWithoutExtension(entry.path().filename().string()));
+                    ShowDirectoryTree(entry.path());
+                    ImGui::TreePop();
+                }
+            }
+        }
+        else
+        {
+            if (entry.path().extension().string() != ".cpp")
+            {
+                if (ImGui::Selectable(GarinIO::GetFileNameWithoutExtension(entry.path().filename().string()).c_str(), selected_item == entry.path().string()))
+                {
+                    selected_item = entry.path().string();
+                    // std::cout << "Archivo seleccionado: " << selected_item << std::endl;
+                }
+
+                if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+                {
+                    OpenAssociatedFiles(entry.path());
+                }
+
+                EditorGUI::Drag("SCRIPTCLASS", GarinIO::GetFileNameWithoutExtension(entry.path().filename().string()));
+            }
+        }
+    }
+}
+
+void FilesUI::OpenAssociatedFiles(const std::filesystem::path &path)
+{
+    std::filesystem::path header_file = path.parent_path() / (path.stem().string() + ".h");
+    std::filesystem::path cpp_file = path.parent_path() / (path.stem().string() + ".cpp");
+
+    std::string command = "code";
+
+    if (std::filesystem::exists(header_file))
+    {
+        std::cout << "Abriendo archivo de cabecera: " << header_file << std::endl;
+        command += " \"" + header_file.string() + "\"";
+    }
+
+    if (std::filesystem::exists(cpp_file))
+    {
+        std::cout << "Abriendo archivo de implementación: " << cpp_file << std::endl;
+        command += " \"" + cpp_file.string() + "\"";
+    }
+
+    if (std::system(command.c_str()) != 0)
+    {
+        std::cerr << "Error al abrir archivos en VSCode." << std::endl;
+    }
+}
+
+void FilesUI::create_script_files(const std::string &script_name)
+{
+    std::string header_file = FileManager::get_execute_path() + configs->current_proyect + "/clscpp/" + script_name + ".h";
+    std::string source_file = FileManager::get_execute_path() + configs->current_proyect + "/clscpp/" + script_name + ".cpp";
+
+    // Crear archivo .h
+    std::ofstream header(header_file);
+    if (header.is_open())
+    {
+
+        header << "#pragma once\n";
+        header << "#include <GarinNatives.h>\n\n";
+        header << "#include <GarinGraphics.h>\n\n";
+        header << "#include <GarinMaths.h>\n\n";
+        header << "#include <GarinComponents.h>\n\n";
+        header << "\n";
+        header << "class " << script_name << " : public GameBehaviour\n";
+        header << "{\n";
+        header << "public:\n";
+        header << "    void on_init() override;\n";
+        header << "    void on_tick() override;\n";
+        header << "};\n";
+        header << "\n";
+        header << "GARINCLASS(" + script_name + ")";
+        header.close();
+    }
+
+    // Crear archivo .cpp
+    std::ofstream source(source_file);
+    if (source.is_open())
+    {
+        source << "#include \"" << script_name << ".h\"\n\n";
+        source << "\n";
+        source << "void " << script_name << "::on_init()\n";
+        source << "{\n";
+        source << "    // Inicialización\n";
+        source << "}\n\n";
+        source << "void " << script_name << "::on_tick()\n";
+        source << "{\n";
+        source << "    // Lógica de actualización\n";
+        source << "}\n";
+        source.close();
+    }
+}

@@ -13,6 +13,7 @@
 #include <GarinMaths.h>
 #include <GarinGraphics.h>
 #include <GarinEvents.h>
+#include <GarinUI.h>
 
 #include <TerrainGenerator.h>
 
@@ -51,6 +52,7 @@ public:
     MenuUI *menuui;
     UINotification *notify;
 
+    void purpledark();
     void embraceTheDarkness();
 
     void on_start() override;

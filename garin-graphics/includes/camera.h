@@ -12,6 +12,7 @@ public:
   };
 
   Projection proj = Projection::Perspective;
+  bool use_projection;
   glm::mat4 projection;
   glm::mat4 view;
   glm::vec3 cameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);

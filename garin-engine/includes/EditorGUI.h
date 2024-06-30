@@ -209,6 +209,43 @@ public:
         }
     }
 
+    static void Drag(std::string DRAG_NAME, std::string OBJECT_NAME)
+    {
+        if (ImGui::BeginDragDropSource())
+        {
+            ImGui::SetDragDropPayload(DRAG_NAME.c_str(), OBJECT_NAME.c_str(), OBJECT_NAME.size() + 1);
+            ImGui::Text("%s", OBJECT_NAME.c_str());
+            ImGui::EndDragDropSource();
+        }
+    }
+
+    static std::optional<std::string> Drag_Objetive(std::string DRAG_NAME)
+    {
+        if (ImGui::BeginDragDropTarget())
+        {
+            ImGuiDragDropFlags target_flags = 0;
+            target_flags |= ImGuiDragDropFlags_AcceptBeforeDelivery;
+            target_flags |= ImGuiDragDropFlags_AcceptNoDrawDefaultRect;
+
+            if (ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+            {
+                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload(DRAG_NAME.c_str(), target_flags))
+                {
+                    const char *receivedString = static_cast<const char *>(payload->Data);
+                    std::string convertedPath = receivedString;
+
+                    std::cout << "String recibido: " << convertedPath << std::endl;
+                    ImGui::EndDragDropTarget();
+                    return convertedPath;
+                }
+            }
+
+            ImGui::EndDragDropTarget();
+        }
+
+        return std::nullopt;
+    }
+
     static std::string _labelPrefix(const char *const label)
     {
         float width = ImGui::CalcItemWidth();
