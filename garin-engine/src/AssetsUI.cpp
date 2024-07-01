@@ -95,7 +95,7 @@ void AssetsUI::ShowDirectoryTree(const std::filesystem::path &path)
             std::filesystem::path selected_path(selected_item);
             extension = selected_path.extension().string();
             base_name = selected_path.stem().string();
-            drawer_files_drag(extension, base_name);
+            drawer_files_drag(extension, base_name, entry.path().string());
         }
     }
 }
@@ -111,30 +111,33 @@ void AssetsUI::drawer_files(std::string extension, std::string file_name)
     }
 }
 
-void AssetsUI::drawer_files_drag(std::string extension, std::string file_name)
+void AssetsUI::drawer_files_drag(std::string extension, std::string file_name, std::string complete_path)
 {
+    std::cout << "DRAGGING PATH: " << complete_path << std::endl;
+
     if (extension == ".fbx" || extension == ".obj")
     {
-        EditorGUI::Drag("MODELCLASS", file_name);
+        EditorGUI::Drag("MODELCLASS", GarinIO::GetWithAfterAssetDir(complete_path));
+        std::cout << "DRAGGING PATH: " << GarinIO::GetWithAfterAssetDir(complete_path) << std::endl;
     }
     else if (extension == ".mp3" || extension == ".wav")
     {
-        EditorGUI::Drag("AUDIOCLASS", file_name);
+        EditorGUI::Drag("AUDIOCLASS", GarinIO::GetWithAfterAssetDir(complete_path));
     }
     else if (extension == ".png" || extension == ".jpg")
     {
-        EditorGUI::Drag("IMAGECLASS", file_name);
+        EditorGUI::Drag("IMAGECLASS", GarinIO::GetWithAfterAssetDir(complete_path));
     }
     else if (extension == ".material" || extension == ".mtl")
     {
-        EditorGUI::Drag("MATERIALCLASS", file_name);
+        EditorGUI::Drag("MATERIALCLASS", GarinIO::GetWithAfterAssetDir(complete_path));
     }
     else if (extension == ".material" || extension == ".mtl")
     {
-        EditorGUI::Drag("MATERIALCLASS", file_name);
+        EditorGUI::Drag("MATERIALCLASS", GarinIO::GetWithAfterAssetDir(complete_path));
     }
     else if (extension == ".glsl" || extension == ".shader" || extension == ".vs" || extension == ".fs")
     {
-        EditorGUI::Drag("SHADERCLASS", file_name);
+        EditorGUI::Drag("SHADERCLASS", GarinIO::GetWithAfterAssetDir(complete_path));
     }
 }

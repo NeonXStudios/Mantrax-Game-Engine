@@ -3,6 +3,8 @@
 #include <iostream>
 #include <filesystem>
 #include <FileManager.h>
+#include <string>
+#include <algorithm>
 #include <nlohmann/json.hpp>
 
 class GarinIO
@@ -14,20 +16,23 @@ public:
         return pathObj.stem().string();
     }
 
-    static string GetWithAfterAssetDir(string fullPath)
+    static void replaceAll(std::string &str, char oldChar, char newChar)
     {
-        std::string targetFolder = "assets/";
+        std::replace(str.begin(), str.end(), oldChar, newChar);
+    }
 
-        size_t pos = fullPath.find(targetFolder);
+    static std::string GetWithAfterAssetDir(const std::string &fullPath)
+    {
+        std::string keyword = "assets";
+        size_t pos = fullPath.find(keyword);
+
         if (pos != std::string::npos)
         {
-            std::string extractedPath = fullPath.substr(pos + targetFolder.length());
-
-            std::replace(extractedPath.begin(), extractedPath.end(), '/', '\\');
-
-            return extractedPath;
+            std::string relativePath = fullPath.substr(pos);
+            replaceAll(relativePath, '\\', '/');
+            replaceAll(relativePath, '/', '/');
+            return relativePath;
         }
-
         return "";
     }
 };

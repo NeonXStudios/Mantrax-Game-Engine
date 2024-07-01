@@ -12,5 +12,5 @@ public:
     void draw(EditorConfigs *p_configs) override;
     void ShowDirectoryTree(const std::filesystem::path &path);
     void drawer_files(std::string extension, std::string filename);
-    void drawer_files_drag(std::string extension, std::string file_name);
+    void drawer_files_drag(std::string extension, std::string file_name, std::string complete_path = "");
 };

@@ -2,11 +2,28 @@
     {
         "components": [
             {
-                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
-                "name": "ModelComponent"
+                "name": "ModelComponent",
+                "varsdata": [
+                    {
+                        "name": "ColorBase",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_Color.png"
+                    },
+                    {
+                        "name": "Model",
+                        "type": "string",
+                        "value": "assets/Box.fbx"
+                    },
+                    {
+                        "name": "NormalMap",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_NormalGL.png"
+                    }
+                ]
             }
         ],
         "name": "a",
+        "object_id": 2020555,
         "px": -1.5380477905273438,
         "py": 4.829702377319336,
         "pz": 13.185166358947754,
@@ -20,11 +37,28 @@
     {
         "components": [
             {
-                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
-                "name": "ModelComponent"
+                "name": "ModelComponent",
+                "varsdata": [
+                    {
+                        "name": "ColorBase",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_Color.png"
+                    },
+                    {
+                        "name": "Model",
+                        "type": "string",
+                        "value": "assets/Box.fbx"
+                    },
+                    {
+                        "name": "NormalMap",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_NormalGL.png"
+                    }
+                ]
             }
         ],
         "name": "b",
+        "object_id": 1701064,
         "px": 7.924655437469482,
         "py": 9.437575340270996,
         "pz": 0.0,
@@ -38,11 +72,28 @@
     {
         "components": [
             {
-                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
-                "name": "ModelComponent"
+                "name": "ModelComponent",
+                "varsdata": [
+                    {
+                        "name": "ColorBase",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_Color.png"
+                    },
+                    {
+                        "name": "Model",
+                        "type": "string",
+                        "value": "assets/Box.fbx"
+                    },
+                    {
+                        "name": "NormalMap",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_NormalGL.png"
+                    }
+                ]
             }
         ],
         "name": "c",
+        "object_id": 1763538,
         "px": 6.0,
         "py": 19.0,
         "pz": 0.0,
@@ -56,11 +107,28 @@
     {
         "components": [
             {
-                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
-                "name": "ModelComponent"
+                "name": "ModelComponent",
+                "varsdata": [
+                    {
+                        "name": "ColorBase",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_Color.png"
+                    },
+                    {
+                        "name": "Model",
+                        "type": "string",
+                        "value": "assets/Box.fbx"
+                    },
+                    {
+                        "name": "NormalMap",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_NormalGL.png"
+                    }
+                ]
             }
         ],
         "name": "d",
+        "object_id": 1755722,
         "px": 4.098303318023682,
         "py": 13.843692779541016,
         "pz": 0.0,
@@ -74,11 +142,28 @@
     {
         "components": [
             {
-                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
-                "name": "ModelComponent"
+                "name": "ModelComponent",
+                "varsdata": [
+                    {
+                        "name": "ColorBase",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_Color.png"
+                    },
+                    {
+                        "name": "Model",
+                        "type": "string",
+                        "value": "assets/Box.fbx"
+                    },
+                    {
+                        "name": "NormalMap",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_NormalGL.png"
+                    }
+                ]
             }
         ],
         "name": "e",
+        "object_id": 1273156,
         "px": 7.526618957519531,
         "py": 5.434485912322998,
         "pz": 6.652606010437012,
@@ -92,14 +177,46 @@
     {
         "components": [
             {
-                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
-                "name": "ModelComponent"
+                "name": "ModelComponent",
+                "varsdata": [
+                    {
+                        "name": "ColorBase",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_Color.png"
+                    },
+                    {
+                        "name": "Model",
+                        "type": "string",
+                        "value": "assets/Box.fbx"
+                    },
+                    {
+                        "name": "NormalMap",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_NormalGL.png"
+                    }
+                ]
+            },
+            {
+                "name": "GMaterial",
+                "varsdata": [
+                    {
+                        "name": "FragmentPath",
+                        "type": "string",
+                        "value": "assets/shaders/mesh_fragment.glsl"
+                    },
+                    {
+                        "name": "VertexPath",
+                        "type": "string",
+                        "value": "assets/shaders/mesh_vertex.glsl"
+                    }
+                ]
             }
         ],
         "name": "f",
-        "px": 7.979724884033203,
-        "py": 13.858890533447266,
-        "pz": 0.0,
+        "object_id": 1430127,
+        "px": -4.513909816741943,
+        "py": 0.0,
+        "pz": 13.315834045410156,
         "rx": 0.0,
         "ry": 0.0,
         "rz": 0.0,
@@ -110,11 +227,71 @@
     {
         "components": [
             {
-                "data": "{\n    \"modelpath\": \"assets/Box.fbx\"\n}",
-                "name": "ModelComponent"
+                "name": "ModelComponent",
+                "varsdata": [
+                    {
+                        "name": "ColorBase",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_Color.png"
+                    },
+                    {
+                        "name": "Model",
+                        "type": "string",
+                        "value": "assets/packages/models/Room.fbx"
+                    },
+                    {
+                        "name": "NormalMap",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_NormalGL.png"
+                    }
+                ]
+            },
+            {
+                "name": "GScript",
+                "varsdata": null
+            },
+            {
+                "name": "GMaterial",
+                "varsdata": [
+                    {
+                        "name": "FragmentPath",
+                        "type": "string",
+                        "value": "assets/shaders/mesh_fragment.glsl"
+                    },
+                    {
+                        "name": "VertexPath",
+                        "type": "string",
+                        "value": "assets/shaders/mesh_vertex.glsl"
+                    }
+                ]
+            },
+            {
+                "name": "GCollision",
+                "varsdata": null
+            },
+            {
+                "name": "GBody",
+                "varsdata": [
+                    {
+                        "name": "isStatic",
+                        "type": "bool",
+                        "value": false
+                    },
+                    {
+                        "name": "mass",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "useGravity",
+                        "type": "bool",
+                        "value": true
+                    }
+                ]
             }
         ],
         "name": "g",
+        "object_id": 1264577,
         "px": 11.784479141235352,
         "py": 6.315704345703125,
         "pz": 2.6057262420654297,
