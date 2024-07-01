@@ -165,6 +165,7 @@ void gamescene::on_start()
     menuui = new MenuUI();
 
     notify = new UINotification();
+    IconsManager::init();
 
     string info = "OPEN FILE: " + configs->current_scene;
     notify->AddNotification(info, 5.0f);
@@ -176,10 +177,8 @@ void gamescene::on_start()
     DebugGame::restore_console();
 }
 
-void gamescene::on_update(float delta_time)
+void gamescene::on_edition_mode(float delta_time)
 {
-    runner->on_tick();
-
     if (ImGui::IsMouseDown(ImGuiMouseButton_Right))
     {
         camera->move_forward(delta_time, InputSystem::get_axis(GLFW_KEY_W, GLFW_KEY_S) * 0.1f);
@@ -208,6 +207,11 @@ void gamescene::on_update(float delta_time)
     std::string window_name = "Garin Editor - " + Graphics::get_current_scene()->scene_name;
 
     glfwSetWindowTitle(Graphics::get_game_window(), window_name.c_str());
+}
+
+void gamescene::on_update(float delta_time)
+{
+    runner->on_tick();
 }
 
 void gamescene::on_draw()

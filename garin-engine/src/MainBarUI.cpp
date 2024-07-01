@@ -3,10 +3,14 @@
 #include "../includes/UIAdministrator.h"
 
 #include <GarinGraphics.h>
+#include <GarinEvents.h>
+#include <GarinComponents.h>
 
 void MainBarUI::draw(Entity *owner)
 {
     ShowNewScenePopup();
+
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(ImGui::GetStyle().FramePadding.x, 32 / 2));
 
     if (ImGui::BeginMainMenuBar())
     {
@@ -19,7 +23,10 @@ void MainBarUI::draw(Entity *owner)
 
             if (ImGui::MenuItem("Save"))
             {
-                Graphics::get_current_scene()->save_scene();
+                if (!AppSettings::is_playing)
+                {
+                    Graphics::get_current_scene()->save_scene();
+                }
             }
 
             ImGui::EndMenu();
@@ -51,19 +58,40 @@ void MainBarUI::draw(Entity *owner)
                     }
                 };
 
-                create_directory_if_not_exists(build_path);
-                create_directory_if_not_exists(build_path + "scenes/");
-                create_directory_if_not_exists(build_path + "packages/");
-                create_directory_if_not_exists(build_path + "packages/shaders/");
-                create_directory_if_not_exists(build_path + "packages/models/");
-                create_directory_if_not_exists(build_path + "packages/audios/");
-                create_directory_if_not_exists(data_path);
+                // create_directory_if_not_exists(build_path);
+                // create_directory_if_not_exists(build_path + "scenes/");
+                // create_directory_if_not_exists(build_path + "packages/");
+                // create_directory_if_not_exists(build_path + "packages/shaders/");
+                // create_directory_if_not_exists(build_path + "packages/models/");
+                // create_directory_if_not_exists(build_path + "packages/audios/");
+                // create_directory_if_not_exists(data_path);
 
-                WindowsCompiler::compile_windows();
+                std::thread compile_thread(WindowsCompiler::compile_windows);
+
+                compile_thread.join();
             }
             ImGui::EndMenu();
         }
     }
 
+    ImGui::SameLine((ImGui::GetWindowWidth() / 2) - 16);
+
+    if (ImGui::ImageButton((void *)(intptr_t)IconsManager::PLAY(), ImVec2(16, 16)))
+    {
+        AppSettings::is_playing = !AppSettings::is_playing;
+
+        if (!AppSettings::is_playing)
+        {
+            DebugGame::add_message("Stop play mode reloading scene", DebugGame::logger);
+            Graphics::get_current_scene()->load_scene(Graphics::get_current_scene()->scene_name);
+        }
+        else
+        {
+            DebugGame::add_message("Entering play mode", DebugGame::logger);
+        }
+        std::cout << "Entering play mode" << std::endl;
+    }
+
     ImGui::EndMainMenuBar();
+    ImGui::PopStyleVar();
 }

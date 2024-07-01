@@ -50,7 +50,6 @@ target_include_directories(${project_name} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-maths/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-physics/includes/physx
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-physics/includes/
-    ${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/projects/test/clscpp/
 )
 
 # GARIN-ENGINE LIBS PATH
@@ -84,10 +83,14 @@ set(OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Debug)
 # Copiar directorios específicos y su contenido
 add_custom_command(TARGET ${project_name} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/ ${OUTPUT_DIRECTORY}
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/projects ${OUTPUT_DIRECTORY}/projects
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/data ${OUTPUT_DIRECTORY}/data
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/assets ${OUTPUT_DIRECTORY}/assets
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/garin-data/icons ${OUTPUT_DIRECTORY}/icons
     COMMENT "Copying directories (projects, data, assets) to ${OUTPUT_DIRECTORY}"
 )

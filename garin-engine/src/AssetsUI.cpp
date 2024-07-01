@@ -104,11 +104,10 @@ void AssetsUI::drawer_files(std::string extension, std::string file_name)
 {
     if (extension == ".scene")
     {
-        Graphics::get_current_scene()->load_scene(file_name);
-    }
-    else if (extension == ".fbx")
-    {
-        EditorGUI::Drag("MODELCLASS", file_name);
+        if (!AppSettings::is_playing)
+        {
+            Graphics::get_current_scene()->load_scene(file_name);
+        }
     }
 }
 

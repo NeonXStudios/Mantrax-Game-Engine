@@ -3,6 +3,9 @@
 #include <iostream>
 #include <filesystem>
 #include <string>
+#include <cstdio>
+#include <cstring>
+#include <cerrno>
 
 namespace fs = std::filesystem;
 
@@ -146,20 +149,85 @@ public:
         }
     }
 
+    static bool copy_directory(const fs::path &source, const fs::path &destination)
+    {
+        try
+        {
+            // Comprobar si la carpeta de origen existe y es un directorio
+            if (!fs::exists(source) || !fs::is_directory(source))
+            {
+                std::cerr << "Error: La carpeta de origen no existe o no es un directorio." << std::endl;
+                return false;
+            }
+
+            // Crear la carpeta de destino si no existe
+            if (!fs::exists(destination))
+            {
+                if (!fs::create_directories(destination))
+                {
+                    std::cerr << "Error: No se pudo crear la carpeta de destino." << std::endl;
+                    return false;
+                }
+            }
+
+            // Iterar sobre todos los archivos y subdirectorios en la carpeta de origen
+            for (const auto &entry : fs::directory_iterator(source))
+            {
+                const auto destination_path = destination / entry.path().filename();
+
+                // Si es un archivo, copiarlo
+                if (fs::is_regular_file(entry))
+                {
+                    fs::copy_file(entry.path(), destination_path, fs::copy_options::overwrite_existing);
+                }
+                // Si es un directorio, llamar recursivamente a esta función
+                else if (fs::is_directory(entry))
+                {
+                    if (!copy_directory(entry.path(), destination_path))
+                    {
+                        return false; // Error al copiar subdirectorio
+                    }
+                }
+            }
+            return true;
+        }
+        catch (const fs::filesystem_error &e)
+        {
+            std::cerr << "Error de sistema de archivos: " << e.what() << std::endl;
+            return false;
+        }
+    }
+
+    static void copy_all_data(/*std::string source_path, std::string destination_path*/)
+    {
+        fs::path source_path = FileManager::get_execute_path() + "projects/test/assets";
+        fs::path destination_path = FileManager::get_execute_path() + "projects/test/build/assets";
+
+        if (copy_directory(source_path, destination_path))
+        {
+            std::cout << "Carpeta y archivos copiados correctamente." << std::endl;
+        }
+        else
+        {
+            std::cerr << "Error al copiar la carpeta y archivos." << std::endl;
+        }
+    }
+
     static void compile_windows()
     {
         std::string data_path = FileManager::get_execute_path() + "projects/test/wlibsgpp";
 
-        copy_scene_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/scenes/");
-        copy_shaders_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
-        copy_models_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
-        copy_audio_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
-        copy_textures_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
-        copy_and_rename_file(FileManager::get_execute_path() + "projects/test/EngineSettings.data", FileManager::get_execute_path() + "projects/test/build/", FileManager::get_execute_path() + "projects/test/build/GameSettings.data");
+        // copy_scene_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/scenes/");
+        // copy_shaders_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
+        // copy_models_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
+        // copy_audio_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
+        // copy_textures_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
+        // copy_and_rename_file(FileManager::get_execute_path() + "projects/test/EngineSettings.data", FileManager::get_execute_path() + "projects/test/build/", FileManager::get_execute_path() + "projects/test/build/GameSettings.data");
+        copy_all_data();
 
         std::filesystem::current_path(data_path);
 
-        int result = system("mingw32-make");
+        int result = system("cmake -G \"Visual Studio 17 2022\"");
 
         if (result == 0)
         {

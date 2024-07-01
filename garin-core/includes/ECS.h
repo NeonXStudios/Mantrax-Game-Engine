@@ -71,6 +71,26 @@ public:
 	{
 		return transform;
 	}
+
+	void setup_var(const std::string &name, int value)
+	{
+		variableMap[name] = value;
+	}
+
+	void setup_var(const std::string &name, float value)
+	{
+		variableMap[name] = value;
+	}
+
+	void setup_var(const std::string &name, bool value)
+	{
+		variableMap[name] = value;
+	}
+
+	void setup_var(const std::string &name, const std::string &value)
+	{
+		variableMap[name] = value;
+	}
 };
 
 // #define G_VAR(name, value) variableMap[#name] = value
@@ -86,14 +106,12 @@ public:
 	glm::mat4 MatrixLocal = glm::mat4(1.0f);
 	glm::mat4 parentMatrix;
 
-	glm::quat rotation;
+	glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 	glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 Rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 Scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	Entity *entity;
 
 	TransformComponent *parent = nullptr;
-
 	vector<TransformComponent *> childrens;
 
 	bool adaptPosition = true;
@@ -105,13 +123,6 @@ public:
 		MatrixLocal = glm::mat4(1.0f);
 
 		MatrixLocal = glm::translate(MatrixLocal, Position);
-
-		glm::quat rotationZ = glm::angleAxis(glm::radians(Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-		glm::quat rotationY = glm::angleAxis(glm::radians(Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		glm::quat rotationX = glm::angleAxis(glm::radians(Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-
-		rotation = rotationZ * rotationY * rotationX;
-
 		MatrixLocal *= glm::mat4_cast(rotation);
 		MatrixLocal = glm::scale(MatrixLocal, Scale);
 
@@ -157,6 +168,19 @@ public:
 	glm::mat4 get_matrix() const
 	{
 		return Matrix;
+	}
+
+	void set_rotation(const glm::vec3 &eulerAngles)
+	{
+		glm::quat rotationX = glm::angleAxis(glm::radians(eulerAngles.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::quat rotationY = glm::angleAxis(glm::radians(eulerAngles.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::quat rotationZ = glm::angleAxis(glm::radians(eulerAngles.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		rotation = rotationX * rotationY * rotationZ;
+	}
+
+	glm::vec3 get_euler_angles() const
+	{
+		return glm::eulerAngles(rotation);
 	}
 
 	void attachTo(TransformComponent *parent)
