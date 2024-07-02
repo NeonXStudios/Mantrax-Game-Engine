@@ -21,4 +21,5 @@ public:
 
     void start_world_physics();
     void update_world_physics();
+    void delete_phys_world();
 };

@@ -48,3 +48,42 @@ void PhysicsEngine::update_world_physics()
     mScene->simulate(1.0f / 60.0f);
     mScene->fetchResults(true);
 }
+
+void PhysicsEngine::delete_phys_world()
+{
+    if (mPvd)
+    {
+        mPvd->release();
+        mPvd = NULL;
+    }
+
+    if (mMaterial)
+    {
+        mMaterial->release();
+        mMaterial = NULL;
+    }
+
+    if (mScene)
+    {
+        mScene->release();
+        mScene = NULL;
+    }
+
+    if (mDispatcher)
+    {
+        mDispatcher->release();
+        mDispatcher = NULL;
+    }
+
+    if (mPhysics)
+    {
+        mPhysics->release();
+        mPhysics = NULL;
+    }
+
+    if (mFoundation)
+    {
+        mFoundation->release();
+        mFoundation = NULL;
+    }
+}

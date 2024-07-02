@@ -28,7 +28,8 @@ void ModelComponent::draw()
     if (entity->hasComponent<GMaterial>())
     {
         entity->getComponent<GMaterial>().p_shader->use();
-        entity->getComponent<GMaterial>().p_shader->setMat4("camera_matrix", Graphics::get_main_camera()->GetCameraMatrix());
+        entity->getComponent<GMaterial>().p_shader->setMat4("view", Graphics::get_main_camera()->GetView());
+        entity->getComponent<GMaterial>().p_shader->setMat4("projection", Graphics::get_main_camera()->GetProjectionMatrix());
         entity->getComponent<GMaterial>().p_shader->setVec3("ambientLightColor", glm::vec3(0.3f, 0.3f, 0.3f));
         entity->getComponent<GMaterial>().p_shader->setVec3("lightDir", glm::vec3(-0.2f, -1.0f, -0.3f));
         entity->getComponent<GMaterial>().p_shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));

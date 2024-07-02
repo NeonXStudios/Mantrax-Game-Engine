@@ -27,6 +27,7 @@
         "px": -1.5380477905273438,
         "py": 4.829702377319336,
         "pz": 13.185166358947754,
+        "rw": 1.0,
         "rx": 300.0,
         "ry": 213.0,
         "rz": 0.0,
@@ -55,17 +56,77 @@
                         "value": "assets/Ground054_1K-PNG_NormalGL.png"
                     }
                 ]
+            },
+            {
+                "name": "GMaterial",
+                "varsdata": [
+                    {
+                        "name": "FragmentPath",
+                        "type": "string",
+                        "value": "assets/shaders/mesh_fragment.glsl"
+                    },
+                    {
+                        "name": "FragmentPathDeferred",
+                        "type": "string",
+                        "value": "assets/shaders/deferred_shading_fragment.glsl"
+                    },
+                    {
+                        "name": "FragmentPathGbuffer",
+                        "type": "string",
+                        "value": "assets/shaders/g_buffer_fragment.glsl"
+                    },
+                    {
+                        "name": "VertexPath",
+                        "type": "string",
+                        "value": "assets/shaders/mesh_vertex.glsl"
+                    },
+                    {
+                        "name": "VertexPathDeferred",
+                        "type": "string",
+                        "value": "assets/shaders/deferred_shading_vertex.glsl"
+                    },
+                    {
+                        "name": "VertexPathGbuffer",
+                        "type": "string",
+                        "value": "assets/shaders/g_buffer_vertex.glsl"
+                    }
+                ]
+            },
+            {
+                "name": "GCollision",
+                "varsdata": null
+            },
+            {
+                "name": "GBody",
+                "varsdata": [
+                    {
+                        "name": "isStatic",
+                        "type": "bool",
+                        "value": true
+                    },
+                    {
+                        "name": "mass",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "useGravity",
+                        "type": "bool",
+                        "value": false
+                    }
+                ]
             }
         ],
         "name": "b",
         "object_id": 1701064,
-        "px": 7.924655437469482,
-        "py": 9.437575340270996,
+        "px": 2.8936541080474854,
+        "py": -7.762423515319824,
         "pz": 0.0,
+        "rw": 1.0,
         "rx": 0.0,
-        "ry": 0.0,
+        "ry": -0.0,
         "rz": 0.0,
-        "sx": 1.0,
+        "sx": 18.64044761657715,
         "sy": 1.0,
         "sz": 1.0
     },
@@ -97,6 +158,7 @@
         "px": 6.0,
         "py": 19.0,
         "pz": 0.0,
+        "rw": 1.0,
         "rx": 0.0,
         "ry": 0.0,
         "rz": 0.0,
@@ -132,6 +194,7 @@
         "px": 4.098303318023682,
         "py": 13.843692779541016,
         "pz": 0.0,
+        "rw": 1.0,
         "rx": 0.0,
         "ry": 0.0,
         "rz": 0.0,
@@ -167,6 +230,7 @@
         "px": 7.526618957519531,
         "py": 5.434485912322998,
         "pz": 6.652606010437012,
+        "rw": 1.0,
         "rx": 0.0,
         "ry": 0.0,
         "rz": 0.0,
@@ -205,9 +269,29 @@
                         "value": "assets/shaders/mesh_fragment.glsl"
                     },
                     {
+                        "name": "FragmentPathDeferred",
+                        "type": "string",
+                        "value": "assets/shaders/deferred_shading_fragment.glsl"
+                    },
+                    {
+                        "name": "FragmentPathGbuffer",
+                        "type": "string",
+                        "value": "assets/shaders/g_buffer_fragment.glsl"
+                    },
+                    {
                         "name": "VertexPath",
                         "type": "string",
                         "value": "assets/shaders/mesh_vertex.glsl"
+                    },
+                    {
+                        "name": "VertexPathDeferred",
+                        "type": "string",
+                        "value": "assets/shaders/deferred_shading_vertex.glsl"
+                    },
+                    {
+                        "name": "VertexPathGbuffer",
+                        "type": "string",
+                        "value": "assets/shaders/g_buffer_vertex.glsl"
                     }
                 ]
             }
@@ -217,6 +301,7 @@
         "px": -4.513909816741943,
         "py": 0.0,
         "pz": 13.315834045410156,
+        "rw": 1.0,
         "rx": 0.0,
         "ry": 0.0,
         "rz": 0.0,
@@ -259,9 +344,29 @@
                         "value": "assets/shaders/mesh_fragment.glsl"
                     },
                     {
+                        "name": "FragmentPathDeferred",
+                        "type": "string",
+                        "value": "assets/shaders/deferred_shading_fragment.glsl"
+                    },
+                    {
+                        "name": "FragmentPathGbuffer",
+                        "type": "string",
+                        "value": "assets/shaders/g_buffer_fragment.glsl"
+                    },
+                    {
                         "name": "VertexPath",
                         "type": "string",
                         "value": "assets/shaders/mesh_vertex.glsl"
+                    },
+                    {
+                        "name": "VertexPathDeferred",
+                        "type": "string",
+                        "value": "assets/shaders/deferred_shading_vertex.glsl"
+                    },
+                    {
+                        "name": "VertexPathGbuffer",
+                        "type": "string",
+                        "value": "assets/shaders/g_buffer_vertex.glsl"
                     }
                 ]
             },
@@ -295,6 +400,7 @@
         "px": 11.784479141235352,
         "py": 6.315704345703125,
         "pz": 2.6057262420654297,
+        "rw": 1.0,
         "rx": 0.0,
         "ry": 0.0,
         "rz": 0.0,

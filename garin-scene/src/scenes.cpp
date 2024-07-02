@@ -5,8 +5,7 @@ using namespace nlohmann;
 
 void scenes::init()
 {
-    physic_world = new PhysicsEngine();
-    physic_world->start_world_physics();
+    // physic_world->start_world_physics();
 
     // VIRTUAL START
     on_start();
@@ -78,6 +77,17 @@ void scenes::load_scene(std::string scene_name_new)
 {
     try
     {
+        if (physic_world == nullptr)
+        {
+            physic_world = new PhysicsEngine();
+        }
+        else
+        {
+            physic_world->delete_phys_world();
+        }
+
+        physic_world->start_world_physics();
+
         for (Entity *ent : objects_worlds)
         {
             ent->ClearAllComponentes();
@@ -116,6 +126,7 @@ void scenes::load_scene(std::string scene_name_new)
             VarVerify::set_value_if_exists(data_loaded[i], "rx", transform->rotation.x);
             VarVerify::set_value_if_exists(data_loaded[i], "ry", transform->rotation.y);
             VarVerify::set_value_if_exists(data_loaded[i], "rz", transform->rotation.z);
+            VarVerify::set_value_if_exists(data_loaded[i], "rw", transform->rotation.w);
             VarVerify::set_value_if_exists(data_loaded[i], "sx", transform->Scale.x);
             VarVerify::set_value_if_exists(data_loaded[i], "sy", transform->Scale.y);
             VarVerify::set_value_if_exists(data_loaded[i], "sz", transform->Scale.z);
@@ -160,6 +171,8 @@ void scenes::load_scene(std::string scene_name_new)
             {
                 std::cerr << "Warning: 'components' is missing or not an array in entity " << i << std::endl;
             }
+
+            new_object->get_transform()->update();
         }
 
         // ATTACH WITH PARENTS
@@ -208,6 +221,7 @@ void scenes::save_scene()
             dataOBJ["rx"] = ent->get_transform()->rotation.x;
             dataOBJ["ry"] = ent->get_transform()->rotation.y;
             dataOBJ["rz"] = ent->get_transform()->rotation.z;
+            dataOBJ["rw"] = ent->get_transform()->rotation.w;
 
             dataOBJ["sx"] = ent->get_transform()->Scale.x;
             dataOBJ["sy"] = ent->get_transform()->Scale.y;

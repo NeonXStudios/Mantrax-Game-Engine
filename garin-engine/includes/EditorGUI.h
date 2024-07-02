@@ -216,6 +216,9 @@ public:
 
             ImGui::SameLine();
             ImGui::Separator();
+
+            func();
+
             for (const auto &[key, value] : cpm->variableMap)
             {
                 if (value.type() == typeid(std::string))
@@ -227,6 +230,14 @@ public:
                     if (key == "Model")
                     {
                         auto result = EditorGUI::Drag_Objetive("MODELCLASS");
+                        if (result.has_value())
+                        {
+                            cpm->variableMap[key] = result.value();
+                        }
+                    }
+                    else if (key == "VertexPath" || key == "FragmentPath")
+                    {
+                        auto result = EditorGUI::Drag_Objetive("SHADERCLASS");
                         if (result.has_value())
                         {
                             cpm->variableMap[key] = result.value();
@@ -260,7 +271,6 @@ public:
                     cpm->variableMap[key] = EditorGUI::Toggle(key, val);
                 }
             }
-            func();
             ImGui::EndGroup();
             ImGui::Separator();
             ImGui::TreePop();

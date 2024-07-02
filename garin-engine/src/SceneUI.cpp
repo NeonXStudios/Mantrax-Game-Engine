@@ -44,7 +44,9 @@ void SceneUI::draw(Entity *select_obj)
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(matrix), glm::value_ptr(translation), glm::value_ptr(rotation), glm::value_ptr(scale));
 
             transform->Position = translation;
-            transform->set_rotation(glm::vec3(rotation.x, rotation.y, rotation.z));
+            transform->rotation.x = glm::radians(rotation.x);
+            transform->rotation.y = glm::radians(rotation.y);
+            transform->rotation.z = glm::radians(rotation.z);
             transform->Scale = scale;
             transform->update();
         }

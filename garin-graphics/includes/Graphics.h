@@ -42,6 +42,7 @@ public:
 
     static Graphics *graphics;
     static RenderGraphics *render_graphics;
+
     int start_graphics(string window_name, int width, int height, bool vsync, scenes *game);
     bool is_running();
 

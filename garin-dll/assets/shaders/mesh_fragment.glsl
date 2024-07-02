@@ -24,5 +24,7 @@ void main()
     // Combina la iluminación ambiental y direccional con el color de la textura
     vec3 result = (ambient + diffuse) * texture(sampler_texture, TexCoords).rgb;
     
-    FragColor = vec4(result, 1.0);
+    //FragColor = vec4(result, 1.0);
+
+    FragColor = texture(sampler_texture, TexCoords);
 }

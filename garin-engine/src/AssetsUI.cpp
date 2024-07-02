@@ -113,12 +113,9 @@ void AssetsUI::drawer_files(std::string extension, std::string file_name)
 
 void AssetsUI::drawer_files_drag(std::string extension, std::string file_name, std::string complete_path)
 {
-    std::cout << "DRAGGING PATH: " << complete_path << std::endl;
-
     if (extension == ".fbx" || extension == ".obj")
     {
         EditorGUI::Drag("MODELCLASS", GarinIO::GetWithAfterAssetDir(complete_path));
-        std::cout << "DRAGGING PATH: " << GarinIO::GetWithAfterAssetDir(complete_path) << std::endl;
     }
     else if (extension == ".mp3" || extension == ".wav")
     {

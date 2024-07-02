@@ -27,6 +27,7 @@ void Camera::update()
         Orientation = glm::mat3(rotationMatrix) * glm::vec3(0.0f, 0.0f, -1.0f);
         view = glm::lookAt(cameraPosition, cameraPosition + Orientation, cameraUp);
         cameraMatrix = projection * view;
+        cameraPosition.z = 10;
     }
 
     cameraUp = glm::mat4(rotationMatrix) * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);

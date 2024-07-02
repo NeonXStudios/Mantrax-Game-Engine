@@ -62,6 +62,7 @@ int Graphics::start_graphics(std::string window_name, int width, int height, boo
     DebugGame::add_message("Garin engine graphics started", DebugGame::logger);
     setupRenderTexture(1920, 1080);
 
+
     std::thread updateThread([this]
                              { this->update_loop(); });
 
