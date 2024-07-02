@@ -51,39 +51,57 @@ void PhysicsEngine::update_world_physics()
 
 void PhysicsEngine::delete_phys_world()
 {
-    if (mPvd)
+    if (mScene)
     {
-        mPvd->release();
-        mPvd = NULL;
+        PxU32 numActors = mScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC);
+        std::vector<PxRigidActor *> actors(numActors);
+        mScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC, reinterpret_cast<PxActor **>(actors.data()), numActors);
+
+        for (PxRigidActor *actor : actors)
+        {
+            PxU32 numShapes = actor->getNbShapes();
+            std::vector<PxShape *> shapes(numShapes);
+            actor->getShapes(shapes.data(), numShapes);
+
+            for (PxShape *shape : shapes)
+            {
+                shape->release();
+            }
+
+            actor->release();
+        }
+
+        mScene->release();
+        mScene = nullptr;
     }
 
     if (mMaterial)
     {
         mMaterial->release();
-        mMaterial = NULL;
-    }
-
-    if (mScene)
-    {
-        mScene->release();
-        mScene = NULL;
+        mMaterial = nullptr;
     }
 
     if (mDispatcher)
     {
         mDispatcher->release();
-        mDispatcher = NULL;
+        mDispatcher = nullptr;
     }
 
     if (mPhysics)
     {
         mPhysics->release();
-        mPhysics = NULL;
+        mPhysics = nullptr;
+    }
+
+    if (mPvd)
+    {
+        mPvd->release();
+        mPvd = nullptr;
     }
 
     if (mFoundation)
     {
         mFoundation->release();
-        mFoundation = NULL;
+        mFoundation = nullptr;
     }
 }

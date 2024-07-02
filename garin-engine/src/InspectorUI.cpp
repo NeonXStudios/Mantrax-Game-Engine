@@ -12,8 +12,10 @@ void InspectorUI::draw(Entity *select_obj)
         ImGui::Begin("Inspector");
         select_obj->ObjectName = EditorGUI::InputText("Name: ", select_obj->ObjectName);
         select_obj->get_transform()->Position = EditorGUI::Vector3("Position", select_obj->get_transform()->Position);
+        select_obj->get_transform()->update();
         // select_obj->get_transform()->Rotation = EditorGUI::Vector3("Rotation", select_obj->get_transform()->Rotation);
         select_obj->get_transform()->Scale = EditorGUI::Vector3("Scale", select_obj->get_transform()->Scale);
+        select_obj->get_transform()->update();
 
         ImGui::Separator();
 
@@ -66,6 +68,12 @@ void InspectorUI::draw(Entity *select_obj)
             if (ImGui::Button("Game Script", ImVec2(buttonWidth, 20)))
             {
                 select_obj->addComponent<GScript>();
+                ImGui::CloseCurrentPopup();
+            }
+
+            if (ImGui::Button("Character Controller", ImVec2(buttonWidth, 20)))
+            {
+                select_obj->addComponent<GCharacter>();
                 ImGui::CloseCurrentPopup();
             }
 

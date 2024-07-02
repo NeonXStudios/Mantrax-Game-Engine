@@ -9,4 +9,5 @@ void UIAdministrator::draw_ui(Entity *owner)
     ComponentsDrawer::updateUI<GCollision>(owner, 2, new CCollider());
     ComponentsDrawer::updateUI<GScript>(owner, 3, new CGScript());
     ComponentsDrawer::updateUI<GMaterial>(owner, 4, new CMaterial());
+    ComponentsDrawer::updateUI<GCharacter>(owner, 4, new CCharacter());
 }

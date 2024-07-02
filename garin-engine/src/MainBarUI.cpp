@@ -87,6 +87,15 @@ void MainBarUI::draw(Entity *owner)
         }
         else
         {
+            for (Entity *ent : Graphics::get_current_scene()->objects_worlds)
+            {
+                for (Component *comp : ent->GetAllComponent())
+                {
+                    comp->clean();
+                    comp->init();
+                }
+            }
+
             DebugGame::add_message("Entering play mode", DebugGame::logger);
         }
         std::cout << "Entering play mode" << std::endl;
