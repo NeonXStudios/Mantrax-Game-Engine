@@ -13,4 +13,5 @@ public:
     void defines() override;
     void init() override;
     void update() override;
+    void clean() override;
 };

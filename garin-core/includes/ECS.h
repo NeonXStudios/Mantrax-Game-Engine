@@ -27,8 +27,8 @@ inline ComponentID getComponentTypeID() noexcept
 	return typeID;
 }
 
-constexpr std::size_t maxComponents = 32;
-constexpr std::size_t maxGroups = 32;
+constexpr std::size_t maxComponents = 1024;
+constexpr std::size_t maxGroups = 1024;
 
 using ComponentBitSet = std::bitset<maxComponents>;
 using GroupBitset = std::bitset<maxGroups>;
@@ -38,33 +38,28 @@ using ComponentArray = std::array<Component *, maxComponents>;
 class Component
 {
 public:
-	// using Variable = std::variant<int, double, float, std::string>;
-	// std::map<std::string, Variable> variableMap;
-
 	using Variable = std::any;
 	std::map<std::string, Variable> variableMap;
 
 	int component_id;
-	Entity *entity;
-	TransformComponent *transform;
+	Entity *entity = nullptr;
+	TransformComponent *transform = nullptr;
 	bool enabled = true;
 
-	virtual void defines() {}
-	virtual void init() {}
-	virtual void update() {}
-	virtual void draw() {}
-	virtual void clean() {}
-	virtual std::string serialize() { return ""; }
-	virtual void deserialize(std::string g, std::string path = "") {}
+	virtual ~Component()
+	{
+		clean();
+		clear_vars();
+	}
 
-	~Component()
+	void clear_vars()
 	{
 		variableMap.clear();
 	}
 
 	Component()
 	{
-		component_id = IDGenerator::generate_id();
+		component_id = IDGenerator::generate_id_component();
 	}
 
 	TransformComponent *get_transform()
@@ -91,6 +86,14 @@ public:
 	{
 		variableMap[name] = value;
 	}
+
+	virtual void defines() {}
+	virtual void init() {}
+	virtual void update() {}
+	virtual void draw() {}
+	virtual void clean() {}
+	virtual std::string serialize() { return ""; }
+	virtual void deserialize(std::string g, std::string path = "") {}
 };
 
 // #define G_VAR(name, value) variableMap[#name] = value
@@ -344,28 +347,115 @@ public:
 						   { return dynamic_cast<T *>(c) != nullptr; });
 	}
 
+	// template <typename T>
+	// bool removeComponent()
+	// {
+	// 	auto it = std::remove_if(components.begin(), components.end(), [](Component *c)
+	// 							 { return dynamic_cast<T *>(c) != nullptr; });
+
+	// 	if (it != components.end())
+	// 	{
+	// 		for (auto iter = it; iter != components.end(); ++iter)
+	// 		{
+	// 			if (Component *component = dynamic_cast<Component *>(*iter))
+	// 			{
+	// 				component->clear_vars();
+	// 				component->clean();
+	// 			}
+	// 			delete *iter;
+	// 		}
+	// 		components.erase(it, components.end());
+
+	// 		return true;
+	// 	}
+	// 	return false;
+	// }
+
 	template <typename T>
 	bool removeComponent()
 	{
-		auto it = std::remove_if(components.begin(), components.end(), [](Component *c)
-								 { return dynamic_cast<T *>(c) != nullptr; });
-
-		if (it != components.end())
+		if (hasComponent<T>())
 		{
-			for (auto iter = it; iter != components.end(); ++iter)
-			{
-				if (Component *component = dynamic_cast<Component *>(*iter))
-				{
-					component->clean();
-				}
-				delete *iter;
-			}
+			auto it = std::remove_if(components.begin(), components.end(),
+									 [](const Component *c)
+									 { return dynamic_cast<const T *>(c) != nullptr; });
+
 			components.erase(it, components.end());
 
+			componentArray[getComponentTypeID<T>()] = nullptr;
+			componentBitset[getComponentTypeID<T>()] = false;
 			return true;
 		}
 		return false;
 	}
+
+	bool Entity::removeComponentByID(int id)
+	{
+		if (id < 0 || id >= componentBitset.size())
+		{
+			std::cerr << "Error: ID fuera de rango en removeComponentByID: " << id << std::endl;
+			return false;
+		}
+
+		if (componentBitset[id])
+		{
+			std::cout << "Intentando borrar componente" << std::endl;
+
+			auto it = std::find_if(components.begin(), components.end(),
+								   [id](const Component *c)
+								   { return c->component_id == id; });
+
+			if (it != components.end())
+			{
+				std::cout << "Iniciando borrado del componente" << std::endl;
+				// Liberar la memoria del componente eliminado
+				delete *it;
+				components.erase(it);
+
+				componentArray[id] = nullptr;
+				componentBitset[id] = false;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// bool removeComponentByID(int id)
+	// {
+	// 	// Find the component with the given ID and move it to the end
+	// 	auto it = std::remove_if(components.begin(), components.end(), [id](Component *c)
+	// 							 { return c->component_id == id; });
+
+	// 	// Check if we found any component to remove
+	// 	if (it != components.end())
+	// 	{
+	// 		// Iterate from the position of the found component to the end of the container
+	// 		for (auto iter = it; iter != components.end(); ++iter)
+	// 		{
+	// 			std::cout << "Cleaning component with ID: " << (*iter)->component_id << std::endl;
+
+	// 			// Clear variables and clean up the component
+	// 			(*iter)->clear_vars();
+	// 			(*iter)->clean();
+
+	// 			std::cout << "Deleting component" << std::endl;
+
+	// 			// Delete the component from heap memory
+	// 			delete *iter;
+	// 		}
+
+	// 		// Erase the elements from the container
+	// 		components.erase(it, components.end());
+
+	// 		std::cout << "Component(s) removed. New size of components: " << components.size() << std::endl;
+
+	// 		return true;
+	// 	}
+
+	// 	std::cout << "Component with ID " << id << " not found." << std::endl;
+
+	// 	return false;
+	// }
 
 	void ClearAllComponentes()
 	{

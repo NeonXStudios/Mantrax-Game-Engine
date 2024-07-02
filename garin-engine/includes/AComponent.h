@@ -9,6 +9,7 @@
 #include <optional>
 #include <ECS.h>
 #include <sstream>
+#include <cassert>
 
 class AComponent
 {
@@ -20,24 +21,7 @@ public:
     {
         if (owner->hasComponent<T>())
         {
-            ImGui::PushID(id);
-            if (ImGui::Button("X"))
-            {
-                // if (std::is_same<T, SpriteComponent>::value)
-                // {
-                //     std::cout << "El componente base no puede ser eliminado" << std::endl;
-                // }
-                // else
-                // {
-                //     owner->removeComponent<T>();
-                // }
-            }
-            else
-            {
-                draw(owner);
-                ImGui::Separator();
-            }
-            ImGui::PopID();
+            draw(owner);
         }
     }
 

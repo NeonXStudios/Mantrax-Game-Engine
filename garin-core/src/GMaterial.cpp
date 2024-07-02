@@ -27,3 +27,24 @@ void GMaterial::init()
 void GMaterial::update()
 {
 }
+
+void GMaterial::clean()
+{
+    if (p_shader)
+    {
+        delete p_shader;
+        p_shader = nullptr;
+    }
+
+    if (p_deferred_shader)
+    {
+        delete p_deferred_shader;
+        p_deferred_shader = nullptr;
+    }
+
+    if (p_gbuffer_shader)
+    {
+        delete p_gbuffer_shader;
+        p_gbuffer_shader = nullptr;
+    }
+}

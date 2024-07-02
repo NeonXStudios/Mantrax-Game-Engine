@@ -16,9 +16,17 @@ void GScript::update()
 
 void GScript::clean()
 {
-    if (behaviour != nullptr)
+    try
     {
-        behaviour.reset();
-        behaviour.release();
+        if (behaviour != nullptr)
+        {
+            behaviour.reset();
+            behaviour.release();
+            behaviour = nullptr;
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
     }
 }

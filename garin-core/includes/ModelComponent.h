@@ -22,6 +22,7 @@ public:
     void init() override;
     void update() override;
     void draw() override;
+    void clean() override;
     void set_model(string path_load);
     std::string serialize() override;
 };

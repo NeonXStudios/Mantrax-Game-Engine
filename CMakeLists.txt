@@ -77,6 +77,13 @@ endforeach()
 
 target_link_libraries(${project_name} PRIVATE ${LIBRARIES})
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -frtti")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    add_compile_options(/GR)
+endif()
+
+
 # Define la carpeta de salida
 set(OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Debug)
 
