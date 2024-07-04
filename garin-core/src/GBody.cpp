@@ -24,7 +24,7 @@ void GBody::init()
     body = mPhysics->createRigidDynamic(t);
 
     string nameBODY = std::to_string(entity->objectID);
-    body->setName(nameBODY.c_str());
+    body->setName(entity->ObjectSTRID.c_str());
 
     physx::PxRigidBodyExt::updateMassAndInertia(*body, GETVAR(mass, float));
     Graphics::get_current_scene()->physic_world->mScene->addActor(*body);

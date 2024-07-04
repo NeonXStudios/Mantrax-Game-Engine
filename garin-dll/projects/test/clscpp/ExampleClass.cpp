@@ -16,7 +16,10 @@ void ExampleClass::on_tick()
         direction.y = 1.81f;
     }
 
-    self->getComponent<GCharacter>().move(direction);
+    if (self->hasComponent<GCharacter>())
+    {
+        self->getComponent<GCharacter>().move(direction);
+    }
 
     try
     {

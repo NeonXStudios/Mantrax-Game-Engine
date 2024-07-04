@@ -38,6 +38,7 @@ Entity *scenes::make_entity()
     Entity *entity_maked = new Entity();
     std::cout << "New entity created" << std::endl;
     entity_maked->objectID = IDGenerator::generate_id();
+    entity_maked->ObjectSTRID = std::to_string(entity_maked->objectID);
 
     objects_worlds.push_back(entity_maked);
 

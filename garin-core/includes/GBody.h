@@ -47,6 +47,7 @@ public:
     void init() override;
     void update() override;
 
+    void set_position(glm::vec3 new_position);
     void add_impulse(glm::vec3 direction, GBodySpace::force_mode mode);
 
     glm::vec3 get_body_position();

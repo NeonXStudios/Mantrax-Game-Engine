@@ -8,7 +8,7 @@ void GCollision::init()
         shape = Graphics::get_current_scene()->physic_world->mPhysics->createShape(physx::PxBoxGeometry(boxSize.x, boxSize.y, boxSize.z), *Graphics::get_current_scene()->physic_world->mMaterial, 1);
 
         std::string nameBODY = std::to_string(entity->objectID);
-        shape->setName(nameBODY.c_str());
+        shape->setName(entity->ObjectSTRID.c_str());
         std::cout << "Setting shape name to: " << nameBODY << std::endl;
     }
     else

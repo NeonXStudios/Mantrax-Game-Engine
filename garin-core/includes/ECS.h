@@ -462,6 +462,7 @@ public:
 	{
 		for (auto &component : components)
 		{
+			component->clean();
 			delete component;
 		}
 
