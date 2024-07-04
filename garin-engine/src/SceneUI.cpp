@@ -21,7 +21,7 @@ void SceneUI::draw(Entity *select_obj)
     ImVec2 p = ImGui::GetCursorScreenPos();
     ImGui::Image((void *)(intptr_t)Graphics::texture, ImVec2(Graphics::render_width, Graphics::render_height), ImVec2(ImVec2(0, 1)), ImVec2(ImVec2(1, 0)));
 
-    if (select_obj != nullptr && !AppSettings::is_playing)
+    if (select_obj != nullptr)
     {
         static ImGuizmo::MODE gizmoMode(ImGuizmo::LOCAL);
         static ImGuizmo::OPERATION gizmoOperation(ImGuizmo::TRANSLATE);
@@ -43,11 +43,23 @@ void SceneUI::draw(Entity *select_obj)
             glm::vec3 translation, rotation, scale;
             ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(matrix), glm::value_ptr(translation), glm::value_ptr(rotation), glm::value_ptr(scale));
 
-            transform->Position = translation;
-            transform->rotation.x = glm::radians(rotation.x);
-            transform->rotation.y = glm::radians(rotation.y);
-            transform->rotation.z = glm::radians(rotation.z);
-            transform->Scale = scale;
+            if (!select_obj->hasComponent<GBody>())
+            {
+                transform->Position = translation;
+                transform->rotation.x = glm::radians(rotation.x);
+                transform->rotation.y = glm::radians(rotation.y);
+                transform->rotation.z = glm::radians(rotation.z);
+                transform->Scale = scale;
+            }
+            else
+            {
+                transform->Position = translation;
+                transform->rotation.x = glm::radians(rotation.x);
+                transform->rotation.y = glm::radians(rotation.y);
+                transform->rotation.z = glm::radians(rotation.z);
+                transform->Scale = scale;
+                select_obj->getComponent<GBody>().set_position(translation);
+            }
             transform->update();
         }
 
@@ -65,6 +77,12 @@ void SceneUI::draw(Entity *select_obj)
         {
             gizmoOperation = ImGuizmo::SCALE;
         }
+    }
+
+    if (ImGui::IsKeyDown(ImGuiKey_Delete))
+    {
+        Graphics::get_current_scene()->destroy(select_obj);
+        select_obj = nullptr;
     }
 
     ImGui::End();

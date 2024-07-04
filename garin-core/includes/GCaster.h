@@ -17,5 +17,5 @@ struct GCastHit
 class GCaster
 {
 public:
-    bool RayCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Lenght, GCastHit *hit, PxHitFlags hitFlags = PxHitFlags(PxHitFlag::eDEFAULT));
+    bool RayCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Lenght, GCastHit *hit, PxHitFlags hitFlags = PxHitFlags(PxHitFlag::eDEFAULT), PxU32 layerMask = LAYER_0);
 };

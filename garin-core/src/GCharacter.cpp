@@ -7,9 +7,6 @@ void GCharacter::init()
     auto *physxScene = Graphics::get_current_scene()->physic_world->mScene;
     auto *physxMaterial = Graphics::get_current_scene()->physic_world->mMaterial;
 
-    // Crea el manager del controlador de personaje
-    gManager = PxCreateControllerManager(*physxScene);
-
     // Configura la descripción del controlador de cápsula
     PxCapsuleControllerDesc desc;
     desc.height = 2.0f;
@@ -18,7 +15,9 @@ void GCharacter::init()
     desc.material = physxMaterial;
 
     // Crea el controlador de personaje
-    gController = gManager->createController(desc);
+    gController = Graphics::get_current_scene()->physic_world->gManager->createController(desc);
+
+    gController->setPosition(physx::PxExtendedVec3(entity->get_transform()->Position.x, entity->get_transform()->Position.y, entity->get_transform()->Position.z));
 }
 
 void GCharacter::update()

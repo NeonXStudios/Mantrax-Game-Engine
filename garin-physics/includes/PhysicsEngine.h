@@ -10,6 +10,7 @@ public:
     physx::PxDefaultErrorCallback mDefaultErrorCallback;
     physx::PxDefaultCpuDispatcher *mDispatcher = NULL;
     physx::PxTolerancesScale mToleranceScale;
+    PxControllerManager *gManager = nullptr;
 
     physx::PxFoundation *mFoundation = NULL;
     physx::PxPhysics *mPhysics = NULL;

@@ -23,10 +23,28 @@ void ExampleClass::on_tick()
 
     try
     {
+        // find_object_by_name("b")->getComponent<GCollision>().setLayerMask(LAYER_0);
+        // find_object_by_name("b")->get_transform()->Position.z = 0;
+
         GCastHit hit;
         GCaster *ray = new GCaster();
 
-        if (ray->RayCast(self->get_transform()->Position, glm::vec3(0.0f, -1.0f, 0.0f), 10.0f, &hit))
+        if (ray->RayCast(self->get_transform()->Position, glm::vec3(0.0f, -1.0f, 0.0f), 50.0f, &hit, PxHitFlags(PxHitFlag::eDEFAULT), LAYER_0 | LAYER_1))
+        {
+            std::cout << "Object Cast: " << hit.entity->ObjectName << std::endl;
+        }
+
+        if (ray->RayCast(self->get_transform()->Position, glm::vec3(0.0f, 1.0f, 0.0f), 50.0f, &hit, PxHitFlags(PxHitFlag::eDEFAULT), LAYER_0 | LAYER_1))
+        {
+            std::cout << "Object Cast: " << hit.entity->ObjectName << std::endl;
+        }
+
+        if (ray->RayCast(self->get_transform()->Position, glm::vec3(1.0f, 0.0f, 0.0f), 50.0f, &hit, PxHitFlags(PxHitFlag::eDEFAULT), LAYER_0 | LAYER_1))
+        {
+            std::cout << "Object Cast: " << hit.entity->ObjectName << std::endl;
+        }
+
+        if (ray->RayCast(self->get_transform()->Position, glm::vec3(0.0f, 0.0f, 1.0f), 50.0f, &hit, PxHitFlags(PxHitFlag::eDEFAULT), LAYER_0 | LAYER_1))
         {
             std::cout << "Object Cast: " << hit.entity->ObjectName << std::endl;
         }

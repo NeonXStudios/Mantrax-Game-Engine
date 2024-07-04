@@ -40,6 +40,9 @@ void PhysicsEngine::start_world_physics()
 
     if (mFoundation)
         std::cout << "Physic world started with PhysX" << std::endl;
+
+    // Crea el manager del controlador de personaje
+    gManager = PxCreateControllerManager(*mScene);
 #pragma endregion
 }
 
@@ -54,16 +57,10 @@ void PhysicsEngine::delete_phys_world()
     try
     {
 
-        for (Entity *a : Graphics::get_current_scene()->objects_worlds)
+        if (gManager)
         {
-            for (GCharacter *cc : a->getComponents<GCharacter>())
-            {
-                if (cc->gManager)
-                {
-                    cc->gManager->purgeControllers();
-                    cc->gManager->release();
-                }
-            }
+            gManager->purgeControllers();
+            gManager->release();
         }
 
         if (mScene)

@@ -12,6 +12,7 @@
 #include "GMaterial.h"
 #include "GCharacter.h"
 #include "GCaster.h"
+#include "LayerManager.h"
 #include <GAudio.h>
 #include <AudioManager.h>
 #include <openxr/openxr.h>

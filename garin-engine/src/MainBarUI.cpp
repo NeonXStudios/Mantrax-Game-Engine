@@ -83,6 +83,7 @@ void MainBarUI::draw(Entity *owner)
 
         if (AppSettings::is_playing)
         {
+            Graphics::get_current_scene()->save_scene();
             Graphics::get_current_scene()->load_scene(Graphics::get_current_scene()->scene_name);
             DebugGame::add_message("Entering in playmode", DebugGame::logger);
         }

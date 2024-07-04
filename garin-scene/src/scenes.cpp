@@ -71,6 +71,19 @@ Entity *scenes::get_entity_by_id(int id)
     return nullptr;
 }
 
+Entity *scenes::get_entity_by_id_string(std::string id)
+{
+    for (Entity *ent : objects_worlds)
+    {
+        if (ent->ObjectSTRID == id)
+        {
+            return ent;
+        }
+    }
+
+    return nullptr;
+}
+
 Entity *scenes::get_entity_by_name(std::string name)
 {
     for (Entity *ent : objects_worlds)
@@ -313,5 +326,18 @@ void scenes::save_scene()
     catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
+    }
+}
+
+void scenes::destroy(Entity *object_to_destroy)
+{
+    if (object_to_destroy != nullptr)
+    {
+        auto it = std::find(objects_worlds.begin(), objects_worlds.end(), object_to_destroy);
+        if (it != objects_worlds.end())
+        {
+            object_to_destroy->ClearAllComponentes();
+            objects_worlds.erase(it);
+        }
     }
 }

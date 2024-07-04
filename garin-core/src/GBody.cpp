@@ -23,7 +23,6 @@ void GBody::init()
 
     body = mPhysics->createRigidDynamic(t);
 
-    string nameBODY = std::to_string(entity->objectID);
     body->setName(entity->ObjectSTRID.c_str());
 
     physx::PxRigidBodyExt::updateMassAndInertia(*body, GETVAR(mass, float));
@@ -94,4 +93,15 @@ void GBody::add_impulse(glm::vec3 direction, GBodySpace::force_mode mode)
         break;
     }
     }
+}
+
+void GBody::set_position(glm::vec3 new_position)
+{
+    physx::PxVec3 px_position(new_position.x, new_position.y, new_position.z);
+
+    physx::PxTransform current_pose = body->getGlobalPose();
+
+    current_pose.p = px_position;
+
+    body->setGlobalPose(current_pose);
 }

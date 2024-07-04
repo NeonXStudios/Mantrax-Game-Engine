@@ -5,11 +5,33 @@ void GCollision::init()
 {
     if (Graphics::get_current_scene()->physic_world != nullptr && Graphics::get_current_scene()->physic_world->mScene != nullptr)
     {
-        shape = Graphics::get_current_scene()->physic_world->mPhysics->createShape(physx::PxBoxGeometry(boxSize.x, boxSize.y, boxSize.z), *Graphics::get_current_scene()->physic_world->mMaterial, 1);
+        shape = Graphics::get_current_scene()->physic_world->mPhysics->createShape(physx::PxBoxGeometry(boxSize.x, boxSize.y, boxSize.z), *Graphics::get_current_scene()->physic_world->mMaterial, true);
 
-        std::string nameBODY = std::to_string(entity->objectID);
-        shape->setName(entity->ObjectSTRID.c_str());
-        std::cout << "Setting shape name to: " << nameBODY << std::endl;
+        if (shape)
+        {
+            shape->setName(entity->ObjectSTRID.c_str());
+
+            // Configurar el filtro de capa
+            PxFilterData filterData;
+            filterData.word0 = LAYER_0 | LAYER_1; // Asegúrate de que las capas son correctas
+            filterData.word1 = 0;
+            filterData.word2 = 0;
+            filterData.word3 = 0;
+
+            shape->setSimulationFilterData(filterData);
+
+            std::cout << "Shape Layer Mask: " << filterData.word0 << ", " << filterData.word1 << ", " << filterData.word2 << ", " << filterData.word3 << std::endl;
+            std::cout << "Shape created with size: (" << boxSize.x << ", " << boxSize.y << ", " << boxSize.z << ")" << std::endl;
+
+            if (is_trigger)
+            {
+                shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
+            }
+        }
+        else
+        {
+            std::cout << "Error creating shape" << std::endl;
+        }
     }
     else
     {
@@ -21,16 +43,21 @@ void GCollision::update()
 {
     if (shape)
     {
-        physx::PxGeometry *newGeometry = nullptr;
-
         glm::vec3 newsize = boxSize * entity->get_transform()->Scale;
 
-        newGeometry = new physx::PxBoxGeometry(newsize.x, newsize.y, newsize.z);
+        physx::PxBoxGeometry newGeometry(newsize.x, newsize.y, newsize.z);
+        shape->setGeometry(newGeometry);
 
-        shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, is_trigger);
+        // // Opcional: actualizar el filtro de capa si es necesario
+        // PxFilterData filterData;
+        // filterData.word0 = LAYER_0 | LAYER_1;
+        // filterData.word1 = 0;
+        // filterData.word2 = 0;
+        // filterData.word3 = 0;
 
-        shape->setGeometry(*newGeometry);
+        // shape->setSimulationFilterData(filterData);
 
-        std::cout << "Shape Name: " << shape->getName() << std::endl;
+        // // Imprimir los datos del filtro
+        // std::cout << "Shape Update Layer Mask: " << filterData.word0 << ", " << filterData.word1 << ", " << filterData.word2 << ", " << filterData.word3 << std::endl;
     }
 }

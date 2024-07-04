@@ -40,7 +40,10 @@ public:
     Entity *make_entity();
     Entity *get_entity_by_index(int index);
     Entity *get_entity_by_id(int id);
+    Entity *get_entity_by_id_string(std::string id);
     Entity *get_entity_by_name(string index);
+
+    void destroy(Entity *object_to_destroy);
 
     std::string demangle(const char *mangled_name)
     {

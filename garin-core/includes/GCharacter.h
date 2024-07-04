@@ -6,7 +6,6 @@
 class GCharacter : public Component
 {
 public:
-    PxControllerManager *gManager = nullptr;
     PxController *gController = nullptr;
 
     void init() override;
