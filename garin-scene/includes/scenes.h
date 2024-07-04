@@ -19,6 +19,7 @@ public:
 
     vector<Entity *> objects_worlds = vector<Entity *>();
     PhysicsEngine *physic_world;
+    bool unload_scene;
 
     // SCENE VIRTUALS
     virtual void on_start() {};

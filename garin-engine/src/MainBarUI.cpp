@@ -78,26 +78,20 @@ void MainBarUI::draw(Entity *owner)
 
     if (ImGui::ImageButton((void *)(intptr_t)IconsManager::PLAY(), ImVec2(16, 16)))
     {
+
         AppSettings::is_playing = !AppSettings::is_playing;
 
-        if (!AppSettings::is_playing)
+        if (AppSettings::is_playing)
         {
-            DebugGame::add_message("Stop play mode reloading scene", DebugGame::logger);
             Graphics::get_current_scene()->load_scene(Graphics::get_current_scene()->scene_name);
+            DebugGame::add_message("Entering in playmode", DebugGame::logger);
         }
         else
         {
-            for (Entity *ent : Graphics::get_current_scene()->objects_worlds)
-            {
-                for (Component *comp : ent->GetAllComponent())
-                {
-                    comp->clean();
-                    comp->init();
-                }
-            }
-
-            DebugGame::add_message("Entering play mode", DebugGame::logger);
+            Graphics::get_current_scene()->load_scene(Graphics::get_current_scene()->scene_name);
+            DebugGame::add_message("Stopping in playmode", DebugGame::logger);
         }
+
         std::cout << "Entering play mode" << std::endl;
     }
 

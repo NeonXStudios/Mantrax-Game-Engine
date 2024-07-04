@@ -65,13 +65,6 @@ void GBody::update()
     }
 }
 
-void GBody::clean()
-{
-    PxRigidActor *actor = body;
-    Graphics::get_current_scene()->physic_world->mScene->removeActor(*actor);
-    actor->release();
-}
-
 glm::vec3 GBody::get_body_position()
 {
     float x = body->getGlobalPose().p.x;
@@ -79,4 +72,26 @@ glm::vec3 GBody::get_body_position()
     float z = body->getGlobalPose().p.z;
 
     return glm::vec3(x, y, z);
+}
+
+void GBody::add_impulse(glm::vec3 direction, GBodySpace::force_mode mode)
+{
+    switch (mode)
+    {
+    case GBodySpace::Impulse:
+    {
+        body->addForce(physx::PxVec3(direction.x, direction.y, direction.z), physx::PxForceMode::eIMPULSE, true);
+        break;
+    }
+    case GBodySpace::Acceleration:
+    {
+        body->addForce(physx::PxVec3(direction.x, direction.y, direction.z), physx::PxForceMode::eACCELERATION, true);
+        break;
+    }
+    case GBodySpace::Velocity:
+    {
+        body->addForce(physx::PxVec3(direction.x, direction.y, direction.z), physx::PxForceMode::eVELOCITY_CHANGE, true);
+        break;
+    }
+    }
 }

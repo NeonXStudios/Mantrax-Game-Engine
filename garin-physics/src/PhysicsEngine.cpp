@@ -51,57 +51,77 @@ void PhysicsEngine::update_world_physics()
 
 void PhysicsEngine::delete_phys_world()
 {
-    if (mScene)
+    try
     {
-        PxU32 numActors = mScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC);
-        std::vector<PxRigidActor *> actors(numActors);
-        mScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC, reinterpret_cast<PxActor **>(actors.data()), numActors);
 
-        for (PxRigidActor *actor : actors)
+        for (Entity *a : Graphics::get_current_scene()->objects_worlds)
         {
-            PxU32 numShapes = actor->getNbShapes();
-            std::vector<PxShape *> shapes(numShapes);
-            actor->getShapes(shapes.data(), numShapes);
-
-            for (PxShape *shape : shapes)
+            for (GCharacter *cc : a->getComponents<GCharacter>())
             {
-                shape->release();
+                if (cc->gManager)
+                {
+                    cc->gManager->purgeControllers();
+                    cc->gManager->release();
+                }
             }
-
-            actor->release();
         }
 
-        mScene->release();
-        mScene = nullptr;
-    }
+        if (mScene)
+        {
+            PxU32 numActors = mScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC);
+            std::vector<PxRigidActor *> actors(numActors);
+            mScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC, reinterpret_cast<PxActor **>(actors.data()), numActors);
 
-    if (mMaterial)
-    {
-        mMaterial->release();
-        mMaterial = nullptr;
-    }
+            for (PxRigidActor *actor : actors)
+            {
+                PxU32 numShapes = actor->getNbShapes();
+                std::vector<PxShape *> shapes(numShapes);
+                actor->getShapes(shapes.data(), numShapes);
 
-    if (mDispatcher)
-    {
-        mDispatcher->release();
-        mDispatcher = nullptr;
-    }
+                for (PxShape *shape : shapes)
+                {
+                    shape->release();
+                }
 
-    if (mPhysics)
-    {
-        mPhysics->release();
-        mPhysics = nullptr;
-    }
+                actor->release();
+            }
 
-    if (mPvd)
-    {
-        mPvd->release();
-        mPvd = nullptr;
-    }
+            mScene->release();
+            mScene = nullptr;
+        }
 
-    if (mFoundation)
+        if (mMaterial)
+        {
+            mMaterial->release();
+            mMaterial = nullptr;
+        }
+
+        if (mDispatcher)
+        {
+            mDispatcher->release();
+            mDispatcher = nullptr;
+        }
+
+        if (mPhysics)
+        {
+            mPhysics->release();
+            mPhysics = nullptr;
+        }
+
+        if (mPvd)
+        {
+            mPvd->release();
+            mPvd = nullptr;
+        }
+
+        if (mFoundation)
+        {
+            mFoundation->release();
+            mFoundation = nullptr;
+        }
+    }
+    catch (const std::exception &e)
     {
-        mFoundation->release();
-        mFoundation = nullptr;
+        std::cerr << e.what() << '\n';
     }
 }

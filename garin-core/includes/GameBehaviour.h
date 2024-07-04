@@ -9,6 +9,8 @@ using namespace std;
 class GameBehaviour
 {
 public:
+    Entity *self;
+
     virtual void on_init() {}
     virtual void on_tick() {}
 

@@ -1,5 +1,6 @@
 #include "../includes/CCollider.h"
 #include <GarinComponents.h>
+#include <GDGizmos.h>
 
 namespace fs = std::filesystem;
 
@@ -14,6 +15,7 @@ void CCollider::draw(Entity *owner)
     {
         EditorGUI::Draw_Component<GCollision>(owner, cmap, "Collider", cmap->component_id, cmap, [cmap]()
                                               { 
+                                                ImGui::Text(cmap->shape->getName());
                                     cmap->is_trigger = EditorGUI::Toggle("Is Trigger", cmap->is_trigger); 
                                     cmap->boxSize = EditorGUI::Vector3("Box Size", cmap->boxSize); });
     }

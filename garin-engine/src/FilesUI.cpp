@@ -2,7 +2,15 @@
 
 void FilesUI::draw(Entity *owner, EditorConfigs *p_configs)
 {
+    // Verificación de puntero nulo
+    if (!p_configs)
+    {
+        std::cerr << "Error: p_configs es nulo." << std::endl;
+        return;
+    }
+
     EditorConfigs *configs = p_configs;
+
     ImGui::Begin("Scripts");
     ShowDirectoryTree(FileManager::get_execute_path() + configs->current_proyect + "/clscpp");
 
@@ -37,7 +45,7 @@ void FilesUI::draw(Entity *owner, EditorConfigs *p_configs)
 
         if (ImGui::Button("Create"))
         {
-            create_script_files(script_name);
+            create_script_files(script_name, configs);
             show_script_popup = false;
             ImGui::CloseCurrentPopup();
         }
@@ -104,31 +112,45 @@ void FilesUI::ShowDirectoryTree(const std::filesystem::path &path)
 
 void FilesUI::OpenAssociatedFiles(const std::filesystem::path &path)
 {
-    std::filesystem::path header_file = path.parent_path() / (path.stem().string() + ".h");
-    std::filesystem::path cpp_file = path.parent_path() / (path.stem().string() + ".cpp");
-
-    std::string command = "code";
-
-    if (std::filesystem::exists(header_file))
+    try
     {
-        std::cout << "Abriendo archivo de cabecera: " << header_file << std::endl;
-        command += " \"" + header_file.string() + "\"";
+        std::filesystem::path header_file = path.parent_path() / (path.stem().string() + ".h");
+        std::filesystem::path cpp_file = path.parent_path() / (path.stem().string() + ".cpp");
+
+        std::string command = "code";
+
+        if (std::filesystem::exists(header_file))
+        {
+            std::cout << "Abriendo archivo de cabecera: " << header_file << std::endl;
+            command += " \"" + header_file.string() + "\"";
+        }
+
+        if (std::filesystem::exists(cpp_file))
+        {
+            std::cout << "Abriendo archivo de implementación: " << cpp_file << std::endl;
+            command += " \"" + cpp_file.string() + "\"";
+        }
+
+        if (std::system(command.c_str()) != 0)
+        {
+            std::cerr << "Error al abrir archivos en VSCode." << std::endl;
+        }
     }
-
-    if (std::filesystem::exists(cpp_file))
+    catch (const std::exception &e)
     {
-        std::cout << "Abriendo archivo de implementación: " << cpp_file << std::endl;
-        command += " \"" + cpp_file.string() + "\"";
-    }
-
-    if (std::system(command.c_str()) != 0)
-    {
-        std::cerr << "Error al abrir archivos en VSCode." << std::endl;
+        std::cerr << e.what() << '\n';
     }
 }
 
-void FilesUI::create_script_files(const std::string &script_name)
+void FilesUI::create_script_files(const std::string &script_name, EditorConfigs *configs)
 {
+    // Verificación de puntero nulo
+    if (!configs)
+    {
+        std::cerr << "Error: configs es nulo." << std::endl;
+        return;
+    }
+
     std::string header_file = FileManager::get_execute_path() + configs->current_proyect + "/clscpp/" + script_name + ".h";
     std::string source_file = FileManager::get_execute_path() + configs->current_proyect + "/clscpp/" + script_name + ".cpp";
 
@@ -136,7 +158,6 @@ void FilesUI::create_script_files(const std::string &script_name)
     std::ofstream header(header_file);
     if (header.is_open())
     {
-
         header << "#pragma once\n";
         header << "#include <GarinNatives.h>\n\n";
         header << "#include <GarinGraphics.h>\n\n";
@@ -152,6 +173,11 @@ void FilesUI::create_script_files(const std::string &script_name)
         header << "\n";
         header << "GARINCLASS(" + script_name + ")";
         header.close();
+    }
+    else
+    {
+        std::cerr << "Error al crear el archivo de cabecera: " << header_file << std::endl;
+        return;
     }
 
     // Crear archivo .cpp
@@ -169,5 +195,10 @@ void FilesUI::create_script_files(const std::string &script_name)
         source << "    // Lógica de actualización\n";
         source << "}\n";
         source.close();
+    }
+    else
+    {
+        std::cerr << "Error al crear el archivo de implementación: " << source_file << std::endl;
+        return;
     }
 }

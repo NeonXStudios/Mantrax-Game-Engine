@@ -11,6 +11,9 @@
 #include "GScript.h"
 #include "GMaterial.h"
 #include "GCharacter.h"
+#include "GCaster.h"
+#include <GAudio.h>
+#include <AudioManager.h>
 #include <openxr/openxr.h>
 #include <openxr/openxr_platform.h>
 #include <vr.h>

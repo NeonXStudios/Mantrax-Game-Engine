@@ -3,6 +3,16 @@
 #include <GarinMaths.h>
 #include <PhysicsEngine.h>
 
+namespace GBodySpace
+{
+    enum force_mode
+    {
+        Impulse,
+        Velocity,
+        Acceleration
+    };
+};
+
 class GBody : public Component
 {
 public:
@@ -36,7 +46,8 @@ public:
     void defines() override;
     void init() override;
     void update() override;
-    void clean() override;
+
+    void add_impulse(glm::vec3 direction, GBodySpace::force_mode mode);
 
     glm::vec3 get_body_position();
     glm::quat get_body_rotation();

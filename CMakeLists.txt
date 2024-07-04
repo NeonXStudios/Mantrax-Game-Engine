@@ -21,6 +21,7 @@ add_compile_options(/wd4701)
 # ADD DEFINITIONS
 add_definitions(-DGLM_ENABLE_EXPERIMENTAL -D_DEBUG -D_CRT_SECURE_NO_WARNINGS -DWin32_LEAN_AND_MEAN)
 
+
 # GARIN-ENGINE MAINS CPP
 file(GLOB SOURCES
     "garin-engine/src/*.cpp"
@@ -33,6 +34,7 @@ file(GLOB SOURCES
     "garin-graphics/src/*.cpp"
     "garin-maths/src/*.cpp"
     "garin-physics/src/*.cpp"
+    "garin-audio/src/*.cpp"
     "garin-dll/projects/test/clscpp/*.cpp"
 )
 
@@ -50,6 +52,7 @@ target_include_directories(${project_name} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-maths/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-physics/includes/physx
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-physics/includes/
+    ${CMAKE_CURRENT_SOURCE_DIR}/garin-audio/includes/
 )
 
 # GARIN-ENGINE LIBS PATH
@@ -62,11 +65,11 @@ file(GLOB LIBRARIES
     "garin-graphics/libs/*.lib"
     "garin-maths/libs/*.lib"
     "garin-physics/libs/*.lib"
+    "garin-audio/libs/*.lib"
 )
 
 # Define la ubicación de los DLLs
 file(GLOB DLLS "garin-physics/libs/*.dll")
-
 
 foreach(dll ${DLLS})
     add_custom_command(TARGET ${project_name} POST_BUILD
@@ -83,21 +86,21 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     add_compile_options(/GR)
 endif()
 
-
 # Define la carpeta de salida
 set(OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Debug)
 
-# Copiar directorios específicos y su contenido
-add_custom_command(TARGET ${project_name} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/ ${OUTPUT_DIRECTORY}
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/projects ${OUTPUT_DIRECTORY}/projects
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/data ${OUTPUT_DIRECTORY}/data
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/assets ${OUTPUT_DIRECTORY}/assets
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/garin-data/icons ${OUTPUT_DIRECTORY}/icons
-    COMMENT "Copying directories (projects, data, assets) to ${OUTPUT_DIRECTORY}"
-)
+# Función para copiar un directorio si no existe
+function(copy_directory_if_not_exists src_dir dst_dir)
+    add_custom_command(TARGET ${project_name} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${dst_dir}
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${src_dir} ${dst_dir}
+        COMMAND ${CMAKE_COMMAND} -E echo "Copying ${src_dir} to ${dst_dir}"
+        COMMENT "Checking and copying ${src_dir} to ${dst_dir} if it does not exist")
+endfunction()
+
+# Copiar directorios específicos y su contenido si no existen
+copy_directory_if_not_exists(${CMAKE_CURRENT_SOURCE_DIR}/garin-dll ${OUTPUT_DIRECTORY})
+copy_directory_if_not_exists(${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/projects ${OUTPUT_DIRECTORY}/projects)
+copy_directory_if_not_exists(${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/data ${OUTPUT_DIRECTORY}/data)
+copy_directory_if_not_exists(${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/assets ${OUTPUT_DIRECTORY}/assets)
+copy_directory_if_not_exists(${CMAKE_CURRENT_SOURCE_DIR}/garin-data/icons ${OUTPUT_DIRECTORY}/icons)

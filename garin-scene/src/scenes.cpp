@@ -13,14 +13,24 @@ void scenes::init()
 
 void scenes::update(float delta_time)
 {
-    physic_world->update_world_physics();
-    for (Entity *ent : objects_worlds)
+    if (!unload_scene)
     {
-        ent->update();
-    }
+        try
+        {
+            physic_world->update_world_physics();
+            for (Entity *ent : objects_worlds)
+            {
+                ent->update();
+            }
 
-    // VIRTUAL UPDATE
-    on_update(delta_time);
+            // VIRTUAL UPDATE
+            on_update(delta_time);
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+    }
 }
 
 Entity *scenes::make_entity()
@@ -77,21 +87,28 @@ void scenes::load_scene(std::string scene_name_new)
 {
     try
     {
+        unload_scene = true;
+
         if (physic_world == nullptr)
         {
             physic_world = new PhysicsEngine();
         }
-        else
+
+        physic_world->delete_phys_world();
+
+        try
         {
-            physic_world->delete_phys_world();
+            for (Entity *ent : objects_worlds)
+            {
+                ent->ClearAllComponentes();
+            }
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << e.what() << '\n';
         }
 
         physic_world->start_world_physics();
-
-        for (Entity *ent : objects_worlds)
-        {
-            ent->ClearAllComponentes();
-        }
 
         objects_worlds.clear();
         scene_name = scene_name_new;
@@ -194,6 +211,7 @@ void scenes::load_scene(std::string scene_name_new)
             }
         }
 
+        unload_scene = false;
         std::cout << "Loaded Scene: " << scene_name_new << std::endl;
     }
     catch (const std::exception &e)

@@ -21,6 +21,7 @@
 #include <any>
 #include <stdexcept>
 #include <optional>
+#include <stdexcept>
 
 #ifdef byte
 #undef byte

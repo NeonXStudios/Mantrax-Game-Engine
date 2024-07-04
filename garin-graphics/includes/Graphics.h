@@ -16,6 +16,8 @@
 #include <AppSettings.h>
 #endif
 
+#include <AudioManager.h>
+
 using namespace std;
 
 class scenes;
@@ -42,12 +44,7 @@ public:
 
     static Graphics *graphics;
     static RenderGraphics *render_graphics;
-
-    int start_graphics(string window_name, int width, int height, bool vsync, scenes *game);
-    bool is_running();
-
-    void render_loop();
-    void update_loop();
+    AudioManager *audio_manager;
 
     // GRAPHICS SETTINGS
     static void set_vsync(bool vsync_active);
@@ -64,6 +61,12 @@ public:
     static Camera *get_main_camera();
     static scenes *get_current_scene();
     static unsigned int get_render();
+    int start_graphics(string window_name, int width, int height, bool vsync, scenes *game);
+    bool is_running();
+
+    void render_loop();
+    void update_loop();
     void setupRenderTexture(int width, int height);
     void renderToTexture();
+    void setWindowIcon(GLFWwindow *window, const char *iconPath);
 };

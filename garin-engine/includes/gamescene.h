@@ -17,6 +17,7 @@
 
 #include <TerrainGenerator.h>
 #include <IconsManager.h>
+#include <GDGizmos.h>
 
 class Drawer;
 class Camera;
@@ -53,6 +54,8 @@ public:
     MenuUI *menuui;
     UINotification *notify;
     IconsManager *icons;
+
+    GDGizmos *gizmos;
 
     void purpledark();
     void embraceTheDarkness();

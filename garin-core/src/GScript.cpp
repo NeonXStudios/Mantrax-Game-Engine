@@ -5,7 +5,10 @@ void GScript::init()
     behaviour = GameBehaviourFactory::instance().create_instance_by_name(ClassName);
 
     if (behaviour != nullptr)
+    {
+        behaviour.get()->self = entity;
         behaviour.get()->on_init();
+    }
 }
 
 void GScript::update()

@@ -42,6 +42,8 @@ int Graphics::start_graphics(std::string window_name, int width, int height, boo
         return -1;
     }
 
+    setWindowIcon(window, "icons/EngineIcon_2.png");
+
     glfwMakeContextCurrent(window);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -55,6 +57,9 @@ int Graphics::start_graphics(std::string window_name, int width, int height, boo
     glEnable(GL_DEPTH_TEST);
 
     // run_scene->on_start();
+    audio_manager = new AudioManager();
+    audio_manager->create();
+
     run_scene->init();
 
     DebugGame::init_console();
@@ -290,4 +295,24 @@ void Graphics::renderToTexture()
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
     Graphics::run_scene->draw_ui();
+}
+
+void Graphics::setWindowIcon(GLFWwindow *window, const char *iconPath)
+{
+    int width, height, channels;
+    unsigned char *pixels = stbi_load(iconPath, &width, &height, &channels, 4);
+    if (!pixels)
+    {
+        std::cerr << "Failed to load icon image: " << iconPath << std::endl;
+        return;
+    }
+
+    GLFWimage icon;
+    icon.width = width;
+    icon.height = height;
+    icon.pixels = pixels;
+
+    glfwSetWindowIcon(window, 1, &icon);
+
+    stbi_image_free(pixels);
 }

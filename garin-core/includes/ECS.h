@@ -317,7 +317,8 @@ public:
 				return *derived;
 			}
 		}
-		throw std::runtime_error("Component not found");
+
+		throw std::runtime_error(std::string("Component not found: ") + typeid(T).name());
 	}
 
 	template <typename T>
