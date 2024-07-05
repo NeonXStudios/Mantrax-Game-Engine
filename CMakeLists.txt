@@ -104,3 +104,4 @@ copy_directory_if_not_exists(${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/projects ${OU
 copy_directory_if_not_exists(${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/data ${OUTPUT_DIRECTORY}/data)
 copy_directory_if_not_exists(${CMAKE_CURRENT_SOURCE_DIR}/garin-dll/assets ${OUTPUT_DIRECTORY}/assets)
 copy_directory_if_not_exists(${CMAKE_CURRENT_SOURCE_DIR}/garin-data/icons ${OUTPUT_DIRECTORY}/icons)
+copy_directory_if_not_exists(${CMAKE_CURRENT_SOURCE_DIR}/garin-data/packages ${OUTPUT_DIRECTORY}/packages)

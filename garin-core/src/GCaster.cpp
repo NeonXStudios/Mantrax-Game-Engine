@@ -96,7 +96,6 @@ bool GCaster::RayCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length,
     {
         std::cout << "Raycast did not hit anything with filter." << std::endl;
 
-        // Debugging: Check all shapes in the scene
         std::cout << "Debugging all shapes in the scene:" << std::endl;
         for (PxU32 i = 0; i < physicsWorld->mScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC); ++i)
         {
@@ -122,7 +121,6 @@ bool GCaster::RayCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length,
                 std::cout << "Shape Name: " << (shapeName ? shapeName : "Unnamed") << std::endl;
                 std::cout << "Layer Mask: " << shapeFilterData.word0 << ", " << shapeFilterData.word1 << ", " << shapeFilterData.word2 << ", " << shapeFilterData.word3 << std::endl;
 
-                // Print shape geometry type and size
                 PxGeometryHolder geometryHolder = shape->getGeometry();
                 switch (geometryHolder.getType())
                 {
@@ -140,7 +138,6 @@ bool GCaster::RayCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length,
                     std::cout << "Radius: " << sphereGeometry.radius << std::endl;
                     break;
                 }
-                // Add cases for other geometry types if necessary
                 default:
                     std::cout << "Shape Type: Other" << std::endl;
                     break;

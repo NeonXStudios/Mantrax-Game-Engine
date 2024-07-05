@@ -17,6 +17,7 @@
 #endif
 
 #include <AudioManager.h>
+#include <DynamicLibLoader.h>
 
 using namespace std;
 
@@ -45,6 +46,8 @@ public:
     static Graphics *graphics;
     static RenderGraphics *render_graphics;
     AudioManager *audio_manager;
+
+    std::unique_ptr<DynamicLibLoader> engine_libs_loader;
 
     // GRAPHICS SETTINGS
     static void set_vsync(bool vsync_active);

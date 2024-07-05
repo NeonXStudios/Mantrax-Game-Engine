@@ -72,6 +72,15 @@ void MainBarUI::draw(Entity *owner)
             }
             ImGui::EndMenu();
         }
+
+        if (ImGui::BeginMenu("Engine"))
+        {
+            if (ImGui::MenuItem("Recompile Scripts"))
+            {
+                Graphics::graphics->engine_libs_loader.get()->load_components();
+            }
+            ImGui::EndMenu();
+        }
     }
 
     ImGui::SameLine((ImGui::GetWindowWidth() / 2) - 16);

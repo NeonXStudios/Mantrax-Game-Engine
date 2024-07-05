@@ -56,6 +56,9 @@ int Graphics::start_graphics(std::string window_name, int width, int height, boo
 
     glEnable(GL_DEPTH_TEST);
 
+    engine_libs_loader = std::make_unique<DynamicLibLoader>();
+    engine_libs_loader.get()->load_components();
+
     // run_scene->on_start();
     audio_manager = new AudioManager();
     audio_manager->create();
