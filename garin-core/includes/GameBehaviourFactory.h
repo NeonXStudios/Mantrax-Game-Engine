@@ -83,6 +83,11 @@ public:
         }
     }
 
+    void reload_components()
+    {
+        creators.clear();
+    }
+
 private:
     std::unordered_map<std::string, Creator> creators;
     std::unordered_map<std::string, Creator_global> creators_global;

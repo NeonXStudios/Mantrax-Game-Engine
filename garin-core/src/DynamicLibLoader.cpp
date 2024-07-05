@@ -7,6 +7,11 @@ void DynamicLibLoader::load_components()
 {
     try
     {
+        if (loader)
+        {
+            loader.release();
+            loader = nullptr;
+        }
 
         loader = std::make_unique<Loader>();
         auto copy_file = [](const std::filesystem::path &from, const std::filesystem::path &to)
@@ -18,8 +23,6 @@ void DynamicLibLoader::load_components()
 
             dst << src.rdbuf();
         };
-
-        reset_component_registry();
 
         loader->free();
 

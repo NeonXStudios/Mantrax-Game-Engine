@@ -5,6 +5,7 @@
 #include <GarinGraphics.h>
 #include <GarinEvents.h>
 #include <GarinComponents.h>
+#include <GarinBehaviours.h>
 
 void MainBarUI::draw(Entity *owner)
 {
@@ -77,6 +78,7 @@ void MainBarUI::draw(Entity *owner)
         {
             if (ImGui::MenuItem("Recompile Scripts"))
             {
+                GameBehaviourFactory::instance().reload_components();
                 Graphics::graphics->engine_libs_loader.get()->load_components();
             }
             ImGui::EndMenu();
