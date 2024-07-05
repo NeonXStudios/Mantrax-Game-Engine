@@ -18,6 +18,7 @@
 
 #include <AudioManager.h>
 #include <DynamicLibLoader.h>
+#include <GameBehaviourRunner.h>
 
 using namespace std;
 
@@ -46,6 +47,7 @@ public:
     static Graphics *graphics;
     static RenderGraphics *render_graphics;
     AudioManager *audio_manager;
+    GameBehaviourRunner *runner;
 
     std::unique_ptr<DynamicLibLoader> engine_libs_loader;
 

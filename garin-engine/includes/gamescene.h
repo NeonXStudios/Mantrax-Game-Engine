@@ -42,7 +42,6 @@ public:
 
     Entity *select_obj;
     EditorConfigs *configs = new EditorConfigs();
-    GameBehaviourRunner *runner;
 
     InspectorUI *inspector;
     MainBarUI *mainbar;

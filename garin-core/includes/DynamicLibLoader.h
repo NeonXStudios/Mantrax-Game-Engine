@@ -11,35 +11,37 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
+#include "dll.h"
+#include "types.h"
 
 class Component;
 
 class DynamicLibLoader
 {
 public:
-    std::unique_ptr<Loader> loader = std::make_unique<Loader>();
-    std::unordered_map<std::string, std::function<std::shared_ptr<Component>()>> factories;
+    std::unordered_map<std::string, Function<Shared<Component>()>> factories;
+    std::unique_ptr<Loader> loader;
     uint64_t loader_dll_stamp;
-
-    std::shared_ptr<Component> create_component(const std::string &name) const;
-    void register_component(const std::string &name, std::function<std::shared_ptr<Component>()> factory);
 
     void load_components();
     void check_components_reload();
     void reset_component_registry();
 
-    template <typename T>
-    void register_component_type(const std::string &name)
-    {
-        register_component(
-            name,
-            [name]()
-            {
-                std::shared_ptr<Component> c = std::make_shared<T>();
-                c->_name = name;
-                return c;
-            });
-    }
+    // GARIN_API void register_component(const std::string &name, Function<Shared<Component>()> factory);
+    GARIN_API Shared<Component> create_component(const std::string &name) const;
+
+    // template <typename T>
+    // void register_component(const std::string &name)
+    // {
+    //     register_component(
+    //         name,
+    //         [name]()
+    //         {
+    //             Shared<Component> c = new_shared<T>();
+    //             c->_name = name;
+    //             return c;
+    //         });
+    // }
 };
 
 #endif // ENGINELIBSLOADER_H

@@ -31,12 +31,12 @@ bool GCaster::RayCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length,
     PxQueryFilterData filterData;
     filterData.data.word0 = raycastLayerMask;
 
-    std::cout << "Raycast Layer Mask: " << raycastLayerMask << std::endl;
+    // std::cout << "Raycast Layer Mask: " << raycastLayerMask << std::endl;
 
-    std::cout << "Starting raycast..." << std::endl;
-    std::cout << "Ray Origin: (" << RayOrigin.x << ", " << RayOrigin.y << ", " << RayOrigin.z << ")" << std::endl;
-    std::cout << "Ray Direction: (" << RayDirection.x << ", " << RayDirection.y << ", " << RayDirection.z << ")" << std::endl;
-    std::cout << "Ray Length: " << Length << std::endl;
+    // std::cout << "Starting raycast..." << std::endl;
+    // std::cout << "Ray Origin: (" << RayOrigin.x << ", " << RayOrigin.y << ", " << RayOrigin.z << ")" << std::endl;
+    // std::cout << "Ray Direction: (" << RayDirection.x << ", " << RayDirection.y << ", " << RayDirection.z << ")" << std::endl;
+    // std::cout << "Ray Length: " << Length << std::endl;
 
     bool hitCasting = physicsWorld->mScene->raycast(origin, dir, Length, hitBuffer, hitFlags, filterData);
 
@@ -92,59 +92,59 @@ bool GCaster::RayCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length,
             }
         }
     }
-    else
-    {
-        std::cout << "Raycast did not hit anything with filter." << std::endl;
+    // else
+    // {
+    //     std::cout << "Raycast did not hit anything with filter." << std::endl;
 
-        std::cout << "Debugging all shapes in the scene:" << std::endl;
-        for (PxU32 i = 0; i < physicsWorld->mScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC); ++i)
-        {
-            PxActor *actor;
-            physicsWorld->mScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC, &actor, 1, i);
-            PxRigidActor *rigidActor = static_cast<PxRigidActor *>(actor);
+    //     std::cout << "Debugging all shapes in the scene:" << std::endl;
+    //     for (PxU32 i = 0; i < physicsWorld->mScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC); ++i)
+    //     {
+    //         PxActor *actor;
+    //         physicsWorld->mScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC, &actor, 1, i);
+    //         PxRigidActor *rigidActor = static_cast<PxRigidActor *>(actor);
 
-            if (!rigidActor)
-                continue;
+    //         if (!rigidActor)
+    //             continue;
 
-            PxU32 numShapes = rigidActor->getNbShapes();
-            std::vector<PxShape *> shapes(numShapes);
-            rigidActor->getShapes(shapes.data(), numShapes);
+    //         PxU32 numShapes = rigidActor->getNbShapes();
+    //         std::vector<PxShape *> shapes(numShapes);
+    //         rigidActor->getShapes(shapes.data(), numShapes);
 
-            for (PxShape *shape : shapes)
-            {
-                if (!shape)
-                    continue;
+    //         for (PxShape *shape : shapes)
+    //         {
+    //             if (!shape)
+    //                 continue;
 
-                PxFilterData shapeFilterData = shape->getSimulationFilterData();
-                const char *shapeName = shape->getName();
+    //             PxFilterData shapeFilterData = shape->getSimulationFilterData();
+    //             const char *shapeName = shape->getName();
 
-                std::cout << "Shape Name: " << (shapeName ? shapeName : "Unnamed") << std::endl;
-                std::cout << "Layer Mask: " << shapeFilterData.word0 << ", " << shapeFilterData.word1 << ", " << shapeFilterData.word2 << ", " << shapeFilterData.word3 << std::endl;
+    //             std::cout << "Shape Name: " << (shapeName ? shapeName : "Unnamed") << std::endl;
+    //             std::cout << "Layer Mask: " << shapeFilterData.word0 << ", " << shapeFilterData.word1 << ", " << shapeFilterData.word2 << ", " << shapeFilterData.word3 << std::endl;
 
-                PxGeometryHolder geometryHolder = shape->getGeometry();
-                switch (geometryHolder.getType())
-                {
-                case PxGeometryType::eBOX:
-                {
-                    PxBoxGeometry boxGeometry = geometryHolder.box();
-                    std::cout << "Shape Type: Box" << std::endl;
-                    std::cout << "Dimensions: (" << boxGeometry.halfExtents.x * 2 << ", " << boxGeometry.halfExtents.y * 2 << ", " << boxGeometry.halfExtents.z * 2 << ")" << std::endl;
-                    break;
-                }
-                case PxGeometryType::eSPHERE:
-                {
-                    PxSphereGeometry sphereGeometry = geometryHolder.sphere();
-                    std::cout << "Shape Type: Sphere" << std::endl;
-                    std::cout << "Radius: " << sphereGeometry.radius << std::endl;
-                    break;
-                }
-                default:
-                    std::cout << "Shape Type: Other" << std::endl;
-                    break;
-                }
-            }
-        }
-    }
+    //             PxGeometryHolder geometryHolder = shape->getGeometry();
+    //             switch (geometryHolder.getType())
+    //             {
+    //             case PxGeometryType::eBOX:
+    //             {
+    //                 PxBoxGeometry boxGeometry = geometryHolder.box();
+    //                 std::cout << "Shape Type: Box" << std::endl;
+    //                 std::cout << "Dimensions: (" << boxGeometry.halfExtents.x * 2 << ", " << boxGeometry.halfExtents.y * 2 << ", " << boxGeometry.halfExtents.z * 2 << ")" << std::endl;
+    //                 break;
+    //             }
+    //             case PxGeometryType::eSPHERE:
+    //             {
+    //                 PxSphereGeometry sphereGeometry = geometryHolder.sphere();
+    //                 std::cout << "Shape Type: Sphere" << std::endl;
+    //                 std::cout << "Radius: " << sphereGeometry.radius << std::endl;
+    //                 break;
+    //             }
+    //             default:
+    //                 std::cout << "Shape Type: Other" << std::endl;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    // }
 
     return false;
 }

@@ -138,8 +138,6 @@ void gamescene::purpledark()
 
 void gamescene::on_start()
 {
-
-    runner = new GameBehaviourRunner();
     configs->load_config();
 
     Graphics::get_current_scene()->load_scene(configs->current_scene);
@@ -169,10 +167,6 @@ void gamescene::on_start()
 
     string info = "OPEN FILE: " + configs->current_scene;
     notify->AddNotification(info, 5.0f);
-
-    runner = new GameBehaviourRunner();
-
-    runner->on_init();
 
     DebugGame::restore_console();
 }
@@ -211,7 +205,6 @@ void gamescene::on_edition_mode(float delta_time)
 
 void gamescene::on_update(float delta_time)
 {
-    runner->on_tick();
 }
 
 void gamescene::on_draw()

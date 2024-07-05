@@ -1,15 +1,20 @@
 #include "../includes/DynamicLibLoader.h"
 #include "ECS.h"
+#include <GarinComponents.h>
+#include <GarinBehaviours.h>
 
 void DynamicLibLoader::load_components()
 {
     try
     {
-        std::cout << "Starting Dynamic Libs Load" << std::endl;
+
+        loader = std::make_unique<Loader>();
         auto copy_file = [](const std::filesystem::path &from, const std::filesystem::path &to)
         {
             std::ifstream src(from, std::ios::binary);
             std::ofstream dst(to, std::ios::binary);
+
+            dst.clear();
 
             dst << src.rdbuf();
         };
@@ -23,7 +28,6 @@ void DynamicLibLoader::load_components()
 
         if (!std::filesystem::exists(from_dll_path))
         {
-            std::cout << "DLL NOT EXIST IN PATH: " << from_dll_path << std::endl;
             return;
         }
 
@@ -31,15 +35,19 @@ void DynamicLibLoader::load_components()
 
         loader->load(dll_path.c_str());
 
-        typedef void (*FuncType)(Component *);
+        typedef void (*FuncType)(GameBehaviourFactory *);
 
-        auto func = (FuncType)loader->get_function<FuncType>("loader");
+        auto func = (FuncType)loader->get_function<FuncType>("REGISTER_COMPONENTS");
 
         if (!func)
         {
             std::cout << "Failed to load components" << std::endl;
             return;
         }
+
+        GameBehaviourFactory *factoryPtr = &GameBehaviourFactory::instance();
+
+        func(factoryPtr);
 
         loader_dll_stamp = std::filesystem::last_write_time(from_dll_path).time_since_epoch().count();
 
@@ -64,10 +72,10 @@ void DynamicLibLoader::check_components_reload()
     }
 }
 
-void DynamicLibLoader::register_component(const std::string &name, std::function<std::shared_ptr<Component>()> factory)
-{
-    factories[name] = factory;
-}
+// void DynamicLibLoader::register_component(const std::string &name, std::function<std::shared_ptr<Component>()> factory)
+// {
+//     factories[name] = factory;
+// }
 
 std::shared_ptr<Component> DynamicLibLoader::create_component(const std::string &name) const
 {

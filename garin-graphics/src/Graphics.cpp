@@ -21,6 +21,7 @@ unsigned int Graphics::texture = 0;
 int Graphics::start_graphics(std::string window_name, int width, int height, bool vsync, scenes *game)
 {
     Graphics::run_scene = game;
+    runner = new GameBehaviourRunner();
 
     if (!glfwInit())
     {
@@ -63,6 +64,7 @@ int Graphics::start_graphics(std::string window_name, int width, int height, boo
     audio_manager = new AudioManager();
     audio_manager->create();
 
+    runner->on_init();
     run_scene->init();
 
     DebugGame::init_console();
@@ -144,6 +146,7 @@ void Graphics::render_loop()
             if (AppSettings::is_playing)
             {
                 Graphics::run_scene->update(Timer::delta_time);
+                runner->on_tick();
             }
             else
             {

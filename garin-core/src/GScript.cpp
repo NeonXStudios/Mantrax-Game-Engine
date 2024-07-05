@@ -1,13 +1,20 @@
 #include "../includes/GScript.h"
 
+void GScript::defines()
+{
+    GVAR(ClassName, "TestDllImport", std::string);
+}
+
 void GScript::init()
 {
-    behaviour = GameBehaviourFactory::instance().create_instance_by_name(ClassName);
+    behaviour = GameBehaviourFactory::instance().create_instance_by_name(GETVAR(ClassName, std::string));
 
     if (behaviour != nullptr)
     {
         behaviour.get()->self = entity;
         behaviour.get()->on_init();
+
+        std::cout << "Starting script class: " << GETVAR(ClassName, std::string) << std::endl;
     }
 }
 

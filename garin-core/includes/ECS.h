@@ -42,6 +42,7 @@ public:
 	std::map<std::string, Variable> variableMap;
 
 	int component_id;
+	std::string _name;
 	Entity *entity = nullptr;
 	TransformComponent *transform = nullptr;
 	bool enabled = true;

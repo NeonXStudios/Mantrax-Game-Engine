@@ -251,6 +251,15 @@ public:
                             cpm->variableMap[key] = result.value();
                         }
                     }
+                    else if (key == "ClassName")
+                    {
+
+                        auto result = EditorGUI::Drag_Objetive("SCRIPTCLASS");
+                        if (result.has_value())
+                        {
+                            cpm->variableMap[key] = result.value();
+                        }
+                    }
                 }
                 else if (value.type() == typeid(float))
                 {

@@ -1,7 +1,7 @@
 #include "GarinGameCore.h"
-#include <iostream>
+#include "TestDllImport.h"
+#include <GarinBehaviours.h>
 
-void hello()
+REGISTER_CLASS
 {
-    std::cout << "OU YEAH" << std::endl;
 }

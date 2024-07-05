@@ -7,8 +7,8 @@ class GScript : public Component
 {
 public:
     std::unique_ptr<GameBehaviour> behaviour;
-    std::string ClassName = "ExampleClass";
 
+    void defines() override;
     void init() override;
     void update() override;
     void clean() override;
