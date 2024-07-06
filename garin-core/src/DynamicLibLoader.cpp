@@ -5,61 +5,48 @@
 
 void DynamicLibLoader::load_components()
 {
-    try
+    auto copy_file = [](const std::filesystem::path &from, const std::filesystem::path &to)
     {
-        if (loader)
-        {
-            loader.release();
-            loader = nullptr;
-        }
+        std::ifstream src(from, std::ios::binary);
+        std::ofstream dst(to, std::ios::binary);
 
-        loader = std::make_unique<Loader>();
-        auto copy_file = [](const std::filesystem::path &from, const std::filesystem::path &to)
-        {
-            std::ifstream src(from, std::ios::binary);
-            std::ofstream dst(to, std::ios::binary);
+        dst.clear();
 
-            dst.clear();
+        dst << src.rdbuf();
+    };
+    std::cout << "Triying reload dll" << std::endl;
+    loader->free();
 
-            dst << src.rdbuf();
-        };
+    auto from_dll_path = FileManager::get_execute_path() + "packages/GarinGameCore.dll";
+    auto dll_path = FileManager::get_execute_path() + "GarinGameCore.dll";
 
-        loader->free();
-
-        auto from_dll_path = FileManager::get_execute_path() + "packages/GarinGameCore.dll";
-        auto dll_path = FileManager::get_execute_path() + "GarinGameCore.dll";
-
-        if (!std::filesystem::exists(from_dll_path))
-        {
-            return;
-        }
-
-        copy_file(from_dll_path, dll_path);
-
-        loader->load(dll_path.c_str());
-
-        typedef void (*FuncType)(GameBehaviourFactory *);
-
-        auto func = (FuncType)loader->get_function<FuncType>("REGISTER_COMPONENTS");
-
-        if (!func)
-        {
-            std::cout << "Failed to load components" << std::endl;
-            return;
-        }
-
-        GameBehaviourFactory *factoryPtr = &GameBehaviourFactory::instance();
-
-        func(factoryPtr);
-
-        loader_dll_stamp = std::filesystem::last_write_time(from_dll_path).time_since_epoch().count();
-
-        std::cout << "Components reloaded" << std::endl;
-    }
-    catch (const std::exception &e)
+    if (!std::filesystem::exists(from_dll_path))
     {
-        std::cerr << e.what() << '\n';
+        return;
     }
+
+    copy_file(from_dll_path, dll_path);
+
+    std::cout << "Triying load dll" << std::endl;
+    loader->load(dll_path.c_str());
+
+    typedef void (*FuncType)(GameBehaviourFactory *);
+
+    auto func = (FuncType)loader->get_function<FuncType>("REGISTER_COMPONENTS");
+
+    if (!func)
+    {
+        std::cout << "Failed to load components" << std::endl;
+        return;
+    }
+
+    GameBehaviourFactory *factoryPtr = &GameBehaviourFactory::instance();
+
+    func(factoryPtr);
+
+    loader_dll_stamp = std::filesystem::last_write_time(from_dll_path).time_since_epoch().count();
+
+    std::cout << "Components reloaded" << std::endl;
 }
 
 void DynamicLibLoader::check_components_reload()

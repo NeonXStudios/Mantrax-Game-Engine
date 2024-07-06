@@ -1,0 +1,3 @@
+C:/Proyects/GarinEngine/garin-data/packages/CMakeFiles/GarinGameCore.dir
+C:/Proyects/GarinEngine/garin-data/packages/CMakeFiles/ALL_BUILD.dir
+C:/Proyects/GarinEngine/garin-data/packages/CMakeFiles/ZERO_CHECK.dir

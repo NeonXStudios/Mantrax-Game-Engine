@@ -20,6 +20,7 @@ unsigned int Graphics::texture = 0;
 
 int Graphics::start_graphics(std::string window_name, int width, int height, bool vsync, scenes *game)
 {
+    Graphics::graphics = this;
     Graphics::run_scene = game;
     runner = new GameBehaviourRunner();
 

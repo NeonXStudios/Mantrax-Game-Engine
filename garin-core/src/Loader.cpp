@@ -1,4 +1,5 @@
 #include "../includes/Loader.h"
+#include <iostream>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -23,6 +24,7 @@ void Loader::load(const char *path)
 void Loader::free()
 {
 #if defined(_WIN32) || defined(_WIN64)
+    std::cout << "DLL FREE" << std::endl;
     FreeLibrary((HMODULE)handle);
 #elif defined(__linux__)
     dlclose(handle);

@@ -10,7 +10,6 @@ set(SOURCES
 )
 
 # Directorios de inclusión
-include_directories(src)
 
 # Añadir la biblioteca estática
 add_library(GarinGameCore SHARED ${SOURCES})
@@ -29,8 +28,6 @@ target_include_directories(GarinGameCore PRIVATE
 )
 
 
-# Vincular la biblioteca estática
-# target_link_libraries(GarinGameCore PRIVATE GarinLibs.lib)
 
 # Definiciones de compilación
 target_compile_definitions(GarinGameCore PRIVATE GARINGAMECORE_EXPORTS)

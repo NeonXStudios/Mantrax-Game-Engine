@@ -23,6 +23,11 @@ public:
     std::unique_ptr<Loader> loader;
     uint64_t loader_dll_stamp;
 
+    DynamicLibLoader()
+    {
+        loader = std::make_unique<Loader>();
+    }
+
     void load_components();
     void check_components_reload();
     void reset_component_registry();

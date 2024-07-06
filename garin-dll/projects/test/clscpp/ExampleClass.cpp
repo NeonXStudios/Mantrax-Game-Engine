@@ -1,4 +1,4 @@
-#include "ExampleClass.h"
+#include "ExampleClass.hpp"
 
 void ExampleClass::on_init()
 {
@@ -58,5 +58,5 @@ void ExampleClass::on_tick()
 
     Graphics::get_main_camera()->cameraPosition = glm::mix(Graphics::get_main_camera()->cameraPosition, self->get_transform()->Position, interpolationSpeed * deltaTime);
 
-    // std::cout << "OBJETOS EN ESCENA: " << Graphics::get_current_scene()->objects_worlds.size() << std::endl;
+    // // std::cout << "OBJETOS EN ESCENA: " << Graphics::get_current_scene()->objects_worlds.size() << std::endl;
 }

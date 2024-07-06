@@ -1,6 +1,11 @@
 #include "../includes/GCollision.h"
 #include <GarinGraphics.h>
 
+void GCollision::defines()
+{
+    GVAR(IsTrigger, false, bool);
+}
+
 void GCollision::init()
 {
     if (Graphics::get_current_scene()->physic_world != nullptr && Graphics::get_current_scene()->physic_world->mScene != nullptr)
@@ -13,7 +18,7 @@ void GCollision::init()
 
             // Configurar el filtro de capa
             PxFilterData filterData;
-            filterData.word0 = LAYER_0 | LAYER_1; // Asegúrate de que las capas son correctas
+            filterData.word0 = LAYER_0 | LAYER_1;
             filterData.word1 = 0;
             filterData.word2 = 0;
             filterData.word3 = 0;
@@ -23,7 +28,7 @@ void GCollision::init()
             std::cout << "Shape Layer Mask: " << filterData.word0 << ", " << filterData.word1 << ", " << filterData.word2 << ", " << filterData.word3 << std::endl;
             std::cout << "Shape created with size: (" << boxSize.x << ", " << boxSize.y << ", " << boxSize.z << ")" << std::endl;
 
-            if (is_trigger)
+            if (GETVAR(IsTrigger, bool))
             {
                 shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
             }
@@ -59,5 +64,10 @@ void GCollision::update()
 
         // // Imprimir los datos del filtro
         // std::cout << "Shape Update Layer Mask: " << filterData.word0 << ", " << filterData.word1 << ", " << filterData.word2 << ", " << filterData.word3 << std::endl;
+
+        if (GETVAR(IsTrigger, bool))
+        {
+            shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
+        }
     }
 }

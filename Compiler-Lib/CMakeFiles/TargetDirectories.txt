@@ -1,0 +1,4 @@
+C:/Proyects/GarinEngine/Compiler-Lib/CMakeFiles/GarinLibs.dir
+C:/Proyects/GarinEngine/Compiler-Lib/CMakeFiles/INSTALL.dir
+C:/Proyects/GarinEngine/Compiler-Lib/CMakeFiles/ALL_BUILD.dir
+C:/Proyects/GarinEngine/Compiler-Lib/CMakeFiles/ZERO_CHECK.dir

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Proyects\GarinEngine\garin-data\packages\CMakeFiles\43f3850ae5d925ae9175df7ccb4e61ab\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{9EFEFECA-4E2F-3AE8-ACBF-C157B01EB2EE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

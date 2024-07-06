@@ -15,6 +15,7 @@ public:
     PxU32 layerMask2 = 0;
     PxU32 layerMask3 = 0;
 
+    void defines();
     void init() override;
     void update() override;
     void setLayerMask(PxU32 mask0, PxU32 mask1 = 0, PxU32 mask2 = 0, PxU32 mask3 = 0)

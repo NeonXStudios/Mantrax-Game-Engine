@@ -79,7 +79,20 @@ void MainBarUI::draw(Entity *owner)
             if (ImGui::MenuItem("Recompile Scripts"))
             {
                 GameBehaviourFactory::instance().reload_components();
-                Graphics::graphics->engine_libs_loader.get()->load_components();
+
+                if (Graphics::graphics != nullptr)
+                {
+                    if (Graphics::graphics->engine_libs_loader.get() != nullptr)
+                    {
+                        std::cout << "Starting reload components" << std::endl;
+
+                        Graphics::graphics->engine_libs_loader.get()->load_components();
+                    }
+                }
+                else
+                {
+                    std::cout << "Graphics info never assigned" << std::endl;
+                }
             }
             ImGui::EndMenu();
         }

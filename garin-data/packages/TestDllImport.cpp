@@ -3,10 +3,10 @@
 
 void TestDllImport::on_init()
 {
-    std::cout << "Starting from DLL" << std::endl;
+    std::cout << "PINCHE DARIL" << std::endl;
 }
 
 void TestDllImport::on_tick()
 {
-    std::cout << "Hello from DLL" << std::endl;
+    // std::cout << "NO LO SE RICK PARECE FALSO" << std::endl;
 }

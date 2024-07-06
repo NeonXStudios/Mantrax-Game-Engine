@@ -1,0 +1,10 @@
+^C:\PROYECTS\GARINENGINE\GARIN-DATA\PACKAGES\CMAKEFILES\43F3850AE5D925AE9175DF7CCB4E61AB\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Proyects/GarinEngine/garin-data/packages -BC:/Proyects/GarinEngine/garin-data/packages --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Proyects/GarinEngine/garin-data/packages/GarinGameCore.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

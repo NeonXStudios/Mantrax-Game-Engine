@@ -1,4 +1,5 @@
-#include "ExampleGame.h"
+#include "ExampleGame.hpp"
+#include <GarinGraphics.h>
 
 void ExampleGame::on_init()
 {
