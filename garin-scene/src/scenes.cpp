@@ -172,7 +172,6 @@ void scenes::load_scene(std::string scene_name_new)
                     {
                         std::string component_name = cmps[e]["name"];
                         Component *cmpGet = ComponentFactory::add_component(new_object, component_name);
-
                         json data = cmps[e]["varsdata"];
 
                         for (int i = 0; i < data.size(); i++)
@@ -222,6 +221,14 @@ void scenes::load_scene(std::string scene_name_new)
                 new_object_child->get_transform()->parent = new_object_parent->get_transform();
 
                 new_object_parent->get_transform()->childrens.push_back(new_object_child->get_transform());
+            }
+        }
+
+        for (Entity *ent : objects_worlds)
+        {
+            for (Component *comp : ent->GetAllComponent())
+            {
+                comp->init();
             }
         }
 

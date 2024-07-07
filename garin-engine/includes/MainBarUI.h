@@ -1,5 +1,7 @@
 #pragma once
 #include "UIComponent.h"
+#include "../includes/UINotification.h"
+#include <GarinNatives.h>
 
 class MainBarUI : public UIComponent
 {
@@ -38,4 +40,6 @@ public:
             ImGui::EndPopup();
         }
     }
+
+    void recompileAndReloadLibraries();
 };

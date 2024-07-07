@@ -78,21 +78,63 @@ void MainBarUI::draw(Entity *owner)
         {
             if (ImGui::MenuItem("Recompile Scripts"))
             {
-                GameBehaviourFactory::instance().reload_components();
+                std::thread hilo([]()
+                                 { 
+                                    UINotification::AddNotification("Recompiling libraries...", 10.0f);
 
-                if (Graphics::graphics != nullptr)
-                {
-                    if (Graphics::graphics->engine_libs_loader.get() != nullptr)
-                    {
-                        std::cout << "Starting reload components" << std::endl;
+    GameBehaviourFactory::instance().reload_components();
 
-                        Graphics::graphics->engine_libs_loader.get()->load_components();
-                    }
-                }
-                else
-                {
-                    std::cout << "Graphics info never assigned" << std::endl;
-                }
+    UINotification::AddNotification("Compiling libraries (wait for it)...", 10.0f);
+
+    std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/";
+
+    // Formar los comandos
+    std::string cmake_command = "cd /d " + cmake_path + " && cmake -G \"Visual Studio 17 2022\" .";
+    std::string msbuild_command = "cd /d " + cmake_path + " && msbuild GarinGameCore.sln /p:Configuration=Debug";
+
+    // Ejecutar el comando CMake
+    int result = system(cmake_command.c_str());
+
+    if (result == 0)
+    {
+        UINotification::AddNotification("CMake Reloaded...", 10.0f);
+        UINotification::AddNotification("Starting compilation of the libraries (Wait)...", 10.0f);
+
+        // Ejecutar el comando MSBuild
+        int result_build = system(msbuild_command.c_str());
+
+        if (result_build == 0)
+        {
+            UINotification::AddNotification("Successfully compiled libraries...", 10.0f);
+        }
+        else
+        {
+            UINotification::AddNotification("Error during the compilation of the libraries...", 10.0f);
+            std::cerr << "Error during msbuild execution, result code: " << result_build << std::endl;
+        }
+    }
+    else
+    {
+        UINotification::AddNotification("Error during CMake execution...", 10.0f);
+        std::cerr << "Error during cmake execution, result code: " << result << std::endl;
+    }
+
+    if (Graphics::graphics != nullptr)
+    {
+        if (Graphics::graphics->engine_libs_loader.get() != nullptr)
+        {
+            std::cout << "Starting reload components" << std::endl;
+
+            Graphics::graphics->engine_libs_loader.get()->load_components();
+
+            UINotification::AddNotification("Compiled and reloaded libraries...", 3.0f);
+        }
+    }
+    else
+    {
+        std::cout << "Graphics info never assigned" << std::endl;
+    } });
+                hilo.join();
             }
             ImGui::EndMenu();
         }
@@ -122,4 +164,62 @@ void MainBarUI::draw(Entity *owner)
 
     ImGui::EndMainMenuBar();
     ImGui::PopStyleVar();
+}
+
+void MainBarUI::recompileAndReloadLibraries()
+{
+    UINotification::AddNotification("Recompiling libraries...", 10.0f);
+
+    GameBehaviourFactory::instance().reload_components();
+
+    UINotification::AddNotification("Compiling libraries (wait for it)...", 10.0f);
+
+    std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/";
+
+    // Formar los comandos
+    std::string cmake_command = "cd /d " + cmake_path + " && cmake -G \"Visual Studio 17 2022\" .";
+    std::string msbuild_command = "cd /d " + cmake_path + " && msbuild GarinGameCore.sln /p:Configuration=Debug";
+
+    // Ejecutar el comando CMake
+    int result = system(cmake_command.c_str());
+
+    if (result == 0)
+    {
+        UINotification::AddNotification("CMake Reloaded...", 10.0f);
+        UINotification::AddNotification("Starting compilation of the libraries (Wait)...", 10.0f);
+
+        // Ejecutar el comando MSBuild
+        int result_build = system(msbuild_command.c_str());
+
+        if (result_build == 0)
+        {
+            UINotification::AddNotification("Successfully compiled libraries...", 10.0f);
+        }
+        else
+        {
+            UINotification::AddNotification("Error during the compilation of the libraries...", 10.0f);
+            std::cerr << "Error during msbuild execution, result code: " << result_build << std::endl;
+        }
+    }
+    else
+    {
+        UINotification::AddNotification("Error during CMake execution...", 10.0f);
+        std::cerr << "Error during cmake execution, result code: " << result << std::endl;
+    }
+
+    if (Graphics::graphics != nullptr)
+    {
+        if (Graphics::graphics->engine_libs_loader.get() != nullptr)
+        {
+            std::cout << "Starting reload components" << std::endl;
+
+            Graphics::graphics->engine_libs_loader.get()->load_components();
+
+            UINotification::AddNotification("Compiled and reloaded libraries...", 3.0f);
+        }
+    }
+    else
+    {
+        std::cout << "Graphics info never assigned" << std::endl;
+    }
 }

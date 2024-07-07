@@ -1,4 +1,4 @@
-#include "ExampleClass.hpp"
+#include "ExampleClass.h"
 
 void ExampleClass::on_init()
 {
