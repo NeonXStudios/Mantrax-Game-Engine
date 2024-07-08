@@ -16,5 +16,4 @@ ASSIGN_APIS
 {
     ASSIGNAPIS();
     std::cout << "Assigning Graphics API" << std::endl;
-    std::cout << "Object: " << GameCoreManager::current_scene->objects_worlds.size() << std::endl;
 }
