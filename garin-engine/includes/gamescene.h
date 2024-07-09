@@ -34,7 +34,7 @@ class HierarchyUI;
 class MenuUI;
 class UINotification;
 
-class gamescene : public scenes
+class gamescene : public Scene
 {
 public:
     Drawer *drawcube;

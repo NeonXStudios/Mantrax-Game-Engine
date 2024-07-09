@@ -140,7 +140,7 @@ void gamescene::on_start()
 {
     configs->load_config();
 
-    Graphics::get_current_scene()->load_scene(configs->current_scene);
+    SceneManager::GetOpenScene()->load_scene(configs->current_scene);
 
     DebugGame::add_message("GAME SCENE STARTED", DebugGame::logger);
 
@@ -150,8 +150,6 @@ void gamescene::on_start()
     main_camera = camera;
 
     std::cout << "CARPETA DE EJECUCION: " << FileManager::get_execute_path() << std::endl;
-
-    embraceTheDarkness();
 
     inspector = new InspectorUI();
     mainbar = new MainBarUI();
@@ -199,7 +197,7 @@ void gamescene::on_edition_mode(float delta_time)
         camera->Orientation = glm::rotate(camera->Orientation, glm::radians(-InputSystem::get_mouse_x()), camera->GetUp());
     }
 
-    std::string window_name = "Garin Editor - " + Graphics::get_current_scene()->scene_name;
+    std::string window_name = "Garin Editor - " + SceneManager::GetOpenScene()->scene_name;
 
     glfwSetWindowTitle(Graphics::get_game_window(), window_name.c_str());
 }

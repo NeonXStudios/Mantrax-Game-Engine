@@ -6,6 +6,7 @@ class GraphicsCore
 {
 public:
     static Graphics *graphics_core;
+    static GLFWwindow *window;
     static unsigned int get_render();
     static int get_width();
     static int get_height();

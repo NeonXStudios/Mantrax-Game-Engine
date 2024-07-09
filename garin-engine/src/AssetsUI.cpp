@@ -106,7 +106,7 @@ void AssetsUI::drawer_files(std::string extension, std::string file_name)
     {
         if (!AppSettings::is_playing)
         {
-            Graphics::get_current_scene()->load_scene(file_name);
+            SceneManager::GetOpenScene()->load_scene(file_name);
         }
     }
 }

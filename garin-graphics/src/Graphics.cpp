@@ -14,14 +14,12 @@ int Graphics::height;
 int Graphics::render_width = 1;
 int Graphics::render_height = 1;
 
-scenes *Graphics::run_scene = nullptr;
 RenderGraphics *Graphics::render_graphics = nullptr;
 unsigned int Graphics::texture = 0;
 
-int Graphics::start_graphics(std::string window_name, int width, int height, bool vsync, scenes *game)
+int Graphics::start_graphics(std::string window_name, int width, int height, bool vsync, std::function<void(void)> func)
 {
     Graphics::graphics = this;
-    Graphics::run_scene = game;
     runner = new GameBehaviourRunner();
 
     if (!glfwInit())
@@ -61,20 +59,13 @@ int Graphics::start_graphics(std::string window_name, int width, int height, boo
     engine_libs_loader = std::make_unique<DynamicLibLoader>();
     engine_libs_loader.get()->load_components();
 
-    // run_scene->on_start();
-    audio_manager = new AudioManager();
-    audio_manager->create();
-
     runner->on_init();
-    run_scene->init();
+    SceneManager::GetOpenScene()->init();
 
     DebugGame::init_console();
 
     DebugGame::add_message("Garin engine graphics started", DebugGame::logger);
     setupRenderTexture(1920, 1080);
-
-    std::thread updateThread([this]
-                             { this->update_loop(); });
 
     render_graphics = new RenderGraphics();
 
@@ -84,14 +75,7 @@ int Graphics::start_graphics(std::string window_name, int width, int height, boo
         std::cout << "Render Graphics Started" << std::endl;
     }
 
-    render_loop();
-
-    if (updateThread.joinable())
-    {
-        updateThread.join();
-    }
-
-    run_scene->on_destroy();
+    render_loop(func);
 
     glfwDestroyWindow(Graphics::window);
     glfwTerminate();
@@ -99,20 +83,7 @@ int Graphics::start_graphics(std::string window_name, int width, int height, boo
     return 0;
 }
 
-void Graphics::update_loop()
-{
-    // while (!glfwWindowShouldClose(window))
-    // {
-    //     InputSystem::update_input();
-
-    //     Graphics::run_scene->main_camera->update();
-
-    //     Graphics::run_scene->update(Timer::delta_time);
-    //     // Graphics::run_scene->on_update(1.0f);
-    // }
-}
-
-void Graphics::render_loop()
+void Graphics::render_loop(std::function<void(void)> func)
 {
     startTime = glfwGetTime();
     double lastFrameTime = startTime;
@@ -121,7 +92,7 @@ void Graphics::render_loop()
     const double targetFPS = 120.0;
     const double targetFrameTime = 1.0 / targetFPS;
 
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(Graphics::get_game_window()))
     {
         glfwPollEvents();
 
@@ -138,25 +109,14 @@ void Graphics::render_loop()
         renderToTexture();
 
         double elapsedTime = glfwGetTime() - lastFrameTime;
-        if (elapsedTime < targetFrameTime)
+        if (deltaTime < targetFrameTime)
         {
-            InputSystem::update_input();
-
-            Graphics::run_scene->main_camera->update();
-
-            if (AppSettings::is_playing)
-            {
-                Graphics::run_scene->update(Timer::delta_time);
-                runner->on_tick();
-            }
-            else
-            {
-                Graphics::run_scene->on_edition_mode(Timer::delta_time);
-            }
-
-            double sleepTime = (targetFrameTime - elapsedTime) * 1000.0;
-            std::this_thread::sleep_for(std::chrono::milliseconds((int)sleepTime));
+            double sleepTime = targetFrameTime - deltaTime;
+            glfwWaitEventsTimeout(sleepTime);
         }
+
+        InputSystem::update_input();
+        func();
 
         glfwSwapBuffers(Graphics::window);
     }
@@ -219,12 +179,7 @@ int Graphics::get_height()
 
 Camera *Graphics::get_main_camera()
 {
-    return Graphics::run_scene->main_camera;
-}
-
-scenes *Graphics::get_current_scene()
-{
-    return Graphics::run_scene;
+    return SceneManager::GetOpenScene()->main_camera;
 }
 
 unsigned int Graphics::get_render()
@@ -275,24 +230,24 @@ void Graphics::renderToTexture()
 
     glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    for (Entity *ent : Graphics::get_current_scene()->objects_worlds)
+    for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
     {
         ent->on_draw();
     }
 
-    Graphics::run_scene->on_draw();
+    SceneManager::GetOpenScene()->on_draw();
 
-    Graphics::run_scene->draw_ui();
+    SceneManager::GetOpenScene()->draw_ui();
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    for (Entity *ent : Graphics::get_current_scene()->objects_worlds)
+    for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
     {
         ent->on_draw();
     }
 
-    Graphics::run_scene->on_draw();
+    SceneManager::GetOpenScene()->on_draw();
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -301,7 +256,7 @@ void Graphics::renderToTexture()
     glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, 1920, 1080, 0);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
-    Graphics::run_scene->draw_ui();
+    SceneManager::GetOpenScene()->draw_ui();
 }
 
 void Graphics::setWindowIcon(GLFWwindow *window, const char *iconPath)

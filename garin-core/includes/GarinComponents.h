@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Timer.h>
-#include <scenes.h>
 #include <LayerManager.h>
 #include "ECS.h"
 #include "GBody.h"
@@ -13,6 +12,7 @@
 #include "GCharacter.h"
 #include "GCaster.h"
 #include "LayerManager.h"
+#include <Scene.h>
 #include <GAudio.h>
 #include <AudioManager.h>
 #include <openxr/openxr.h>

@@ -34,7 +34,7 @@ void DynamicLibLoader::load_components()
     typedef void (*FuncType)(GameBehaviourFactory *);
     auto func = (FuncType)loader->get_function<FuncType>("REGISTER_COMPONENTS");
 
-    typedef void (*FuncTypeAPI)(scenes *, Graphics *graphics);
+    typedef void (*FuncTypeAPI)(Scene *, Graphics *graphics);
     auto func_graphics = (FuncTypeAPI)loader->get_function<FuncTypeAPI>("REGISTER_APIS");
 
     if (!func)
@@ -50,7 +50,7 @@ void DynamicLibLoader::load_components()
     }
 
     GameBehaviourFactory *factoryPtr = &GameBehaviourFactory::instance();
-    scenes *scene = Graphics::get_current_scene();
+    Scene *scene = SceneManager::GetOpenScene();
 
     if (Graphics::graphics != nullptr)
     {

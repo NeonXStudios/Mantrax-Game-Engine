@@ -19,13 +19,13 @@ void HierarchyUI::draw(Entity *select_obj)
     {
         if (ImGui::MenuItem("Create New Object"))
         {
-            Graphics::get_current_scene()->make_entity();
+            SceneManager::GetOpenScene()->make_entity();
         }
 
         ImGui::EndPopup();
     }
 
-    for (Entity *ent : Graphics::get_current_scene()->objects_worlds)
+    for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
     {
         if (ent->get_transform()->parent == nullptr)
         {
@@ -51,8 +51,17 @@ void HierarchyUI::drawEntityNode(Entity *entity)
 
         if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
         {
-            game->set_object_select(entity);
-            std::cout << "Select object: " << game->select_obj->ObjectName << std::endl;
+            if (entity != game->select_obj)
+            {
+                game->set_object_select(entity);
+            }
+            else
+            {
+                if (game->select_obj != nullptr)
+                {
+                    game->set_object_select(nullptr);
+                }
+            }
         }
 
         if (node_open)
@@ -68,21 +77,30 @@ void HierarchyUI::drawEntityNode(Entity *entity)
     {
         if (ImGui::Selectable(name_tree.c_str(), selected))
         {
-            game->set_object_select(entity);
-            std::cout << "Select object: " << game->select_obj->ObjectName << std::endl;
+            if (entity != game->select_obj)
+            {
+                game->set_object_select(entity);
+            }
+            else
+            {
+                if (game->select_obj != nullptr)
+                {
+                    game->set_object_select(nullptr);
+                }
+            }
         }
     }
 
     if (ImGui::BeginDragDropSource())
     {
-        ImGui::SetDragDropPayload("DND_DEMO_CELL", &entity, sizeof(Entity *));
+        ImGui::SetDragDropPayload("ENTITY_CELL", &entity, sizeof(Entity *));
         ImGui::Text("Dragging %s", entity->ObjectName.c_str());
         ImGui::EndDragDropSource();
     }
 
     if (ImGui::BeginDragDropTarget())
     {
-        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
+        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY_CELL"))
         {
             IM_ASSERT(payload->DataSize == sizeof(Entity *));
             Entity *droppedEntity = *(Entity **)payload->Data;

@@ -11,7 +11,7 @@
 
 using namespace std;
 
-class scenes
+class Scene
 {
 public:
     string scene_name = "New Scene";

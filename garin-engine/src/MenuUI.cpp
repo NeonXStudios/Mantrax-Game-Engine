@@ -1,6 +1,6 @@
 #include "../includes/MenuUI.h"
 
-void MenuUI::draw(scenes *scene)
+void MenuUI::draw(Scene *scene)
 {
     // if (ImGui::IsMouseClicked(1))
     // {

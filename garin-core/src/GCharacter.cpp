@@ -4,8 +4,8 @@
 void GCharacter::init()
 {
     // Asegúrate de tener acceso correcto a la escena de PhysX y al material
-    auto *physxScene = Graphics::get_current_scene()->physic_world->mScene;
-    auto *physxMaterial = Graphics::get_current_scene()->physic_world->mMaterial;
+    auto *physxScene = SceneManager::GetOpenScene()->physic_world->mScene;
+    auto *physxMaterial = SceneManager::GetOpenScene()->physic_world->mMaterial;
 
     // Configura la descripción del controlador de cápsula
     PxCapsuleControllerDesc desc;
@@ -15,7 +15,7 @@ void GCharacter::init()
     desc.material = physxMaterial;
 
     // Crea el controlador de personaje
-    gController = Graphics::get_current_scene()->physic_world->gManager->createController(desc);
+    gController = SceneManager::GetOpenScene()->physic_world->gManager->createController(desc);
 
     gController->setPosition(physx::PxExtendedVec3(entity->get_transform()->Position.x, entity->get_transform()->Position.y, entity->get_transform()->Position.z));
 }

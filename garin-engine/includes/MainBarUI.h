@@ -26,7 +26,7 @@ public:
             if (ImGui::Button("OK", ImVec2(120, 0)))
             {
                 // Load the new scene
-                Graphics::get_current_scene()->load_scene(new_scene_name);
+                SceneManager::GetOpenScene()->load_scene(new_scene_name);
                 show_new_scene_popup = false;
                 ImGui::CloseCurrentPopup();
             }

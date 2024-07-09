@@ -1,4 +1,5 @@
 #include "../includes/InputSystem.h"
+#include <GraphicsCore.h>
 
 double InputSystem::lastX = 0.0;
 double InputSystem::lastY = 0.0;
@@ -13,14 +14,14 @@ float InputSystem::get_axis(GLuint positive_key, GLuint negative_key)
 
 bool InputSystem::on_key_pressed(GLuint key)
 {
-    return glfwGetKey(Graphics::get_game_window(), key) == GLFW_PRESS;
+    return glfwGetKey(GraphicsCore::window, key) == GLFW_PRESS;
 }
 
 void InputSystem::update_input()
 {
     float abstract_sense = 0.1f;
     double mouseX, mouseY;
-    glfwGetCursorPos(Graphics::get_game_window(), &mouseX, &mouseY);
+    glfwGetCursorPos(GraphicsCore::window, &mouseX, &mouseY);
 
     float deltaX = static_cast<float>(mouseX - lastX);
     float deltaY = static_cast<float>(lastY - mouseY);

@@ -6,6 +6,7 @@
 #include <GarinEvents.h>
 #include <GarinComponents.h>
 #include <GarinBehaviours.h>
+#include <UIStyle.h>
 
 void MainBarUI::draw(Entity *owner)
 {
@@ -26,7 +27,7 @@ void MainBarUI::draw(Entity *owner)
             {
                 if (!AppSettings::is_playing)
                 {
-                    Graphics::get_current_scene()->save_scene();
+                    SceneManager::GetOpenScene()->save_scene();
                 }
             }
 
@@ -138,6 +139,39 @@ void MainBarUI::draw(Entity *owner)
             }
             ImGui::EndMenu();
         }
+
+        if (ImGui::BeginMenu("Engine Themes"))
+        {
+            if (ImGui::MenuItem("Default Classic"))
+            {
+                UIStyle::SetStyleUI(DefaultClassic);
+            }
+            if (ImGui::MenuItem("Default Light"))
+            {
+                UIStyle::SetStyleUI(DefaultWhite);
+            }
+            if (ImGui::MenuItem("Default Dark"))
+            {
+                UIStyle::SetStyleUI(DefaultDark);
+            }
+            if (ImGui::MenuItem("Darkness"))
+            {
+                UIStyle::SetStyleUI(Darkness);
+            }
+            if (ImGui::MenuItem("Dracula"))
+            {
+                UIStyle::SetStyleUI(Dracula);
+            }
+            if (ImGui::MenuItem("RedDark"))
+            {
+                UIStyle::SetStyleUI(RedDark);
+            }
+            if (ImGui::MenuItem("Dark"))
+            {
+                UIStyle::SetStyleUI(Dark);
+            }
+            ImGui::EndMenu();
+        }
     }
 
     ImGui::SameLine((ImGui::GetWindowWidth() / 2) - 16);
@@ -149,13 +183,13 @@ void MainBarUI::draw(Entity *owner)
 
         if (AppSettings::is_playing)
         {
-            Graphics::get_current_scene()->save_scene();
-            Graphics::get_current_scene()->load_scene(Graphics::get_current_scene()->scene_name);
+            SceneManager::GetOpenScene()->save_scene();
+            SceneManager::GetOpenScene()->load_scene(SceneManager::GetOpenScene()->scene_name);
             DebugGame::add_message("Entering in playmode", DebugGame::logger);
         }
         else
         {
-            Graphics::get_current_scene()->load_scene(Graphics::get_current_scene()->scene_name);
+            SceneManager::GetOpenScene()->load_scene(SceneManager::GetOpenScene()->scene_name);
             DebugGame::add_message("Stopping in playmode", DebugGame::logger);
         }
 

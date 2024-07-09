@@ -1,4 +1,5 @@
 #include "../includes/GarinUI.h"
+#include <UIStyle.h>
 
 GarinUI *GarinUI::instance = nullptr;
 
@@ -24,6 +25,7 @@ void GarinUI::make_context()
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     // ImGui::StyleColorsDark();
+    UIStyle::SetStyleUI(Dracula);
 
     ImGui_ImplGlfw_InitForOpenGL(Graphics::get_game_window(), true);
     ImGui_ImplOpenGL3_Init("#version 330");

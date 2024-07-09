@@ -12,8 +12,8 @@
 #include <DebugGame.h>
 #include <RenderGraphics.h>
 #include <camera.h>
-#include <scenes.h>
 #include <AppSettings.h>
+#include <SceneManager.h>
 #endif
 
 #include <AudioManager.h>
@@ -22,13 +22,12 @@
 
 using namespace std;
 
-class scenes;
+class Scene;
 
 class Graphics
 {
 private:
     static GLFWwindow *window;
-    static scenes *run_scene;
     static double startTime;
     static double currentTime;
     static double lifetime;
@@ -46,7 +45,6 @@ public:
 
     static Graphics *graphics;
     static RenderGraphics *render_graphics;
-    AudioManager *audio_manager;
     GameBehaviourRunner *runner;
 
     std::unique_ptr<DynamicLibLoader> engine_libs_loader;
@@ -64,13 +62,11 @@ public:
     static int get_width();
     static int get_height();
     static Camera *get_main_camera();
-    static scenes *get_current_scene();
     static unsigned int get_render();
-    int start_graphics(string window_name, int width, int height, bool vsync, scenes *game);
+    int start_graphics(string window_name, int width, int height, bool vsync, std::function<void(void)> func);
     bool is_running();
 
-    void render_loop();
-    void update_loop();
+    void render_loop(std::function<void(void)> func);
     void setupRenderTexture(int width, int height);
     void renderToTexture();
     void setWindowIcon(GLFWwindow *window, const char *iconPath);

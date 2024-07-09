@@ -81,7 +81,7 @@ void SceneUI::draw(Entity *select_obj)
 
     if (ImGui::IsKeyDown(ImGuiKey_Delete))
     {
-        Graphics::get_current_scene()->destroy(select_obj);
+        SceneManager::GetOpenScene()->destroy(select_obj);
         select_obj = nullptr;
     }
 

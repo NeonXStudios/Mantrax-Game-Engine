@@ -1,9 +1,9 @@
-#include "../includes/scenes.h"
+#include "../includes/Scene.h"
 #include "VarVerify.h"
 
 using namespace nlohmann;
 
-void scenes::init()
+void Scene::init()
 {
     // physic_world->start_world_physics();
 
@@ -11,7 +11,7 @@ void scenes::init()
     on_start();
 }
 
-void scenes::update(float delta_time)
+void Scene::update(float delta_time)
 {
     if (!unload_scene)
     {
@@ -33,7 +33,7 @@ void scenes::update(float delta_time)
     }
 }
 
-Entity *scenes::make_entity()
+Entity *Scene::make_entity()
 {
     Entity *entity_maked = new Entity();
     std::cout << "New entity created" << std::endl;
@@ -45,7 +45,7 @@ Entity *scenes::make_entity()
     return entity_maked;
 }
 
-Entity *scenes::get_entity_by_index(int index)
+Entity *Scene::get_entity_by_index(int index)
 {
     Entity *object_get = objects_worlds[index];
 
@@ -58,7 +58,7 @@ Entity *scenes::get_entity_by_index(int index)
     return object_get;
 }
 
-Entity *scenes::get_entity_by_id(int id)
+Entity *Scene::get_entity_by_id(int id)
 {
     for (Entity *ent : objects_worlds)
     {
@@ -71,7 +71,7 @@ Entity *scenes::get_entity_by_id(int id)
     return nullptr;
 }
 
-Entity *scenes::get_entity_by_id_string(std::string id)
+Entity *Scene::get_entity_by_id_string(std::string id)
 {
     for (Entity *ent : objects_worlds)
     {
@@ -84,7 +84,7 @@ Entity *scenes::get_entity_by_id_string(std::string id)
     return nullptr;
 }
 
-Entity *scenes::get_entity_by_name(std::string name)
+Entity *Scene::get_entity_by_name(std::string name)
 {
     for (Entity *ent : objects_worlds)
     {
@@ -97,7 +97,7 @@ Entity *scenes::get_entity_by_name(std::string name)
     return nullptr;
 }
 
-void scenes::load_scene(std::string scene_name_new)
+void Scene::load_scene(std::string scene_name_new)
 {
     try
     {
@@ -241,7 +241,7 @@ void scenes::load_scene(std::string scene_name_new)
     }
 }
 
-void scenes::save_scene()
+void Scene::save_scene()
 {
     try
     {
@@ -336,7 +336,7 @@ void scenes::save_scene()
     }
 }
 
-void scenes::destroy(Entity *object_to_destroy)
+void Scene::destroy(Entity *object_to_destroy)
 {
     if (object_to_destroy != nullptr)
     {

@@ -16,7 +16,7 @@ bool GCaster::RayCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length,
 
         PxRaycastBuffer hitBuffer;
 
-        auto scene = Graphics::get_current_scene();
+        auto scene = SceneManager::GetOpenScene();
         if (!scene)
         {
             std::cerr << "Error: current scene is null." << std::endl;
@@ -77,7 +77,7 @@ bool GCaster::RayCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length,
                 if (std::all_of(nombreDelShape.begin(), nombreDelShape.end(), ::isdigit))
                 {
                     int objectID = std::stoi(nombreDelShape);
-                    hitRay->entity = Graphics::get_current_scene()->get_entity_by_id_string(nombreDelShape);
+                    hitRay->entity = SceneManager::GetOpenScene()->get_entity_by_id_string(nombreDelShape);
                     if (!hitRay->entity)
                     {
                         std::cerr << "Error: entity not found for ID: " << objectID << std::endl;

@@ -9,7 +9,7 @@ using namespace nlohmann;
 void EditorConfigs::save_config()
 {
     json settings;
-    settings["current_scene"] = Graphics::get_current_scene()->scene_name;
+    settings["current_scene"] = SceneManager::GetOpenScene()->scene_name;
     settings["start_scene"] = start_scene;
     settings["camera_state"] = Graphics::get_main_camera()->use_projection;
 

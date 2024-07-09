@@ -1,6 +1,7 @@
 #include "../includes/GBody.h"
 #include "../includes/GCollision.h"
 #include <GarinGraphics.h>
+#include <SceneManager.h>
 
 void GBody::defines()
 {
@@ -11,8 +12,7 @@ void GBody::defines()
 
 void GBody::init()
 {
-
-    mPhysics = Graphics::get_current_scene()->physic_world->mPhysics;
+    mPhysics = SceneManager::GetOpenScene()->physic_world->mPhysics;
 
     // shape = mPhysics->createShape(physx::PxBoxGeometry(halfExtent, halfExtent, halfExtent), *SceneManager::GetSceneManager()->OpenScene->mMaterial, 1);
     physx::PxVec3 position_start = physx::PxVec3(entity->get_transform()->Position.x, entity->get_transform()->Position.y, entity->get_transform()->Position.z);
@@ -26,7 +26,7 @@ void GBody::init()
     body->setName(entity->ObjectSTRID.c_str());
 
     physx::PxRigidBodyExt::updateMassAndInertia(*body, GETVAR(mass, float));
-    Graphics::get_current_scene()->physic_world->mScene->addActor(*body);
+    SceneManager::GetOpenScene()->physic_world->mScene->addActor(*body);
 
     body->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, GETVAR(isStatic, bool));
     body->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !GETVAR(useGravity, bool));

@@ -10,6 +10,6 @@
 #define REGISTER_CLASS void REGISTER_COMPONENTS(GameBehaviourFactory *engine)
 extern "C" GARIN_API void REGISTER_COMPONENTS(GameBehaviourFactory *engine);
 
-#define ASSIGNAPIS() (SceneManager::current_scene = scene_api, GraphicsCore::graphics_core = graphics)
+#define ASSIGNAPIS() (SceneManager::current_scene = scene_api, GraphicsCore::graphics_core = graphics, GraphicsCore::window = graphics->window)
 #define ASSIGN_APIS void REGISTER_APIS(scenes *scene_api, Graphics *graphics)
 extern "C" GARIN_API void REGISTER_APIS(scenes *scene_api, Graphics *graphics);

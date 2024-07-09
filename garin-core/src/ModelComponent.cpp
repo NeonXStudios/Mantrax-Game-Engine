@@ -30,7 +30,7 @@ void ModelComponent::draw()
     {
         if (entity->hasComponent<GMaterial>())
         {
-            auto &material = entity->getComponent<GMaterial>();
+            GMaterial &material = entity->getComponent<GMaterial>();
 
             material.p_shader->use();
             // material.p_shader->setMat4("view", Graphics::get_main_camera()->GetView());
