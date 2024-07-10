@@ -7,6 +7,7 @@
 #include <GarinComponents.h>
 #include <GarinBehaviours.h>
 #include <UIStyle.h>
+#include <SceneData.h>
 
 void MainBarUI::draw(Entity *owner)
 {
@@ -27,7 +28,7 @@ void MainBarUI::draw(Entity *owner)
             {
                 if (!AppSettings::is_playing)
                 {
-                    SceneManager::GetOpenScene()->save_scene();
+                    SceneData::save_scene();
                 }
             }
 
@@ -183,14 +184,12 @@ void MainBarUI::draw(Entity *owner)
 
         if (AppSettings::is_playing)
         {
-            SceneManager::GetOpenScene()->save_scene();
-            SceneManager::GetOpenScene()->load_scene(SceneManager::GetOpenScene()->scene_name);
-            DebugGame::add_message("Entering in playmode", DebugGame::logger);
+            SceneData::save_scene();
+            SceneData::load_scene(SceneManager::GetOpenScene()->scene_name);
         }
         else
         {
-            SceneManager::GetOpenScene()->load_scene(SceneManager::GetOpenScene()->scene_name);
-            DebugGame::add_message("Stopping in playmode", DebugGame::logger);
+            SceneData::load_scene(SceneManager::GetOpenScene()->scene_name);
         }
 
         std::cout << "Entering play mode" << std::endl;

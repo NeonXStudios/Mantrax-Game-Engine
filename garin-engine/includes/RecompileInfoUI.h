@@ -1,7 +1,8 @@
 #pragma once
 #include <imgui.h>
+#include <Core.h>
 
-class RecompileInfoUI
+class GARINLIBS_API RecompileInfoUI
 {
 public:
     static void view_ui_recompile()

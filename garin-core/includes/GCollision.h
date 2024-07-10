@@ -2,8 +2,9 @@
 #include <ECS.h>
 #include <GarinMaths.h>
 #include <PhysicsEngine.h>
+#include "Core.h"
 
-class GCollision : public Component
+class GARINLIBS_API GCollision : public Component
 {
 public:
     glm::vec3 boxSize = glm::vec3(1, 1, 1);

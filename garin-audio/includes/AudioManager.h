@@ -2,10 +2,11 @@
 #include <inc/fmod.hpp>
 #include <inc/fmod_errors.h>
 #include <iostream>
+#include <Core.h>
 
 using namespace FMOD;
 
-class AudioManager
+class GARINLIBS_API AudioManager
 {
 public:
     static AudioManager *instance;

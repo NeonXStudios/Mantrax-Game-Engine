@@ -2,8 +2,9 @@
 
 #include <iostream>
 #include <GameBehaviour.h>
+#include "Core.h"
 
-class GameBehaviourRunner
+class GARINLIBS_API GameBehaviourRunner
 {
 public:
     std::vector<std::shared_ptr<GameBehaviour>> behaviours;

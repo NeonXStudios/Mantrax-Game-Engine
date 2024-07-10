@@ -2,8 +2,10 @@
 #include "UIComponent.h"
 #include "../includes/UINotification.h"
 #include <GarinNatives.h>
+#include <SceneData.h>
+#include <Core.h>
 
-class MainBarUI : public UIComponent
+class GARINLIBS_API MainBarUI : public UIComponent
 {
 public:
     bool show_new_scene_popup = false;
@@ -26,7 +28,7 @@ public:
             if (ImGui::Button("OK", ImVec2(120, 0)))
             {
                 // Load the new scene
-                SceneManager::GetOpenScene()->load_scene(new_scene_name);
+                SceneData::load_scene(new_scene_name);
                 show_new_scene_popup = false;
                 ImGui::CloseCurrentPopup();
             }

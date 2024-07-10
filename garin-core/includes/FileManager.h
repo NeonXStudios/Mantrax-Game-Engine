@@ -5,16 +5,16 @@
 #include <string>
 #include <type_traits>
 #include <vector>
-#include <imgui.h>
 #include <filesystem>
 
 #include <cstddef>
 #include <windows.h>
 #include <nlohmann/json.hpp>
+#include "Core.h"
 
 namespace fs = std::filesystem;
 
-class FileManager
+class GARINLIBS_API FileManager
 {
 public:
     template <typename T>

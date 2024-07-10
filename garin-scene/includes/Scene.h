@@ -8,10 +8,11 @@
 #include <PhysicsEngine.h>
 
 #include <GLFW/glfw3.h>
+#include <Core.h>
 
 using namespace std;
 
-class Scene
+class GARINLIBS_API Scene
 {
 public:
     string scene_name = "New Scene";
@@ -32,9 +33,6 @@ public:
     // SCENE FUNCTIONS
     void init();
     void update(float delta_time);
-
-    void load_scene(std::string scene_name);
-    void save_scene();
 
     // FUNCTION ENTITYS
     Entity *make_entity();

@@ -10,8 +10,9 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <Core.h>
 
-class UINotification
+class GARINLIBS_API UINotification
 {
 public:
     static UINotification instance;

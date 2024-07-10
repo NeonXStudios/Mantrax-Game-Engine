@@ -1,6 +1,7 @@
 #pragma once
+#include <Core.h>
 
-class WindowGraphics
+class GARINLIBS_API WindowGraphics
 {
 public:
     WindowGraphics();

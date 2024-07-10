@@ -3,10 +3,11 @@
 #include <ECS.h>
 #include <iostream>
 #include <string>
+#include "Core.h"
 
 using namespace std;
 
-class GameBehaviour
+class GARINLIBS_API GameBehaviour
 {
 public:
     Entity *self;

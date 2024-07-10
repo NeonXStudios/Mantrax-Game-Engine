@@ -69,7 +69,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-engine\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-audio\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -79,7 +79,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-engine\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-audio\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -89,7 +89,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-engine\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-audio\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -99,7 +99,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-engine\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\..\garin-audio\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -173,9 +173,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\Proyects\GarinEngine\Compiler-Lib\GarinLibs.vcxproj">
-      <Project>{94092AE8-7F2E-3553-A190-980F47B9CC3F}</Project>
-      <Name>GarinLibs</Name>
+    <ProjectReference Include="C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary.vcxproj">
+      <Project>{17CB388E-DF43-3F65-8938-D9B64F33C879}</Project>
+      <Name>GarinLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

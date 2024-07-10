@@ -6,10 +6,11 @@
 
 #include <iostream>
 #include <cstring>
+#include <Core.h>
 
 using namespace std;
 
-class VR
+class GARINLIBS_API VR
 {
 public:
     void init_vr();

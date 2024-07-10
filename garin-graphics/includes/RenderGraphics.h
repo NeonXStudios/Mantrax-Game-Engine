@@ -1,10 +1,11 @@
 #pragma once
 #include <functional>
 #include <Drawer.h>
+#include <Core.h>
 
 using namespace std;
 
-class RenderGraphics
+class GARINLIBS_API RenderGraphics
 {
 public:
     void checkFramebufferStatus();
@@ -14,11 +15,10 @@ public:
 
 public:
     unsigned int texture;
-    unsigned int framebuffer;   
-    unsigned int depthTexture;  
-    GLuint colorAndDepthTexture; 
-    GLuint depthRenderbuffer; 
+    unsigned int framebuffer;
+    unsigned int depthTexture;
+    GLuint colorAndDepthTexture;
+    GLuint depthRenderbuffer;
 
-
-    void checkGLError(const char* location);
+    void checkGLError(const char *location);
 };

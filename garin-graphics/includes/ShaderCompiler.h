@@ -7,8 +7,9 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <Core.h>
 
-class Shader
+class GARINLIBS_API Shader
 {
 public:
     GLuint ID;

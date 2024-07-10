@@ -1,4 +1,5 @@
 #include "../includes/AssetsUI.h"
+#include <SceneData.h>
 
 void AssetsUI::draw(EditorConfigs *p_configs)
 {
@@ -106,7 +107,7 @@ void AssetsUI::drawer_files(std::string extension, std::string file_name)
     {
         if (!AppSettings::is_playing)
         {
-            SceneManager::GetOpenScene()->load_scene(file_name);
+            SceneData::load_scene(file_name);
         }
     }
 }

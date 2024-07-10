@@ -1,9 +1,10 @@
 #include <PxPhysicsAPI.h>
 #include <iostream>
+#include <Core.h>
 
 using namespace physx;
 
-class GarinCollisionEvents : public PxSimulationEventCallback
+class GARINLIBS_API GarinCollisionEvents : public PxSimulationEventCallback
 {
 public:
     void onContact(const PxContactPairHeader &pairHeader, const PxContactPair *pairs, PxU32 nbPairs) override
@@ -72,5 +73,5 @@ public:
         }
     }
 
-    void onAdvance(const PxRigidBody*const* bodyBuffer, const PxTransform* poseBuffer, const PxU32 count) override {}
+    void onAdvance(const PxRigidBody *const *bodyBuffer, const PxTransform *poseBuffer, const PxU32 count) override {}
 };

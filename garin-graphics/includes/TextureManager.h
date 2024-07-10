@@ -2,10 +2,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <Core.h>
 
 using namespace std;
 
-class TextureManager
+class GARINLIBS_API TextureManager
 {
 private:
     GLuint texture_maked;

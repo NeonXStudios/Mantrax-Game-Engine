@@ -10,8 +10,9 @@
 #include <ECS.h>
 #include <sstream>
 #include <cassert>
+#include <Core.h>
 
-class AComponent
+class GARINLIBS_API AComponent
 {
 public:
     bool started = false;

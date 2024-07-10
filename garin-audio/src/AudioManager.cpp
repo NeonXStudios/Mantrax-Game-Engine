@@ -38,7 +38,7 @@ void AudioManager::StartSystem()
 
     if (result == FMOD_OK && AudioManager::instance != nullptr)
     {
-        std::cout << "AUDIO MANAGER LOADED" << std::endl;
+        std::cout << "AUDIO MANAGER LOADED FROM DLL" << std::endl;
     }
 
     result = system->set3DSettings(1.0f, 1.0f, 1.0f);
@@ -80,4 +80,13 @@ void AudioManager::release()
     if (!AudioManager::instance)
         return;
     delete AudioManager::instance;
+}
+
+extern "C" GARINLIBS_API AudioManager *GetAudioManager()
+{
+    if (AudioManager::instance == nullptr)
+    {
+        AudioManager::instance = new AudioManager();
+    }
+    return AudioManager::instance;
 }

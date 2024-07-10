@@ -16,10 +16,11 @@
 #include "HierarchyUI.h"
 #include "MenuUI.h"
 #include "UINotification.h"
+#include <Core.h>
 
 namespace fs = std::filesystem;
 
-class UIAdministrator
+class GARINLIBS_API UIAdministrator
 {
 public:
     static void draw_ui(Entity *owner);

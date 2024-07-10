@@ -1,6 +1,7 @@
 #pragma once
+#include <Core.h>
 
-class AndroidGraphics
+class GARINLIBS_API AndroidGraphics
 {
 public:
     AndroidGraphics();

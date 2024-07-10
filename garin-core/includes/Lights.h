@@ -1,6 +1,7 @@
 #pragma once
+#include "Core.h"
 
-class Lights
+class GARINLIBS_API Lights
 {
 public:
     Lights();

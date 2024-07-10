@@ -2,8 +2,9 @@
 #include <ECS.h>
 #include <GarinMaths.h>
 #include <PhysicsEngine.h>
+#include "Core.h"
 
-class GCharacter : public Component
+class GARINLIBS_API GCharacter : public Component
 {
 public:
     PxController *gController = nullptr;

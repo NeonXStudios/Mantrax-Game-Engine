@@ -1,10 +1,11 @@
 #pragma once
 #include "UIComponent.h"
 #include "gamescene.h"
+#include <Core.h>
 
 class gamescene;
 
-class HierarchyUI : public UIComponent
+class GARINLIBS_API HierarchyUI : public UIComponent
 {
 public:
     gamescene *game;

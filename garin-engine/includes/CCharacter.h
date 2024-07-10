@@ -2,10 +2,11 @@
 #include <ECS.h>
 #include "AComponent.h"
 #include "FileBrowser.h"
+#include <Core.h>
 
 namespace fs = std::filesystem;
 
-class CCharacter : public AComponent
+class GARINLIBS_API CCharacter : public AComponent
 {
 public:
     void start() override;

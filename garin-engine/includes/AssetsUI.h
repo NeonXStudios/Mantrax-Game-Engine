@@ -1,7 +1,9 @@
 #pragma once
 #include "UIComponent.h"
+#include <AppSettings.h>
+#include <Core.h>
 
-class AssetsUI : public UIComponent
+class GARINLIBS_API AssetsUI : public UIComponent
 {
 public:
     EditorConfigs *configs;

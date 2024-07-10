@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <Core.h>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -19,7 +20,7 @@ namespace Primitive
     };
 };
 
-class Drawer
+class GARINLIBS_API Drawer
 {
 public:
     // Shaders

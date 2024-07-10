@@ -1,6 +1,5 @@
 #pragma once
 #define NO_INCLUDE_GRAPHICS_CLASS
-
 #ifndef GRAPHICS_CLASS
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -9,11 +8,11 @@
 #include <GarinComponents.h>
 #include <GarinMaths.h>
 #include <GarinEvents.h>
-#include <DebugGame.h>
 #include <RenderGraphics.h>
 #include <camera.h>
 #include <AppSettings.h>
 #include <SceneManager.h>
+#include <Core.h>
 #endif
 
 #include <AudioManager.h>
@@ -24,7 +23,7 @@ using namespace std;
 
 class Scene;
 
-class Graphics
+class GARINLIBS_API Graphics
 {
 private:
     static GLFWwindow *window;
@@ -35,11 +34,12 @@ private:
     static int height;
 
 public:
+    GLFWwindow *game_graphics_window;
     static unsigned int texture;
-    unsigned int framebuffer;          // Framebuffer Object
-    unsigned int depthTexture;         // Texture to capture depth
-    unsigned int colorAndDepthTexture; // Variable para almacenar el ID de la textura combinada de color y profundidad
-    unsigned int depthRenderbuffer;    // Variable para almacenar el ID del renderbuffer de profundidad
+    unsigned int framebuffer;
+    unsigned int depthTexture;
+    unsigned int colorAndDepthTexture;
+    unsigned int depthRenderbuffer;
     static int render_width;
     static int render_height;
 
@@ -70,4 +70,5 @@ public:
     void setupRenderTexture(int width, int height);
     void renderToTexture();
     void setWindowIcon(GLFWwindow *window, const char *iconPath);
+    void clean_graphics();
 };

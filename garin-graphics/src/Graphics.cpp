@@ -42,6 +42,8 @@ int Graphics::start_graphics(std::string window_name, int width, int height, boo
         return -1;
     }
 
+    game_graphics_window = window;
+
     setWindowIcon(window, "icons/EngineIcon_2.png");
 
     glfwMakeContextCurrent(window);
@@ -59,12 +61,11 @@ int Graphics::start_graphics(std::string window_name, int width, int height, boo
     engine_libs_loader = std::make_unique<DynamicLibLoader>();
     engine_libs_loader.get()->load_components();
 
-    runner->on_init();
     SceneManager::GetOpenScene()->init();
+    runner->on_init();
 
-    DebugGame::init_console();
+    std::cout << "Garin engine graphics started" << std::endl;
 
-    DebugGame::add_message("Garin engine graphics started", DebugGame::logger);
     setupRenderTexture(1920, 1080);
 
     render_graphics = new RenderGraphics();
@@ -75,10 +76,7 @@ int Graphics::start_graphics(std::string window_name, int width, int height, boo
         std::cout << "Render Graphics Started" << std::endl;
     }
 
-    render_loop(func);
-
-    glfwDestroyWindow(Graphics::window);
-    glfwTerminate();
+    func();
 
     return 0;
 }
@@ -122,6 +120,12 @@ void Graphics::render_loop(std::function<void(void)> func)
     }
 }
 
+void Graphics::clean_graphics()
+{
+    glfwDestroyWindow(Graphics::window);
+    glfwTerminate();
+}
+
 void Graphics::set_vsync(bool vsync_active)
 {
     glfwSwapInterval(vsync_active);
@@ -131,7 +135,7 @@ void Graphics::set_screen(int screen_index)
 {
     if (screen_index <= 0)
     {
-        DebugGame::add_message("Graphics system return error with index minor 0", DebugGame::warning);
+        std::cout << "Graphics system return error with index minor 0" << std::endl;
         return;
     }
 
@@ -144,11 +148,11 @@ void Graphics::set_screen(int screen_index)
         const GLFWvidmode *secondMode = glfwGetVideoMode(new_monitor);
 
         glfwSetWindowMonitor(window, new_monitor, 0, 0, secondMode->width, secondMode->height, GLFW_DONT_CARE);
-        DebugGame::add_message("Graphics system changed to monitor ID: " + screen_index, DebugGame::logger);
+        std::cout << "Graphics system changed to monitor ID: " << std::endl;
     }
     else
     {
-        DebugGame::add_message("Graphics system only found 1 screen", DebugGame::warning);
+        std::cout << "Graphics system only found 1 screen" << std::endl;
     }
 }
 

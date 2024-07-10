@@ -1,7 +1,8 @@
 #pragma once
 #include "UIComponent.h"
+#include <Core.h>
 
-class FilesUI : public UIComponent
+class GARINLIBS_API FilesUI : public UIComponent
 {
 public:
     bool show_script_popup = false;

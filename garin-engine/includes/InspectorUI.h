@@ -1,7 +1,8 @@
 #pragma once
 #include "UIComponent.h"
+#include <Core.h>
 
-class InspectorUI : public UIComponent
+class GARINLIBS_API InspectorUI : public UIComponent
 {
 public:
     void draw(Entity *select_obj) override;

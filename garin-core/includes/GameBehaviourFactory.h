@@ -2,10 +2,11 @@
 #include <GarinComponents.h>
 #include <GarinBehaviours.h>
 #include <GarinNatives.h>
+#include "Core.h"
 
-class GameBehaviour;
+class GARINLIBS_API GameBehaviour;
 
-class GameBehaviourFactory
+class GARINLIBS_API GameBehaviourFactory
 {
 public:
     using Creator = std::function<std::unique_ptr<GameBehaviour>()>;

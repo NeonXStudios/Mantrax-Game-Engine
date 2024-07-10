@@ -2,8 +2,9 @@
 #include <iostream>
 #include <random>
 #include <iomanip>
+#include <Core.h>
 
-class IDGenerator
+class GARINLIBS_API IDGenerator
 {
 public:
     static int generate_id()

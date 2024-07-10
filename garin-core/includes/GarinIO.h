@@ -6,8 +6,9 @@
 #include <string>
 #include <algorithm>
 #include <nlohmann/json.hpp>
+#include "Core.h"
 
-class GarinIO
+class GARINLIBS_API GarinIO
 {
 public:
     static std::string GetFileNameWithoutExtension(const std::string &filepath)

@@ -7,7 +7,9 @@
 #include <GarinNatives.h>
 #include <GarinIO.h>
 
-class UIComponent
+#include <Core.h>
+
+class GARINLIBS_API UIComponent
 {
 public:
     bool is_open = true;

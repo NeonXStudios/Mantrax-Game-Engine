@@ -3,11 +3,12 @@
 #include <iostream>
 #include <GarinComponents.h>
 #include <GarinGraphics.h>
+#include "Core.h"
 
 using namespace std;
 using namespace FMOD;
 
-class GAudio : public Component
+class GARINLIBS_API GAudio : public Component
 {
     Sound *sound = nullptr;
     Channel *channel = nullptr;

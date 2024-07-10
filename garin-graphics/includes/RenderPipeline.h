@@ -1,9 +1,10 @@
 #pragma once
 
 #include <iostream>
+#include <Core.h>
 
-class RenderPipeline
+class GARINLIBS_API RenderPipeline
 {
-    
+
     void render();
 };

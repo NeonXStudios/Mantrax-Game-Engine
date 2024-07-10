@@ -19,7 +19,19 @@ void EditorConfigs::save_config()
 void EditorConfigs::load_config()
 {
     json settings = json::parse(FileManager::read_file(FileManager::get_execute_path() + current_proyect + "/EngineSettings.data"));
+    std::cout << "JSON CONFIG DATA: " << settings.dump(4) << std::endl;
     current_scene = (std::string)settings["current_scene"];
     start_scene = (std::string)settings["start_scene"];
+
+    if (Graphics::get_main_camera() == nullptr)
+    {
+        std::cout << "Main camera its null" << std::endl;
+        return;
+    }
+    else
+    {
+        std::cout << "Loading camera config" << std::endl;
+    }
+
     VarVerify::set_value_if_exists(settings, "camera_state", Graphics::get_main_camera()->use_projection);
 }

@@ -7,8 +7,9 @@
 #include "GMaterial.h"
 #include <Model.h>
 #include <Graphics.h>
+#include "Core.h"
 
-class ModelComponent : public Component
+class GARINLIBS_API ModelComponent : public Component
 {
 public:
     string model_path;

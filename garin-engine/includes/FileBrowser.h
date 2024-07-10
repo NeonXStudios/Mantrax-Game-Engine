@@ -5,10 +5,11 @@
 #include <string>
 #include <optional>
 #include <imgui.h>
+#include <Core.h>
 
 namespace fs = std::filesystem;
 
-class FileBrowser
+class GARINLIBS_API FileBrowser
 {
 public:
     static std::string currentDirectory;

@@ -1,7 +1,8 @@
 #pragma once
 #include <NodeManager.h>
+#include "Core.h"
 
-class Node_Print
+class GARINLIBS_API Node_Print
 {
     // public
 };

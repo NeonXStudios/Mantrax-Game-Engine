@@ -4,23 +4,24 @@
 
 #include <GarinNatives.h>
 #include <GarinMaths.h>
+#include "Core.h"
 
-class Component;
-class Entity;
-class Manager;
-class TransformComponent;
+class GARINLIBS_API Component;
+class GARINLIBS_API Entity;
+class GARINLIBS_API Manager;
+class GARINLIBS_API TransformComponent;
 
 using ComponentID = std::size_t;
 using Group = std::size_t;
 
-inline ComponentID getNewComponentTypeID()
+inline GARINLIBS_API ComponentID getNewComponentTypeID()
 {
 	static ComponentID lastID = 0u;
 	return lastID++;
 }
 
 template <typename T>
-inline ComponentID getComponentTypeID() noexcept
+inline GARINLIBS_API ComponentID getComponentTypeID() noexcept
 {
 	static_assert(std::is_base_of<Component, T>::value, "");
 	static ComponentID typeID = getNewComponentTypeID();
@@ -35,7 +36,7 @@ using GroupBitset = std::bitset<maxGroups>;
 
 using ComponentArray = std::array<Component *, maxComponents>;
 
-class Component
+class GARINLIBS_API Component
 {
 public:
 	using Variable = std::any;
@@ -107,7 +108,7 @@ public:
 #define GVAR(name, value, type) variableMap[#name] = static_cast<type>(value)
 #define GETVAR(name, type) std::any_cast<type>(variableMap.at(#name))
 
-class TransformComponent
+class GARINLIBS_API TransformComponent
 {
 public:
 	glm::mat4 Matrix = glm::mat4(1.0f);
@@ -204,7 +205,7 @@ public:
 	}
 };
 
-class Entity
+class GARINLIBS_API Entity
 {
 private:
 	bool active = true;

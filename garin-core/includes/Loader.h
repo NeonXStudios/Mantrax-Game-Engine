@@ -1,4 +1,5 @@
 #pragma once
+#include "Core.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -6,7 +7,7 @@
 #include <dlfcn.h>
 #endif
 
-class Loader
+class GARINLIBS_API Loader
 {
 public:
     void *handle = nullptr;

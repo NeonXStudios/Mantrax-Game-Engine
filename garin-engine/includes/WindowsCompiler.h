@@ -6,10 +6,11 @@
 #include <cstdio>
 #include <cstring>
 #include <cerrno>
+#include <Core.h>
 
 namespace fs = std::filesystem;
 
-class WindowsCompiler
+class GARINLIBS_API WindowsCompiler
 {
 public:
     static void copy_scene_files(const std::string &source_dir, const std::string &destination_dir)

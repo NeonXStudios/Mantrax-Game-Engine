@@ -6,7 +6,6 @@
 #include "GBody.h"
 #include "GCollision.h"
 #include "ModelComponent.h"
-#include "TerrainGenerator.h"
 #include "GScript.h"
 #include "GMaterial.h"
 #include "GCharacter.h"

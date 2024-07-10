@@ -1,0 +1,55 @@
+#include "../includes/gamescene.h"
+#include <windows.h>
+#include <iostream>
+#include <SceneManager.h>
+#include <AudioManager.h>
+
+typedef AudioManager *(*GetAudioManagerFunc)();
+
+int main(void)
+{
+    HMODULE hModule = LoadLibrary(TEXT("GarinLibs.dll"));
+    if (!hModule)
+    {
+        std::cerr << "Failed to load DLL" << std::endl;
+        return -1;
+    }
+
+    GetAudioManagerFunc GetAudioManager = (GetAudioManagerFunc)GetProcAddress(hModule, "GetAudioManager");
+    if (!GetAudioManager)
+    {
+        std::cerr << "Failed to get function address" << std::endl;
+        FreeLibrary(hModule);
+        return -1;
+    }
+
+    AudioManager *audioManager = GetAudioManager();
+    audioManager->create();
+    audioManager->StartSystem();
+
+    SceneManager *sceneManager = new SceneManager();
+    sceneManager->create();
+
+    gamescene *scene_game = new gamescene();
+    SceneManager::GetSceneManager()->OpenScene = scene_game;
+
+    Graphics *game_graphics = new Graphics();
+    game_graphics->start_graphics("Garin Editor", 1920, 1080, false, [game_graphics]()
+                                  {
+        SceneManager::GetOpenScene()->main_camera->update();
+
+        if (AppSettings::is_playing) {
+            SceneManager::GetOpenScene()->update(Timer::delta_time);
+            game_graphics->runner->on_tick();
+        } else {
+            SceneManager::GetOpenScene()->on_edition_mode(Timer::delta_time);
+        } });
+
+    SceneManager::GetOpenScene()->on_destroy();
+    sceneManager->release();
+    audioManager->release();
+
+    FreeLibrary(hModule);
+
+    return 0;
+}

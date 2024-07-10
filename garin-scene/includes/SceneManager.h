@@ -3,8 +3,10 @@
 #include <GarinComponents.h>
 #include "Scene.h"
 
+#include <Core.h>
+
 class Scene;
-class SceneManager
+class GARINLIBS_API SceneManager
 {
 public:
     Scene *OpenScene;
@@ -23,4 +25,5 @@ public:
     Entity *CloneEntity(Entity *entity);
     Entity *Destroy(Entity *object);
     void ClearOpenScene();
+    static void load_scene(std::string scene_name_new);
 };

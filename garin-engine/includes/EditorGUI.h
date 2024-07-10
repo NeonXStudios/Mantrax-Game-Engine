@@ -5,10 +5,11 @@
 #include <GarinNatives.h>
 #include <GarinUI.h>
 #include <IconsManager.h>
+#include <Core.h>
 
 using namespace std;
 
-class EditorGUI
+class GARINLIBS_API EditorGUI
 {
 public:
     static string InputText(string Name, string value)

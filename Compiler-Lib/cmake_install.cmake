@@ -2,7 +2,7 @@
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/GarinLibs")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/GarinLibrary")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -30,18 +30,6 @@ endif()
 # Is this installation the result of a crosscompile?
 if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
-endif()
-
-if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/GarinLibs/lib" TYPE STATIC_LIBRARY FILES "C:/Proyects/GarinEngine/Compiler-Lib/GarinLibs/GarinLibs/lib/Debug/GarinLibs.lib")
-  elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/GarinLibs/lib" TYPE STATIC_LIBRARY FILES "C:/Proyects/GarinEngine/Compiler-Lib/GarinLibs/GarinLibs/lib/Release/GarinLibs.lib")
-  elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Mm][Ii][Nn][Ss][Ii][Zz][Ee][Rr][Ee][Ll])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/GarinLibs/lib" TYPE STATIC_LIBRARY FILES "C:/Proyects/GarinEngine/Compiler-Lib/GarinLibs/GarinLibs/lib/MinSizeRel/GarinLibs.lib")
-  elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ww][Ii][Tt][Hh][Dd][Ee][Bb][Ii][Nn][Ff][Oo])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/GarinLibs/lib" TYPE STATIC_LIBRARY FILES "C:/Proyects/GarinEngine/Compiler-Lib/GarinLibs/GarinLibs/lib/RelWithDebInfo/GarinLibs.lib")
-  endif()
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)

@@ -2,8 +2,9 @@
 #include <GarinNatives.h>
 #include <GarinComponents.h>
 #include <GarinBehaviours.h>
+#include "Core.h"
 
-class GScript : public Component
+class GARINLIBS_API GScript : public Component
 {
 public:
     std::unique_ptr<GameBehaviour> behaviour;

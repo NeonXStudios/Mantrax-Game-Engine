@@ -2,8 +2,9 @@
 
 #include <PxPhysicsAPI.h>
 #include "GarinCollisionEvents.h"
+#include <Core.h>
 
-class PhysicsEngine
+class GARINLIBS_API PhysicsEngine
 {
 public:
     physx::PxDefaultAllocator mDefaultAllocatorCallback;

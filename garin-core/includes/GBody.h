@@ -2,10 +2,11 @@
 #include <ECS.h>
 #include <GarinMaths.h>
 #include <PhysicsEngine.h>
+#include "Core.h"
 
 namespace GBodySpace
 {
-    enum force_mode
+    enum GARINLIBS_API force_mode
     {
         Impulse,
         Velocity,
@@ -13,7 +14,7 @@ namespace GBodySpace
     };
 };
 
-class GBody : public Component
+class GARINLIBS_API GBody : public Component
 {
 public:
     // float mass = 1;

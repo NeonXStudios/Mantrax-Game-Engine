@@ -11,12 +11,11 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
-#include "dll.h"
 #include "types.h"
+#include "Core.h"
 
 class Component;
-
-class DynamicLibLoader
+class GARINLIBS_API DynamicLibLoader
 {
 public:
     std::unordered_map<std::string, Function<Shared<Component>()>> factories;
@@ -33,7 +32,7 @@ public:
     void reset_component_registry();
 
     // GARIN_API void register_component(const std::string &name, Function<Shared<Component>()> factory);
-    GARIN_API Shared<Component> create_component(const std::string &name) const;
+    Shared<Component> create_component(const std::string &name) const;
 
     // template <typename T>
     // void register_component(const std::string &name)

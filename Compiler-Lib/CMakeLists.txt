@@ -1,61 +1,58 @@
 cmake_minimum_required(VERSION 3.10)
-set(project_name "GarinLibs")
-
-# Nombre del proyecto
-project(${project_name})
+project(GarinLibrary)
 
 # Establecer el estándar de C++
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Incluir directorios de cabeceras
-include_directories(
-        ${CMAKE_CURRENT_SOURCE_DIR}/../garin-core/includes
-        ${CMAKE_CURRENT_SOURCE_DIR}/../garin-engine/includes
-        ${CMAKE_CURRENT_SOURCE_DIR}/../garin-graphics/includes
-        ${CMAKE_CURRENT_SOURCE_DIR}/../garin-scene/includes
-        ${CMAKE_CURRENT_SOURCE_DIR}/../garin-ui/includes
-        ${CMAKE_CURRENT_SOURCE_DIR}/../garin-vr/includes
-        ${CMAKE_CURRENT_SOURCE_DIR}/../garin-maths/includes
-        ${CMAKE_CURRENT_SOURCE_DIR}/../garin-physics/includes/physx
-        ${CMAKE_CURRENT_SOURCE_DIR}/../garin-physics/includes/
-        ${CMAKE_CURRENT_SOURCE_DIR}/../garin-audio/includes/
+# Buscar archivos fuente
+file(GLOB_RECURSE GARIN_CORE_SOURCES "../garin-core/src/*.cpp")
+file(GLOB_RECURSE GARIN_SCENE_SOURCES "../garin-scene/src/*.cpp")
+file(GLOB_RECURSE GARIN_UI_SOURCES "../garin-ui/src/*.cpp" "../garin-ui/includes/*.cpp")
+file(GLOB_RECURSE GARIN_VR_SOURCES "../garin-vr/src/*.cpp")
+file(GLOB_RECURSE GARIN_GRAPHICS_SOURCES "../garin-graphics/src/*.cpp" "../garin-graphics/libs/glad.c")
+file(GLOB_RECURSE GARIN_MATHS_SOURCES "../garin-maths/src/*.cpp")
+file(GLOB_RECURSE GARIN_PHYSICS_SOURCES "../garin-physics/src/*.cpp")
+file(GLOB_RECURSE GARIN_AUDIO_SOURCES "../garin-audio/src/*.cpp")
+file(GLOB_RECURSE GARIN_GLAD "../garin-graphics/libs/glad.c")
+file(GLOB_RECURSE GARIN_EDITOR "../garin-engine/src/*.cpp")
+
+# Combinar todos los archivos fuente
+set(ALL_SOURCES
+    ${GARIN_CORE_SOURCES}
+    ${GARIN_SCENE_SOURCES}
+    ${GARIN_UI_SOURCES}
+    ${GARIN_VR_SOURCES}
+    ${GARIN_GRAPHICS_SOURCES}
+    ${GARIN_MATHS_SOURCES}
+    ${GARIN_PHYSICS_SOURCES}
+    ${GARIN_AUDIO_SOURCES}
+    ${GARIN_GLAD}
+    ${GARIN_EDITOR}
+)
+set(SOURCES
+    ../garin-engine/src/main.cpp
 )
 
-# Establecer el directorio de salida para archivos de proyecto de Visual Studio
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/GarinLibs/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/GarinLibs/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/GarinLibs/lib)
+# Crear la biblioteca compartida (DLL)
+add_library(GarinLibrary SHARED ${ALL_SOURCES})
 
-# Establecer directorio de salida para archivos intermedios de Visual Studio
-set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/GarinLibs)
-
-# Establecer directorio de salida para archivos de caché de CMake
-set(CMAKE_CACHEFILE_DIR ${CMAKE_BINARY_DIR}/GarinLibs/cache)
-
-# Lista de archivos fuente
-file(GLOB_RECURSE SOURCES
-    "../garin-engine/src/*.cpp"
-    "../garin-graphics/libs/glad.c"
-    "../garin-core/src/*.cpp"
-    "../garin-scene/src/*.cpp"
-    "../garin-ui/src/*.cpp"
-    "../garin-ui/includes/*.cpp"
-    "../garin-vr/src/*.cpp"
-    "../garin-graphics/src/*.cpp"
-    "../garin-maths/src/*.cpp"
-    "../garin-physics/src/*.cpp"
-    "../garin-audio/src/*.cpp"
-    "../garin-dll/projects/test/clscpp/*.cpp"
+# Incluir directorios
+target_include_directories(GarinLibrary PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../garin-core/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/../garin-graphics/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/../garin-scene/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/../garin-ui/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/../garin-vr/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/../garin-maths/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/../garin-physics/includes/physx
+    ${CMAKE_CURRENT_SOURCE_DIR}/../garin-physics/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/../garin-audio/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/../garin-engine/includes
 )
 
-list(REMOVE_ITEM SOURCES
-    "garin-engine/src/main.cpp"
-)
-
-# GARIN-ENGINE LIBS PATH
-file(GLOB LIBRARIES
-    "../garin-engine/libs/*.lib"
+# Enlazar bibliotecas
+file(GLOB_RECURSE GARIN_LIBS
     "../garin-core/libs/*.lib"
     "../garin-scene/libs/*.lib"
     "../garin-ui/libs/*.lib"
@@ -66,23 +63,5 @@ file(GLOB LIBRARIES
     "../garin-audio/libs/*.lib"
 )
 
-# Crear la biblioteca estática
-add_library(${project_name} STATIC ${SOURCES})
-
-# Definir el símbolo de exportación (solo necesario para bibliotecas compartidas)
-# target_compile_definitions(${project_name} PRIVATE GARINAUDIO_EXPORTS)
-
-# Establecer la ruta de salida específica para esta biblioteca
-set_target_properties(${project_name} PROPERTIES
-ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/GarinLibs/lib
-LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/GarinLibs/lib
-RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/GarinLibs/bin
-)
-
-target_link_libraries(${project_name} PRIVATE ${LIBRARIES})
-
-# Instalar las bibliotecas
-install(TARGETS ${project_name}
-        ARCHIVE DESTINATION GarinLibs/lib
-        LIBRARY DESTINATION GarinLibs/lib
-        RUNTIME DESTINATION GarinLibs/bin)
+target_compile_definitions(GarinLibrary PRIVATE GARINLIBS_EXPORTS)
+target_link_libraries(GarinLibrary PRIVATE ${GARIN_LIBS})

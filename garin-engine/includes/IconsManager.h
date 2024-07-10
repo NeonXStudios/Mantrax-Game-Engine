@@ -1,8 +1,9 @@
 #pragma once
 #include <GarinGraphics.h>
 #include <GarinIO.h>
+#include <Core.h>
 
-class IconsManager
+class GARINLIBS_API IconsManager
 {
 public:
     static IconsManager *icons;

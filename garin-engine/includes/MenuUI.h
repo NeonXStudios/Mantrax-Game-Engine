@@ -1,7 +1,8 @@
 #pragma once
 #include "UIComponent.h"
+#include <Core.h>
 
-class MenuUI : public UIComponent
+class GARINLIBS_API MenuUI : public UIComponent
 {
 public:
     bool right_click_held = false;

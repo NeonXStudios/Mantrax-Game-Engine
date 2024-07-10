@@ -2,8 +2,9 @@
 #include <ECS.h>
 #include <GarinMaths.h>
 #include <GarinGraphics.h>
+#include "Core.h"
 
-class GMaterial : public Component
+class GARINLIBS_API GMaterial : public Component
 {
 public:
     Shader *p_shader;

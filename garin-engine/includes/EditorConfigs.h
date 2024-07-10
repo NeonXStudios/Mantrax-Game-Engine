@@ -1,8 +1,9 @@
 #pragma once
 #include <iostream>
 #include <FileManager.h>
+#include <Core.h>
 
-class EditorConfigs
+class GARINLIBS_API EditorConfigs
 {
 public:
     std::string current_scene = "New Scene";

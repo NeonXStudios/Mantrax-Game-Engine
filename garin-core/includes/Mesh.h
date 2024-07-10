@@ -11,11 +11,12 @@
 
 #include <string>
 #include <vector>
+#include "Core.h"
 using namespace std;
 
 #define MAX_BONE_INFLUENCE 4
 
-struct Vertex
+struct GARINLIBS_API Vertex
 {
     // position
     glm::vec3 Position;
@@ -33,14 +34,14 @@ struct Vertex
     float m_Weights[MAX_BONE_INFLUENCE];
 };
 
-struct Texture
+struct GARINLIBS_API Texture
 {
     unsigned int id;
     string type;
     string path;
 };
 
-class Mesh
+class GARINLIBS_API Mesh
 {
 public:
     // mesh Data

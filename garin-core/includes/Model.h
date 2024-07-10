@@ -19,10 +19,11 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include "Core.h"
 
 using namespace std;
 
-class Model
+class GARINLIBS_API Model
 {
 public:
     // model data

@@ -3,7 +3,6 @@
 #include <GarinNatives.h>
 #include "WindowsCompiler.h"
 #include "UIAdministrator.h"
-#include "DebugGame.h"
 
 #include "EditorGUI.h"
 #include "EditorConfigs.h"
@@ -15,9 +14,8 @@
 #include <GarinEvents.h>
 #include <GarinUI.h>
 
-#include <TerrainGenerator.h>
 #include <IconsManager.h>
-#include <GDGizmos.h>
+#include <Core.h>
 
 class Drawer;
 class Camera;
@@ -34,7 +32,7 @@ class HierarchyUI;
 class MenuUI;
 class UINotification;
 
-class gamescene : public Scene
+class GARINLIBS_API gamescene : public Scene
 {
 public:
     Drawer *drawcube;
@@ -53,8 +51,6 @@ public:
     MenuUI *menuui;
     UINotification *notify;
     IconsManager *icons;
-
-    GDGizmos *gizmos;
 
     void purpledark();
     void embraceTheDarkness();

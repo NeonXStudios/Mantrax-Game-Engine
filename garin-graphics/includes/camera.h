@@ -1,8 +1,9 @@
 #pragma once
 #include <GarinMaths.h>
 #include <vector>
+#include <Core.h>
 
-class Camera
+class GARINLIBS_API Camera
 {
 public:
   enum Projection

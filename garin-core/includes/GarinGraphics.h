@@ -1,6 +1,5 @@
 #pragma once
 #include <Drawer.h>
-#include <GarinUI.h>
 #include <ShaderCompiler.h>
 
 #ifndef NO_INCLUDE_GRAPHICS_CLASS

@@ -1,6 +1,7 @@
 #pragma once
+#include "Core.h"
 
-class AppSettings
+class GARINLIBS_API AppSettings
 {
 public:
     static bool is_playing;

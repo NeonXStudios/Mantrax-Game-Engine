@@ -11,8 +11,9 @@
 #include <imgui.h>
 #include <memory>
 #include <sstream>
+#include <Core.h>
 
-class ComponentsDrawer
+class GARINLIBS_API ComponentsDrawer
 {
 public:
     template <typename T>
