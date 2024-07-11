@@ -184,8 +184,18 @@ void MainBarUI::draw(Entity *owner)
 
         if (AppSettings::is_playing)
         {
+            Entity *selectobj = owner;
+
+            if (selectobj != nullptr)
+            {
+                selectobj = owner;
+            }
+
             SceneData::save_scene();
             SceneData::load_scene(SceneManager::GetOpenScene()->scene_name);
+
+            if (selectobj != nullptr)
+                game->set_object_select(selectobj);
         }
         else
         {

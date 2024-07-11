@@ -26,6 +26,8 @@ void gamescene::on_start()
     hierarchyui = new HierarchyUI();
     menuui = new MenuUI();
 
+    mainbar->game = this;
+
     notify = new UINotification();
     IconsManager::init();
 

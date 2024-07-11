@@ -58,6 +58,7 @@ void SceneUI::draw(Entity *select_obj)
                 transform->rotation.y = glm::radians(rotation.y);
                 transform->rotation.z = glm::radians(rotation.z);
                 transform->Scale = scale;
+                select_obj->getComponent<GBody>().body->setLinearVelocity(PxVec3(0, 0, 0));
                 select_obj->getComponent<GBody>().set_position(translation);
             }
             transform->update();

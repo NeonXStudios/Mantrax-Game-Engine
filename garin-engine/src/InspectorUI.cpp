@@ -37,43 +37,43 @@ void InspectorUI::draw(Entity *select_obj)
 
             if (ImGui::Button("Render Mesh", ImVec2(buttonWidth, 20)))
             {
-                select_obj->addComponent<ModelComponent>();
+                select_obj->addComponent<ModelComponent>().init();
                 ImGui::CloseCurrentPopup();
             }
 
             if (ImGui::Button("Rigid Body", ImVec2(buttonWidth, 20)))
             {
-                select_obj->addComponent<GBody>();
+                select_obj->addComponent<GBody>().init();
                 ImGui::CloseCurrentPopup();
             }
 
             if (ImGui::Button("Box Collider", ImVec2(buttonWidth, 20)))
             {
-                select_obj->addComponent<GCollision>();
+                select_obj->addComponent<GCollision>().init();
                 ImGui::CloseCurrentPopup();
             }
 
             if (ImGui::Button("Material", ImVec2(buttonWidth, 20)))
             {
-                select_obj->addComponent<GMaterial>();
+                select_obj->addComponent<GMaterial>().init();
                 ImGui::CloseCurrentPopup();
             }
 
             if (ImGui::Button("Game Script", ImVec2(buttonWidth, 20)))
             {
-                select_obj->addComponent<GScript>();
+                select_obj->addComponent<GScript>().init();
                 ImGui::CloseCurrentPopup();
             }
 
             if (ImGui::Button("Character Controller", ImVec2(buttonWidth, 20)))
             {
-                select_obj->addComponent<GCharacter>();
+                select_obj->addComponent<GCharacter>().init();
                 ImGui::CloseCurrentPopup();
             }
 
             if (ImGui::Button("Audio Source", ImVec2(buttonWidth, 20)))
             {
-                select_obj->addComponent<GAudio>();
+                select_obj->addComponent<GAudio>().init();
                 ImGui::CloseCurrentPopup();
             }
 

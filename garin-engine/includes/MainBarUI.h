@@ -4,10 +4,13 @@
 #include <GarinNatives.h>
 #include <SceneData.h>
 #include <Core.h>
+#include "gamescene.h"
 
+class gamescene;
 class GARINLIBS_API MainBarUI : public UIComponent
 {
 public:
+    gamescene *game;
     bool show_new_scene_popup = false;
     char new_scene_name[128] = "";
 
