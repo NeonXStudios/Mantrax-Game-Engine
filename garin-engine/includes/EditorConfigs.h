@@ -9,6 +9,7 @@ public:
     std::string current_scene = "New Scene";
     std::string start_scene = "New Scene";
     std::string current_proyect = "projects/test/";
+    bool project_select = false;
 
     void save_config();
     void load_config();

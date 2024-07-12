@@ -5,7 +5,7 @@ void AssetsUI::draw(EditorConfigs *p_configs)
 {
     configs = p_configs;
     ImGui::Begin("Assets");
-    ShowDirectoryTree(FileManager::get_execute_path() + configs->current_proyect + "/assets");
+    ShowDirectoryTree(FileManager::get_game_path() + "/assets");
 
     if (ImGui::IsWindowHovered())
     {

@@ -12,7 +12,7 @@ void FilesUI::draw(Entity *owner, EditorConfigs *p_configs)
     EditorConfigs *configs = p_configs;
 
     ImGui::Begin("Scripts");
-    ShowDirectoryTree(FileManager::get_execute_path() + configs->current_proyect + "/clscpp");
+    ShowDirectoryTree(FileManager::get_game_path() + "/clscpp");
 
     if (ImGui::BeginPopupContextWindow("AssetsPopup", ImGuiMouseButton_Right))
     {
@@ -26,7 +26,7 @@ void FilesUI::draw(Entity *owner, EditorConfigs *p_configs)
 
     if (ImGui::Button("Open Class Proyect"))
     {
-        std::filesystem::current_path(FileManager::get_execute_path() + configs->current_proyect + "/clscpp");
+        std::filesystem::current_path(FileManager::get_game_path() + "/clscpp");
 
         int result = system("code .");
     }
@@ -151,8 +151,8 @@ void FilesUI::create_script_files(const std::string &script_name, EditorConfigs 
         return;
     }
 
-    std::string header_file = FileManager::get_execute_path() + configs->current_proyect + "/clscpp/" + script_name + ".h";
-    std::string source_file = FileManager::get_execute_path() + configs->current_proyect + "/clscpp/" + script_name + ".cpp";
+    std::string header_file = FileManager::get_game_path() + "assets/clscpp/" + script_name + ".h";
+    std::string source_file = FileManager::get_game_path() + "assets/clscpp/" + script_name + ".cpp";
 
     // Crear archivo .h
     std::ofstream header(header_file);

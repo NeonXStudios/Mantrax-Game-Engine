@@ -7,14 +7,11 @@
 
 void gamescene::on_start()
 {
+    configs = new EditorConfigs();
     camera = new Camera();
     main_camera = camera;
 
     GarinUI::make_ui_context(Graphics::get_game_window());
-
-    configs->load_config();
-    SceneData::load_scene(configs->current_scene);
-
     std::cout << "CARPETA DE EJECUCION: " << FileManager::get_execute_path() << std::endl;
 
     inspector = new InspectorUI();
@@ -25,6 +22,9 @@ void gamescene::on_start()
     settingsui = new GameSettingsUI();
     hierarchyui = new HierarchyUI();
     menuui = new MenuUI();
+    hub = new EngineHubUI();
+    hub->configs = configs;
+    mainbar->configs = configs;
 
     mainbar->game = this;
 
@@ -38,7 +38,7 @@ void gamescene::on_start()
 
 void gamescene::on_edition_mode(float delta_time)
 {
-    if (ImGui::IsMouseDown(ImGuiMouseButton_Right))
+    if (ImGui::IsMouseDown(ImGuiMouseButton_Right) && configs->project_select)
     {
         camera->move_forward(delta_time, InputSystem::get_axis(GLFW_KEY_W, GLFW_KEY_S) * 0.1f);
         camera->move_left(delta_time, InputSystem::get_axis(GLFW_KEY_A, GLFW_KEY_D) * 0.1f);
@@ -79,19 +79,25 @@ void gamescene::on_draw()
 void gamescene::draw_ui()
 {
     GarinUI::get_ui_manager()->render_new_frame_ui_context(true);
+    if (configs->project_select == true)
+    {
+        hierarchyui->game = this;
 
-    hierarchyui->game = this;
-
-    inspector->draw(select_obj);
-    mainbar->draw(select_obj);
-    sceneui->draw(select_obj);
-    filesui->draw(select_obj, configs);
-    assetsui->draw(configs);
-    settingsui->draw(configs);
-    hierarchyui->draw(select_obj);
-    menuui->draw(this);
-    // notify->RenderNotifications();
-    UINotification::instance.RenderNotifications();
+        inspector->draw(select_obj);
+        mainbar->draw(select_obj);
+        sceneui->draw(select_obj);
+        filesui->draw(select_obj, configs);
+        assetsui->draw(configs);
+        settingsui->draw(configs);
+        hierarchyui->draw(select_obj);
+        menuui->draw(this);
+        // notify->RenderNotifications();
+        UINotification::instance.RenderNotifications();
+    }
+    else
+    {
+        hub->draw();
+    }
 
     GarinUI::get_ui_manager()->render_ui_context();
 }

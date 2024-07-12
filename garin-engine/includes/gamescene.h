@@ -39,7 +39,7 @@ public:
     Camera *camera;
 
     Entity *select_obj;
-    EditorConfigs *configs = new EditorConfigs();
+    EditorConfigs *configs;
 
     InspectorUI *inspector;
     MainBarUI *mainbar;
@@ -51,6 +51,7 @@ public:
     MenuUI *menuui;
     UINotification *notify;
     IconsManager *icons;
+    EngineHubUI *hub;
 
     void purpledark();
     void embraceTheDarkness();

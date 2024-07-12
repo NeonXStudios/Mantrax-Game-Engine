@@ -1,5 +1,7 @@
 #include "../includes/FileManager.h"
 
+std::string FileManager::game_path = "";
+
 std::vector<fs::directory_entry> FileManager::get_files_noT(const std::string &path)
 {
     std::vector<fs::directory_entry> files;
@@ -80,5 +82,15 @@ std::string FileManager::get_execute_path()
 
 std::string FileManager::get_project_path()
 {
-    return "C:/Proyects/GarinEngine/build/Debug/projects/test/";
+    return FileManager::game_path + "/";
+}
+
+std::string FileManager::get_game_path()
+{
+    return FileManager::game_path + "/";
+}
+
+bool FileManager::check_file_if_exist(const std::string &path)
+{
+    return std::filesystem::exists(path);
 }

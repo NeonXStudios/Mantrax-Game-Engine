@@ -32,6 +32,14 @@ void MainBarUI::draw(Entity *owner)
                 }
             }
 
+            if (ImGui::MenuItem("Close Proyect"))
+            {
+                if (!AppSettings::is_playing)
+                {
+                    configs->project_select = false;
+                }
+            }
+
             ImGui::EndMenu();
         }
 
