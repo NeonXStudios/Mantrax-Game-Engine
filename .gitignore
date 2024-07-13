@@ -5,3 +5,7 @@ bin/
 .build/*
 .Compiler-Lib/*
 *.ilk
+/Compiler-Lib
+*.obj
+Compiler-Lib/GarinLibrary/CMakeCache.txt
+*.obj

@@ -28,6 +28,7 @@ C:\Proyects\GarinEngine\garin-ui\includes\imgui_demo.cpp;C:\Proyects\GarinEngine
 C:\Proyects\GarinEngine\garin-ui\includes\imgui_draw.cpp;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\GarinLibrary.dir\Debug\imgui_draw.obj
 C:\Proyects\GarinEngine\garin-ui\includes\imgui_impl_glfw.cpp;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\GarinLibrary.dir\Debug\imgui_impl_glfw.obj
 C:\Proyects\GarinEngine\garin-ui\includes\imgui_impl_opengl3.cpp;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\GarinLibrary.dir\Debug\imgui_impl_opengl3.obj
+C:\Proyects\GarinEngine\garin-ui\includes\imgui_impl_vulkan.cpp;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\GarinLibrary.dir\Debug\imgui_impl_vulkan.obj
 C:\Proyects\GarinEngine\garin-ui\includes\imgui_node_editor.cpp;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\GarinLibrary.dir\Debug\imgui_node_editor.obj
 C:\Proyects\GarinEngine\garin-ui\includes\imgui_node_editor_api.cpp;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\GarinLibrary.dir\Debug\imgui_node_editor_api.obj
 C:\Proyects\GarinEngine\garin-ui\includes\imgui_tables.cpp;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\GarinLibrary.dir\Debug\imgui_tables.obj

@@ -91,6 +91,9 @@
     <ClCompile Include="C:\Proyects\GarinEngine\garin-ui\includes\imgui_impl_opengl3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-ui\includes\imgui_impl_vulkan.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Proyects\GarinEngine\garin-ui\includes\imgui_node_editor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

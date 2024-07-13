@@ -34,6 +34,7 @@ public:
     static int height;
     static int render_width;
     static int render_height;
+    static settings_window current_config_window;
 
     // FPS controller settings
     static double lastFrameTime;
@@ -68,5 +69,4 @@ public:
     static void swap_buffer();
 
     static void setup_render_texture(int width, int height);
-    static void render_to_texture();
 };

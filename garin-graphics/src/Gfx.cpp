@@ -22,9 +22,12 @@ unsigned int Gfx::framebuffer = -1;
 unsigned int Gfx::depthTexture = -1;
 unsigned int Gfx::colorAndDepthTexture = -1;
 unsigned int Gfx::depthRenderbuffer = -1;
+settings_window Gfx::current_config_window;
 
 int Gfx::create_windows(settings_window settings)
 {
+    current_config_window = settings;
+
     if (!glfwInit())
     {
         std::cout << "Error on try init GLFW" << std::endl;
@@ -72,15 +75,11 @@ int Gfx::create_windows(settings_window settings)
     return 0;
 }
 
-void Gfx::render_to_texture()
-{
-    render_to_texture();
-}
-
 void Gfx::poll_events()
 {
     glfwPollEvents();
     InputSystem::update_input();
+    render_to_texture();
 }
 
 void Gfx::timer_control()

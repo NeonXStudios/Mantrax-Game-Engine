@@ -28,13 +28,14 @@ int main(void)
     Gfx::create_windows(window_config);
 
     SceneManager::GetOpenScene()->init();
+    std::cout << "Al system started" << std::endl;
 
     while (!Gfx::try_window_close())
     {
-        Gfx::render_to_texture();
         Gfx::poll_events();
         Gfx::timer_control();
         Gfx::process_window_size();
+        Gfx::render_to_texture();
         SceneManager::GetOpenScene()->main_camera->update();
 
         if (AppSettings::is_playing)
