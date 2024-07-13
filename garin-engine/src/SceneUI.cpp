@@ -33,7 +33,7 @@ void SceneUI::draw(Entity *select_obj)
         float *projection = (float *)glm::value_ptr(SceneManager::GetOpenScene()->main_camera->GetProjectionMatrix());
         float *view = (float *)glm::value_ptr(SceneManager::GetOpenScene()->main_camera->GetView());
 
-        ImGuizmo::SetRect(p.x, p.y, Gfx::get_width(), Gfx::get_height());
+        ImGuizmo::SetRect(p.x, p.y, Gfx::render_width, Gfx::render_height);
 
         bool res = ImGuizmo::Manipulate(view, projection, gizmoOperation, gizmoMode, glm::value_ptr(matrix));
         ignoreGui &= !ImGuizmo::IsOver();

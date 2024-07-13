@@ -55,4 +55,4 @@ file(GLOB LIBRARIES
 target_link_libraries(${project_name} PRIVATE ${LIBRARIES})
 
 # Enlaces adicionales
-target_link_libraries(${project_name} PRIVATE GarinLibrary)
+target_link_libraries(${project_name} PRIVATE GarinLibraryEditor)

@@ -21,8 +21,8 @@ int main(void)
 
     settings_window window_config = settings_window();
     window_config.window_name = "Garin Engine";
-    window_config.width = 800;
-    window_config.height = 400;
+    window_config.width = 1920;
+    window_config.height = 1080;
     window_config.maximized = true;
 
     Gfx::create_windows(window_config);
@@ -47,6 +47,8 @@ int main(void)
         {
             SceneManager::GetOpenScene()->on_edition_mode(Timer::delta_time);
         }
+
+        std::cout << "screen x: " << Gfx::render_width << std::endl;
 
         Gfx::swap_buffer();
     }

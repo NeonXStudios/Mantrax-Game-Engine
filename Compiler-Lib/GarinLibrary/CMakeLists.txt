@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(GarinLibrary)
+project(GarinLib)
 
 # Establecer el estándar de C++
 set(CMAKE_CXX_STANDARD 17)
@@ -19,7 +19,6 @@ file(GLOB_RECURSE GARIN_MATHS_SOURCES "../../garin-maths/src/*.cpp")
 file(GLOB_RECURSE GARIN_PHYSICS_SOURCES "../../garin-physics/src/*.cpp")
 file(GLOB_RECURSE GARIN_AUDIO_SOURCES "../../garin-audio/src/*.cpp")
 file(GLOB_RECURSE GARIN_GLAD "../../garin-graphics/libs/glad.c")
-file(GLOB_RECURSE GARIN_EDITOR "../../garin-engine/src/*.cpp")
 
 # Combinar todos los archivos fuente
 set(ALL_SOURCES
@@ -32,7 +31,6 @@ set(ALL_SOURCES
     ${GARIN_PHYSICS_SOURCES}
     ${GARIN_AUDIO_SOURCES}
     ${GARIN_GLAD}
-    ${GARIN_EDITOR}
 )
 set(SOURCES
     ../garin-engine/src/main.cpp
@@ -52,7 +50,6 @@ target_include_directories(GarinLibrary PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../../garin-physics/includes/physx
     ${CMAKE_CURRENT_SOURCE_DIR}/../../garin-physics/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/../../garin-audio/includes
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../garin-engine/includes
 )
 
 # Enlazar bibliotecas
