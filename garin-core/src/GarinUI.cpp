@@ -1,6 +1,6 @@
 #include "../includes/GarinUI.h"
 #include <UIStyle.h>
-#include <Graphics.h>
+#include <Gfx.h>
 
 GarinUI *GarinUI::instance = nullptr;
 
@@ -26,14 +26,12 @@ void GarinUI::make_context(GLFWwindow *window)
         (void)io;
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-        // Configure ImGui styles
         UIStyle::SetStyleUI(Dracula);
 
-        // Verificar el contexto de la ventana
         if (window == nullptr)
         {
             std::cout << "Error: Window context is null." << std::endl;
-            ImGui::DestroyContext(); // Limpia ImGui si el contexto de la ventana es nulo
+            ImGui::DestroyContext();
             return;
         }
         else
@@ -41,9 +39,13 @@ void GarinUI::make_context(GLFWwindow *window)
             std::cout << "Window context for ImGui found." << std::endl;
         }
 
-        // Inicialización de ImGui para GLFW y OpenGL
-        ImGui_ImplGlfw_InitForOpenGL(window, true);
-        ImGui_ImplOpenGL3_Init("#version 330");
+        switch (Gfx::current_config_window.api_graphic)
+        {
+        case OpenGL:
+            ImGui_ImplGlfw_InitForOpenGL(window, true);
+            ImGui_ImplOpenGL3_Init("#version 330");
+            break;
+        }
 
         std::cout << "UI Context started." << std::endl;
     }
