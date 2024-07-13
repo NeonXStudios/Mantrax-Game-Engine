@@ -25,50 +25,40 @@ class Scene;
 
 class GARINLIBS_API Graphics
 {
-private:
-    static GLFWwindow *window;
-    static double startTime;
-    static double currentTime;
-    static double lifetime;
-    static int width;
-    static int height;
-
 public:
-    GLFWwindow *game_graphics_window;
-    static unsigned int texture;
-    unsigned int framebuffer;
-    unsigned int depthTexture;
-    unsigned int colorAndDepthTexture;
-    unsigned int depthRenderbuffer;
-    static int render_width;
-    static int render_height;
+    // static unsigned int texture;
+    // unsigned int framebuffer;
+    // unsigned int depthTexture;
+    // unsigned int colorAndDepthTexture;
+    // unsigned int depthRenderbuffer;
+    // static int render_width;
+    // static int render_height;
 
-    static Graphics *graphics;
-    static RenderGraphics *render_graphics;
-    GameBehaviourRunner *runner;
+    // static Graphics *graphics;
+    // static RenderGraphics *render_graphics;
+    // GameBehaviourRunner *runner;
 
-    std::unique_ptr<DynamicLibLoader> engine_libs_loader;
+    // std::unique_ptr<DynamicLibLoader> engine_libs_loader;
 
-    // GRAPHICS SETTINGS
-    static void set_vsync(bool vsync_active);
-    static void set_screen(int screen_index);
-    static int get_current_screen();
+    // // GRAPHICS SETTINGS
+    // static void set_vsync(bool vsync_active);
+    // static void set_screen(int screen_index);
+    // static int get_current_screen();
 
-    // STATIC FUNCTIONS
-    static void send_console(string msg);
+    // // STATIC FUNCTIONS
+    // static void send_console(string msg);
 
-    static double get_lifetime();
-    static GLFWwindow *get_game_window();
-    static int get_width();
-    static int get_height();
-    static Camera *get_main_camera();
-    static unsigned int get_render();
-    int start_graphics(string window_name, int width, int height, bool vsync, std::function<void(void)> func);
-    bool is_running();
+    // static double get_lifetime();
+    // static GLFWwindow *get_game_window();
+    // static int get_width();
+    // static int get_height();
+    // static Camera *get_main_camera();
+    // static unsigned int get_render();
+    // int start_graphics(string window_name, int width, int height, bool vsync, std::function<void(void)> func);
+    // bool is_running();
 
-    void render_loop(std::function<void(void)> func);
-    void setupRenderTexture(int width, int height);
-    void renderToTexture();
-    void setWindowIcon(GLFWwindow *window, const char *iconPath);
-    void clean_graphics();
+    // void render_loop(std::function<void(void)> func);
+    // void setupRenderTexture(int width, int height);
+    // void renderToTexture();
+    // void clean_graphics();
 };

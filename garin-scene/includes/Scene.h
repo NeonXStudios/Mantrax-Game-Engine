@@ -3,7 +3,7 @@
 #include <GarinBehaviours.h>
 #include <GarinNatives.h>
 #include <GarinGraphics.h>
-#include <GarinComponents.h>
+#include <ECS.h>
 #include <camera.h>
 #include <PhysicsEngine.h>
 
@@ -11,6 +11,8 @@
 #include <Core.h>
 
 using namespace std;
+
+class Camera;
 
 class GARINLIBS_API Scene
 {

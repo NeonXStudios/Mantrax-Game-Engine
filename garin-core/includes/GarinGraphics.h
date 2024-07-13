@@ -3,7 +3,7 @@
 #include <ShaderCompiler.h>
 
 #ifndef NO_INCLUDE_GRAPHICS_CLASS
-#include <Graphics.h>
+#include <Gfx.h>
 #endif
 
 #include <RenderGraphics.h>

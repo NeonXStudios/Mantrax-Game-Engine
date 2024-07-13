@@ -1,0 +1,417 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4AD8D5D5-9C0A-380D-BCA5-017CCC456965}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>GarinLibrary</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GarinLibrary.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GarinLibrary</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GarinLibrary.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GarinLibrary</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">GarinLibrary.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">GarinLibrary</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">GarinLibrary.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">GarinLibrary</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-audio\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-engine\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /w</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;GARINLIBS_EXPORTS;CMAKE_INTDIR="Debug";GarinLibrary_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;GARINLIBS_EXPORTS;CMAKE_INTDIR=\"Debug\";GarinLibrary_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-audio\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-engine\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-audio\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-engine\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\..\garin-audio\libs\fmodL_vc.lib;..\..\garin-audio\libs\fmod_vc.lib;..\..\garin-graphics\libs\assimp-vc143-mtd.lib;..\..\garin-graphics\libs\glfw3.lib;..\..\garin-graphics\libs\glfw3_mt.lib;..\..\garin-graphics\libs\glfw3dll.lib;..\..\garin-physics\libs\LowLevelAABB_static_64.lib;..\..\garin-physics\libs\LowLevelDynamics_static_64.lib;..\..\garin-physics\libs\LowLevel_static_64.lib;..\..\garin-physics\libs\PhysXCharacterKinematic_static_64.lib;..\..\garin-physics\libs\PhysXCommon_64.lib;..\..\garin-physics\libs\PhysXCooking_64.lib;..\..\garin-physics\libs\PhysXExtensions_static_64.lib;..\..\garin-physics\libs\PhysXFoundation_64.lib;..\..\garin-physics\libs\PhysXPvdSDK_static_64.lib;..\..\garin-physics\libs\PhysXTask_static_64.lib;..\..\garin-physics\libs\PhysXVehicle_static_64.lib;..\..\garin-physics\libs\PhysX_64.lib;..\..\garin-physics\libs\SceneQuery_static_64.lib;..\..\garin-physics\libs\SimulationController_static_64.lib;..\..\garin-vr\libs\openxr_loaderd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/Debug/GarinLibrary.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/Debug/GarinLibrary.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-audio\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-engine\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /w</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;GARINLIBS_EXPORTS;CMAKE_INTDIR="Release";GarinLibrary_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;GARINLIBS_EXPORTS;CMAKE_INTDIR=\"Release\";GarinLibrary_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-audio\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-engine\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-audio\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-engine\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\..\garin-audio\libs\fmodL_vc.lib;..\..\garin-audio\libs\fmod_vc.lib;..\..\garin-graphics\libs\assimp-vc143-mtd.lib;..\..\garin-graphics\libs\glfw3.lib;..\..\garin-graphics\libs\glfw3_mt.lib;..\..\garin-graphics\libs\glfw3dll.lib;..\..\garin-physics\libs\LowLevelAABB_static_64.lib;..\..\garin-physics\libs\LowLevelDynamics_static_64.lib;..\..\garin-physics\libs\LowLevel_static_64.lib;..\..\garin-physics\libs\PhysXCharacterKinematic_static_64.lib;..\..\garin-physics\libs\PhysXCommon_64.lib;..\..\garin-physics\libs\PhysXCooking_64.lib;..\..\garin-physics\libs\PhysXExtensions_static_64.lib;..\..\garin-physics\libs\PhysXFoundation_64.lib;..\..\garin-physics\libs\PhysXPvdSDK_static_64.lib;..\..\garin-physics\libs\PhysXTask_static_64.lib;..\..\garin-physics\libs\PhysXVehicle_static_64.lib;..\..\garin-physics\libs\PhysX_64.lib;..\..\garin-physics\libs\SceneQuery_static_64.lib;..\..\garin-physics\libs\SimulationController_static_64.lib;..\..\garin-vr\libs\openxr_loaderd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/Release/GarinLibrary.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/Release/GarinLibrary.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-audio\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-engine\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /w</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;GARINLIBS_EXPORTS;CMAKE_INTDIR="MinSizeRel";GarinLibrary_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;GARINLIBS_EXPORTS;CMAKE_INTDIR=\"MinSizeRel\";GarinLibrary_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-audio\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-engine\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-audio\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-engine\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\..\garin-audio\libs\fmodL_vc.lib;..\..\garin-audio\libs\fmod_vc.lib;..\..\garin-graphics\libs\assimp-vc143-mtd.lib;..\..\garin-graphics\libs\glfw3.lib;..\..\garin-graphics\libs\glfw3_mt.lib;..\..\garin-graphics\libs\glfw3dll.lib;..\..\garin-physics\libs\LowLevelAABB_static_64.lib;..\..\garin-physics\libs\LowLevelDynamics_static_64.lib;..\..\garin-physics\libs\LowLevel_static_64.lib;..\..\garin-physics\libs\PhysXCharacterKinematic_static_64.lib;..\..\garin-physics\libs\PhysXCommon_64.lib;..\..\garin-physics\libs\PhysXCooking_64.lib;..\..\garin-physics\libs\PhysXExtensions_static_64.lib;..\..\garin-physics\libs\PhysXFoundation_64.lib;..\..\garin-physics\libs\PhysXPvdSDK_static_64.lib;..\..\garin-physics\libs\PhysXTask_static_64.lib;..\..\garin-physics\libs\PhysXVehicle_static_64.lib;..\..\garin-physics\libs\PhysX_64.lib;..\..\garin-physics\libs\SceneQuery_static_64.lib;..\..\garin-physics\libs\SimulationController_static_64.lib;..\..\garin-vr\libs\openxr_loaderd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/MinSizeRel/GarinLibrary.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/MinSizeRel/GarinLibrary.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-audio\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-engine\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /w</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;GARINLIBS_EXPORTS;CMAKE_INTDIR="RelWithDebInfo";GarinLibrary_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;GARINLIBS_EXPORTS;CMAKE_INTDIR=\"RelWithDebInfo\";GarinLibrary_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-audio\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-engine\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-core\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-graphics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-scene\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-ui\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-vr\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-maths\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes\physx;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-physics\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-audio\includes;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\..\..\garin-engine\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\..\garin-audio\libs\fmodL_vc.lib;..\..\garin-audio\libs\fmod_vc.lib;..\..\garin-graphics\libs\assimp-vc143-mtd.lib;..\..\garin-graphics\libs\glfw3.lib;..\..\garin-graphics\libs\glfw3_mt.lib;..\..\garin-graphics\libs\glfw3dll.lib;..\..\garin-physics\libs\LowLevelAABB_static_64.lib;..\..\garin-physics\libs\LowLevelDynamics_static_64.lib;..\..\garin-physics\libs\LowLevel_static_64.lib;..\..\garin-physics\libs\PhysXCharacterKinematic_static_64.lib;..\..\garin-physics\libs\PhysXCommon_64.lib;..\..\garin-physics\libs\PhysXCooking_64.lib;..\..\garin-physics\libs\PhysXExtensions_static_64.lib;..\..\garin-physics\libs\PhysXFoundation_64.lib;..\..\garin-physics\libs\PhysXPvdSDK_static_64.lib;..\..\garin-physics\libs\PhysXTask_static_64.lib;..\..\garin-physics\libs\PhysXVehicle_static_64.lib;..\..\garin-physics\libs\PhysX_64.lib;..\..\garin-physics\libs\SceneQuery_static_64.lib;..\..\garin-physics\libs\SimulationController_static_64.lib;..\..\garin-vr\libs\openxr_loaderd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/RelWithDebInfo/GarinLibrary.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/RelWithDebInfo/GarinLibrary.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary -BC:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary --check-stamp-file C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\WindowsPaths.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeCCompiler.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeCXXCompiler.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeRCCompiler.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary -BC:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary --check-stamp-file C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\WindowsPaths.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeCCompiler.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeCXXCompiler.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeRCCompiler.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary -BC:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary --check-stamp-file C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\WindowsPaths.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeCCompiler.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeCXXCompiler.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeRCCompiler.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary -BC:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary --check-stamp-file C:/Proyects/GarinEngine/Compiler-Lib/GarinLibrary/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.28\Modules\Platform\WindowsPaths.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeCCompiler.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeCXXCompiler.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeRCCompiler.cmake;C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\3.28.5\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\AppSettings.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\ComponentFactory.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\DynamicLibLoader.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\FileManager.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\GAudio.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\GBody.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\GCaster.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\GCharacter.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\GCollision.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\GMaterial.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\GScript.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\GameBehaviour.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\GameBehaviourRunner.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\GarinUI.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\InputSystem.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\LightComponent.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\Lights.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\Loader.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\ModelComponent.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-core\src\types.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-scene\src\Scene.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-scene\src\SceneManager.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-ui\includes\ImGuizmo.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-ui\includes\crude_json.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-ui\includes\imgui.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-ui\includes\imgui_canvas.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-ui\includes\imgui_demo.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-ui\includes\imgui_draw.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-ui\includes\imgui_impl_glfw.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-ui\includes\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-ui\includes\imgui_node_editor.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-ui\includes\imgui_node_editor_api.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-ui\includes\imgui_tables.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-ui\includes\imgui_widgets.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-vr\src\vr.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-graphics\libs\glad.c" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-graphics\src\Drawer.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-graphics\src\Gfx.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-graphics\src\Graphics.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-graphics\src\RenderGraphics.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-graphics\src\TextureManager.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-graphics\src\Timer.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-graphics\src\camera.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-physics\src\PhysicsEngine.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-audio\src\AudioManager.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\AComponent.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\AssetsUI.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\CCharacter.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\CCollider.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\CGScript.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\CMaterial.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\CModel.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\CRigidbody.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\ComponentsDrawer.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\EditorConfigs.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\EngineHubUI.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\FileBrowser.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\FilesUI.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\GameSettingsUI.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\HierarchyUI.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\IconsManager.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\InspectorUI.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\MainBarUI.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\MenuUI.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\Node.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\SceneData.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\SceneFile.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\SceneUI.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\UIAdministrator.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\UINotification.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\gamescene.cpp" />
+    <ClCompile Include="C:\Proyects\GarinEngine\garin-engine\src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Proyects\GarinEngine\Compiler-Lib\GarinLibrary\ZERO_CHECK.vcxproj">
+      <Project>{8BFCD797-2562-3549-81F8-1E7A91594911}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

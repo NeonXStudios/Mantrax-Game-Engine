@@ -2,5 +2,5 @@ build/
 bin/
 .vscode/
 .vs
-.build/
-.Compiler-Lib/
+.build/*
+.Compiler-Lib/*

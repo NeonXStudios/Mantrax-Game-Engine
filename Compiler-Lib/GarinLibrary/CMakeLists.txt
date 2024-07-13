@@ -5,6 +5,10 @@ project(GarinLibrary)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+if (MSVC)
+    add_compile_options(/MP /w)
+endif()
+
 # Buscar archivos fuente
 file(GLOB_RECURSE GARIN_CORE_SOURCES "../../garin-core/src/*.cpp")
 file(GLOB_RECURSE GARIN_SCENE_SOURCES "../../garin-scene/src/*.cpp")

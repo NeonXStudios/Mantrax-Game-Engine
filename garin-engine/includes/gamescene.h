@@ -31,6 +31,7 @@ class GameSettingsUI;
 class HierarchyUI;
 class MenuUI;
 class UINotification;
+class EngineHubUI;
 
 class GARINLIBS_API gamescene : public Scene
 {

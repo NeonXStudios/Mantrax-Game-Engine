@@ -1,5 +1,5 @@
 #include "../includes/camera.h"
-#include <Graphics.h>
+#include <Gfx.h>
 
 void Camera::update()
 {
@@ -18,12 +18,12 @@ void Camera::update()
     if (use_projection)
     {
         view = glm::lookAt(cameraPosition, cameraPosition + Orientation, cameraUp);
-        projection = glm::perspective(glm::radians(fov), (float)Graphics::render_width / (float)Graphics::render_height, 0.1f, 10000.0f);
+        projection = glm::perspective(glm::radians(fov), (float)Gfx::render_width / (float)Gfx::render_height, 0.1f, 10000.0f);
         cameraMatrix = projection * view;
     }
     else
     {
-        projection = glm::ortho(-Graphics::render_width / 2.0f * zoom, Graphics::render_width / 2.0f * zoom, -Graphics::render_height / 2.0f * zoom, Graphics::render_height / 2.0f * zoom, -1000.0f, 1000.0f);
+        projection = glm::ortho(-Gfx::render_width / 2.0f * zoom, Gfx::render_width / 2.0f * zoom, -Gfx::render_height / 2.0f * zoom, Gfx::render_height / 2.0f * zoom, -1000.0f, 1000.0f);
         Orientation = glm::mat3(rotationMatrix) * glm::vec3(0.0f, 0.0f, -1.0f);
         view = glm::lookAt(cameraPosition, cameraPosition + Orientation, cameraUp);
         cameraMatrix = projection * view;

@@ -32,15 +32,15 @@ void EngineHubUI::draw()
         ImGui::PushID("EngineHubPanel");
         ImGui::Begin("Proyects");
         nlohmann::json data = json::parse(FileManager::read_file(FileManager::get_execute_path() + "EngineData.json"));
-        std::string engine_projects_path = "Projects Path: " + (std::string)data["projects_path"];
-        ListarCarpetas(stringToWString((std::string)data["projects_path"]));
+        std::string engine_projects_path = (std::string)data["projects_path"];
+        ListarCarpetas(stringToWString(engine_projects_path));
         ImGui::End();
 
         ImGui::Begin("Options");
 
-        if (ImGui::Button("New Proyect", ImVec2(ImGui::GetWindowWidth(), 50)))
-        {
-        }
+        // if (ImGui::Button("New Proyect", ImVec2(ImGui::GetWindowWidth(), 50)))
+        // {
+        // }
 
         if (ImGui::Button("Set Projects Path", ImVec2(ImGui::GetWindowWidth(), 50)))
         {

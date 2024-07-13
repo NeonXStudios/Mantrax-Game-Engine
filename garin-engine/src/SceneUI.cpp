@@ -16,10 +16,10 @@ void SceneUI::draw(Entity *select_obj)
     ImGuizmo::SetDrawlist();
 
     ImVec2 windowSize = ImGui::GetContentRegionAvail();
-    Graphics::render_width = windowSize.x;
-    Graphics::render_height = windowSize.y;
+    Gfx::render_width = windowSize.x;
+    Gfx::render_height = windowSize.y;
     ImVec2 p = ImGui::GetCursorScreenPos();
-    ImGui::Image((void *)(intptr_t)Graphics::texture, ImVec2(Graphics::render_width, Graphics::render_height), ImVec2(ImVec2(0, 1)), ImVec2(ImVec2(1, 0)));
+    ImGui::Image((void *)(intptr_t)Gfx::texture, ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(ImVec2(0, 1)), ImVec2(ImVec2(1, 0)));
 
     if (select_obj != nullptr)
     {
@@ -30,10 +30,10 @@ void SceneUI::draw(Entity *select_obj)
 
         glm::mat4 matrix = transform->get_matrix();
 
-        float *projection = (float *)glm::value_ptr(Graphics::get_main_camera()->GetProjectionMatrix());
-        float *view = (float *)glm::value_ptr(Graphics::get_main_camera()->GetView());
+        float *projection = (float *)glm::value_ptr(SceneManager::GetOpenScene()->main_camera->GetProjectionMatrix());
+        float *view = (float *)glm::value_ptr(SceneManager::GetOpenScene()->main_camera->GetView());
 
-        ImGuizmo::SetRect(p.x, p.y, Graphics::render_width, Graphics::render_height);
+        ImGuizmo::SetRect(p.x, p.y, Gfx::get_width(), Gfx::get_height());
 
         bool res = ImGuizmo::Manipulate(view, projection, gizmoOperation, gizmoMode, glm::value_ptr(matrix));
         ignoreGui &= !ImGuizmo::IsOver();

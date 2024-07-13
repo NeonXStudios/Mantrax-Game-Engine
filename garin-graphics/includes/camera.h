@@ -2,6 +2,7 @@
 #include <GarinMaths.h>
 #include <vector>
 #include <Core.h>
+#include <Gfx.h>
 
 class GARINLIBS_API Camera
 {

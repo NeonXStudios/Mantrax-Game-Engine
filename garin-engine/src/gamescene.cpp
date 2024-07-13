@@ -11,7 +11,7 @@ void gamescene::on_start()
     camera = new Camera();
     main_camera = camera;
 
-    GarinUI::make_ui_context(Graphics::get_game_window());
+    GarinUI::make_ui_context(Gfx::get_game_window());
     std::cout << "CARPETA DE EJECUCION: " << FileManager::get_execute_path() << std::endl;
 
     inspector = new InspectorUI();
@@ -43,12 +43,12 @@ void gamescene::on_edition_mode(float delta_time)
         camera->move_forward(delta_time, InputSystem::get_axis(GLFW_KEY_W, GLFW_KEY_S) * 0.1f);
         camera->move_left(delta_time, InputSystem::get_axis(GLFW_KEY_A, GLFW_KEY_D) * 0.1f);
 
-        if (glfwGetKey(Graphics::get_game_window(), GLFW_KEY_Q) == GLFW_PRESS)
+        if (glfwGetKey(Gfx::get_game_window(), GLFW_KEY_Q) == GLFW_PRESS)
         {
             camera->cameraPosition.y -= 0.1f;
         }
 
-        if (glfwGetKey(Graphics::get_game_window(), GLFW_KEY_E) == GLFW_PRESS)
+        if (glfwGetKey(Gfx::get_game_window(), GLFW_KEY_E) == GLFW_PRESS)
         {
             camera->cameraPosition.y += 0.1f;
         }
