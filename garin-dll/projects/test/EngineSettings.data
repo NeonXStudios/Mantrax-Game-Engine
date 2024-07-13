@@ -1,4 +1,5 @@
 {
-    "current_scene": "NewScene",
-    "start_scene": "NewScene"
+    "camera_state": false,
+    "current_scene": "New Scene",
+    "start_scene": "New Scene"
 }

@@ -5,6 +5,11 @@
                 "name": "ModelComponent",
                 "varsdata": [
                     {
+                        "name": "CastAmbience",
+                        "type": "bool",
+                        "value": true
+                    },
+                    {
                         "name": "ColorBase",
                         "type": "string",
                         "value": "assets/Ground054_1K-PNG_Color.png"
@@ -40,6 +45,11 @@
             {
                 "name": "ModelComponent",
                 "varsdata": [
+                    {
+                        "name": "CastAmbience",
+                        "type": "bool",
+                        "value": false
+                    },
                     {
                         "name": "ColorBase",
                         "type": "string",
@@ -94,7 +104,13 @@
             },
             {
                 "name": "GCollision",
-                "varsdata": null
+                "varsdata": [
+                    {
+                        "name": "IsTrigger",
+                        "type": "bool",
+                        "value": false
+                    }
+                ]
             },
             {
                 "name": "GBody",
@@ -136,6 +152,11 @@
                 "name": "ModelComponent",
                 "varsdata": [
                     {
+                        "name": "CastAmbience",
+                        "type": "bool",
+                        "value": true
+                    },
+                    {
                         "name": "ColorBase",
                         "type": "string",
                         "value": "assets/Ground054_1K-PNG_Color.png"
@@ -171,6 +192,11 @@
             {
                 "name": "ModelComponent",
                 "varsdata": [
+                    {
+                        "name": "CastAmbience",
+                        "type": "bool",
+                        "value": true
+                    },
                     {
                         "name": "ColorBase",
                         "type": "string",
@@ -208,6 +234,11 @@
                 "name": "ModelComponent",
                 "varsdata": [
                     {
+                        "name": "CastAmbience",
+                        "type": "bool",
+                        "value": true
+                    },
+                    {
                         "name": "ColorBase",
                         "type": "string",
                         "value": "assets/Ground054_1K-PNG_Color.png"
@@ -243,6 +274,11 @@
             {
                 "name": "ModelComponent",
                 "varsdata": [
+                    {
+                        "name": "CastAmbience",
+                        "type": "bool",
+                        "value": false
+                    },
                     {
                         "name": "ColorBase",
                         "type": "string",
@@ -315,6 +351,11 @@
                 "name": "ModelComponent",
                 "varsdata": [
                     {
+                        "name": "CastAmbience",
+                        "type": "bool",
+                        "value": false
+                    },
+                    {
                         "name": "ColorBase",
                         "type": "string",
                         "value": "assets/Ground054_1K-PNG_Color.png"
@@ -322,7 +363,7 @@
                     {
                         "name": "Model",
                         "type": "string",
-                        "value": "assets/packages/models/Room.fbx"
+                        "value": "assets/Box.fbx"
                     },
                     {
                         "name": "NormalMap",
@@ -333,7 +374,13 @@
             },
             {
                 "name": "GScript",
-                "varsdata": null
+                "varsdata": [
+                    {
+                        "name": "ClassName",
+                        "type": "string",
+                        "value": "TestDllImport"
+                    }
+                ]
             },
             {
                 "name": "GMaterial",
@@ -372,7 +419,89 @@
             },
             {
                 "name": "GCollision",
-                "varsdata": null
+                "varsdata": [
+                    {
+                        "name": "IsTrigger",
+                        "type": "bool",
+                        "value": false
+                    }
+                ]
+            },
+            {
+                "name": "GBody",
+                "varsdata": [
+                    {
+                        "name": "isStatic",
+                        "type": "bool",
+                        "value": true
+                    },
+                    {
+                        "name": "mass",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "useGravity",
+                        "type": "bool",
+                        "value": false
+                    }
+                ]
+            }
+        ],
+        "name": "g",
+        "object_id": 1264577,
+        "px": 11.784479141235352,
+        "py": 6.315704345703125,
+        "pz": 0.0,
+        "rw": 1.0,
+        "rx": 0.0,
+        "ry": 0.0,
+        "rz": 0.0,
+        "sx": 1.0,
+        "sy": 1.0,
+        "sz": 1.0
+    },
+    {
+        "components": [
+            {
+                "name": "ModelComponent",
+                "varsdata": [
+                    {
+                        "name": "CastAmbience",
+                        "type": "bool",
+                        "value": false
+                    },
+                    {
+                        "name": "ColorBase",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_Color.png"
+                    },
+                    {
+                        "name": "Model",
+                        "type": "string",
+                        "value": "assets/Box.fbx"
+                    },
+                    {
+                        "name": "NormalMap",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_NormalGL.png"
+                    }
+                ]
+            },
+            {
+                "name": "GMaterial",
+                "varsdata": [
+                    {
+                        "name": "FragmentPath",
+                        "type": "string",
+                        "value": "assets/shaders/mesh_fragment.glsl"
+                    },
+                    {
+                        "name": "VertexPath",
+                        "type": "string",
+                        "value": "assets/shaders/mesh_vertex.glsl"
+                    }
+                ]
             },
             {
                 "name": "GBody",
@@ -393,16 +522,26 @@
                         "value": true
                     }
                 ]
+            },
+            {
+                "name": "GCollision",
+                "varsdata": [
+                    {
+                        "name": "IsTrigger",
+                        "type": "bool",
+                        "value": false
+                    }
+                ]
             }
         ],
-        "name": "g",
-        "object_id": 1264577,
-        "px": 11.784479141235352,
-        "py": 6.315704345703125,
-        "pz": 2.6057262420654297,
+        "name": "New Entity",
+        "object_id": 1129154,
+        "px": 5.498449802398682,
+        "py": 9.115998268127441,
+        "pz": 0.0,
         "rw": 1.0,
         "rx": 0.0,
-        "ry": 0.0,
+        "ry": -0.0,
         "rz": 0.0,
         "sx": 1.0,
         "sy": 1.0,
