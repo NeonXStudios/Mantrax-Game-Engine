@@ -19,7 +19,7 @@ void DynamicLibLoader::create()
     {
         DynamicLibLoader::instance->load_components();
     }
-    std::cout << "Dynamic Lib Loader Created" << endl;
+    std::cout << "AudioManager Created" << endl;
 }
 
 void DynamicLibLoader::load_components()
@@ -50,7 +50,7 @@ void DynamicLibLoader::load_components()
     std::cout << "Triying load dll" << std::endl;
     loader->load(dll_path.c_str());
 
-    typedef void (*FuncType)(GameBehaviourFactory *, AudioManager *, SceneManager *scenemanager);
+    typedef void (*FuncType)(GameBehaviourFactory *, AudioManager *, SceneManager *scenemanager, GLFWwindow *gfx_pass);
     auto func = (FuncType)loader->get_function<FuncType>("REGISTER_COMPONENTS");
 
     // typedef void (*FuncTypeAPI)(Scene *, GLFWindow *graphics);
@@ -76,7 +76,7 @@ void DynamicLibLoader::load_components()
         std::cout << "Triying load Graphics in dll" << std::endl;
     }
 
-    func(factoryPtr, AudioManager::GetManager(), SceneManager::GetSceneManager());
+    func(factoryPtr, AudioManager::GetManager(), SceneManager::GetSceneManager(), Gfx::get_game_window());
     // func_graphics(scene, Gfx::get_game_window());
 
     loader_dll_stamp = std::filesystem::last_write_time(from_dll_path).time_since_epoch().count();

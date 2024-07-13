@@ -38,11 +38,32 @@ void EngineHubUI::draw()
 
         ImGui::Begin("Options");
 
-        // if (ImGui::Button("New Proyect", ImVec2(ImGui::GetWindowWidth(), 50)))
-        // {
-        // }
+        project_name = EditorGUI::InputText("", project_name);
+        if (ImGui::Button("Create Proyect", ImVec2(ImGui::GetWindowWidth() - 30, 50)))
+        {
+            nlohmann::json data = json::parse(FileManager::read_file(FileManager::get_execute_path() + "EngineData.json"));
+            std::string engine_projects_path = (std::string)data["projects_path"] + "/" + project_name;
+            std::string proyect_assets = FileManager::get_execute_path() + "packages_info";
 
-        if (ImGui::Button("Set Projects Path", ImVec2(ImGui::GetWindowWidth(), 50)))
+            if (!fs::exists(engine_projects_path))
+            {
+                if (fs::create_directories(engine_projects_path))
+                {
+                    copy_directory_contents(proyect_assets, engine_projects_path);
+                    std::cout << "Directory created successfully." << std::endl;
+                }
+                else
+                {
+                    std::cerr << "Failed to create directory." << std::endl;
+                }
+            }
+            else
+            {
+                std::cout << "Directory already exists." << std::endl;
+            }
+        }
+
+        if (ImGui::Button("Set Projects Path", ImVec2(ImGui::GetWindowWidth() - 30, 50)))
         {
             std::string selectedFolderPath = openFolderBrowser();
             if (!selectedFolderPath.empty())
@@ -137,7 +158,7 @@ void EngineHubUI::ListarCarpetas(const std::wstring &ruta)
             {
                 std::string nombreCarpeta = entry.path().filename().string();
 
-                if (ImGui::Button(nombreCarpeta.c_str(), ImVec2(ImGui::GetWindowWidth(), 50)))
+                if (ImGui::Button(nombreCarpeta.c_str(), ImVec2(ImGui::GetWindowWidth() - 30, 50)))
                 {
                     std::string path = entry.path().string();
 
@@ -210,4 +231,50 @@ std::string EngineHubUI::openFolderBrowser()
         CoTaskMemFree(pidl);
     }
     return "";
+}
+
+void EngineHubUI::copy_directory_contents(const fs::path &source, const fs::path &destination)
+{
+    try
+    {
+        // Check if the source directory exists
+        if (!fs::exists(source) || !fs::is_directory(source))
+        {
+            std::cerr << "Source directory does not exist or is not a directory." << std::endl;
+            return;
+        }
+
+        // Create the destination directory if it does not exist
+        if (!fs::exists(destination))
+        {
+            fs::create_directories(destination);
+        }
+
+        // Iterate through the source directory
+        for (const auto &entry : fs::directory_iterator(source))
+        {
+            const auto &path = entry.path();
+            auto destinationPath = destination / path.filename();
+
+            if (fs::is_directory(path))
+            {
+                // Recursively copy subdirectories
+                fs::create_directories(destinationPath);
+                copy_directory_contents(path, destinationPath);
+            }
+            else if (fs::is_regular_file(path))
+            {
+                // Copy files
+                fs::copy_file(path, destinationPath, fs::copy_options::overwrite_existing);
+            }
+            else
+            {
+                std::cerr << "Unsupported file type: " << path << std::endl;
+            }
+        }
+    }
+    catch (fs::filesystem_error &e)
+    {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
 }
