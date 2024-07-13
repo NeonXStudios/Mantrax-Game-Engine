@@ -36,19 +36,21 @@ int main(void)
         Gfx::timer_control();
         Gfx::process_window_size();
         Gfx::render_to_texture();
-        SceneManager::GetOpenScene()->main_camera->update();
 
-        if (AppSettings::is_playing)
+        if (SceneManager::GetOpenScene()->main_camera != nullptr)
         {
-            SceneManager::GetOpenScene()->update(Timer::delta_time);
-            // game_graphics->runner->on_tick();
-        }
-        else
-        {
-            SceneManager::GetOpenScene()->on_edition_mode(Timer::delta_time);
-        }
+            SceneManager::GetOpenScene()->main_camera->update();
 
-        std::cout << "screen x: " << Gfx::render_width << std::endl;
+            if (AppSettings::is_playing)
+            {
+                SceneManager::GetOpenScene()->update(Timer::delta_time);
+                // game_graphics->runner->on_tick();
+            }
+            else
+            {
+                SceneManager::GetOpenScene()->on_edition_mode(Timer::delta_time);
+            }
+        }
 
         Gfx::swap_buffer();
     }

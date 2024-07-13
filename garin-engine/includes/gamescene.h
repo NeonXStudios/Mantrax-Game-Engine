@@ -16,6 +16,8 @@
 
 #include <IconsManager.h>
 #include <Core.h>
+#include <mutex>
+#include <sstream>
 
 class Drawer;
 class Camera;
@@ -53,6 +55,30 @@ public:
     UINotification *notify;
     IconsManager *icons;
     EngineHubUI *hub;
+
+    std::stringstream buffer_stdout;
+    std::stringstream buffer_stderr;
+    std::string stdout_buffer;
+    std::string stderr_buffer;
+    std::streambuf *old_stdout;
+    std::streambuf *old_stderr;
+    std::mutex mutex;
+
+    void ReadBuffer(std::stringstream &buffer, std::string &target)
+    {
+        std::string line;
+        while (std::getline(buffer, line))
+        {
+            target += line + "\n";
+        }
+        buffer.clear();
+    }
+
+    void Clear() {
+        std::lock_guard<std::mutex> guard(mutex);
+        stdout_buffer.clear();
+        stderr_buffer.clear();
+    }
 
     void purpledark();
     void embraceTheDarkness();

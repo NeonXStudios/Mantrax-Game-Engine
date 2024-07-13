@@ -7,6 +7,9 @@
 
 void gamescene::on_start()
 {
+    old_stdout = std::cout.rdbuf(buffer_stdout.rdbuf());
+    old_stderr = std::cerr.rdbuf(buffer_stderr.rdbuf());
+
     configs = new EditorConfigs();
     camera = new Camera();
     main_camera = camera;
@@ -81,6 +84,9 @@ void gamescene::draw_ui()
     GarinUI::get_ui_manager()->render_new_frame_ui_context(true);
     if (configs->project_select == true)
     {
+        ReadBuffer(buffer_stdout, stdout_buffer);
+        ReadBuffer(buffer_stderr, stderr_buffer);
+
         hierarchyui->game = this;
 
         inspector->draw(select_obj);
@@ -93,6 +99,21 @@ void gamescene::draw_ui()
         menuui->draw(this);
         // notify->RenderNotifications();
         UINotification::instance.RenderNotifications();
+
+        ImGui::Begin("Console");
+        std::lock_guard<std::mutex> guard(mutex);
+
+        // if (ImGui::Button("Clear Console"))
+        // {
+        //     Clear();
+        // }
+
+        ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+        ImGui::TextUnformatted(stdout_buffer.c_str());
+        ImGui::TextUnformatted(stderr_buffer.c_str());
+        ImGui::EndChild();
+
+        ImGui::End();
     }
     else
     {
