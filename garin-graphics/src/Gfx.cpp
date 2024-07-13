@@ -72,12 +72,19 @@ int Gfx::create_windows(settings_window settings)
     return 0;
 }
 
-void Gfx::render_window(std::function<void(void)> func)
+void Gfx::render_to_texture()
+{
+    render_to_texture();
+}
+
+void Gfx::poll_events()
 {
     glfwPollEvents();
+    InputSystem::update_input();
+}
 
-    glfwGetWindowSize(window, &width, &height);
-
+void Gfx::timer_control()
+{
     currentTime = glfwGetTime();
     lifetime = currentTime - startTime;
 
@@ -86,18 +93,21 @@ void Gfx::render_window(std::function<void(void)> func)
 
     Timer::delta_time = deltaTime;
 
-    render_to_texture();
-
     double elapsedTime = glfwGetTime() - lastFrameTime;
     if (deltaTime < targetFrameTime)
     {
         double sleepTime = targetFrameTime - deltaTime;
         glfwWaitEventsTimeout(sleepTime);
     }
+}
 
-    InputSystem::update_input();
-    func();
+void Gfx::process_window_size()
+{
+    glfwGetWindowSize(window, &width, &height);
+}
 
+void Gfx::swap_buffer()
+{
     glfwSwapBuffers(Gfx::window);
 }
 

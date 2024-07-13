@@ -31,19 +31,23 @@ int main(void)
 
     while (!Gfx::try_window_close())
     {
-        Gfx::render_window([]()
-                           {
-                               SceneManager::GetOpenScene()->main_camera->update();
+        Gfx::render_to_texture();
+        Gfx::poll_events();
+        Gfx::timer_control();
+        Gfx::process_window_size();
+        SceneManager::GetOpenScene()->main_camera->update();
 
-                                                              if (AppSettings::is_playing)
-                                                              {
-                                                                  SceneManager::GetOpenScene()->update(Timer::delta_time);
-                                                                  //game_graphics->runner->on_tick();
-                                                              }
-                                                              else
-                                                              {
-                                                                  SceneManager::GetOpenScene()->on_edition_mode(Timer::delta_time);
-                                                              } });
+        if (AppSettings::is_playing)
+        {
+            SceneManager::GetOpenScene()->update(Timer::delta_time);
+            // game_graphics->runner->on_tick();
+        }
+        else
+        {
+            SceneManager::GetOpenScene()->on_edition_mode(Timer::delta_time);
+        }
+
+        Gfx::swap_buffer();
     }
 
     Gfx::clear_graphics();

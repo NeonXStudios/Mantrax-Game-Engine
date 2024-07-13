@@ -51,7 +51,6 @@ public:
 
     // window functions
     static int create_windows(settings_window windows_setting);
-    static void render_window(std::function<void(void)> func);
     static void set_window_icon(GLFWwindow *window, const char *iconPath);
     static void clear_graphics();
     static void set_vsync(bool vsync_active);
@@ -61,7 +60,12 @@ public:
     static int get_height();
     static GLFWwindow *get_game_window();
     static unsigned int get_render();
+    static void render_to_texture();
     static bool try_window_close();
+    static void poll_events();
+    static void timer_control();
+    static void process_window_size();
+    static void swap_buffer();
 
     static void setup_render_texture(int width, int height);
     static void render_to_texture();
