@@ -8,6 +8,9 @@
 #include <GarinBehaviours.h>
 #include <UIStyle.h>
 #include <SceneData.h>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 void MainBarUI::draw(Entity *owner)
 {
@@ -88,64 +91,64 @@ void MainBarUI::draw(Entity *owner)
         {
             if (ImGui::MenuItem("Recompile Scripts"))
             {
-                std::thread hilo([]()
-                                 {
-                                     UINotification::AddNotification("Recompiling libraries...", 10.0f);
+                std::string directoryPath = FileManager::get_project_path() + "clscpp/";
+                std::string outputFilePath = FileManager::get_project_path() + "wlibsgpp/GameLibsLoader.h";
 
-                                     GameBehaviourFactory::instance().reload_components();
+                std::ofstream clearFile(outputFilePath, std::ofstream::out | std::ofstream::trunc);
+                clearFile.close();
 
-                                     UINotification::AddNotification("Compiling libraries (wait for it)...", 10.0f);
+                process_header_files(directoryPath, outputFilePath);
 
-                                     std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/";
+                std::string register_core = FileManager::get_project_path() + "wlibsgpp/GarinGameCore.cpp";
+                for (const auto &entry : fs::directory_iterator(directoryPath))
+                {
+                    if (entry.path().extension() == ".h")
+                    {
+                        std::cout << "INSERTANDO ARCHIVO: " << entry.path().filename().stem().string() << std::endl;
+                        insert_register(register_core, entry.path().filename().stem().string());
+                    }
+                }
 
-                                     // Formar los comandos
-                                     std::string cmake_command = "cd /d " + cmake_path + " && cmake -G \"Visual Studio 17 2022\" .";
-                                     std::string msbuild_command = "cd /d " + cmake_path + " && msbuild GarinGameCore.sln /p:Configuration=Debug";
+                UINotification::AddNotification("Recompiling libraries...", 10.0f);
 
-                                     // Ejecutar el comando CMake
-                                     int result = system(cmake_command.c_str());
+                GameBehaviourFactory::instance().reload_components();
 
-                                     if (result == 0)
-                                     {
-                                         UINotification::AddNotification("CMake Reloaded...", 10.0f);
-                                         UINotification::AddNotification("Starting compilation of the libraries (Wait)...", 10.0f);
+                UINotification::AddNotification("Compiling libraries (wait for it)...", 10.0f);
 
-                                         // Ejecutar el comando MSBuild
-                                         int result_build = system(msbuild_command.c_str());
+                std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/Compiler-Lib/GarinEditorEngine/";
 
-                                         if (result_build == 0)
-                                         {
-                                             UINotification::AddNotification("Successfully compiled libraries...", 10.0f);
-                                         }
-                                         else
-                                         {
-                                             UINotification::AddNotification("Error during the compilation of the libraries...", 10.0f);
-                                             std::cerr << "Error during msbuild execution, result code: " << result_build << std::endl;
-                                         }
-                                     }
-                                     else
-                                     {
-                                         UINotification::AddNotification("Error during CMake execution...", 10.0f);
-                                         std::cerr << "Error during cmake execution, result code: " << result << std::endl;
-                                     }
+                // Formar los comandos
+                std::string cmake_command = "cd /d " + cmake_path + " && cmake -G \"Visual Studio 17 2022\" .";
+                std::string msbuild_command = "cd /d " + cmake_path + " && msbuild GarinEditor.sln /p:Configuration=Debug";
 
-                                     // if (Graphics::graphics != nullptr)
-                                     // {
-                                     //     if (Graphics::graphics->engine_libs_loader.get() != nullptr)
-                                     //     {
-                                     //         std::cout << "Starting reload components" << std::endl;
+                // Ejecutar el comando CMake
+                int result = system(cmake_command.c_str());
 
-                                     //         Graphics::graphics->engine_libs_loader.get()->load_components();
+                if (result == 0)
+                {
+                    UINotification::AddNotification("CMake Reloaded...", 10.0f);
+                    UINotification::AddNotification("Starting compilation of the libraries (Wait)...", 10.0f);
 
-                                     //         UINotification::AddNotification("Compiled and reloaded libraries...", 3.0f);
-                                     //     }
-                                     // }
-                                     // else
-                                     // {
-                                     //     std::cout << "Graphics info never assigned" << std::endl;
-                                     // }
-                                 });
-                hilo.join();
+                    // Ejecutar el comando MSBuild
+                    int result_build = system(msbuild_command.c_str());
+
+                    if (result_build == 0)
+                    {
+                        UINotification::AddNotification("Successfully compiled libraries...", 10.0f);
+                    }
+                    else
+                    {
+                        UINotification::AddNotification("Error during the compilation of the libraries...", 10.0f);
+                        std::cerr << "Error during msbuild execution, result code: " << result_build << std::endl;
+                    }
+                }
+                else
+                {
+                    UINotification::AddNotification("Error during CMake execution...", 10.0f);
+                    std::cerr << "Error during cmake execution, result code: " << result << std::endl;
+                }
+
+                DynamicLibLoader::instance->load_components();
             }
             ImGui::EndMenu();
         }
@@ -226,11 +229,11 @@ void MainBarUI::recompileAndReloadLibraries()
 
     UINotification::AddNotification("Compiling libraries (wait for it)...", 10.0f);
 
-    std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/";
+    std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/Compiler-Lib/GarinEditorEngine/";
 
     // Formar los comandos
     std::string cmake_command = "cd /d " + cmake_path + " && cmake -G \"Visual Studio 17 2022\" .";
-    std::string msbuild_command = "cd /d " + cmake_path + " && msbuild GarinGameCore.sln /p:Configuration=Debug";
+    std::string msbuild_command = "cd /d " + cmake_path + " && msbuild GarinEditor.sln /p:Configuration=Debug";
 
     // Ejecutar el comando CMake
     int result = system(cmake_command.c_str());
@@ -259,7 +262,7 @@ void MainBarUI::recompileAndReloadLibraries()
         std::cerr << "Error during cmake execution, result code: " << result << std::endl;
     }
 
-    // if (Graphics::graphics != nullptr)
+    // if (Gfx::get_game_window() != nullptr)
     // {
     //     if (Graphics::graphics->engine_libs_loader.get() != nullptr)
     //     {

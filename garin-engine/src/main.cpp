@@ -4,15 +4,21 @@
 #include <SceneManager.h>
 #include <AudioManager.h>
 #include <GarinUI.h>
+#include <GameBehaviour.h>
 
 SceneManager *sceneManager = new SceneManager();
 AudioManager *audioManager = new AudioManager();
+DynamicLibLoader *lib_loader = new DynamicLibLoader();
+GameBehaviourFactory *factory_behaviour = new GameBehaviourFactory();
 
 int main(void)
 {
     // start audio systems
     audioManager->create();
     audioManager->StartSystem();
+
+    // Start ddl
+    lib_loader->create();
 
     // start scene manager
     sceneManager->create();
@@ -28,6 +34,7 @@ int main(void)
     Gfx::create_windows(window_config);
 
     SceneManager::GetOpenScene()->init();
+
     std::cout << "Al system started" << std::endl;
 
     while (!Gfx::try_window_close())

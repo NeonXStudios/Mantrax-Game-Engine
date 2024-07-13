@@ -84,9 +84,5 @@ void AudioManager::release()
 
 extern "C" GARINLIBS_API AudioManager *GetAudioManager()
 {
-    if (AudioManager::instance == nullptr)
-    {
-        AudioManager::instance = new AudioManager();
-    }
     return AudioManager::instance;
 }

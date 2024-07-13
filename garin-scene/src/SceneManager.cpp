@@ -261,3 +261,28 @@ void SceneManager::load_scene(std::string scene_name_new)
         std::cerr << e.what() << '\n';
     }
 }
+
+extern "C" GARINLIBS_API SceneManager *GetSceneManager()
+{
+    return SceneManager::GetSceneManager();
+}
+
+extern "C" GARINLIBS_API Scene *GetOpenScene()
+{
+    return SceneManager::GetOpenScene();
+}
+
+extern "C" GARINLIBS_API std::string *GetOpenSceneName()
+{
+    return SceneManager::GetOpenSceneName();
+}
+
+// extern "C" GARINLIBS_API void LoadScene(const char *scenePath, const char *sceneName)
+// {
+//     SceneManager::LoadScene(scenePath, sceneName);
+// }
+
+// extern "C" GARINLIBS_API void ClearOpenScene()
+// {
+//     SceneManager::ClearOpenScene();
+// }

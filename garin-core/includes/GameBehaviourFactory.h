@@ -69,7 +69,7 @@ public:
         auto it = creators.find(class_name);
         if (it != creators.end())
         {
-            std::cout << "Clase encontrada, creando instancia: " << class_name << std::endl;
+            std::cout << "******** Clase encontrada, creando instancia: " << class_name << std::endl;
             return it->second();
         }
         else
@@ -104,7 +104,6 @@ public:
 
     // std::unordered_map<std::string, Creator_global> creators_global;
 
-private:
     GameBehaviourFactory() = default;
 
     // No permitir copia ni movimiento
