@@ -23,6 +23,10 @@ Component *ComponentFactory::add_component(Entity *ent, std::string component_na
     {
         return &ent->addComponent<GScript>();
     }
+    else if (component_name == "GScriptLua")
+    {
+        return &ent->addComponent<GScriptLua>();
+    }
     else if (component_name == "GAudio")
     {
         return &ent->addComponent<GAudio>();

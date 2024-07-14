@@ -2,27 +2,61 @@
 
 void GScript::defines()
 {
-    GVAR(ClassName, "TestDllImport", std::string);
+    try
+    {
+        GVAR(ClassName, "TestDllImport", std::string);
+    }
+    catch (const std::exception &e)
+    {
+        std::string errorMessage = "Error en init: ";
+        errorMessage += e.what();
+        logError(errorMessage);
+        std::cerr << errorMessage << std::endl;
+    }
 }
 
 void GScript::init()
 {
-    std::cout << "Loading script: " << GETVAR(ClassName, std::string) << std::endl;
-    behaviour = GameBehaviourFactory::instance().create_instance_by_name(GETVAR(ClassName, std::string));
-
-    if (behaviour != nullptr)
+    try
     {
-        behaviour.get()->self = entity;
-        behaviour.get()->on_init();
+        std::cout << "Loading script: " << GETVAR(ClassName, std::string) << std::endl;
+        behaviour = GameBehaviourFactory::instance().create_instance_by_name(GETVAR(ClassName, std::string));
 
-        std::cout << "Starting script class: " << GETVAR(ClassName, std::string) << std::endl;
+        if (behaviour != nullptr)
+        {
+            behaviour.get()->self = entity;
+            behaviour.get()->on_init();
+
+            std::cout << "Starting script class: " << GETVAR(ClassName, std::string) << std::endl;
+        }
+        else
+        {
+            std::cerr << "Error: No se pudo crear una instancia de " << GETVAR(ClassName, std::string) << std::endl;
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::string errorMessage = "Error en init: ";
+        errorMessage += e.what();
+        logError(errorMessage);
+        std::cerr << errorMessage << std::endl;
     }
 }
 
 void GScript::update()
 {
-    if (behaviour != nullptr)
-        behaviour.get()->on_tick();
+    try
+    {
+        if (behaviour != nullptr)
+            behaviour.get()->on_tick();
+    }
+    catch (const std::exception &e)
+    {
+        std::string errorMessage = "Error en init: ";
+        errorMessage += e.what();
+        logError(errorMessage);
+        std::cerr << errorMessage << std::endl;
+    }
 }
 
 void GScript::clean()
@@ -32,12 +66,11 @@ void GScript::clean()
         if (behaviour != nullptr)
         {
             behaviour.reset();
-            behaviour.release();
-            behaviour = nullptr;
+            behaviour = nullptr; // `reset()` ya maneja `release()`
         }
     }
     catch (const std::exception &e)
     {
-        std::cerr << e.what() << '\n';
+        std::cerr << "Error en clean: " << e.what() << '\n';
     }
 }

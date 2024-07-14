@@ -1,6 +1,7 @@
 #include "../includes/SceneUI.h"
 #include <GarinGraphics.h>
 #include <GarinEvents.h>
+#include <GarinMaths.h>
 
 using namespace ImGuizmo;
 
@@ -46,21 +47,22 @@ void SceneUI::draw(Entity *select_obj)
             if (!select_obj->hasComponent<GBody>())
             {
                 transform->Position = translation;
-                transform->rotation.x = glm::radians(rotation.x);
-                transform->rotation.y = glm::radians(rotation.y);
-                transform->rotation.z = glm::radians(rotation.z);
+                transform->set_rotation(rotation);
+                transform->update();
+
                 transform->Scale = scale;
             }
             else
             {
                 transform->Position = translation;
-                transform->rotation.x = glm::radians(rotation.x);
-                transform->rotation.y = glm::radians(rotation.y);
-                transform->rotation.z = glm::radians(rotation.z);
                 transform->Scale = scale;
+                transform->set_rotation(rotation);
+                transform->update();
+
                 select_obj->getComponent<GBody>().body->setLinearVelocity(PxVec3(0, 0, 0));
                 select_obj->getComponent<GBody>().set_position(translation);
             }
+
             transform->update();
         }
 

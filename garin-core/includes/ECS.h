@@ -116,6 +116,7 @@ public:
 	glm::mat4 parentMatrix;
 
 	glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+	glm::vec3 EulerRotation;
 	glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 Scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	Entity *entity;
@@ -132,7 +133,11 @@ public:
 		MatrixLocal = glm::mat4(1.0f);
 
 		MatrixLocal = glm::translate(MatrixLocal, Position);
+
+		rotation = glm::quat(EulerRotation);
 		MatrixLocal *= glm::mat4_cast(rotation);
+
+		// Aplica escala
 		MatrixLocal = glm::scale(MatrixLocal, Scale);
 
 		if (parent)
@@ -164,9 +169,10 @@ public:
 				{
 					parentMatrix = glm::scale(parentMatrix, glm::vec3(1.0f / parent->Scale.x, 1.0f / parent->Scale.y, 1.0f / parent->Scale.z));
 				}
-
-				Matrix = parentMatrix * MatrixLocal;
 			}
+
+			// Multiplica la matriz del padre con la matriz local
+			Matrix = parentMatrix * MatrixLocal;
 		}
 		else
 		{
@@ -181,10 +187,13 @@ public:
 
 	void set_rotation(const glm::vec3 &eulerAngles)
 	{
-		glm::quat rotationX = glm::angleAxis(glm::radians(eulerAngles.x), glm::vec3(1.0f, 0.0f, 0.0f));
-		glm::quat rotationY = glm::angleAxis(glm::radians(eulerAngles.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		glm::quat rotationZ = glm::angleAxis(glm::radians(eulerAngles.z), glm::vec3(0.0f, 0.0f, 1.0f));
-		rotation = rotationX * rotationY * rotationZ;
+		// glm::quat rotationX = glm::angleAxis(glm::radians(eulerAngles.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		// glm::quat rotationY = glm::angleAxis(glm::radians(eulerAngles.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		// glm::quat rotationZ = glm::angleAxis(glm::radians(eulerAngles.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		// rotation = rotationX * rotationY * rotationZ;
+
+		glm::quat quaternion = glm::quat(eulerAngles);
+		rotation = quaternion;
 	}
 
 	glm::vec3 get_euler_angles() const

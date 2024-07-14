@@ -1,5 +1,6 @@
 #include "../includes/Gfx.h"
 #include <SceneManager.h>
+#include <RenderPipeline.h>
 
 GLFWwindow *Gfx::window = nullptr;
 double Gfx::startTime = 0;
@@ -234,10 +235,12 @@ void Gfx::render_to_texture()
 
     glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
-    {
-        ent->on_draw();
-    }
+    // for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
+    // {
+    //     ent->on_draw();
+    // }
+
+    RenderPipeline::render();
 
     SceneManager::GetOpenScene()->on_draw();
 
@@ -246,10 +249,12 @@ void Gfx::render_to_texture()
     glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
-    {
-        ent->on_draw();
-    }
+    // for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
+    // {
+    //     ent->on_draw();
+    // }
+
+    RenderPipeline::render();
 
     SceneManager::GetOpenScene()->on_draw();
 

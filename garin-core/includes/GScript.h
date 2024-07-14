@@ -13,4 +13,10 @@ public:
     void init() override;
     void update() override;
     void clean() override;
+
+    void logError(const std::string &errorMessage)
+    {
+        std::ofstream errorLog("error.log", std::ios_base::app);
+        errorLog << errorMessage << std::endl;
+    }
 };

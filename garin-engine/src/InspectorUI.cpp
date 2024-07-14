@@ -13,7 +13,12 @@ void InspectorUI::draw(Entity *select_obj)
         select_obj->ObjectName = EditorGUI::InputText("Name: ", select_obj->ObjectName);
         select_obj->get_transform()->Position = EditorGUI::Vector3("Position", select_obj->get_transform()->Position);
         select_obj->get_transform()->update();
-        // select_obj->get_transform()->Rotation = EditorGUI::Vector3("Rotation", select_obj->get_transform()->Rotation);
+
+        glm::vec3 eulerAngles = glm::eulerAngles(select_obj->get_transform()->rotation);
+        eulerAngles = EditorGUI::Vector3("Rotation", eulerAngles);
+        select_obj->get_transform()->set_rotation(eulerAngles);
+        select_obj->get_transform()->update();
+
         select_obj->get_transform()->Scale = EditorGUI::Vector3("Scale", select_obj->get_transform()->Scale);
         select_obj->get_transform()->update();
 
@@ -59,9 +64,15 @@ void InspectorUI::draw(Entity *select_obj)
                 ImGui::CloseCurrentPopup();
             }
 
-            if (ImGui::Button("Game Script", ImVec2(buttonWidth, 20)))
+            if (ImGui::Button("Game Script (C++ Alpha)", ImVec2(buttonWidth, 20)))
             {
                 select_obj->addComponent<GScript>().init();
+                ImGui::CloseCurrentPopup();
+            }
+
+            if (ImGui::Button("Game Script (Lua)", ImVec2(buttonWidth, 20)))
+            {
+                select_obj->addComponent<GScriptLua>();
                 ImGui::CloseCurrentPopup();
             }
 

@@ -138,4 +138,8 @@ void AssetsUI::drawer_files_drag(std::string extension, std::string file_name, s
     {
         EditorGUI::Drag("SHADERCLASS", GarinIO::GetWithAfterAssetDir(complete_path));
     }
+    else if (extension == ".lua")
+    {
+        EditorGUI::Drag("SCRIPTCLASSLUA", GarinIO::GetWithAfterAssetDir(complete_path));
+    }
 }

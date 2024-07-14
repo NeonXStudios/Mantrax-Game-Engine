@@ -37,6 +37,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-physics/includes/physx
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-physics/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-audio/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/garin-scripting/includes
 )
 
 file(GLOB LIBRARIES
@@ -49,6 +50,7 @@ file(GLOB LIBRARIES
     "garin-maths/libs/*.lib"
     "garin-physics/libs/*.lib"
     "garin-audio/libs/*.lib"
+    "garin-scripting/libs/*.lib"
 )
 
 # Enlace a librerias

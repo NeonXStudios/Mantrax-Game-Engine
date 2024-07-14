@@ -141,7 +141,7 @@ public:
             vector.y,
             vector.z};
 
-        ImGui::DragFloat3(EditorGUI::_labelPrefix(Name.c_str()).c_str(), v);
+        ImGui::DragFloat3(EditorGUI::_labelPrefix(Name.c_str()).c_str(), v, 0.01f);
 
         return glm::vec3(v[0], v[1], v[2]);
     }
@@ -254,8 +254,15 @@ public:
                     }
                     else if (key == "ClassName")
                     {
-
                         auto result = EditorGUI::Drag_Objetive("SCRIPTCLASS");
+                        if (result.has_value())
+                        {
+                            cpm->variableMap[key] = result.value();
+                        }
+                    }
+                    else if (key == "ScriptPath")
+                    {
+                        auto result = EditorGUI::Drag_Objetive("SCRIPTCLASSLUA");
                         if (result.has_value())
                         {
                             cpm->variableMap[key] = result.value();

@@ -10,4 +10,5 @@ void UIAdministrator::draw_ui(Entity *owner)
     ComponentsDrawer::updateUI<GScript>(owner, 4, new CGScript());
     ComponentsDrawer::updateUI<GMaterial>(owner, 5, new CMaterial());
     ComponentsDrawer::updateUI<GCharacter>(owner, 6, new CCharacter());
+    ComponentsDrawer::updateUI<GScriptLua>(owner, 7, new CCharacter());
 }

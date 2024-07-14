@@ -5,11 +5,13 @@
 #include <AudioManager.h>
 #include <GarinUI.h>
 #include <GameBehaviour.h>
+#include <RenderPipeline.h>
 
 SceneManager *sceneManager = new SceneManager();
 AudioManager *audioManager = new AudioManager();
 DynamicLibLoader *lib_loader = new DynamicLibLoader();
 GameBehaviourFactory *factory_behaviour = new GameBehaviourFactory();
+RenderPipeline *piprender = new RenderPipeline();
 
 int main(void)
 {
@@ -32,6 +34,7 @@ int main(void)
     window_config.maximized = true;
 
     Gfx::create_windows(window_config);
+    RenderPipeline::init();
 
     SceneManager::GetOpenScene()->init();
 
@@ -42,6 +45,7 @@ int main(void)
         Gfx::poll_events();
         Gfx::timer_control();
         Gfx::process_window_size();
+
         Gfx::render_to_texture();
 
         if (SceneManager::GetOpenScene()->main_camera != nullptr)
