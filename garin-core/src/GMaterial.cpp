@@ -14,7 +14,9 @@ void GMaterial::defines()
 
 void GMaterial::init()
 {
-    p_shader = new Shader(GETVAR(VertexPath, std::string).c_str(), GETVAR(FragmentPath, std::string).c_str());
+    std::string vertexpath = FileManager::get_project_path() + GETVAR(VertexPath, std::string);
+    std::string fragpath = FileManager::get_project_path() + GETVAR(FragmentPath, std::string);
+    p_shader = new Shader(vertexpath.c_str(), fragpath.c_str());
     // p_gbuffer_shader = new Shader(GETVAR(VertexPathGbuffer, std::string).c_str(), GETVAR(FragmentPathGbuffer, std::string).c_str());
     // p_deferred_shader = new Shader(GETVAR(VertexPathDeferred, std::string).c_str(), GETVAR(FragmentPathDeferred, std::string).c_str());
 

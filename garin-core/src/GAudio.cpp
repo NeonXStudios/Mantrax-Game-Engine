@@ -18,8 +18,9 @@ void GAudio::init()
     }
     else
     {
+        std::string audio = FileManager::get_project_path() + GETVAR(AudioPath, std::string);
         // FMOD inicializado correctamente, ahora carga y reproduce el sonido.
-        FMOD_RESULT loadResult = AudioManager::GetManager()->system->createSound(GETVAR(AudioPath, std::string).c_str(), FMOD_3D | FMOD_3D_LINEARROLLOFF, nullptr, &sound);
+        FMOD_RESULT loadResult = AudioManager::GetManager()->system->createSound(audio.c_str(), FMOD_3D | FMOD_3D_LINEARROLLOFF, nullptr, &sound);
 
         if (loadResult != FMOD_OK)
         {

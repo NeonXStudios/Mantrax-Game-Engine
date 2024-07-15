@@ -7,12 +7,41 @@
 #include <cstring>
 #include <cerrno>
 #include <Core.h>
+#include <UINotification.h>
 
 namespace fs = std::filesystem;
 
 class GARINLIBS_API WindowsCompiler
 {
 public:
+    static void copy_file(const std::string &sourceFile, const std::string &destinationFile)
+    {
+        std::ifstream source(sourceFile, std::ios::binary);
+        std::ofstream destination(destinationFile, std::ios::binary);
+
+        // Verificar si los archivos se abrieron correctamente
+        if (!source.is_open())
+        {
+            std::cerr << "Error on try copy DLL: " << sourceFile << std::endl;
+            return;
+        }
+
+        if (!destination.is_open())
+        {
+            std::cerr << "There was an error when copying a DLL to the destination: " << destinationFile << std::endl;
+            return;
+        }
+
+        // Leer y escribir el archivo
+        destination << source.rdbuf();
+
+        // Cerrar archivos
+        source.close();
+        destination.close();
+
+        std::cout << "DLL Installed " << sourceFile << " to " << destinationFile << std::endl;
+    }
+
     static void copy_scene_files(const std::string &source_dir, const std::string &destination_dir)
     {
         if (!fs::exists(destination_dir))
@@ -228,15 +257,71 @@ public:
 
         std::filesystem::current_path(data_path);
 
-        int result = system("cmake -G \"Visual Studio 17 2022\"");
+        std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/Compiler-Lib/GarinEditorEngine/";
+
+        // Formar los comandos
+        std::string cmake_command = "cd /d " + cmake_path + " && cmake -G \"Visual Studio 17 2022\" .";
+        std::string msbuild_command = "cd /d " + cmake_path + " && msbuild GarinEngine.sln /p:Configuration=Debug";
+
+        // Ejecutar el comando CMake
+        int result = system(cmake_command.c_str());
 
         if (result == 0)
         {
-            std::cout << "Game compiled platform => Window" << std::endl;
+            UINotification::AddNotification("CMake Reloaded...", 10.0f);
+            UINotification::AddNotification("Starting compilation of the libraries (Wait)...", 10.0f);
+
+            // Ejecutar el comando MSBuild
+            int result_build = system(msbuild_command.c_str());
+
+            if (result_build == 0)
+            {
+                UINotification::AddNotification("Successfully compiled libraries...", 10.0f);
+
+                std::string cmake_path_game = FileManager::get_project_path() + "wlibsgpp/build/";
+                copy_file(cmake_path + "Debug/GarinGameCore.dll", cmake_path_game + "Debug/GarinGameCore.dll");
+
+                // Formar los comandos
+                std::string cmake_command_game = "cd /d " + cmake_path_game + " && cmake -G \"Visual Studio 17 2022\" .";
+                std::string msbuild_command_game = "cd /d " + cmake_path_game + " && msbuild GarinGame.sln /p:Configuration=Debug";
+
+                // Ejecutar el comando CMake
+                int result = system(cmake_command_game.c_str());
+
+                if (result == 0)
+                {
+                    UINotification::AddNotification("CMake Reloaded...", 10.0f);
+                    UINotification::AddNotification("Starting compilation of the libraries (Wait)...", 10.0f);
+
+                    // Ejecutar el comando MSBuild
+                    int result_build_game = system(msbuild_command_game.c_str());
+
+                    if (result_build_game == 0)
+                    {
+                        UINotification::AddNotification("Successfully game compiled...", 10.0f);
+                    }
+                    else
+                    {
+                        UINotification::AddNotification("Error during the compilation of the libraries...", 10.0f);
+                        std::cerr << "Error during msbuild execution, result code: " << result_build << std::endl;
+                    }
+                }
+                else
+                {
+                    UINotification::AddNotification("Error during CMake execution...", 10.0f);
+                    std::cerr << "Error during compile game - result code: " << result << std::endl;
+                }
+            }
+            else
+            {
+                UINotification::AddNotification("Error during the compilation of the libraries...", 10.0f);
+                std::cerr << "Error during msbuild execution, result code: " << result_build << std::endl;
+            }
         }
         else
         {
-            std::cout << "Error compiling Makefile" << std::endl;
+            UINotification::AddNotification("Error during CMake execution...", 10.0f);
+            std::cerr << "Error during cmake execution, result code: " << result << std::endl;
         }
     }
 };

@@ -14,9 +14,9 @@ void ModelComponent::defines()
 
 void ModelComponent::init()
 {
-    texture_sampler = new TextureManager(GETVAR(ColorBase, std::string));
-    texture_normal = new TextureManager(GETVAR(NormalMap, std::string));
-    model = new Model(GETVAR(Model, std::string));
+    texture_sampler = new TextureManager(FileManager::get_project_path() + GETVAR(ColorBase, std::string));
+    texture_normal = new TextureManager(FileManager::get_project_path() + GETVAR(NormalMap, std::string));
+    model = new Model(FileManager::get_project_path() + GETVAR(Model, std::string));
 
     texture_sampler->active(GL_TEXTURE0);
 

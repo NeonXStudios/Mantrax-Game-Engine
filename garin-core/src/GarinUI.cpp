@@ -26,7 +26,7 @@ void GarinUI::make_context(GLFWwindow *window)
         (void)io;
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-        UIStyle::SetStyleUI(Dracula);
+        UIStyle::SetStyleUI(RedDark);
 
         if (window == nullptr)
         {
