@@ -34,6 +34,8 @@ class HierarchyUI;
 class MenuUI;
 class UINotification;
 class EngineHubUI;
+class InputSystemUI;
+class AnimatorUI;
 
 class GARINLIBS_API gamescene : public Scene
 {
@@ -55,6 +57,8 @@ public:
     UINotification *notify;
     IconsManager *icons;
     EngineHubUI *hub;
+    InputSystemUI *inputui;
+    AnimatorUI *animatorui;
 
     std::stringstream buffer_stdout;
     std::stringstream buffer_stderr;
@@ -74,7 +78,8 @@ public:
         buffer.clear();
     }
 
-    void Clear() {
+    void Clear()
+    {
         std::lock_guard<std::mutex> guard(mutex);
         stdout_buffer.clear();
         stderr_buffer.clear();

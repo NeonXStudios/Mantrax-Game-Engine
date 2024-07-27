@@ -18,5 +18,6 @@ struct GARINLIBS_API GCastHit
 class GARINLIBS_API GCaster
 {
 public:
-    bool RayCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Lenght, GCastHit *hit, PxHitFlags hitFlags = PxHitFlags(PxHitFlag::eDEFAULT), PxU32 layerMask = LAYER_0);
+    static bool RayCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Lenght, GCastHit *hit, PxHitFlags hitFlags = PxHitFlags(PxHitFlag::eDEFAULT), PxU32 layerMask = LAYER_0);
+    static bool LineCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length, GCastHit *hit, PxU32 layerMask);
 };

@@ -12,6 +12,7 @@
 #include "GCaster.h"
 #include "LayerManager.h"
 #include "GScriptLua.h"
+#include "GAnimator.h"
 #include <Scene.h>
 #include <GAudio.h>
 #include <AudioManager.h>

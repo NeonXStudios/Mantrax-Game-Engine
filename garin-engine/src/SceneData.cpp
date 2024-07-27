@@ -90,7 +90,7 @@ void SceneData::save_scene()
             object.push_back(dataOBJ);
         }
 
-        std::string file_path = FileManager::get_execute_path() + "projects/test/assets/" + SceneManager::GetOpenScene()->scene_name + ".scene";
+        std::string file_path = FileManager::get_project_path() + "assets/" + SceneManager::GetOpenScene()->scene_name + ".scene";
         FileManager::write_file(file_path, object.dump(4));
     }
     catch (const std::exception &e)

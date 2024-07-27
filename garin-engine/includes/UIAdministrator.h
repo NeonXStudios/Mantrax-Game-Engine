@@ -17,6 +17,8 @@
 #include "MenuUI.h"
 #include "UINotification.h"
 #include "EngineHubUI.h"
+#include "InputSystemUI.h"
+#include "AnimatorUI.h"
 #include <Core.h>
 
 namespace fs = std::filesystem;

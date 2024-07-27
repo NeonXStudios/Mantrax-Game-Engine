@@ -38,10 +38,21 @@ void EngineBinder::BinderFunction(GScriptLua *luaParent)
         return glm::vec4(x, y, z, w);
     };
 
+    luaParent->lua.new_usertype<glm::quat>("quaternion", sol::constructors<glm::vec4(float, float, float, float)>(),
+                                           "x", &glm::quat::x,
+                                           "y", &glm::quat::y,
+                                           "z", &glm::quat::z,
+                                           "w", &glm::quat::w);
+
+    luaParent->lua["quaternion"]["new"] = [](float x, float y, float z, float w)
+    {
+        return glm::quat(w, x, y, z);
+    };
+
     // TIMER
     // luaParent->lua["GMathf"]["ClampFloat"] = [](float value, float min, float max)
     // { return GMathfs::ClampFloat(value, min, max); };
-    // luaParent->lua["GMathf"]["DeltaTime"] = []()
+    // luaParent->lua["Time"]["DeltaTime"] = []()
     // { return Timer::delta_time; };
 
     std::cout << "ENGINE BINDER" << std::endl;
@@ -56,11 +67,13 @@ void EngineBinder::BinderFunction(GScriptLua *luaParent)
         std::cout << "SCENE CAMERA ITS NULL" << std::endl;
     }
 
-    // GAME CAMERA
+    // GAME CAMERAg
     luaParent->lua["GameCamera"] = sol::make_object(luaParent->lua.lua_state(), SceneManager::GetSceneManager()->OpenScene->main_camera);
     luaParent->lua.new_usertype<Camera>("Camera",
                                         "position", &Camera::cameraPosition,
                                         "fov", &Camera::zoom);
+
+    luaParent->lua["GamePlaying"] = sol::make_object(luaParent->lua.lua_state(), AppSettings::is_playing);
 
     // DEBUG SETTINGS
     luaParent->lua.set_function("print", [](sol::variadic_args args)

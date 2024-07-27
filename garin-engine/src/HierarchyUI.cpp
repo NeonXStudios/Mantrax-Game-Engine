@@ -9,7 +9,7 @@ void HierarchyUI::draw(Entity *select_obj)
         right_click_held = true;
     }
 
-    if (ImGui::IsMouseDown(1) && right_click_held)
+    if (ImGui::IsMouseDown(1) && ImGui::IsWindowHovered() && right_click_held)
     {
         ImGui::OpenPopup("MenuHierarchy");
         right_click_held = false;
@@ -33,6 +33,35 @@ void HierarchyUI::draw(Entity *select_obj)
         }
     }
 
+    // if (ImGui::Selectable("Drop Here From Remove Parent"))
+    // {
+    // }
+
+    // if (ImGui::BeginDragDropSource())
+    // {
+    //     ImGui::SetDragDropPayload("ENTITY_CELL", &select_obj, sizeof(Entity *));
+    //     ImGui::Text("Dragging %s", select_obj->ObjectName.c_str());
+    //     ImGui::EndDragDropSource();
+    // }
+
+    // if (ImGui::BeginDragDropTarget())
+    // {
+    //     if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY_CELL"))
+    //     {
+    //         IM_ASSERT(payload->DataSize == sizeof(Entity *));
+    //         Entity *droppedEntity = *(Entity **)payload->Data;
+
+    //         if (droppedEntity->get_transform()->parent)
+    //         {
+    //             auto &siblings = droppedEntity->get_transform()->parent->childrens;
+    //             siblings.erase(std::remove(siblings.begin(), siblings.end(), droppedEntity->get_transform()), siblings.end());
+    //         }
+
+    //         droppedEntity->get_transform()->detach_from_parent();
+    //     }
+    //     ImGui::EndDragDropTarget();
+    // }
+
     ImGui::End();
 }
 
@@ -43,10 +72,12 @@ void HierarchyUI::drawEntityNode(Entity *entity)
     bool node_open = false;
     bool selected = (entity == game->select_obj);
 
-    std::string name_tree = entity->ObjectName + " (" + std::to_string(entity->objectID) + ")";
+    std::string name_tree = entity->ObjectName + " (" + entity->ObjectSTRID + ")";
 
     if (!entity->get_transform()->childrens.empty())
     {
+        EditorGUI::DrawIcon(IconsManager::ENTITY());
+
         node_open = ImGui::TreeNodeEx(name_tree.c_str(), ImGuiTreeNodeFlags_OpenOnArrow | (selected ? ImGuiTreeNodeFlags_Selected : 0));
 
         if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
@@ -75,6 +106,7 @@ void HierarchyUI::drawEntityNode(Entity *entity)
     }
     else
     {
+        EditorGUI::DrawIcon(IconsManager::ENTITY());
         if (ImGui::Selectable(name_tree.c_str(), selected))
         {
             if (entity != game->select_obj)

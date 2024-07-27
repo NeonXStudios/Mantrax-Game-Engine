@@ -117,7 +117,7 @@ void SceneManager::LoadScene(string scenePath, string sceneName)
 void SceneManager::load_scene(std::string scene_name_new)
 {
     std::cout << "Starting load scene" << std::endl;
-    std::string file_path = FileManager::get_execute_path() + "projects/test/assets/" + scene_name_new + ".scene";
+    std::string file_path = FileManager::get_project_path() + "assets/" + scene_name_new + ".scene";
 
     std::cout << "Loading scene from: " << file_path << std::endl;
 
@@ -150,8 +150,10 @@ void SceneManager::load_scene(std::string scene_name_new)
         SceneManager::GetOpenScene()->scene_name = scene_name_new;
 
         std::ifstream file(file_path);
+
         if (!file.is_open())
         {
+            SceneManager::GetOpenScene()->scene_name = "Error Scene";
             std::cerr << "Error opening file: " << file_path << std::endl;
             return;
         }
@@ -183,6 +185,8 @@ void SceneManager::load_scene(std::string scene_name_new)
             VarVerify::set_value_if_exists(data_loaded[i], "sy", transform->Scale.y);
             VarVerify::set_value_if_exists(data_loaded[i], "sz", transform->Scale.z);
             VarVerify::set_value_if_exists(data_loaded[i], "object_id", new_object->objectID);
+
+            std::cout << "*******Loaded ID: " << new_object->ObjectSTRID << std::endl;
 
             if (data_loaded[i].contains("components") && data_loaded[i]["components"].is_array())
             {

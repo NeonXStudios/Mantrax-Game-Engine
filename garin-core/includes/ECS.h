@@ -130,45 +130,54 @@ public:
 
 	void update()
 	{
+		// Inicializa la matriz local con la identidad
 		MatrixLocal = glm::mat4(1.0f);
 
+		// Aplica la traslación
 		MatrixLocal = glm::translate(MatrixLocal, Position);
 
-		rotation = glm::quat(EulerRotation);
-		MatrixLocal *= glm::mat4_cast(rotation);
+		// Convierte la rotación a una matriz de rotación y multiplícala
+		glm::mat4 rotationMatrix = glm::toMat4(rotation);
+		MatrixLocal *= rotationMatrix;
 
-		// Aplica escala
+		// Aplica la escala
 		MatrixLocal = glm::scale(MatrixLocal, Scale);
 
 		if (parent)
 		{
-			parentMatrix = glm::mat4(1.0f);
+			// Obtén la matriz del padre
+			glm::mat4 parentMatrix = parent->get_matrix();
 
-			if (adaptPosition || adaptRotation || adaptScale)
+			// Si no se debe adaptar la posición, elimina la traslación del padre
+			if (!adaptPosition)
 			{
-				parentMatrix = parent->get_matrix();
+				parentMatrix[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+			}
 
-				if (!adaptPosition)
+			// Si no se debe adaptar la rotación, elimina la rotación del padre
+			if (!adaptRotation)
+			{
+				for (int i = 0; i < 3; ++i)
 				{
-					parentMatrix[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-				}
-
-				if (!adaptRotation)
-				{
-					glm::mat3 upper3x3 = glm::mat3(1.0f);
-					for (int i = 0; i < 3; ++i)
+					for (int j = 0; j < 3; ++j)
 					{
-						for (int j = 0; j < 3; ++j)
+						if (i == j)
 						{
-							parentMatrix[i][j] = upper3x3[i][j];
+							parentMatrix[i][j] = 1.0f; // Mantén la diagonal principal
+						}
+						else
+						{
+							parentMatrix[i][j] = 0.0f; // Elimina los elementos fuera de la diagonal
 						}
 					}
 				}
+			}
 
-				if (!adaptScale)
-				{
-					parentMatrix = glm::scale(parentMatrix, glm::vec3(1.0f / parent->Scale.x, 1.0f / parent->Scale.y, 1.0f / parent->Scale.z));
-				}
+			// Si no se debe adaptar la escala, elimina la escala del padre
+			if (!adaptScale)
+			{
+				glm::vec3 parentScale = parent->Scale;
+				parentMatrix = glm::scale(parentMatrix, glm::vec3(1.0f / parentScale.x, 1.0f / parentScale.y, 1.0f / parentScale.z));
 			}
 
 			// Multiplica la matriz del padre con la matriz local
@@ -187,12 +196,7 @@ public:
 
 	void set_rotation(const glm::vec3 &eulerAngles)
 	{
-		// glm::quat rotationX = glm::angleAxis(glm::radians(eulerAngles.x), glm::vec3(1.0f, 0.0f, 0.0f));
-		// glm::quat rotationY = glm::angleAxis(glm::radians(eulerAngles.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		// glm::quat rotationZ = glm::angleAxis(glm::radians(eulerAngles.z), glm::vec3(0.0f, 0.0f, 1.0f));
-		// rotation = rotationX * rotationY * rotationZ;
-
-		glm::quat quaternion = glm::quat(eulerAngles);
+		glm::quat quaternion = glm::quat(1.0f, glm::radians(eulerAngles));
 		rotation = quaternion;
 	}
 
@@ -201,16 +205,28 @@ public:
 		return glm::eulerAngles(rotation);
 	}
 
-	void attachTo(TransformComponent *parent)
+	void attachTo(TransformComponent *parent_obj)
 	{
-		if (this->parent != nullptr)
+		if (parent_obj != nullptr)
 		{
-			auto &siblings = this->parent->childrens;
+			auto &siblings = parent_obj->childrens;
 			siblings.erase(std::remove(siblings.begin(), siblings.end(), this), siblings.end());
 		}
 
-		this->parent = parent;
+		this->parent = parent_obj;
 		parent->childrens.push_back(this);
+	}
+
+	void detach_from_parent()
+	{
+		// if (parent != nullptr)
+		// {
+		// 	auto it = std::find(parent->childrens.begin(), parent->childrens.end(), this);
+		// 	if (it != parent->childrens.end())
+		// 	{
+		// 		parent->childrens.erase(it);
+		// 	}
+		// }
 	}
 };
 

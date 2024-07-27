@@ -5,7 +5,7 @@ void AssetsUI::draw(EditorConfigs *p_configs)
 {
     configs = p_configs;
     ImGui::Begin("Assets");
-    ShowDirectoryTree(FileManager::get_game_path() + "/assets");
+    ShowDirectoryTree(FileManager::get_project_path() + "/assets");
 
     if (ImGui::IsWindowHovered())
     {
@@ -36,6 +36,8 @@ void AssetsUI::ShowDirectoryTree(const std::filesystem::path &path)
     {
         if (entry.is_directory())
         {
+            EditorGUI::DrawIcon(IconsManager::FOLDER());
+
             if (ImGui::TreeNode(entry.path().filename().string().c_str()))
             {
                 if (ImGui::IsItemClicked(0))
@@ -69,6 +71,27 @@ void AssetsUI::ShowDirectoryTree(const std::filesystem::path &path)
             std::string base_name = "";
             if (entry.path().extension() != ".cpp" && entry.path().extension() != ".h")
             {
+                if (entry.path().extension() == ".lua")
+                {
+                    EditorGUI::DrawIcon(IconsManager::LUA());
+                }
+                else if (entry.path().extension() == ".scene")
+                {
+                    EditorGUI::DrawIcon(IconsManager::SCENE());
+                }
+                else if (entry.path().extension() == ".fbx")
+                {
+                    EditorGUI::DrawIcon(IconsManager::MODEL());
+                }
+                else if (entry.path().extension() == ".wav" || entry.path().extension() == ".mp3")
+                {
+                    EditorGUI::DrawIcon(IconsManager::SOUND());
+                }
+                else
+                {
+                    EditorGUI::DrawIcon(IconsManager::UNKNOWN());
+                }
+
                 if (ImGui::Selectable(entry.path().filename().string().c_str(), selected_item == entry.path().string()))
                 {
 
@@ -82,7 +105,7 @@ void AssetsUI::ShowDirectoryTree(const std::filesystem::path &path)
                         base_name = selected_path.stem().string();
 
                         drawer_files(extension, base_name);
-                        std::cout << "Archivo doble clic: " << selected_item << std::endl;
+                        std::cout << "Opening scene: " << base_name << std::endl;
                     }
                     else
                     {
@@ -109,6 +132,12 @@ void AssetsUI::drawer_files(std::string extension, std::string file_name)
         {
             SceneData::load_scene(file_name);
         }
+    }
+    else if (extension == ".lua")
+    {
+        std::filesystem::current_path(FileManager::get_game_path() + "/assets/");
+
+        int result = system("code .");
     }
 }
 

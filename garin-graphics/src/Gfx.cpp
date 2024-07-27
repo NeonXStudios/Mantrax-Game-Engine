@@ -231,14 +231,10 @@ void Gfx::render_to_texture()
     int width, height;
     glfwGetFramebufferSize(Gfx::get_game_window(), &width, &height);
 
-    glViewport(0, 0, 1920, 1080);
+    glViewport(0, 0, render_width, render_height);
 
     glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    // for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
-    // {
-    //     ent->on_draw();
-    // }
 
     RenderPipeline::render();
 
@@ -249,11 +245,6 @@ void Gfx::render_to_texture()
     glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
-    // {
-    //     ent->on_draw();
-    // }
-
     RenderPipeline::render();
 
     SceneManager::GetOpenScene()->on_draw();
@@ -262,7 +253,7 @@ void Gfx::render_to_texture()
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
     glBindTexture(GL_TEXTURE_2D, Gfx::texture);
-    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, 1920, 1080, 0);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, render_width, render_height, 0);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
     SceneManager::GetOpenScene()->draw_ui();

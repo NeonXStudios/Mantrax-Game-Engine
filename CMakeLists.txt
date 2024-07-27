@@ -20,7 +20,7 @@ file(GLOB SOURCES
     "garin-engine/src/main.cpp"
 )
 
-set(MYLIB_DIR "/")
+set(MYLIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Compiler-Lib/GarinEditorEngine/Debug/")
 link_directories(${MYLIB_DIR})
 
 # Archivo ejecutable

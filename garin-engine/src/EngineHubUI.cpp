@@ -167,9 +167,9 @@ void EngineHubUI::ListarCarpetas(const std::wstring &ruta)
                     configs->current_proyect = path;
                     configs->project_select = true;
 
+                    FileManager::game_path = configs->current_proyect;
                     configs->load_config();
                     SceneData::load_scene(configs->current_scene);
-                    FileManager::game_path = configs->current_proyect;
                 }
             }
         }

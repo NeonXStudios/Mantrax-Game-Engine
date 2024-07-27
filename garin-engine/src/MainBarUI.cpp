@@ -46,6 +46,16 @@ void MainBarUI::draw(Entity *owner)
             ImGui::EndMenu();
         }
 
+        if (ImGui::BeginMenu("Game"))
+        {
+
+            if (ImGui::MenuItem("Input"))
+            {
+            }
+
+            ImGui::EndMenu();
+        }
+
         if (ImGui::BeginMenu("Build"))
         {
             if (ImGui::MenuItem("Windows"))
@@ -189,7 +199,9 @@ void MainBarUI::draw(Entity *owner)
 
     ImGui::SameLine((ImGui::GetWindowWidth() / 2) - 16);
 
-    if (ImGui::ImageButton((void *)(intptr_t)IconsManager::PLAY(), ImVec2(16, 16)))
+    unsigned int current_icon = AppSettings::is_playing ? IconsManager::PAUSE() : IconsManager::PLAY();
+
+    if (ImGui::ImageButton((void *)(intptr_t)current_icon, ImVec2(16, 16)))
     {
 
         AppSettings::is_playing = !AppSettings::is_playing;

@@ -2,6 +2,7 @@
 #include <GarinGraphics.h>
 #include <GarinEvents.h>
 #include <GarinMaths.h>
+#include <EventSystem.h>
 
 using namespace ImGuizmo;
 
@@ -17,10 +18,37 @@ void SceneUI::draw(Entity *select_obj)
     ImGuizmo::SetDrawlist();
 
     ImVec2 windowSize = ImGui::GetContentRegionAvail();
-    Gfx::render_width = windowSize.x;
-    Gfx::render_height = windowSize.y;
+
     ImVec2 p = ImGui::GetCursorScreenPos();
     ImGui::Image((void *)(intptr_t)Gfx::texture, ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(ImVec2(0, 1)), ImVec2(ImVec2(1, 0)));
+    imagePosition = ImGui::GetWindowPos();
+    Gfx::render_width = windowSize.x;
+    Gfx::render_height = windowSize.y;
+
+    if (ImGui::IsWindowHovered() && game != nullptr)
+    {
+        CastData *data = new CastData();
+
+        if (ImGui::IsMouseClicked(0))
+        {
+            WorldPoint = EventSystem::ScreenToViewPort(glm::vec2(p.x, p.y), glm::vec2(Gfx::render_width, Gfx::render_height));
+
+            if (EventSystem::MouseCast(WorldPoint, data))
+            {
+                if (select_obj != data->object)
+                {
+                    game->set_object_select(data->object);
+                }
+            }
+            else
+            {
+                if (!ImGuizmo::IsOver())
+                {
+                    game->set_object_select(nullptr);
+                }
+            }
+        }
+    }
 
     if (select_obj != nullptr)
     {
@@ -41,14 +69,15 @@ void SceneUI::draw(Entity *select_obj)
 
         if (res)
         {
-            glm::vec3 translation, rotation, scale;
-            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(matrix), glm::value_ptr(translation), glm::value_ptr(rotation), glm::value_ptr(scale));
+            glm::vec3 translation, eulerRotation, scale;
+            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(matrix), glm::value_ptr(translation), glm::value_ptr(eulerRotation), glm::value_ptr(scale));
 
             if (!select_obj->hasComponent<GBody>())
             {
                 transform->Position = translation;
-                transform->set_rotation(rotation);
-                transform->update();
+
+                // Usa set_rotation con los ángulos de Euler descompuestos
+                transform->set_rotation(eulerRotation);
 
                 transform->Scale = scale;
             }
@@ -56,29 +85,30 @@ void SceneUI::draw(Entity *select_obj)
             {
                 transform->Position = translation;
                 transform->Scale = scale;
-                transform->set_rotation(rotation);
-                transform->update();
+
+                transform->set_rotation(eulerRotation);
 
                 select_obj->getComponent<GBody>().body->setLinearVelocity(PxVec3(0, 0, 0));
                 select_obj->getComponent<GBody>().set_position(translation);
             }
-
-            transform->update();
         }
 
-        if (InputSystem::on_key_pressed(GLFW_KEY_W))
+        if (!ImGui::IsMouseDown(1))
         {
-            gizmoOperation = ImGuizmo::TRANSLATE;
-        }
+            if (InputSystem::on_key_pressed(GLFW_KEY_W))
+            {
+                gizmoOperation = ImGuizmo::TRANSLATE;
+            }
 
-        if (InputSystem::on_key_pressed(GLFW_KEY_Q))
-        {
-            gizmoOperation = ImGuizmo::ROTATE;
-        }
+            if (InputSystem::on_key_pressed(GLFW_KEY_Q))
+            {
+                gizmoOperation = ImGuizmo::ROTATE;
+            }
 
-        if (InputSystem::on_key_pressed(GLFW_KEY_E))
-        {
-            gizmoOperation = ImGuizmo::SCALE;
+            if (InputSystem::on_key_pressed(GLFW_KEY_E))
+            {
+                gizmoOperation = ImGuizmo::SCALE;
+            }
         }
     }
 
@@ -86,6 +116,11 @@ void SceneUI::draw(Entity *select_obj)
     {
         SceneManager::GetOpenScene()->destroy(select_obj);
         select_obj = nullptr;
+    }
+
+    if (ImGui::IsWindowHovered() && ImGui::IsKeyDown(ImGuiKey_F) && select_obj != nullptr)
+    {
+        SceneManager::GetOpenScene()->main_camera->cameraPosition = select_obj->get_transform()->Position;
     }
 
     ImGui::End();

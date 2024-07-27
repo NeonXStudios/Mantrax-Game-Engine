@@ -234,6 +234,31 @@ public:
                         if (result.has_value())
                         {
                             cpm->variableMap[key] = result.value();
+
+                            cpm->clean();
+                            cpm->init();
+                        }
+                    }
+                    else if (key == "ColorBase")
+                    {
+                        auto result = EditorGUI::Drag_Objetive("IMAGECLASS");
+                        if (result.has_value())
+                        {
+                            cpm->variableMap[key] = result.value();
+
+                            cpm->clean();
+                            cpm->init();
+                        }
+                    }
+                    else if (key == "NormalMap")
+                    {
+                        auto result = EditorGUI::Drag_Objetive("IMAGECLASS");
+                        if (result.has_value())
+                        {
+                            cpm->variableMap[key] = result.value();
+
+                            cpm->clean();
+                            cpm->init();
                         }
                     }
                     else if (key == "VertexPath" || key == "FragmentPath")
@@ -242,6 +267,9 @@ public:
                         if (result.has_value())
                         {
                             cpm->variableMap[key] = result.value();
+
+                            cpm->clean();
+                            cpm->init();
                         }
                     }
                     else if (key == "VertexPath" || key == "FragmentPath")
@@ -250,6 +278,9 @@ public:
                         if (result.has_value())
                         {
                             cpm->variableMap[key] = result.value();
+
+                            cpm->clean();
+                            cpm->init();
                         }
                     }
                     else if (key == "ClassName")
@@ -258,6 +289,9 @@ public:
                         if (result.has_value())
                         {
                             cpm->variableMap[key] = result.value();
+
+                            cpm->clean();
+                            cpm->init();
                         }
                     }
                     else if (key == "ScriptPath")
@@ -266,6 +300,20 @@ public:
                         if (result.has_value())
                         {
                             cpm->variableMap[key] = result.value();
+
+                            cpm->clean();
+                            cpm->init();
+                        }
+                    }
+                    else if (key == "AudioPath")
+                    {
+                        auto result = EditorGUI::Drag_Objetive("AUDIOCLASS");
+                        if (result.has_value())
+                        {
+                            cpm->variableMap[key] = result.value();
+
+                            cpm->clean();
+                            cpm->init();
                         }
                     }
                 }

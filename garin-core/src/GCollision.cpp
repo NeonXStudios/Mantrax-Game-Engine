@@ -14,19 +14,14 @@ void GCollision::init()
 
         if (shape)
         {
+            std::cout << "Entity ID: " << entity->ObjectSTRID << std::endl;
             shape->setName(entity->ObjectSTRID.c_str());
 
-            // Configurar el filtro de capa
             PxFilterData filterData;
-            filterData.word0 = LAYER_0 | LAYER_1;
-            filterData.word1 = 0;
-            filterData.word2 = 0;
-            filterData.word3 = 0;
+            filterData.word0 = layerMask0;
 
             shape->setSimulationFilterData(filterData);
-
-            std::cout << "Shape Layer Mask: " << filterData.word0 << ", " << filterData.word1 << ", " << filterData.word2 << ", " << filterData.word3 << std::endl;
-            std::cout << "Shape created with size: (" << boxSize.x << ", " << boxSize.y << ", " << boxSize.z << ")" << std::endl;
+            shape->setQueryFilterData(filterData);
 
             if (GETVAR(IsTrigger, bool))
             {

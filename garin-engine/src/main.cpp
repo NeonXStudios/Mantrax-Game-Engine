@@ -38,15 +38,13 @@ int main(void)
 
     SceneManager::GetOpenScene()->init();
 
-    std::cout << "Al system started" << std::endl;
+    std::cout << "All system started" << std::endl;
 
     while (!Gfx::try_window_close())
     {
         Gfx::poll_events();
         Gfx::timer_control();
         Gfx::process_window_size();
-
-        Gfx::render_to_texture();
 
         if (SceneManager::GetOpenScene()->main_camera != nullptr)
         {
@@ -62,6 +60,8 @@ int main(void)
                 SceneManager::GetOpenScene()->on_edition_mode(Timer::delta_time);
             }
         }
+
+        Gfx::render_to_texture();
 
         Gfx::swap_buffer();
     }

@@ -26,9 +26,13 @@ void gamescene::on_start()
     hierarchyui = new HierarchyUI();
     menuui = new MenuUI();
     hub = new EngineHubUI();
+    inputui = new InputSystemUI();
+    animatorui = new AnimatorUI();
+
     hub->configs = configs;
     mainbar->configs = configs;
 
+    sceneui->game = this;
     mainbar->game = this;
 
     notify = new UINotification();
@@ -68,11 +72,26 @@ void gamescene::on_edition_mode(float delta_time)
 
     std::string window_name = "Garin Editor - " + SceneManager::GetOpenScene()->scene_name;
 
-    // glfwSetWindowTitle(Graphics::get_game_window(), window_name.c_str());
+    for (Entity *entity : objects_worlds)
+    {
+        entity->transform_component->update();
+        for (Entity *transform : entity->childrens)
+        {
+            transform->transform_component->update();
+        }
+    }
+
+    glfwSetWindowTitle(Gfx::get_game_window(), window_name.c_str());
 }
 
 void gamescene::on_update(float delta_time)
 {
+    // GCastHit *hit = new GCastHit();
+
+    // if (GCaster::LineCast(SceneManager::GetOpenScene()->get_entity_by_index(1)->get_transform()->Position, glm::vec3(0.0f, -1.0f, 0.0f), 100, hit, LAYER_1))
+    // {
+    //     std::cout << "Casting: " << hit->entity->ObjectName << std::endl;
+    // }
 }
 
 void gamescene::on_draw()
@@ -97,6 +116,9 @@ void gamescene::draw_ui()
         settingsui->draw(configs);
         hierarchyui->draw(select_obj);
         menuui->draw(this);
+        inputui->draw();
+        animatorui->draw();
+
         // notify->RenderNotifications();
         UINotification::instance.RenderNotifications();
 
@@ -112,6 +134,26 @@ void gamescene::draw_ui()
         ImGui::TextUnformatted(stdout_buffer.c_str());
         ImGui::TextUnformatted(stderr_buffer.c_str());
         ImGui::EndChild();
+
+        if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+        {
+            if (ImGui::IsKeyReleased(ImGuiKey_S))
+            {
+                if (!AppSettings::is_playing)
+                {
+                    SceneData::save_scene();
+
+                    string info = "Scene Saved: " + configs->current_scene;
+
+                    UINotification::AddNotification(info, 3.0f);
+                }
+                else
+                {
+                    string info = "You cannot save scene in playmode";
+                    UINotification::AddNotification(info, 3.0f);
+                }
+            }
+        }
 
         ImGui::End();
     }
