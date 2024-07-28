@@ -6,6 +6,7 @@
 
 #include "EditorGUI.h"
 #include "EditorConfigs.h"
+#include <GizmosDrawer.h>
 
 #include <GarinComponents.h>
 #include <GarinBehaviours.h>
@@ -36,6 +37,7 @@ class UINotification;
 class EngineHubUI;
 class InputSystemUI;
 class AnimatorUI;
+class GizmosDrawer;
 
 class GARINLIBS_API gamescene : public Scene
 {
@@ -59,6 +61,7 @@ public:
     EngineHubUI *hub;
     InputSystemUI *inputui;
     AnimatorUI *animatorui;
+    GizmosDrawer *gizmos;
 
     std::stringstream buffer_stdout;
     std::stringstream buffer_stderr;
@@ -67,6 +70,8 @@ public:
     std::streambuf *old_stdout;
     std::streambuf *old_stderr;
     std::mutex mutex;
+
+    bool shouldScroll = false;
 
     void ReadBuffer(std::stringstream &buffer, std::string &target)
     {

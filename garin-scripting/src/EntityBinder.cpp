@@ -15,7 +15,6 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
                                         "name", &Entity::ObjectName,
                                         "tag", &Entity::ObjectTag,
                                         "id", &Entity::objectID,
-
                                         // GET COMPONENTS
                                         "transform", &Entity::get_transform,
                                         "GetAudioSource", &Entity::getComponent<GAudio>,
@@ -40,6 +39,44 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
                                               "ChangeScene", &SceneManager::LoadScene,
                                               "newEntity", &SceneManager::NewEntity,
                                               "Destroy", &SceneManager::Destroy);
+
+    // luaParent->lua.new_usertype<GCaster>("GCast",
+    //                                      "Cast", &GCaster::LineCast);
+
+    luaParent->lua.new_usertype<GCaster>("GCaster",
+                                         "LineCast", [](glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length, GCastHit &hit, unsigned int layerMask)
+                                         { return GCaster::LineCast(RayOrigin, RayDirection, Length, &hit, layerMask); });
+
+    luaParent->lua.new_usertype<GCastHit>("GCastHit",
+                                          "point", &GCastHit::point,
+                                          "normal", &GCastHit::normal,
+                                          "entity", &GCastHit::entity);
+
+    luaParent->lua["LAYER_0"] = LAYER_0;
+    luaParent->lua["LAYER_1"] = LAYER_1;
+    luaParent->lua["LAYER_2"] = LAYER_2;
+    luaParent->lua["LAYER_3"] = LAYER_3;
+    luaParent->lua["LAYER_4"] = LAYER_4;
+    luaParent->lua["LAYER_5"] = LAYER_5;
+    luaParent->lua["LAYER_6"] = LAYER_6;
+    luaParent->lua["LAYER_7"] = LAYER_7;
+    luaParent->lua["LAYER_8"] = LAYER_8;
+    luaParent->lua["LAYER_9"] = LAYER_9;
+    luaParent->lua["LAYER_10"] = LAYER_10;
+    luaParent->lua["LAYER_11"] = LAYER_11;
+    luaParent->lua["LAYER_12"] = LAYER_12;
+    luaParent->lua["LAYER_13"] = LAYER_13;
+    luaParent->lua["LAYER_14"] = LAYER_14;
+    luaParent->lua["LAYER_15"] = LAYER_15;
+    luaParent->lua["LAYER_16"] = LAYER_16;
+    luaParent->lua["LAYER_17"] = LAYER_17;
+    luaParent->lua["LAYER_18"] = LAYER_18;
+    luaParent->lua["LAYER_19"] = LAYER_19;
+
+    luaParent->lua.new_usertype<GCastHit>("GCastHit",
+                                          "point", &GCastHit::point,
+                                          "normal", &GCastHit::normal,
+                                          "entity", &GCastHit::entity);
 
     luaParent->lua.new_usertype<GBody>("RigidBody",
                                        "position", &GBody::get_body_position,

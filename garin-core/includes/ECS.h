@@ -2,6 +2,7 @@
 #ifndef ECSCOMPONENT_H
 #define ECSCOMPONENT_H
 
+#include "LayerManager.h"
 #include <GarinNatives.h>
 #include <GarinMaths.h>
 #include "Core.h"
@@ -241,6 +242,7 @@ private:
 	GroupBitset groupBitset;
 
 public:
+	int Layer = LAYER_1;
 	std::string ObjectName = "New Entity";
 	std::string ObjectTag = "None";
 	std::string ObjectSTRID = "0";

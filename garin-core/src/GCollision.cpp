@@ -18,7 +18,7 @@ void GCollision::init()
             shape->setName(entity->ObjectSTRID.c_str());
 
             PxFilterData filterData;
-            filterData.word0 = layerMask0;
+            filterData.word0 = entity->Layer;
 
             shape->setSimulationFilterData(filterData);
             shape->setQueryFilterData(filterData);
@@ -48,17 +48,11 @@ void GCollision::update()
         physx::PxBoxGeometry newGeometry(newsize.x, newsize.y, newsize.z);
         shape->setGeometry(newGeometry);
 
-        // // Opcional: actualizar el filtro de capa si es necesario
-        // PxFilterData filterData;
-        // filterData.word0 = LAYER_0 | LAYER_1;
-        // filterData.word1 = 0;
-        // filterData.word2 = 0;
-        // filterData.word3 = 0;
+        PxFilterData filterData;
+        filterData.word0 = entity->Layer;
 
-        // shape->setSimulationFilterData(filterData);
-
-        // // Imprimir los datos del filtro
-        // std::cout << "Shape Update Layer Mask: " << filterData.word0 << ", " << filterData.word1 << ", " << filterData.word2 << ", " << filterData.word3 << std::endl;
+        shape->setSimulationFilterData(filterData);
+        shape->setQueryFilterData(filterData);
 
         if (GETVAR(IsTrigger, bool))
         {

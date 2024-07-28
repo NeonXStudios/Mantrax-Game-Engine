@@ -15,8 +15,6 @@ bool GCaster::RayCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length,
         PxReal distance = hit.block.distance;
 
         const char *shapeName = hit.block.shape->getName();
-
-        std::cout << "Object name: " << shapeName << std::endl;
     }
     else
     {
@@ -44,7 +42,6 @@ bool GCaster::LineCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length
         PxReal distance = hit.block.distance;
 
         const char *shapeName = hit.block.shape->getName();
-        std::cout << "Object name: " << shapeName << std::endl;
 
         if (SceneManager::GetOpenScene()->get_entity_by_id_string(shapeName) != nullptr)
         {
@@ -63,7 +60,6 @@ bool GCaster::LineCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length
     }
     else
     {
-        std::cout << "No hit detected." << std::endl;
         return false;
     }
 }

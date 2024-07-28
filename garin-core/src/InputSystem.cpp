@@ -6,6 +6,23 @@ double InputSystem::lastY = 0.0;
 double InputSystem::mouse_delta_x = 0.0;
 double InputSystem::mouse_delta_y = 0.0;
 
+std::unordered_map<GLuint, bool> InputSystem::previous_key_state;
+
+void InputSystem::initialize()
+{
+    for (int i = 0; i < GLFW_KEY_LAST; ++i)
+    {
+        previous_key_state[i] = false;
+    }
+}
+
+bool InputSystem::on_key_down(GLuint key)
+{
+    bool is_down = glfwGetKey(Gfx::get_game_window(), key) == GLFW_PRESS;
+    bool was_down = previous_key_state[key];
+    return is_down && !was_down;
+}
+
 float InputSystem::get_axis(GLuint positive_key, GLuint negative_key)
 {
     return -static_cast<float>(InputSystem::on_key_pressed(negative_key)) + static_cast<float>(InputSystem::on_key_pressed(positive_key));
@@ -30,6 +47,11 @@ void InputSystem::update_input()
 
     mouse_delta_x = deltaX * abstract_sense;
     mouse_delta_y = deltaY * abstract_sense;
+
+    for (int i = 0; i < GLFW_KEY_LAST; ++i)
+    {
+        previous_key_state[i] = glfwGetKey(Gfx::get_game_window(), i) == GLFW_PRESS;
+    }
 }
 
 float InputSystem::get_mouse_x()

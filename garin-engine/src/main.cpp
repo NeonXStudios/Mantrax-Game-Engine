@@ -53,7 +53,6 @@ int main(void)
             if (AppSettings::is_playing)
             {
                 SceneManager::GetOpenScene()->update(Timer::delta_time);
-                // game_graphics->runner->on_tick();
             }
             else
             {

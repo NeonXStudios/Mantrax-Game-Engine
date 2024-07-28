@@ -28,12 +28,15 @@ void gamescene::on_start()
     hub = new EngineHubUI();
     inputui = new InputSystemUI();
     animatorui = new AnimatorUI();
+    gizmos = new GizmosDrawer();
 
     hub->configs = configs;
     mainbar->configs = configs;
 
     sceneui->game = this;
     mainbar->game = this;
+
+    gizmos->config_line();
 
     notify = new UINotification();
     IconsManager::init();
@@ -96,6 +99,7 @@ void gamescene::on_update(float delta_time)
 
 void gamescene::on_draw()
 {
+    gizmos->draw_line(glm::vec3(0.0f), glm::vec3(20.0f, 2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(5.0f));
 }
 
 void gamescene::draw_ui()
@@ -133,6 +137,12 @@ void gamescene::draw_ui()
         ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
         ImGui::TextUnformatted(stdout_buffer.c_str());
         ImGui::TextUnformatted(stderr_buffer.c_str());
+
+        if (shouldScroll)
+        {
+            ImGui::SetScrollHereY(1.0f);
+            shouldScroll = false;
+        }
         ImGui::EndChild();
 
         if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))

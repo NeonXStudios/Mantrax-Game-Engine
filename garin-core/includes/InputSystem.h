@@ -16,12 +16,16 @@ public:
     static double lastX;
     static double lastY;
 
-    static float
-    get_axis(GLuint positive_key, GLuint negative_key);
+    static float get_axis(GLuint positive_key, GLuint negative_key);
     static bool on_key_pressed(GLuint key);
 
     static float get_mouse_x();
     static float get_mouse_y();
 
     static void update_input();
+    static void initialize();
+    static bool on_key_down(GLuint key);
+
+private:
+    static std::unordered_map<GLuint, bool> previous_key_state;
 };

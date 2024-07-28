@@ -10,6 +10,25 @@ void InspectorUI::draw(Entity *select_obj)
     if (select_obj != nullptr)
     {
         ImGui::Begin("Inspector");
+
+        int currentLayer = 0;
+        for (int i = 0; i < layerNames.size(); ++i)
+        {
+            if (select_obj->Layer == (1 << i))
+            {
+                currentLayer = i;
+                break;
+            }
+        }
+
+        if (ImGui::Combo("Layer", &currentLayer, layerNames.data(), layerNames.size()))
+        {
+            select_obj->Layer = 1 << currentLayer;
+            std::cout << "Changed layer to: " << select_obj->Layer << std::endl;
+        }
+
+        ImGui::Separator();
+
         select_obj->ObjectName = EditorGUI::InputText("Name: ", select_obj->ObjectName);
         select_obj->get_transform()->Position = EditorGUI::Vector3("Position", select_obj->get_transform()->Position);
         select_obj->get_transform()->update();
