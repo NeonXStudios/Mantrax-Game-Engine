@@ -73,6 +73,8 @@ int Gfx::create_windows(settings_window settings)
 
     setup_render_texture(1920, 1080);
 
+    InputSystem::initialize();
+
     return 0;
 }
 

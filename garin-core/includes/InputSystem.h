@@ -27,5 +27,6 @@ public:
     static bool on_key_down(GLuint key);
 
 private:
+    static std::unordered_map<GLuint, bool> current_key_state;
     static std::unordered_map<GLuint, bool> previous_key_state;
 };

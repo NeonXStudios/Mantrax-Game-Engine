@@ -6,19 +6,21 @@ double InputSystem::lastY = 0.0;
 double InputSystem::mouse_delta_x = 0.0;
 double InputSystem::mouse_delta_y = 0.0;
 
+std::unordered_map<GLuint, bool> InputSystem::current_key_state;
 std::unordered_map<GLuint, bool> InputSystem::previous_key_state;
 
 void InputSystem::initialize()
 {
     for (int i = 0; i < GLFW_KEY_LAST; ++i)
     {
+        current_key_state[i] = false;
         previous_key_state[i] = false;
     }
 }
 
 bool InputSystem::on_key_down(GLuint key)
 {
-    bool is_down = glfwGetKey(Gfx::get_game_window(), key) == GLFW_PRESS;
+    bool is_down = current_key_state[key];
     bool was_down = previous_key_state[key];
     return is_down && !was_down;
 }
@@ -50,32 +52,22 @@ void InputSystem::update_input()
 
     for (int i = 0; i < GLFW_KEY_LAST; ++i)
     {
-        previous_key_state[i] = glfwGetKey(Gfx::get_game_window(), i) == GLFW_PRESS;
+        previous_key_state[i] = current_key_state[i];
+    }
+
+    for (int i = 0; i < GLFW_KEY_LAST; ++i)
+    {
+        current_key_state[i] = glfwGetKey(Gfx::get_game_window(), i) == GLFW_PRESS;
     }
 }
 
 float InputSystem::get_mouse_x()
 {
-    // float sensitivity = 0.2f;
-    // double mouseX, mouseY;
-    // glfwGetCursorPos(Graphics::get_game_window(), &mouseX, &mouseY);
-
-    // float deltaX = static_cast<float>(mouseX - lastX);
-    // lastX = mouseX;
-
     return mouse_delta_x;
 }
 
-// Obtiene el desplazamiento del mouse en el eje Y desde el último cuadro
 float InputSystem::get_mouse_y()
 {
-    // float sensitivity = 0.2f;
-    // double mouseX, mouseY;
-    // glfwGetCursorPos(Graphics::get_game_window(), &mouseX, &mouseY);
-
-    // float deltaY = static_cast<float>(lastY - mouseY);
-    // lastY = mouseY;
-
     return mouse_delta_y;
 }
 
