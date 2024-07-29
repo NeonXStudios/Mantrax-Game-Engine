@@ -52,6 +52,10 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
                                           "normal", &GCastHit::normal,
                                           "entity", &GCastHit::entity);
 
+    luaParent->lua.new_usertype<Timer>("Time",
+                                       "DeltaTime", []()
+                                       { return Timer::delta_time; });
+
     luaParent->lua["LAYER_0"] = LAYER_0;
     luaParent->lua["LAYER_1"] = LAYER_1;
     luaParent->lua["LAYER_2"] = LAYER_2;
