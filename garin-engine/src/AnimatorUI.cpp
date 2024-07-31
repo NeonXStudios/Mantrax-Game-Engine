@@ -4,7 +4,7 @@ void AnimatorUI::draw()
 {
     if (animator != nullptr)
     {
-        if (!ImGui::Begin("Animator Editor"))
+        if (!ImGui::Begin("Animator Editor", &is_open))
         {
             ImGui::End();
             return;

@@ -144,6 +144,21 @@ public:
         return y;
     }
 
+    static glm::vec3 mix(const glm::vec3 &a, const glm::vec3 &b, float t)
+    {
+        return glm::mix(a, b, t);
+    }
+
+    static glm::quat slerp(const glm::quat &a, const glm::quat &b, float t)
+    {
+        return glm::slerp(a, b, t);
+    }
+
+    static float lerp(float a, float b, float t)
+    {
+        return glm::lerp(a, b, t);
+    }
+
     // static float SmoothDamp(float current, float target, float currentVelocity, float smoothTime, float maxSpeed, float deltaTime)
     // {
     //     float smoothTimeClamped = std::max(0.0001f, smoothTime);

@@ -4,7 +4,7 @@
 void AssetsUI::draw(EditorConfigs *p_configs)
 {
     configs = p_configs;
-    ImGui::Begin("Assets");
+    ImGui::Begin("Assets", &is_open);
     ShowDirectoryTree(FileManager::get_project_path() + "/assets");
 
     if (ImGui::IsWindowHovered())
@@ -45,7 +45,6 @@ void AssetsUI::ShowDirectoryTree(const std::filesystem::path &path)
                     double current_time = ImGui::GetTime();
                     if (current_time - last_click_time <= double_click_time)
                     {
-                        // Doble clic detectado
                         selected_item = entry.path().string();
                         std::filesystem::path selected_path(selected_item);
                         std::string extension = selected_path.extension().string();
@@ -56,7 +55,6 @@ void AssetsUI::ShowDirectoryTree(const std::filesystem::path &path)
                     }
                     else
                     {
-                        // Solo primer clic
                         last_click_time = current_time;
                     }
                 }

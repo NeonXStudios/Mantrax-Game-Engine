@@ -9,6 +9,7 @@
 #include <UIStyle.h>
 #include <SceneData.h>
 #include <filesystem>
+#include <GraphicsManagerUI.h>
 
 namespace fs = std::filesystem;
 
@@ -51,6 +52,52 @@ void MainBarUI::draw(Entity *owner)
 
             if (ImGui::MenuItem("Input"))
             {
+            }
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Windows"))
+        {
+
+            if (ImGui::MenuItem("Scene"))
+            {
+                game->uieditor->sceneui->is_open = true;
+            }
+
+            if (ImGui::MenuItem("Game Settings"))
+            {
+                game->uieditor->settingsui->is_open = true;
+            }
+
+            if (ImGui::MenuItem("Inspector"))
+            {
+                game->uieditor->inspector->is_open = true;
+            }
+
+            if (ImGui::MenuItem("Hierarchy"))
+            {
+                game->uieditor->hierarchyui->is_open = true;
+            }
+
+            if (ImGui::MenuItem("Assets"))
+            {
+                game->uieditor->assetsui->is_open = true;
+            }
+
+            if (ImGui::MenuItem("Scripts"))
+            {
+                game->uieditor->filesui->is_open = true;
+            }
+
+            if (ImGui::MenuItem("Input System"))
+            {
+                game->uieditor->inputui->is_open = true;
+            }
+
+            if (ImGui::MenuItem("Graphics Settings"))
+            {
+                game->uieditor->graphicsui->is_open = true;
             }
 
             ImGui::EndMenu();

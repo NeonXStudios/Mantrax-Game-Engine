@@ -30,6 +30,7 @@ void SceneData::save_scene()
             dataOBJ["sz"] = ent->get_transform()->Scale.z;
 
             dataOBJ["object_id"] = ent->objectID;
+            dataOBJ["layer"] = ent->Layer;
 
             if (ent->get_transform()->parent != nullptr)
                 dataOBJ["parent_id"] = ent->get_transform()->parent->entity->objectID;

@@ -4,6 +4,7 @@
 #include <cstdarg>
 #include <thread>
 #include <SceneData.h>
+#include <RenderPipeline.h>
 
 void gamescene::on_start()
 {
@@ -17,28 +18,16 @@ void gamescene::on_start()
     GarinUI::make_ui_context(Gfx::get_game_window());
     std::cout << "CARPETA DE EJECUCION: " << FileManager::get_execute_path() << std::endl;
 
-    inspector = new InspectorUI();
-    mainbar = new MainBarUI();
-    sceneui = new SceneUI();
-    filesui = new FilesUI();
-    assetsui = new AssetsUI();
-    settingsui = new GameSettingsUI();
-    hierarchyui = new HierarchyUI();
-    menuui = new MenuUI();
-    hub = new EngineHubUI();
-    inputui = new InputSystemUI();
-    animatorui = new AnimatorUI();
+    uieditor = new UIEditorManager();
     gizmos = new GizmosDrawer();
 
-    hub->configs = configs;
-    mainbar->configs = configs;
+    uieditor->configs = configs;
+    uieditor->game = this;
 
-    sceneui->game = this;
-    mainbar->game = this;
+    uieditor->setup();
 
     gizmos->config_line();
 
-    notify = new UINotification();
     IconsManager::init();
 
     string info = "OPEN FILE: " + configs->current_scene;
@@ -89,6 +78,7 @@ void gamescene::on_edition_mode(float delta_time)
 
 void gamescene::on_update(float delta_time)
 {
+    uieditor->select_obj = select_obj;
     // GCastHit *hit = new GCastHit();
 
     // if (GCaster::LineCast(SceneManager::GetOpenScene()->get_entity_by_index(1)->get_transform()->Position, glm::vec3(0.0f, -1.0f, 0.0f), 100, hit, LAYER_1))
@@ -105,23 +95,13 @@ void gamescene::on_draw()
 void gamescene::draw_ui()
 {
     GarinUI::get_ui_manager()->render_new_frame_ui_context(true);
+
+    uieditor->draw();
+
     if (configs->project_select == true)
     {
         ReadBuffer(buffer_stdout, stdout_buffer);
         ReadBuffer(buffer_stderr, stderr_buffer);
-
-        hierarchyui->game = this;
-
-        inspector->draw(select_obj);
-        mainbar->draw(select_obj);
-        sceneui->draw(select_obj);
-        filesui->draw(select_obj, configs);
-        assetsui->draw(configs);
-        settingsui->draw(configs);
-        hierarchyui->draw(select_obj);
-        menuui->draw(this);
-        inputui->draw();
-        animatorui->draw();
 
         // notify->RenderNotifications();
         UINotification::instance.RenderNotifications();
@@ -166,10 +146,6 @@ void gamescene::draw_ui()
         }
 
         ImGui::End();
-    }
-    else
-    {
-        hub->draw();
     }
 
     GarinUI::get_ui_manager()->render_ui_context();

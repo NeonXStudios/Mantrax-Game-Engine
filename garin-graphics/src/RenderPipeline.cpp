@@ -3,28 +3,28 @@
 Shader *RenderPipeline::geometryShader = nullptr;
 Shader *RenderPipeline::lightingShader = nullptr;
 
+std::unordered_set<int> RenderPipeline::layers_to_render;
 std::vector<ModelComponent *> RenderPipeline::renderables;
+
+CanvasManager *RenderPipeline::canvas = nullptr;
 
 void RenderPipeline::init()
 {
-    // geometryShader = new Shader("assets/shaders/geometry_pass.vs", "assets/shaders/geometry_pass.fs");
-    // lightingShader = new Shader("assets/shaders/lightpass.vs", "assets/shaders/lightpass.fs");
-
-    // lightingShader->use();
-    // lightingShader->setInt("gPosition", 0);
-    // lightingShader->setInt("gNormal", 1);
-    // lightingShader->setInt("gAlbedoSpec", 2);
+    RenderPipeline::canvas = new CanvasManager();
+    RenderPipeline::canvas->init_ui();
 }
 
 void RenderPipeline::render()
 {
+    // RenderPipeline::canvas->render_ui();
+
     for (ModelComponent *cmp : renderables)
     {
         if (cmp->entity->hasComponent<GMaterial>())
         {
             GMaterial &material = cmp->entity->getComponent<GMaterial>();
 
-            if (cmp->entity->hasComponent<GMaterial>())
+            if (layers_to_render.find(cmp->entity->Layer) != layers_to_render.end())
             {
                 material.p_shader->use();
                 // material.p_shader->setMat4("view", Graphics::get_main_camera()->GetView());
@@ -47,4 +47,14 @@ void RenderPipeline::delete_from_render(ModelComponent *renderable)
 {
     auto it = std::remove(renderables.begin(), renderables.end(), renderable);
     renderables.erase(it, renderables.end());
+}
+
+void RenderPipeline::addLayer(int layer)
+{
+    layers_to_render.insert(layer);
+}
+
+void RenderPipeline::removeLayer(int layer)
+{
+    layers_to_render.erase(layer);
 }

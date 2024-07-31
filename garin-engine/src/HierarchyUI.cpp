@@ -2,7 +2,7 @@
 
 void HierarchyUI::draw(Entity *select_obj)
 {
-    ImGui::Begin("Hierarchy");
+    ImGui::Begin("Hierarchy", &is_open);
 
     if (ImGui::IsMouseClicked(1))
     {

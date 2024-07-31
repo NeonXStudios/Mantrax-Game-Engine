@@ -185,6 +185,7 @@ void SceneManager::load_scene(std::string scene_name_new)
             VarVerify::set_value_if_exists(data_loaded[i], "sy", transform->Scale.y);
             VarVerify::set_value_if_exists(data_loaded[i], "sz", transform->Scale.z);
             VarVerify::set_value_if_exists(data_loaded[i], "object_id", new_object->objectID);
+            VarVerify::set_value_if_exists(data_loaded[i], "layer", new_object->Layer);
 
             std::cout << "*******Loaded ID: " << new_object->ObjectSTRID << std::endl;
 

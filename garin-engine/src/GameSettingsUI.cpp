@@ -2,7 +2,7 @@
 
 void GameSettingsUI::draw(EditorConfigs *configs)
 {
-    ImGui::Begin("Game Settings");
+    ImGui::Begin("Game Settings", &is_open);
     configs->start_scene = EditorGUI::InputText("Start Scene", configs->start_scene);
     SceneManager::GetOpenScene()->main_camera->use_projection = EditorGUI::Toggle("Use Projection: ", SceneManager::GetOpenScene()->main_camera->use_projection);
 

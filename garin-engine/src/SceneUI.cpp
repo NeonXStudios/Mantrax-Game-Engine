@@ -13,7 +13,7 @@ void SceneUI::draw(Entity *select_obj)
 {
     ImGui::PushID(343456);
 
-    ImGui::Begin("Scene");
+    ImGui::Begin("Scene", &is_open);
 
     ImGuizmo::SetDrawlist();
 

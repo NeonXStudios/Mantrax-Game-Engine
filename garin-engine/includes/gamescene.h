@@ -2,10 +2,8 @@
 
 #include <GarinNatives.h>
 #include "WindowsCompiler.h"
-#include "UIAdministrator.h"
+#include "UIEditorManager.h"
 
-#include "EditorGUI.h"
-#include "EditorConfigs.h"
 #include <GizmosDrawer.h>
 
 #include <GarinComponents.h>
@@ -38,6 +36,8 @@ class EngineHubUI;
 class InputSystemUI;
 class AnimatorUI;
 class GizmosDrawer;
+class gamescene;
+class UIEditorManager;
 
 class GARINLIBS_API gamescene : public Scene
 {
@@ -48,20 +48,8 @@ public:
     Entity *select_obj;
     EditorConfigs *configs;
 
-    InspectorUI *inspector;
-    MainBarUI *mainbar;
-    SceneUI *sceneui;
-    FilesUI *filesui;
-    AssetsUI *assetsui;
-    GameSettingsUI *settingsui;
-    HierarchyUI *hierarchyui;
-    MenuUI *menuui;
-    UINotification *notify;
-    IconsManager *icons;
-    EngineHubUI *hub;
-    InputSystemUI *inputui;
-    AnimatorUI *animatorui;
     GizmosDrawer *gizmos;
+    UIEditorManager *uieditor;
 
     std::stringstream buffer_stdout;
     std::stringstream buffer_stderr;

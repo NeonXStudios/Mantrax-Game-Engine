@@ -11,7 +11,7 @@ void FilesUI::draw(Entity *owner, EditorConfigs *p_configs)
 
     EditorConfigs *configs = p_configs;
 
-    ImGui::Begin("Scripts");
+    ImGui::Begin("Scripts", &is_open);
     ShowDirectoryTree(FileManager::get_game_path() + "/clscpp");
 
     if (ImGui::BeginPopupContextWindow("AssetsPopup", ImGuiMouseButton_Right))

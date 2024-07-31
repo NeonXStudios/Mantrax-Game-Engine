@@ -9,7 +9,7 @@ void InspectorUI::draw(Entity *select_obj)
 {
     if (select_obj != nullptr)
     {
-        ImGui::Begin("Inspector");
+        ImGui::Begin("Inspector", &is_open);
 
         int currentLayer = 0;
         for (int i = 0; i < layerNames.size(); ++i)

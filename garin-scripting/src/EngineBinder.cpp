@@ -67,7 +67,7 @@ void EngineBinder::BinderFunction(GScriptLua *luaParent)
         std::cout << "SCENE CAMERA ITS NULL" << std::endl;
     }
 
-    // GAME CAMERAg
+    // GAME CAMERA
     luaParent->lua["GameCamera"] = sol::make_object(luaParent->lua.lua_state(), SceneManager::GetSceneManager()->OpenScene->main_camera);
     luaParent->lua.new_usertype<Camera>("Camera",
                                         "position", &Camera::cameraPosition,
@@ -82,6 +82,10 @@ void EngineBinder::BinderFunction(GScriptLua *luaParent)
                 std::cout << arg.as <string>() << std::endl;
             }
             std::cout << std::endl; });
+
+    luaParent->lua.set_function("mix_vec3", &GMathfs::mix);
+    luaParent->lua.set_function("slerp_quat", &GMathfs::slerp);
+    luaParent->lua.set_function("lerp_float", &GMathfs::lerp);
 
     std::cout << "ENGINE CORRECTLY BINDER" << std::endl;
 }

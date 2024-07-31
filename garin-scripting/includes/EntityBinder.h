@@ -13,4 +13,7 @@ class GARINLIBS_API EntityBinder
 {
 public:
     static void BinderFunction(GScriptLua *script);
+
+    static GScriptLua *find_script(const std::string &script_name);
+    static std::string get_filename_without_extension(const std::string &path);
 };

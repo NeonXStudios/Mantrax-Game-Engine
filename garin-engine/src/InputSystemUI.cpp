@@ -4,7 +4,7 @@ void InputSystemUI::draw()
 {
     if (is_open)
     {
-        ImGui::Begin("Input System");
+        ImGui::Begin("Input System", &is_open);
 
         if (ImGui::Button("Add Axis"))
         {

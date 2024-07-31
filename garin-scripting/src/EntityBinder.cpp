@@ -15,16 +15,23 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
                                         "name", &Entity::ObjectName,
                                         "tag", &Entity::ObjectTag,
                                         "id", &Entity::objectID,
-                                        // GET COMPONENTS
+                                        "layer", &Entity::Layer,
                                         "transform", &Entity::get_transform,
                                         "GetAudioSource", &Entity::getComponent<GAudio>,
                                         "GetCollider", &Entity::getComponent<GCollision>,
                                         "GetMaterial", &Entity::getComponent<GMaterial>,
-                                        "GetLuaScript", &Entity::getComponent<GScriptLua>,
+                                        "GetScript", &Entity::getComponent<GScriptLua>,
                                         "GetCharacter", &Entity::getComponent<GCharacter>,
                                         "GetModel", &Entity::getComponent<ModelComponent>,
                                         "GetBody", &Entity::getComponent<GBody>,
                                         "GetCharacterController", &Entity::getComponent<GCharacter>);
+
+    luaParent->lua.new_usertype<GScriptLua>("GScriptLua",
+                                            "ExecuteFunction", [](GScriptLua *self, const std::string &function_name, sol::variadic_args args)
+                                            { self->ExecuteFunction(function_name, args); });
+
+    luaParent->lua["FindScript"] = [](std::string script_name)
+    { return find_script(script_name); };
 
     luaParent->lua.new_usertype<TransformComponent>("Transform",
                                                     "position", &TransformComponent::Position,
@@ -77,11 +84,6 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
     luaParent->lua["LAYER_18"] = LAYER_18;
     luaParent->lua["LAYER_19"] = LAYER_19;
 
-    luaParent->lua.new_usertype<GCastHit>("GCastHit",
-                                          "point", &GCastHit::point,
-                                          "normal", &GCastHit::normal,
-                                          "entity", &GCastHit::entity);
-
     luaParent->lua.new_usertype<GBody>("RigidBody",
                                        "position", &GBody::get_body_position,
                                        "set_position", &GBody::set_position,
@@ -119,6 +121,33 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
                                         "MinDistance", sol::property([](GAudio &self)
                                                                      { return std::any_cast<float>(self.variableMap["AudioMin"]); }, [](GAudio &self, float value)
                                                                      { self.variableMap["AudioMin"] = value; }));
+}
+
+GScriptLua *EntityBinder::find_script(const std::string &script_name)
+{
+    for (Entity *script_get : SceneManager::GetOpenScene()->objects_worlds)
+    {
+        for (GScriptLua *get_script : script_get->getComponents<GScriptLua>())
+        {
+            if (get_script != nullptr)
+            {
+                std::string script_path = std::any_cast<std::string>(get_script->variableMap["ScriptPath"]);
+                std::string script_name_get = get_filename_without_extension(script_path);
+
+                if (script_name_get == script_name)
+                {
+                    return get_script;
+                }
+            }
+        }
+    }
+    return nullptr;
+}
+
+std::string EntityBinder::get_filename_without_extension(const std::string &path)
+{
+    std::filesystem::path fs_path(path);
+    return fs_path.stem().string();
 }
 
 // TEMPLATE
