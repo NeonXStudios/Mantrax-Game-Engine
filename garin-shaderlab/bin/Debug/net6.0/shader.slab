@@ -1,0 +1,34 @@
+:Core 330
+
+front
+{
+    param_out _Color = vec4 FragColor
+    param_in _Coords = vec2 TexCoords
+
+    param _Texture = Texture2D texture_diffuse
+
+
+    func main ()
+    {
+        FragColor = TXT2D(texture_diffuse, TexCoords)
+    }
+}
+
+back
+{
+    layer(0) param_in _Pos = vec3 aPos
+    layer(1) param_in _Pos = vec3 aNormal
+    layer(2) param_in _Pos = vec2 aTexCoords
+
+    param_out _TexCoords = vec2 TexCoords
+
+    param _Model = mat4 model
+    param _View = mat4 view
+    param _Projection = mat4 projection
+
+    func main ()
+    {
+        TexCoords = aTexCoords
+        _pos = projection * view * model * vec4(aPos, 1.0)
+    }
+}
