@@ -74,6 +74,7 @@ public:
     {
         try
         {
+        if (SceneManager::GetSceneManager()->OpenScene != nullptr){
             float closestZ = std::numeric_limits<float>::lowest();
             Entity *closestObject = nullptr;
 
@@ -115,6 +116,7 @@ public:
                 data->object = closestObject;
                 return true;
             }
+            }   
         }
         catch (const std::exception &e)
         {

@@ -67,6 +67,7 @@ public:
     static void timer_control();
     static void process_window_size();
     static void swap_buffer();
+    static void change_name(std::string name);
 
     static void setup_render_texture(int width, int height);
 };

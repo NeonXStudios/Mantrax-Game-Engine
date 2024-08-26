@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("garin-shaderlab")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e4a5e582ecb80a44f2e9f98a8633502cb076cc54")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6eb42171b8f1d87213a517aba55ca44fe7d5d290")]
 [assembly: System.Reflection.AssemblyProductAttribute("garin-shaderlab")]
 [assembly: System.Reflection.AssemblyTitleAttribute("garin-shaderlab")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -24,6 +24,10 @@ void gamescene::on_start()
     uieditor->configs = configs;
     uieditor->game = this;
 
+    if (uieditor->game != nullptr){
+        std::cout << "Correctly game scene setup in editor UI" << std::endl;
+    }
+
     uieditor->setup();
 
     gizmos->config_line();
@@ -73,12 +77,11 @@ void gamescene::on_edition_mode(float delta_time)
         }
     }
 
-    glfwSetWindowTitle(Gfx::get_game_window(), window_name.c_str());
+    Gfx::change_name(window_name);
 }
 
 void gamescene::on_update(float delta_time)
 {
-    uieditor->select_obj = select_obj;
     // GCastHit *hit = new GCastHit();
 
     // if (GCaster::LineCast(SceneManager::GetOpenScene()->get_entity_by_index(1)->get_transform()->Position, glm::vec3(0.0f, -1.0f, 0.0f), 100, hit, LAYER_1))
@@ -159,4 +162,5 @@ void gamescene::on_destroy()
 void gamescene::set_object_select(Entity *obj)
 {
     select_obj = obj;
+    uieditor->select_obj = select_obj;
 }

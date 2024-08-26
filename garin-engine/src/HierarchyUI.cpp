@@ -82,16 +82,10 @@ void HierarchyUI::drawEntityNode(Entity *entity)
 
         if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
         {
-            if (entity != game->select_obj)
-            {
+            if (game->select_obj != entity){
                 game->set_object_select(entity);
-            }
-            else
-            {
-                if (game->select_obj != nullptr)
-                {
-                    game->set_object_select(nullptr);
-                }
+            }else{
+                game->set_object_select(nullptr);
             }
         }
 
@@ -109,16 +103,10 @@ void HierarchyUI::drawEntityNode(Entity *entity)
         EditorGUI::DrawIcon(IconsManager::ENTITY());
         if (ImGui::Selectable(name_tree.c_str(), selected))
         {
-            if (entity != game->select_obj)
-            {
+            if (game->select_obj != entity){
                 game->set_object_select(entity);
-            }
-            else
-            {
-                if (game->select_obj != nullptr)
-                {
-                    game->set_object_select(nullptr);
-                }
+            }else{
+                game->set_object_select(nullptr);
             }
         }
     }

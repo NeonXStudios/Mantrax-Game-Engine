@@ -1,3 +1,0 @@
-F:/GITHUB/Garin/CMakeFiles/Garin_Engine.dir
-F:/GITHUB/Garin/CMakeFiles/ALL_BUILD.dir
-F:/GITHUB/Garin/CMakeFiles/ZERO_CHECK.dir

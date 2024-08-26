@@ -103,9 +103,6 @@ public:
 	virtual void deserialize(std::string g, std::string path = "") {}
 };
 
-// #define G_VAR(name, value) variableMap[#name] = value
-// #define G_GET_VAR(name, type) std::get<type>(variableMap[#name])
-
 #define GVAR(name, value, type) variableMap[#name] = static_cast<type>(value)
 #define GETVAR(name, type) std::any_cast<type>(variableMap.at(#name))
 

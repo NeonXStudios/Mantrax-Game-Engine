@@ -7,12 +7,12 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:bin\\Debug\\net6.0\\shader.slab||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|F:\\GITHUB\\Garin\\garin-shaderlab\\bin\\Debug\\net6.0\\output.fragment||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:bin\\Debug\\net6.0\\output.fragment||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8079B3F3-0951-4A85-8493-DCFEA638D969}|garin-shaderlab.csproj|f:\\github\\garin\\garin-shaderlab\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8079B3F3-0951-4A85-8493-DCFEA638D969}|garin-shaderlab.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|F:\\GITHUB\\Garin\\garin-shaderlab\\bin\\Debug\\net6.0\\output.fragment||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:bin\\Debug\\net6.0\\output.fragment||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|F:\\GITHUB\\Garin\\garin-shaderlab\\bin\\Debug\\net6.0\\output.vertex||{8B382828-6202-11D1-8870-0000F87579D2}",
@@ -30,39 +30,39 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "output.fragment",
-              "DocumentMoniker": "F:\\GITHUB\\Garin\\garin-shaderlab\\bin\\Debug\\net6.0\\output.fragment",
-              "RelativeDocumentMoniker": "bin\\Debug\\net6.0\\output.fragment",
-              "ToolTip": "F:\\GITHUB\\Garin\\garin-shaderlab\\bin\\Debug\\net6.0\\output.fragment",
-              "RelativeToolTip": "bin\\Debug\\net6.0\\output.fragment",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAALAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-08-15T01:49:22.236Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 3,
               "Title": "output.vertex",
               "DocumentMoniker": "F:\\GITHUB\\Garin\\garin-shaderlab\\bin\\Debug\\net6.0\\output.vertex",
               "RelativeDocumentMoniker": "bin\\Debug\\net6.0\\output.vertex",
               "ToolTip": "F:\\GITHUB\\Garin\\garin-shaderlab\\bin\\Debug\\net6.0\\output.vertex",
               "RelativeToolTip": "bin\\Debug\\net6.0\\output.vertex",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-08-15T01:49:22.15Z",
+              "WhenOpened": "2024-08-15T20:30:51.429Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "output.fragment",
+              "DocumentMoniker": "F:\\GITHUB\\Garin\\garin-shaderlab\\bin\\Debug\\net6.0\\output.fragment",
+              "RelativeDocumentMoniker": "bin\\Debug\\net6.0\\output.fragment",
+              "ToolTip": "F:\\GITHUB\\Garin\\garin-shaderlab\\bin\\Debug\\net6.0\\output.fragment",
+              "RelativeToolTip": "bin\\Debug\\net6.0\\output.fragment",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-08-15T20:30:51.35Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "F:\\GITHUB\\Garin\\garin-shaderlab\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "F:\\GITHUB\\Garin\\garin-shaderlab\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAPgAAAAAAAAAAAAAAD0AAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-15T00:43:29.01Z",
               "EditorCaption": ""
@@ -75,7 +75,7 @@
               "RelativeDocumentMoniker": "bin\\Debug\\net6.0\\shader.slab",
               "ToolTip": "F:\\GITHUB\\Garin\\garin-shaderlab\\bin\\Debug\\net6.0\\shader.slab",
               "RelativeToolTip": "bin\\Debug\\net6.0\\shader.slab",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2024-08-15T00:56:15.248Z",
               "EditorCaption": ""

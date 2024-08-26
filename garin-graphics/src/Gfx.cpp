@@ -261,6 +261,10 @@ void Gfx::render_to_texture()
     SceneManager::GetOpenScene()->draw_ui();
 }
 
+void Gfx::change_name(std::string name){
+    glfwSetWindowTitle(Gfx::get_game_window(), name.c_str());
+}
+
 bool Gfx::try_window_close()
 {
     return glfwWindowShouldClose(Gfx::window);

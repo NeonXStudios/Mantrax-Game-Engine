@@ -25,30 +25,43 @@ void SceneUI::draw(Entity *select_obj)
     Gfx::render_width = windowSize.x;
     Gfx::render_height = windowSize.y;
 
-    if (ImGui::IsWindowHovered() && game != nullptr)
+    try
     {
-        CastData *data = new CastData();
-
-        if (ImGui::IsMouseClicked(0))
+        if (ImGui::IsWindowHovered() && game != nullptr)
         {
-            WorldPoint = EventSystem::ScreenToViewPort(glm::vec2(p.x, p.y), glm::vec2(Gfx::render_width, Gfx::render_height));
+            CastData *data = new CastData();
 
-            if (EventSystem::MouseCast(WorldPoint, data))
+            if (ImGui::IsMouseClicked(0))
             {
-                if (select_obj != data->object)
+                WorldPoint = EventSystem::ScreenToViewPort(glm::vec2(p.x, p.y), glm::vec2(Gfx::render_width, Gfx::render_height));
+
+                if (EventSystem::MouseCast(WorldPoint, data))
                 {
-                    game->set_object_select(data->object);
+                    std::cout << "Selecting object: " << data->object->ObjectName << std::endl;
+
+                    if (select_obj != data->object && game != nullptr)
+                    {
+                        game->set_object_select(data->object);
+                    }
                 }
-            }
-            else
-            {
-                if (!ImGuizmo::IsOver())
+                else
                 {
-                    game->set_object_select(nullptr);
+                    if (!ImGuizmo::IsOver())
+                    {
+                        if (game != nullptr){
+                            std::cout << "Removing object from select" << std::endl;
+                            game->set_object_select(nullptr);
+                        }
+                    }
                 }
             }
         }
     }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
 
     if (select_obj != nullptr)
     {
@@ -76,7 +89,6 @@ void SceneUI::draw(Entity *select_obj)
             {
                 transform->Position = translation;
 
-                // Usa set_rotation con los ángulos de Euler descompuestos
                 transform->set_rotation(eulerRotation);
 
                 transform->Scale = scale;

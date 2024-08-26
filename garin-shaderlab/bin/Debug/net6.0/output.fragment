@@ -1,5 +1,5 @@
 #version 330
-uniform Texture2D texture_diffuse;
+uniform sampler2D texture_diffuse;
 void main() {
     FragColor = texture(texture_diffuse, TexCoords);
 }
