@@ -10,3 +10,4 @@
 #include <TextureManager.h>
 #include <Model.h>
 #include <camera.h>
+#include <ShaderLab.h>

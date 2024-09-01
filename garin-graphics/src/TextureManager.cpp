@@ -45,7 +45,7 @@ void TextureManager::use_texture(GLuint ID)
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_maked);
-    glUniform1i(glGetUniformLocation(ID, "sampler_texture"), 0);
+    glUniform1i(glGetUniformLocation(ID, "texture_diffuse"), 0);
 }
 
 void TextureManager::active(int texture_index)

@@ -16,7 +16,7 @@ public:
 
     static Shader *geometryShader;
     static Shader *lightingShader;
-
+    
     static std::vector<ModelComponent *> renderables;
 
     static void init();
