@@ -24,7 +24,8 @@ void gamescene::on_start()
     uieditor->configs = configs;
     uieditor->game = this;
 
-    if (uieditor->game != nullptr){
+    if (uieditor->game != nullptr)
+    {
         std::cout << "Correctly game scene setup in editor UI" << std::endl;
     }
 
@@ -43,27 +44,27 @@ void gamescene::on_edition_mode(float delta_time)
 {
     if (ImGui::IsMouseDown(ImGuiMouseButton_Right) && configs->project_select)
     {
-        camera->move_forward(delta_time, InputSystem::get_axis(GLFW_KEY_W, GLFW_KEY_S) * 0.1f);
-        camera->move_left(delta_time, InputSystem::get_axis(GLFW_KEY_A, GLFW_KEY_D) * 0.1f);
+        camera->move_forward(delta_time, InputSystem::get_axis(GLFW_KEY_W, GLFW_KEY_S) * 10.0f * delta_time);
+        camera->move_left(delta_time, InputSystem::get_axis(GLFW_KEY_A, GLFW_KEY_D) * 10.0f * delta_time);
 
-        if (glfwGetKey(Gfx::get_game_window(), GLFW_KEY_Q) == GLFW_PRESS)
+        if (InputSystem::on_key_pressed(GLFW_KEY_Q))
         {
-            camera->cameraPosition.y -= 0.1f;
+            camera->cameraPosition.y -= 10.0f * delta_time;
         }
 
-        if (glfwGetKey(Gfx::get_game_window(), GLFW_KEY_E) == GLFW_PRESS)
+        if (InputSystem::on_key_pressed(GLFW_KEY_E))
         {
-            camera->cameraPosition.y += 0.1f;
+            camera->cameraPosition.y += 10.0f * delta_time;
         }
 
-        glm::vec3 newOrientation = glm::rotate(camera->Orientation, glm::radians(InputSystem::get_mouse_y()), glm::normalize(glm::cross(camera->Orientation, camera->GetUp())));
+        glm::vec3 newOrientation = glm::rotate(camera->Orientation, glm::radians(InputSystem::get_mouse_y() * camera_speed_sens * delta_time), glm::normalize(glm::cross(camera->Orientation, camera->GetUp())));
 
         if (abs(glm::angle(newOrientation, camera->GetUp()) - glm::radians(90.0f)) <= glm::radians(85.0f))
         {
             camera->Orientation = newOrientation;
         }
 
-        camera->Orientation = glm::rotate(camera->Orientation, glm::radians(-InputSystem::get_mouse_x()), camera->GetUp());
+        camera->Orientation = glm::rotate(camera->Orientation, glm::radians(-InputSystem::get_mouse_x() * camera_speed_sens * delta_time), camera->GetUp());
     }
 
     std::string window_name = "Garin Editor - " + SceneManager::GetOpenScene()->scene_name;

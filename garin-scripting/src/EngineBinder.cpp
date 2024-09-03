@@ -17,10 +17,14 @@ void EngineBinder::BinderFunction(GScriptLua *luaParent)
         return glm::vec2(x, y);
     };
 
-    luaParent->lua.new_usertype<glm::vec3>("vector3", sol::constructors<glm::vec3(float, float, float)>(),
-                                           "x", &glm::vec3::x,
-                                           "y", &glm::vec3::y,
-                                           "z", &glm::vec3::z);
+    luaParent->lua.new_usertype<glm::vec3>("vector3", sol::constructors<glm::vec3(), glm::vec3(float, float, float)>(), "x", &glm::vec3::x, "y", &glm::vec3::y, "z", &glm::vec3::z, sol::meta_function::addition, [](const glm::vec3 &a, const glm::vec3 &b)
+                                           { return a + b; }, sol::meta_function::subtraction, [](const glm::vec3 &a, const glm::vec3 &b)
+                                           { return a - b; }, sol::meta_function::multiplication, sol::overload([](const glm::vec3 &v, float scalar)
+                                                                                                                { return v * scalar; }, [](float scalar, const glm::vec3 &v)
+                                                                                                                { return scalar * v; }, [](const glm::vec3 &a, const glm::vec3 &b)
+                                                                                                                { return a * b; }),
+                                           sol::meta_function::division, [](const glm::vec3 &v, float scalar)
+                                           { return v / scalar; });
 
     luaParent->lua["vector3"]["new"] = [](float x, float y, float z)
     {
@@ -49,6 +53,9 @@ void EngineBinder::BinderFunction(GScriptLua *luaParent)
         return glm::quat(w, x, y, z);
     };
 
+    luaParent->lua.set_function("normalize", [](const glm::vec3 &v)
+                                { return glm::normalize(v); });
+
     // TIMER
     // luaParent->lua["GMathf"]["ClampFloat"] = [](float value, float min, float max)
     // { return GMathfs::ClampFloat(value, min, max); };
@@ -71,7 +78,12 @@ void EngineBinder::BinderFunction(GScriptLua *luaParent)
     luaParent->lua["GameCamera"] = sol::make_object(luaParent->lua.lua_state(), SceneManager::GetSceneManager()->OpenScene->main_camera);
     luaParent->lua.new_usertype<Camera>("Camera",
                                         "position", &Camera::cameraPosition,
-                                        "fov", &Camera::zoom);
+                                        "fov", &Camera::zoom,
+                                        "rotation", &Camera::cameraRotation,
+                                        "orientation", &Camera::Orientation,
+                                        "forward", &Camera::GetForward,
+                                        "right", &Camera::GetRight,
+                                        "up", &Camera::GetUp);
 
     luaParent->lua["GamePlaying"] = sol::make_object(luaParent->lua.lua_state(), AppSettings::is_playing);
 

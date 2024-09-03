@@ -1,2 +1,8 @@
 build/
+
+Compiler-Lib/GarinLibrary/*
+
+!Compiler-Lib/GarinLibrary/
+!Compiler-Lib/GarinLibrary/CMakeLists.txt
+
 README.md

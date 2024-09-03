@@ -1,5 +1,6 @@
 #include "../includes/AssetsUI.h"
 #include <SceneData.h>
+#include <CodeEditor.h>
 
 void AssetsUI::draw(EditorConfigs *p_configs)
 {
@@ -50,7 +51,7 @@ void AssetsUI::ShowDirectoryTree(const std::filesystem::path &path)
                         std::string extension = selected_path.extension().string();
                         std::string base_name = selected_path.stem().string();
 
-                        drawer_files(extension, base_name);
+                        drawer_files(extension, base_name, entry.path().string());
                         std::cout << "Directorio doble clic: " << selected_item << std::endl;
                     }
                     else
@@ -102,8 +103,8 @@ void AssetsUI::ShowDirectoryTree(const std::filesystem::path &path)
                         extension = selected_path.extension().string();
                         base_name = selected_path.stem().string();
 
-                        drawer_files(extension, base_name);
-                        std::cout << "Opening scene: " << base_name << std::endl;
+                        drawer_files(extension, base_name, entry.path().string());
+                        std::cout << "Opening File: " << base_name << std::endl;
                     }
                     else
                     {
@@ -122,7 +123,7 @@ void AssetsUI::ShowDirectoryTree(const std::filesystem::path &path)
     }
 }
 
-void AssetsUI::drawer_files(std::string extension, std::string file_name)
+void AssetsUI::drawer_files(std::string extension, std::string file_name, std::string file_path_complete)
 {
     if (extension == ".scene")
     {
@@ -136,6 +137,10 @@ void AssetsUI::drawer_files(std::string extension, std::string file_name)
         std::filesystem::current_path(FileManager::get_game_path() + "/assets/");
 
         int result = system("code .");
+    }
+    else if (extension == ".slab")
+    {
+        CodeEditor::get_instance().setup_new_editor(file_path_complete);
     }
 }
 
@@ -161,7 +166,7 @@ void AssetsUI::drawer_files_drag(std::string extension, std::string file_name, s
     {
         EditorGUI::Drag("MATERIALCLASS", GarinIO::GetWithAfterAssetDir(complete_path));
     }
-    else if (extension == ".glsl" || extension == ".shader" || extension == ".vs" || extension == ".fs")
+    else if (extension == ".glsl" || extension == ".shader" || extension == ".vs" || extension == ".fs" || extension == ".slab")
     {
         EditorGUI::Drag("SHADERCLASS", GarinIO::GetWithAfterAssetDir(complete_path));
     }

@@ -6,6 +6,7 @@
 #include "EditorConfigs.h"
 #include "UIAdministrator.h"
 #include "gamescene.h"
+#include <CodeEditor.h>
 
 class Drawer;
 class Camera;
@@ -27,6 +28,7 @@ class AnimatorUI;
 class GizmosDrawer;
 class GraphicsManagerUI;
 class gamescene;
+class CodeEditor;
 
 class UIEditorManager
 {

@@ -22,6 +22,7 @@
 #include <stdexcept>
 #include <optional>
 #include <stdexcept>
+#include <regex>
 
 #ifdef byte
 #undef byte

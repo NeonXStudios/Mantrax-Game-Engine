@@ -278,6 +278,10 @@ void MainBarUI::draw(Entity *owner)
 
     ImGui::EndMainMenuBar();
     ImGui::PopStyleVar();
+
+    ImGui::Begin("Scene Settings");
+    gamescene::getInstance().camera_speed_sens = EditorGUI::Float("Camera sensitivity", gamescene::getInstance().camera_speed_sens);
+    ImGui::End();
 }
 
 void MainBarUI::recompileAndReloadLibraries()

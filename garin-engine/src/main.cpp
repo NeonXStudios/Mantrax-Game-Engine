@@ -24,7 +24,7 @@ int main(void)
 
     // start scene manager
     sceneManager->create();
-    gamescene *scene_game = new gamescene();
+    gamescene *scene_game = &gamescene::getInstance();
     SceneManager::GetSceneManager()->OpenScene = scene_game;
 
     settings_window window_config = settings_window();

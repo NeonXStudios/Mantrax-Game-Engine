@@ -35,13 +35,12 @@ void UIEditorManager::setup()
     mainbar->configs = configs;
 
     sceneui->game = game;
-    mainbar->game = game; 
+    mainbar->game = game;
 
     filesui->is_open = false;
     settingsui->is_open = false;
     graphicsui->is_open = false;
     inputui->is_open = false;
-
 
     notify = new UINotification();
 }
@@ -56,8 +55,8 @@ void UIEditorManager::draw()
         if (mainbar->is_open)
             mainbar->draw(select_obj);
 
-        //if (inspector->is_open)
-            inspector->draw(select_obj);
+        // if (inspector->is_open)
+        inspector->draw(select_obj);
 
         if (sceneui->is_open)
             sceneui->draw(select_obj);
@@ -82,6 +81,8 @@ void UIEditorManager::draw()
 
         if (graphicsui->is_open)
             graphicsui->draw(configs);
+
+        CodeEditor::get_instance().render_editors();
     }
     else
     {

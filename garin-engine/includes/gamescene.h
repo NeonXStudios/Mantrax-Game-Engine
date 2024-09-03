@@ -42,12 +42,19 @@ class UIEditorManager;
 class GARINLIBS_API gamescene : public Scene
 {
 public:
+    static gamescene &getInstance()
+    {
+        static gamescene instance;
+        return instance;
+    }
+
+    gamescene(const gamescene &) = delete;
+    void operator=(const gamescene &) = delete;
+
     Drawer *drawcube;
     Camera *camera;
-
     Entity *select_obj;
     EditorConfigs *configs;
-
     GizmosDrawer *gizmos;
     UIEditorManager *uieditor;
 
@@ -60,6 +67,7 @@ public:
     std::mutex mutex;
 
     bool shouldScroll = false;
+    float camera_speed_sens = 30.0f;
 
     void ReadBuffer(std::stringstream &buffer, std::string &target)
     {
@@ -90,4 +98,8 @@ public:
     void set_object_select(Entity *obj);
 
     std::string demangle(const char *name);
+
+public:
+    gamescene() = default;
+    ~gamescene() = default;
 };

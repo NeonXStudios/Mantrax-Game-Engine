@@ -35,12 +35,28 @@ void CanvasManager::init_ui()
     std::string vertex = "assets/shaders/ui_vertex_shader.glsl";
     std::string fragment = "assets/shaders/ui_fragment_shader.glsl";
 
-    shaderpr = new Shader(vertex.c_str(), fragment.c_str());
+    std::string slab_ui = "assets/shaders/ui.slab";
+
+    CustomShader shader = CustomShaderParser::ParseShaderFile(slab_ui);
+    shader.SaveToVariables();
+    // std::string vertexpath = FileManager::get_project_path() + GETVAR(VertexPath, std::string);
+    // std::string fragpath = FileManager::get_project_path() + GETVAR(FragmentPath, std::string);
+    // p_shader = new Shader(vertexpath.c_str(), fragpath.c_str());
+
+    shaderpr = new Shader(shader.VERTEX, shader.FRAGMENT);
+
+    std::cout << "** Compiled UI VERTEX: \n"
+              << shader.VERTEX << std::endl
+              << std::endl;
+    std::cout << "** Compiled UI FRAGMENT: \n"
+              << shader.FRAGMENT << std::endl
+              << std::endl;
 }
 
 void CanvasManager::render_ui()
 {
     shaderpr->use();
+    shaderpr->setMat4("view", SceneManager::GetOpenScene()->main_camera->GetView());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textureID);

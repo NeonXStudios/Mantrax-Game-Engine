@@ -73,7 +73,7 @@ public:
 
         for (const auto &entry : fs::recursive_directory_iterator(source_dir))
         {
-            if (entry.is_regular_file() && entry.path().extension() == ".glsl")
+            if (entry.is_regular_file() && entry.path().extension() == ".slab")
             {
                 fs::path destination_path = destination_dir / entry.path().filename();
                 if (fs::exists(destination_path))

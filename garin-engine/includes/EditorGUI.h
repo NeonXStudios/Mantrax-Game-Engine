@@ -261,18 +261,7 @@ public:
                             cpm->init();
                         }
                     }
-                    else if (key == "VertexPath" || key == "FragmentPath")
-                    {
-                        auto result = EditorGUI::Drag_Objetive("SHADERCLASS");
-                        if (result.has_value())
-                        {
-                            cpm->variableMap[key] = result.value();
-
-                            cpm->clean();
-                            cpm->init();
-                        }
-                    }
-                    else if (key == "VertexPath" || key == "FragmentPath")
+                    else if (key == "SlabShader")
                     {
                         auto result = EditorGUI::Drag_Objetive("SHADERCLASS");
                         if (result.has_value())
