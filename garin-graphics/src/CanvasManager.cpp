@@ -30,33 +30,30 @@ void CanvasManager::init_ui()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    std::cout << "SHADER PATH: " << ("assets/shaders/ui_vertex_shader.glsl") << std::endl;
-
-    std::string vertex = "assets/shaders/ui_vertex_shader.glsl";
-    std::string fragment = "assets/shaders/ui_fragment_shader.glsl";
-
     std::string slab_ui = "assets/shaders/ui.slab";
 
     CustomShader shader = CustomShaderParser::ParseShaderFile(slab_ui);
     shader.SaveToVariables();
-    // std::string vertexpath = FileManager::get_project_path() + GETVAR(VertexPath, std::string);
-    // std::string fragpath = FileManager::get_project_path() + GETVAR(FragmentPath, std::string);
-    // p_shader = new Shader(vertexpath.c_str(), fragpath.c_str());
 
     shaderpr = new Shader(shader.VERTEX, shader.FRAGMENT);
-
-    std::cout << "** Compiled UI VERTEX: \n"
-              << shader.VERTEX << std::endl
-              << std::endl;
-    std::cout << "** Compiled UI FRAGMENT: \n"
-              << shader.FRAGMENT << std::endl
-              << std::endl;
 }
 
 void CanvasManager::render_ui()
 {
+    if (SceneManager::GetOpenScene()->objects_worlds.size() <= 0)
+        return;
+
+    float screenWidth = 800.0f;
+    float screenHeight = 600.0f;
+
+    glm::mat4 projection = glm::mat4(0.0f);
+    float zoom = 0.043f;
+    projection = glm::ortho(-Gfx::render_width / 2.0f * zoom, Gfx::render_width / 2.0f * zoom, -Gfx::render_height / 2.0f * zoom, Gfx::render_height / 2.0f * zoom, -1000.0f, 1000.0f);
+
     shaderpr->use();
+    shaderpr->setMat4("projection", projection);
     shaderpr->setMat4("view", SceneManager::GetOpenScene()->main_camera->GetView());
+    shaderpr->setMat4("model", SceneManager::GetOpenScene()->get_entity_by_index(0)->get_transform()->get_matrix());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textureID);

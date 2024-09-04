@@ -35,6 +35,7 @@ public:
         oss << qualifier << " " << glslType << " " << Name << ";";
         return oss.str();
     }
+    
 
 private:
     std::string TranslateVertexQualifier() const

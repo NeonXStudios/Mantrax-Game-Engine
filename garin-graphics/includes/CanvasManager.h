@@ -1,6 +1,7 @@
 #pragma once
 #include <GarinGraphics.h>
 #include <GarinIO.h>
+#include <GarinMaths.h>
 #include <Core.h>
 
 class GARINLIBS_API CanvasManager
