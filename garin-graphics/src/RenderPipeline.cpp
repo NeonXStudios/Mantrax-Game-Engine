@@ -5,6 +5,7 @@ Shader *RenderPipeline::lightingShader = nullptr;
 
 std::unordered_set<int> RenderPipeline::layers_to_render;
 std::vector<ModelComponent *> RenderPipeline::renderables;
+std::vector<TextureTarget *> RenderPipeline::render_targets;
 
 CanvasManager *RenderPipeline::canvas = nullptr;
 
@@ -57,4 +58,12 @@ void RenderPipeline::addLayer(int layer)
 void RenderPipeline::removeLayer(int layer)
 {
     layers_to_render.erase(layer);
+}
+
+TextureTarget *RenderPipeline::add_render_texture()
+{
+    TextureTarget *target_t = new TextureTarget();
+    target_t->setup();
+    render_targets.push_back(target_t);
+    return target_t;
 }

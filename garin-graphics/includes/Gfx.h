@@ -1,4 +1,5 @@
 #pragma once
+#define NO_INCLUDE_GRAPHICS_CLASS
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -6,6 +7,7 @@
 #include <GarinComponents.h>
 #include "Core.h"
 #include "Timer.h"
+#include <TextureTarget.h>
 
 enum GARINLIBS_API graphic_api
 {
@@ -49,6 +51,7 @@ public:
     static unsigned int depthTexture;
     static unsigned int colorAndDepthTexture;
     static unsigned int depthRenderbuffer;
+    static TextureTarget *main_render;
 
     // window functions
     static int create_windows(settings_window windows_setting);

@@ -29,6 +29,7 @@ class GizmosDrawer;
 class GraphicsManagerUI;
 class gamescene;
 class CodeEditor;
+class MakerUI;
 
 class UIEditorManager
 {
@@ -49,6 +50,8 @@ public:
     EditorConfigs *configs;
     Entity *select_obj;
     GraphicsManagerUI *graphicsui;
+    MakerUI *makerui;
+
     gamescene *game;
 
     void setup();

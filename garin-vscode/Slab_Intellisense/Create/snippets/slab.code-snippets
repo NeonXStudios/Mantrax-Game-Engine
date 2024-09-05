@@ -1,0 +1,32 @@
+{
+    "Function": {
+        "prefix": "func",
+        "body": [
+            "func ${1:name}() {",
+            "\t$0",
+            "}"
+        ],
+        "description": "Create a function in slab"
+    },
+    "Texture": {
+        "prefix": "param_texture",
+        "body": [
+            "param ${1:Texture2D} ${2:texture}"
+        ],
+        "description": "Declare a texture parameter"
+    },
+    "Front Block": {
+        "prefix": "front",
+        "body": [
+            "front {",
+            "\tparam_out _Color = vec4 FragColor",
+            "\tparam_in _Coords = vec2 TexCoords",
+            "\tparam _Texture = Texture2D texture_diffuse",
+            "\tfunc main() {",
+            "\t\tFragColor = TXT2D(texture_diffuse, TexCoords)",
+            "\t}",
+            "}"
+        ],
+        "description": "Insert front block"
+    }
+}

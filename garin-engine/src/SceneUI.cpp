@@ -20,7 +20,7 @@ void SceneUI::draw(Entity *select_obj)
     ImVec2 windowSize = ImGui::GetContentRegionAvail();
 
     ImVec2 p = ImGui::GetCursorScreenPos();
-    ImGui::Image((void *)(intptr_t)Gfx::texture, ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(ImVec2(0, 1)), ImVec2(ImVec2(1, 0)));
+    ImGui::Image((void *)(intptr_t)Gfx::main_render->get_render(), ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(ImVec2(0, 1)), ImVec2(ImVec2(1, 0)));
     imagePosition = ImGui::GetWindowPos();
     Gfx::render_width = windowSize.x;
     Gfx::render_height = windowSize.y;
@@ -48,7 +48,8 @@ void SceneUI::draw(Entity *select_obj)
                 {
                     if (!ImGuizmo::IsOver())
                     {
-                        if (game != nullptr){
+                        if (game != nullptr)
+                        {
                             std::cout << "Removing object from select" << std::endl;
                             game->set_object_select(nullptr);
                         }
@@ -57,11 +58,10 @@ void SceneUI::draw(Entity *select_obj)
             }
         }
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }
-    
 
     if (select_obj != nullptr)
     {

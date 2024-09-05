@@ -7,6 +7,7 @@
 #include "GeometryPass.h"
 #include "LightingPass.h"
 #include "../includes/CanvasManager.h"
+#include <TextureTarget.h>
 
 class GARINLIBS_API RenderPipeline
 {
@@ -16,12 +17,14 @@ public:
 
     static Shader *geometryShader;
     static Shader *lightingShader;
-    
+
     static std::vector<ModelComponent *> renderables;
+    static std::vector<TextureTarget *> render_targets;
 
     static void init();
     static void render();
     static void delete_from_render(ModelComponent *renderable);
     static void addLayer(int layer);
     static void removeLayer(int layer);
+    static TextureTarget *add_render_texture();
 };

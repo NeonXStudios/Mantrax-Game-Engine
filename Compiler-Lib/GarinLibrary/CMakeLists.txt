@@ -12,7 +12,7 @@ endif()
 # Buscar archivos fuente
 file(GLOB_RECURSE GARIN_CORE_SOURCES "../../garin-core/src/*.cpp")
 file(GLOB_RECURSE GARIN_SCENE_SOURCES "../../garin-scene/src/*.cpp")
-file(GLOB_RECURSE GARIN_UI_SOURCES "../../garin-ui/src/*.cpp" "../../garin-ui/includes/*.cpp")
+file(GLOB_RECURSE GARIN_UI_SOURCES "../../garin-ui/src/*.cpp" "../../garin-ui/includes/*.cpp" "../../garin-ui/src/UIComponents/*.cpp")
 file(GLOB_RECURSE GARIN_VR_SOURCES "../../garin-vr/src/*.cpp")
 file(GLOB_RECURSE GARIN_GRAPHICS_SOURCES "../../garin-graphics/src/*.cpp" "../../garin-graphics/libs/glad.c")
 file(GLOB_RECURSE GARIN_MATHS_SOURCES "../../garin-maths/src/*.cpp")
@@ -50,6 +50,7 @@ target_include_directories(GarinLibrary PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../../garin-graphics/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/../../garin-scene/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/../../garin-ui/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../garin-ui/includes/UIComponents
     ${CMAKE_CURRENT_SOURCE_DIR}/../../garin-vr/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/../../garin-maths/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/../../garin-physics/includes/physx

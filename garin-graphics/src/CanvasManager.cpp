@@ -2,62 +2,23 @@
 
 void CanvasManager::init_ui()
 {
-    float vertices[] = {
-        0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f};
-
-    unsigned int indices[] = {
-        0, 1, 3,
-        1, 2, 3};
-
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    std::string slab_ui = "assets/shaders/ui.slab";
-
-    CustomShader shader = CustomShaderParser::ParseShaderFile(slab_ui);
-    shader.SaveToVariables();
-
-    shaderpr = new Shader(shader.VERTEX, shader.FRAGMENT);
+    add_new_ui_component();
 }
 
 void CanvasManager::render_ui()
 {
-    if (SceneManager::GetOpenScene()->objects_worlds.size() <= 0)
-        return;
+    for (UIComponentsBehaviour *ui_behaviour : ui)
+    {
+        ui_behaviour->draw();
+    }
+}
 
-    float screenWidth = 800.0f;
-    float screenHeight = 600.0f;
+UIComponentsBehaviour *CanvasManager::add_new_ui_component()
+{
+    UIComponentsBehaviour *ui_cmp = new UIComponentsBehaviour();
+    ui_cmp->setup();
 
-    glm::mat4 projection = glm::mat4(0.0f);
-    float zoom = 0.043f;
-    projection = glm::ortho(-Gfx::render_width / 2.0f * zoom, Gfx::render_width / 2.0f * zoom, -Gfx::render_height / 2.0f * zoom, Gfx::render_height / 2.0f * zoom, -1000.0f, 1000.0f);
+    ui.push_back(ui_cmp);
 
-    shaderpr->use();
-    shaderpr->setMat4("projection", projection);
-    shaderpr->setMat4("view", SceneManager::GetOpenScene()->main_camera->GetView());
-    shaderpr->setMat4("model", SceneManager::GetOpenScene()->get_entity_by_index(0)->get_transform()->get_matrix());
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, textureID);
-
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    return ui_cmp;
 }

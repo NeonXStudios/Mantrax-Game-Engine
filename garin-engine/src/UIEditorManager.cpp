@@ -30,6 +30,7 @@ void UIEditorManager::setup()
     inputui = new InputSystemUI();
     animatorui = new AnimatorUI();
     graphicsui = new GraphicsManagerUI();
+    makerui = new MakerUI();
 
     hub->configs = configs;
     mainbar->configs = configs;
@@ -41,6 +42,7 @@ void UIEditorManager::setup()
     settingsui->is_open = false;
     graphicsui->is_open = false;
     inputui->is_open = false;
+    makerui->is_open = false;
 
     notify = new UINotification();
 }
@@ -81,6 +83,8 @@ void UIEditorManager::draw()
 
         if (graphicsui->is_open)
             graphicsui->draw(configs);
+
+        makerui->draw(game);
 
         CodeEditor::get_instance().render_editors();
     }

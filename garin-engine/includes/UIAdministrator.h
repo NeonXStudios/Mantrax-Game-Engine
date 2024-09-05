@@ -19,6 +19,7 @@
 #include "EngineHubUI.h"
 #include "InputSystemUI.h"
 #include "AnimatorUI.h"
+#include "MakerUI.h"
 #include <Core.h>
 
 namespace fs = std::filesystem;

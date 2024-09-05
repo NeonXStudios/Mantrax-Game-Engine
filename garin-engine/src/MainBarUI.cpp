@@ -54,6 +54,11 @@ void MainBarUI::draw(Entity *owner)
             {
             }
 
+            if (ImGui::MenuItem("UI"))
+            {
+                game->uieditor->makerui->is_open = true;
+            }
+
             ImGui::EndMenu();
         }
 

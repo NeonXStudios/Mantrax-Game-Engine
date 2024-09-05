@@ -32,6 +32,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-graphics/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-scene/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-ui/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/garin-ui/includes/UIComponents
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-vr/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-maths/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/garin-physics/includes/physx

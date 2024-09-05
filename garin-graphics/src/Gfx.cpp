@@ -24,6 +24,7 @@ unsigned int Gfx::depthTexture = -1;
 unsigned int Gfx::colorAndDepthTexture = -1;
 unsigned int Gfx::depthRenderbuffer = -1;
 settings_window Gfx::current_config_window;
+TextureTarget *Gfx::main_render = nullptr;
 
 int Gfx::create_windows(settings_window settings)
 {
@@ -191,74 +192,20 @@ GLFWwindow *Gfx::get_game_window()
 
 unsigned int Gfx::get_render()
 {
-    std::cout << "RENDER ID:" << Gfx::texture << std::endl;
-
     return Gfx::texture;
 }
 
 void Gfx::setup_render_texture(int width, int height)
 {
-    glGenFramebuffers(1, &framebuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-
-    glGenTextures(1, &Gfx::texture);
-    glBindTexture(GL_TEXTURE_2D, Gfx::texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, Gfx::texture, 0);
-
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    {
-        std::cout << "Framebuffer is not complete!" << std::endl;
-    }
-
-    glGenTextures(1, &colorAndDepthTexture);
-    glBindTexture(GL_TEXTURE_2D, colorAndDepthTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glGenRenderbuffers(1, &depthRenderbuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderbuffer);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    Gfx::main_render = RenderPipeline::add_render_texture();
 }
 
 void Gfx::render_to_texture()
 {
-    int width, height;
-    glfwGetFramebufferSize(Gfx::get_game_window(), &width, &height);
-
-    glViewport(0, 0, render_width, render_height);
-
-    glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    RenderPipeline::render();
-
-    SceneManager::GetOpenScene()->on_draw();
-
-    SceneManager::GetOpenScene()->draw_ui();
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    RenderPipeline::render();
-
-    SceneManager::GetOpenScene()->on_draw();
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
-    glBindTexture(GL_TEXTURE_2D, Gfx::texture);
-    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, render_width, render_height, 0);
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-
-    SceneManager::GetOpenScene()->draw_ui();
+    for (TextureTarget *data_texture : RenderPipeline::render_targets)
+    {
+        data_texture->draw();
+    }
 }
 
 void Gfx::change_name(std::string name)
