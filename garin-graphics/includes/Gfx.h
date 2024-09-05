@@ -46,11 +46,6 @@ public:
     static double targetFrameTime;
 
     // render texture
-    static unsigned int texture;
-    static unsigned int framebuffer;
-    static unsigned int depthTexture;
-    static unsigned int colorAndDepthTexture;
-    static unsigned int depthRenderbuffer;
     static TextureTarget *main_render;
 
     // window functions
@@ -63,7 +58,6 @@ public:
     static int get_width();
     static int get_height();
     static GLFWwindow *get_game_window();
-    static unsigned int get_render();
     static void render_to_texture();
     static bool try_window_close();
     static void poll_events();

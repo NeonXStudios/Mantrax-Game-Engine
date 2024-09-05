@@ -12,8 +12,6 @@ void gamescene::on_start()
     old_stderr = std::cerr.rdbuf(buffer_stderr.rdbuf());
 
     configs = new EditorConfigs();
-    camera = new Camera();
-    main_camera = camera;
 
     GarinUI::make_ui_context(Gfx::get_game_window());
     std::cout << "CARPETA DE EJECUCION: " << FileManager::get_execute_path() << std::endl;
@@ -44,27 +42,27 @@ void gamescene::on_edition_mode(float delta_time)
 {
     if (ImGui::IsMouseDown(ImGuiMouseButton_Right) && configs->project_select)
     {
-        camera->move_forward(delta_time, InputSystem::get_axis(GLFW_KEY_W, GLFW_KEY_S) * 10.0f * delta_time);
-        camera->move_left(delta_time, InputSystem::get_axis(GLFW_KEY_A, GLFW_KEY_D) * 10.0f * delta_time);
+        SceneManager::GetOpenScene()->main_camera->move_forward(delta_time, InputSystem::get_axis(GLFW_KEY_W, GLFW_KEY_S) * 10.0f * delta_time);
+        SceneManager::GetOpenScene()->main_camera->move_left(delta_time, InputSystem::get_axis(GLFW_KEY_A, GLFW_KEY_D) * 10.0f * delta_time);
 
         if (InputSystem::on_key_pressed(GLFW_KEY_Q))
         {
-            camera->cameraPosition.y -= 10.0f * delta_time;
+            SceneManager::GetOpenScene()->main_camera->cameraPosition.y -= 10.0f * delta_time;
         }
 
         if (InputSystem::on_key_pressed(GLFW_KEY_E))
         {
-            camera->cameraPosition.y += 10.0f * delta_time;
+            SceneManager::GetOpenScene()->main_camera->cameraPosition.y += 10.0f * delta_time;
         }
 
-        glm::vec3 newOrientation = glm::rotate(camera->Orientation, glm::radians(InputSystem::get_mouse_y() * camera_speed_sens * delta_time), glm::normalize(glm::cross(camera->Orientation, camera->GetUp())));
+        glm::vec3 newOrientation = glm::rotate(SceneManager::GetOpenScene()->main_camera->Orientation, glm::radians(InputSystem::get_mouse_y() * camera_speed_sens * delta_time), glm::normalize(glm::cross(SceneManager::GetOpenScene()->main_camera->Orientation, SceneManager::GetOpenScene()->main_camera->GetUp())));
 
-        if (abs(glm::angle(newOrientation, camera->GetUp()) - glm::radians(90.0f)) <= glm::radians(85.0f))
+        if (abs(glm::angle(newOrientation, SceneManager::GetOpenScene()->main_camera->GetUp()) - glm::radians(90.0f)) <= glm::radians(85.0f))
         {
-            camera->Orientation = newOrientation;
+            SceneManager::GetOpenScene()->main_camera->Orientation = newOrientation;
         }
 
-        camera->Orientation = glm::rotate(camera->Orientation, glm::radians(-InputSystem::get_mouse_x() * camera_speed_sens * delta_time), camera->GetUp());
+        SceneManager::GetOpenScene()->main_camera->Orientation = glm::rotate(SceneManager::GetOpenScene()->main_camera->Orientation, glm::radians(-InputSystem::get_mouse_x() * camera_speed_sens * delta_time), SceneManager::GetOpenScene()->main_camera->GetUp());
     }
 
     std::string window_name = "Garin Editor - " + SceneManager::GetOpenScene()->scene_name;
@@ -129,6 +127,8 @@ void gamescene::draw_ui()
         }
         ImGui::EndChild();
 
+        ImGui::End();
+
         if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
         {
             if (ImGui::IsKeyReleased(ImGuiKey_S))
@@ -148,8 +148,6 @@ void gamescene::draw_ui()
                 }
             }
         }
-
-        ImGui::End();
     }
 
     GarinUI::get_ui_manager()->render_ui_context();

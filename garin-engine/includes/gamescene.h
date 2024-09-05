@@ -52,7 +52,6 @@ public:
     void operator=(const gamescene &) = delete;
 
     Drawer *drawcube;
-    Camera *camera;
     Entity *select_obj;
     EditorConfigs *configs;
     GizmosDrawer *gizmos;

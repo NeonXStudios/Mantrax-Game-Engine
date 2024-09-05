@@ -18,11 +18,6 @@ double Gfx::targetFrameTime = 0;
 int Gfx::render_width = 1;
 int Gfx::render_height = 1;
 
-unsigned int Gfx::texture = -1;
-unsigned int Gfx::framebuffer = -1;
-unsigned int Gfx::depthTexture = -1;
-unsigned int Gfx::colorAndDepthTexture = -1;
-unsigned int Gfx::depthRenderbuffer = -1;
 settings_window Gfx::current_config_window;
 TextureTarget *Gfx::main_render = nullptr;
 
@@ -83,7 +78,6 @@ void Gfx::poll_events()
 {
     glfwPollEvents();
     InputSystem::update_input();
-    render_to_texture();
 }
 
 void Gfx::timer_control()
@@ -190,11 +184,6 @@ GLFWwindow *Gfx::get_game_window()
     return Gfx::window;
 }
 
-unsigned int Gfx::get_render()
-{
-    return Gfx::texture;
-}
-
 void Gfx::setup_render_texture(int width, int height)
 {
     Gfx::main_render = RenderPipeline::add_render_texture();
@@ -202,10 +191,6 @@ void Gfx::setup_render_texture(int width, int height)
 
 void Gfx::render_to_texture()
 {
-    for (TextureTarget *data_texture : RenderPipeline::render_targets)
-    {
-        data_texture->draw();
-    }
 }
 
 void Gfx::change_name(std::string name)
@@ -261,11 +246,6 @@ extern "C" GARINLIBS_API int get_height()
 extern "C" GARINLIBS_API GLFWwindow *get_game_window()
 {
     return Gfx::get_game_window();
-}
-
-extern "C" GARINLIBS_API unsigned int get_render()
-{
-    return Gfx::get_render();
 }
 
 extern "C" GARINLIBS_API void render_to_texture()

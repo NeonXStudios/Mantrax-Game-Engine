@@ -1,5 +1,6 @@
 #include "../includes/camera.h"
 #include <Gfx.h>
+#include <RenderPipeline.h>
 
 void Camera::update()
 {
@@ -35,4 +36,17 @@ void Camera::update()
 
     cameraPosition += cameraVelocity;
     cameraVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
+}
+
+Camera::Camera()
+{
+    RenderPipeline::camera_targets.push_back(this);
+}
+
+Camera::~Camera()
+{
+    auto &targets = RenderPipeline::camera_targets;
+    targets.erase(std::remove(targets.begin(), targets.end(), this), targets.end());
+
+    delete this;
 }

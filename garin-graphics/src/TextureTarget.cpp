@@ -38,8 +38,11 @@ void TextureTarget::setup()
     std::cout << "Render ID: " << texture << std::endl;
 }
 
-void TextureTarget::draw()
+void TextureTarget::draw(glm::mat4 camera_matrix)
 {
+    if (SceneManager::GetOpenScene()->main_camera == nullptr)
+        return;
+
     int width, height;
     glfwGetFramebufferSize(Gfx::get_game_window(), &width, &height);
 
@@ -48,7 +51,7 @@ void TextureTarget::draw()
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    RenderPipeline::render();
+    RenderPipeline::render_all_data(camera_matrix);
 
     SceneManager::GetOpenScene()->on_draw();
 
@@ -57,7 +60,7 @@ void TextureTarget::draw()
     glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    RenderPipeline::render();
+    RenderPipeline::render_all_data(camera_matrix);
 
     SceneManager::GetOpenScene()->on_draw();
 
@@ -74,4 +77,12 @@ void TextureTarget::draw()
 unsigned int TextureTarget::get_render()
 {
     return texture;
+}
+
+TextureTarget::~TextureTarget()
+{
+    auto &targets = RenderPipeline::render_targets;
+    targets.erase(std::remove(targets.begin(), targets.end(), this), targets.end());
+
+    delete this;
 }

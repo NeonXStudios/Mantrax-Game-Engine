@@ -1,9 +1,9 @@
 #pragma once
-#ifndef TEXTURETARGET_CLASS
-#define TEXTURETARGET_CLASS
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <Core.h>
+#include <GarinMaths.h>
 
 class GARINLIBS_API TextureTarget
 {
@@ -18,7 +18,8 @@ public:
     int p_height = 1080;
 
     void setup();
-    void draw();
+    void draw(glm::mat4 camera_matrix);
     unsigned int get_render();
+
+    ~TextureTarget();
 };
-#endif

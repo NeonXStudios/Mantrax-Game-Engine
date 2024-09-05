@@ -1,8 +1,11 @@
 #pragma once
+
 #include <GarinMaths.h>
 #include <vector>
 #include <Core.h>
 #include <Gfx.h>
+
+#include <TextureTarget.h>
 
 class GARINLIBS_API Camera
 {
@@ -25,7 +28,6 @@ public:
   float fov = 65.0f;
   float zoom = 0.043f;
 
-  // Quaterniones para las rotaciones
   glm::quat cameraRotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
   float rotationXAngle = 0.0f;
   float rotationYAngle = 0.0f;
@@ -35,13 +37,13 @@ public:
 
   bool firstClick = true;
 
-  // Stores the width and height of the window
   int width = 1920;
   int height = 1080;
 
-  // Adjust the speed of the camera and it's sensitivity when looking around
   float speed = 0.1f;
   float sensitivity = 100.0f;
+
+  TextureTarget *target_render;
 
   void update();
 
@@ -118,4 +120,7 @@ public:
     float velocity = speed * deltatime;
     cameraPosition += speed * glm::normalize(glm::cross(Orientation, cameraUp));
   }
+
+  Camera();
+  ~Camera();
 };

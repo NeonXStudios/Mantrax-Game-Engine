@@ -6,6 +6,7 @@ Shader *RenderPipeline::lightingShader = nullptr;
 std::unordered_set<int> RenderPipeline::layers_to_render;
 std::vector<ModelComponent *> RenderPipeline::renderables;
 std::vector<TextureTarget *> RenderPipeline::render_targets;
+std::vector<Camera *> RenderPipeline::camera_targets;
 
 CanvasManager *RenderPipeline::canvas = nullptr;
 
@@ -13,9 +14,33 @@ void RenderPipeline::init()
 {
     RenderPipeline::canvas = new CanvasManager();
     RenderPipeline::canvas->init_ui();
+
+    if (SceneManager::GetOpenScene()->main_camera == nullptr)
+    {
+        std::cout << "Main camera its null" << std::endl;
+    }
+
+    if (Gfx::main_render == nullptr)
+    {
+        std::cout << "First render target its null" << std::endl;
+    }
+
+    SceneManager::GetOpenScene()->main_camera = new Camera();
+    SceneManager::GetOpenScene()->main_camera->target_render = Gfx::main_render;
+
+    std::cout << "Render Target asigned" << std::endl;
 }
 
 void RenderPipeline::render()
+{
+    for (Camera *camera : RenderPipeline::camera_targets)
+    {
+        camera->update();
+        camera->target_render->draw(camera->GetCameraMatrix());
+    }
+}
+
+void RenderPipeline::render_all_data(glm::mat4 camera_matrix)
 {
     RenderPipeline::canvas->render_ui();
 
@@ -30,7 +55,9 @@ void RenderPipeline::render()
                 material.p_shader->use();
                 // material.p_shader->setMat4("view", Graphics::get_main_camera()->GetView());
                 // material.p_shader->setMat4("projection", Graphics::get_main_camera()->GetProjectionMatrix());
-                material.p_shader->setMat4("camera_matrix", SceneManager::GetOpenScene()->main_camera->GetCameraMatrix());
+
+                material.p_shader->setMat4("camera_matrix", camera_matrix);
+
                 // material.p_shader->setVec3("ambientLightColor", glm::vec3(0.3f, 0.3f, 0.3f));
                 // material.p_shader->setVec3("lightDir", glm::vec3(-0.2f, -1.0f, -0.3f));
                 // material.p_shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));

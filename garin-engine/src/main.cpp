@@ -46,21 +46,16 @@ int main(void)
         Gfx::timer_control();
         Gfx::process_window_size();
 
-        if (SceneManager::GetOpenScene()->main_camera != nullptr)
+        if (AppSettings::is_playing)
         {
-            SceneManager::GetOpenScene()->main_camera->update();
-
-            if (AppSettings::is_playing)
-            {
-                SceneManager::GetOpenScene()->update(Timer::delta_time);
-            }
-            else
-            {
-                SceneManager::GetOpenScene()->on_edition_mode(Timer::delta_time);
-            }
+            SceneManager::GetOpenScene()->update(Timer::delta_time);
+        }
+        else
+        {
+            SceneManager::GetOpenScene()->on_edition_mode(Timer::delta_time);
         }
 
-        Gfx::render_to_texture();
+        RenderPipeline::render();
 
         Gfx::swap_buffer();
     }
