@@ -36,7 +36,9 @@ void RenderPipeline::render()
     for (Camera *camera : RenderPipeline::camera_targets)
     {
         camera->update();
-        camera->target_render->draw(camera->GetCameraMatrix());
+
+        if (camera->target_render != nullptr)
+            camera->target_render->draw(camera->GetCameraMatrix());
     }
 }
 
