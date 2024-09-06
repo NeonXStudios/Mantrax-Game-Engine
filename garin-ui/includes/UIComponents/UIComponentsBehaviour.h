@@ -7,6 +7,7 @@
 class UIComponentsBehaviour
 {
 public:
+    bool component_enabled = true;
     unsigned int VAO, VBO, EBO;
     unsigned int textureID;
     Shader *shaderpr;

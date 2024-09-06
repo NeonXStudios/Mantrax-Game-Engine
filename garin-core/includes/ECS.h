@@ -53,6 +53,8 @@ public:
 	{
 		clean();
 		clear_vars();
+
+		std::cout << "Cleaning component and variables" << std::endl;
 	}
 
 	void clear_vars()
@@ -126,7 +128,7 @@ public:
 	bool adaptRotation = true;
 	bool adaptScale = false;
 
-	void update()
+	void TransformComponent::update()
 	{
 		// Inicializa la matriz local con la identidad
 		MatrixLocal = glm::mat4(1.0f);
@@ -140,6 +142,9 @@ public:
 
 		// Aplica la escala
 		MatrixLocal = glm::scale(MatrixLocal, Scale);
+
+		// Actualiza ángulos de Euler desde el cuaternión
+		EulerRotation = glm::degrees(glm::eulerAngles(rotation));
 
 		if (parent)
 		{
@@ -155,20 +160,7 @@ public:
 			// Si no se debe adaptar la rotación, elimina la rotación del padre
 			if (!adaptRotation)
 			{
-				for (int i = 0; i < 3; ++i)
-				{
-					for (int j = 0; j < 3; ++j)
-					{
-						if (i == j)
-						{
-							parentMatrix[i][j] = 1.0f; // Mantén la diagonal principal
-						}
-						else
-						{
-							parentMatrix[i][j] = 0.0f; // Elimina los elementos fuera de la diagonal
-						}
-					}
-				}
+				parentMatrix = glm::mat4(1.0f); // Solo matriz identidad para rotación
 			}
 
 			// Si no se debe adaptar la escala, elimina la escala del padre
@@ -194,7 +186,11 @@ public:
 
 	void set_rotation(const glm::vec3 &eulerAngles)
 	{
-		glm::quat quaternion = glm::quat(1.0f, glm::radians(eulerAngles));
+		glm::quat quaternion = glm::quat(glm::vec3(
+			glm::radians(eulerAngles.x),
+			glm::radians(eulerAngles.y),
+			glm::radians(eulerAngles.z)));
+
 		rotation = quaternion;
 	}
 
@@ -407,18 +403,49 @@ public:
 	{
 		if (hasComponent<T>())
 		{
+			for (auto &component : components)
+			{
+				if (T *comp = dynamic_cast<T *>(component))
+				{
+					comp->clean();
+				}
+			}
+
 			auto it = std::remove_if(components.begin(), components.end(),
 									 [](const Component *c)
-									 { return dynamic_cast<const T *>(c) != nullptr; });
+									 {
+										 return dynamic_cast<const T *>(c) != nullptr;
+									 });
 
 			components.erase(it, components.end());
 
 			componentArray[getComponentTypeID<T>()] = nullptr;
 			componentBitset[getComponentTypeID<T>()] = false;
+
 			return true;
 		}
 		return false;
 	}
+
+	// template <typename T>
+	// bool removeComponent()
+	// {
+	// 	if (hasComponent<T>())
+	// 	{
+	// 		auto it = std::remove_if(components.begin(), components.end(),
+	// 								 [](const Component *c)
+	// 								 {
+	// 									c->clean();
+	// 									return dynamic_cast<const T *>(c) != nullptr; });
+
+	// 		components.erase(it, components.end());
+
+	// 		componentArray[getComponentTypeID<T>()] = nullptr;
+	// 		componentBitset[getComponentTypeID<T>()] = false;
+	// 		return true;
+	// 	}
+	// 	return false;
+	// }
 
 	bool Entity::removeComponentByID(int id)
 	{

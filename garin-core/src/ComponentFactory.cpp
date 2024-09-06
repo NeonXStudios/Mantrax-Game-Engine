@@ -35,6 +35,10 @@ Component *ComponentFactory::add_component(Entity *ent, std::string component_na
     {
         return &ent->addComponent<GCharacter>();
     }
+    else if (component_name == "GCamera")
+    {
+        return &ent->addComponent<GCamera>();
+    }
 
     return nullptr;
 }

@@ -42,11 +42,3 @@ Camera::Camera()
 {
     RenderPipeline::camera_targets.push_back(this);
 }
-
-Camera::~Camera()
-{
-    auto &targets = RenderPipeline::camera_targets;
-    targets.erase(std::remove(targets.begin(), targets.end(), this), targets.end());
-
-    delete this;
-}

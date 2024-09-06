@@ -33,8 +33,6 @@ void TextureTarget::setup()
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    RenderPipeline::render_targets.push_back(this);
-
     std::cout << "Render ID: " << texture << std::endl;
 }
 
@@ -83,6 +81,4 @@ TextureTarget::~TextureTarget()
 {
     auto &targets = RenderPipeline::render_targets;
     targets.erase(std::remove(targets.begin(), targets.end(), this), targets.end());
-
-    delete this;
 }

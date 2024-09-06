@@ -13,6 +13,7 @@
 #include "LayerManager.h"
 #include "GScriptLua.h"
 #include "GAnimator.h"
+#include "GCamera.h"
 #include <Scene.h>
 #include <GAudio.h>
 #include <AudioManager.h>

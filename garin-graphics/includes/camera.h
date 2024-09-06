@@ -4,7 +4,6 @@
 #include <vector>
 #include <Core.h>
 #include <Gfx.h>
-
 #include <TextureTarget.h>
 
 class GARINLIBS_API Camera
@@ -122,5 +121,4 @@ public:
   }
 
   Camera();
-  ~Camera();
 };

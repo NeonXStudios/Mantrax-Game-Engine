@@ -36,6 +36,9 @@ void gamescene::on_start()
     string info = "OPEN FILE: " + configs->current_scene;
 
     UINotification::AddNotification(info, 3.0f);
+
+    gizmo_models = new GizmoModels();
+    gizmo_models->init();
 }
 
 void gamescene::on_edition_mode(float delta_time)
@@ -92,6 +95,7 @@ void gamescene::on_update(float delta_time)
 void gamescene::on_draw()
 {
     gizmos->draw_line(glm::vec3(0.0f), glm::vec3(20.0f, 2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(5.0f));
+    gizmo_models->draw();
 }
 
 void gamescene::draw_ui()

@@ -12,6 +12,7 @@
 #include <GarinGraphics.h>
 #include <GarinEvents.h>
 #include <GarinUI.h>
+#include <GizmoModels.h>
 
 #include <IconsManager.h>
 #include <Core.h>
@@ -56,6 +57,7 @@ public:
     EditorConfigs *configs;
     GizmosDrawer *gizmos;
     UIEditorManager *uieditor;
+    GizmoModels *gizmo_models;
 
     std::stringstream buffer_stdout;
     std::stringstream buffer_stderr;

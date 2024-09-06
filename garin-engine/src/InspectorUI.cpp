@@ -2,6 +2,7 @@
 #include "../includes/UIAdministrator.h"
 #include <GarinComponents.h>
 
+#include <RenderPipeline.h>
 #include <GarinNatives.h>
 #include <GarinUI.h>
 
@@ -33,7 +34,7 @@ void InspectorUI::draw(Entity *select_obj)
         select_obj->get_transform()->Position = EditorGUI::Vector3("Position", select_obj->get_transform()->Position);
         select_obj->get_transform()->update();
 
-        glm::vec3 eulerAngles = glm::eulerAngles(select_obj->get_transform()->rotation);
+        glm::vec3 eulerAngles = select_obj->get_transform()->EulerRotation;
         eulerAngles = EditorGUI::Vector3("Rotation", eulerAngles);
         select_obj->get_transform()->set_rotation(eulerAngles);
         select_obj->get_transform()->update();
@@ -44,6 +45,35 @@ void InspectorUI::draw(Entity *select_obj)
         ImGui::Separator();
 
         UIAdministrator::draw_ui(select_obj);
+        if (select_obj->hasComponent<GCamera>())
+        {
+            ImVec2 windowSize = ImVec2(ImGui::GetContentRegionAvail().x, 150);
+
+            if (ImGui::Button("Remove Camera", ImVec2(windowSize.x, 20)))
+            {
+                select_obj->removeComponent<GCamera>();
+            }
+            else
+            {
+                ImGui::Separator();
+
+                GCamera *cameraComponent = &select_obj->getComponent<GCamera>();
+
+                if (cameraComponent != nullptr)
+                {
+                    if (cameraComponent->a_camera->target_render != nullptr)
+                    {
+
+                        GLuint textureID = cameraComponent->a_camera->target_render->get_render();
+
+                        ImVec2 p = ImGui::GetCursorScreenPos();
+
+                        ImGui::Image((void *)(intptr_t)textureID, windowSize, ImVec2(0, 1), ImVec2(1, 0));
+                        cameraComponent->update();
+                    }
+                }
+            }
+        }
 
         ImGui::Separator();
 
@@ -105,6 +135,15 @@ void InspectorUI::draw(Entity *select_obj)
             {
                 select_obj->addComponent<GAudio>().init();
                 ImGui::CloseCurrentPopup();
+            }
+
+            if (select_obj->hasComponent<GCamera>() == false)
+            {
+                if (ImGui::Button("Camera", ImVec2(buttonWidth, 20)))
+                {
+                    select_obj->addComponent<GCamera>().init();
+                    ImGui::CloseCurrentPopup();
+                }
             }
 
             ImGui::EndPopup();

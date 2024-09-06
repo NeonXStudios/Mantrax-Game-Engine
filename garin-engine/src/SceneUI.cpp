@@ -88,18 +88,20 @@ void SceneUI::draw(Entity *select_obj)
             if (!select_obj->hasComponent<GBody>())
             {
                 transform->Position = translation;
-
-                transform->set_rotation(eulerRotation);
-
                 transform->Scale = scale;
+
+                glm::quat quaternionRotation = glm::quat(glm::radians(eulerRotation));
+                transform->set_rotation(eulerRotation);
             }
             else
             {
                 transform->Position = translation;
                 transform->Scale = scale;
 
+                glm::quat quaternionRotation = glm::quat(glm::radians(eulerRotation));
                 transform->set_rotation(eulerRotation);
 
+                // Actualizar componentes físicos
                 select_obj->getComponent<GBody>().body->setLinearVelocity(PxVec3(0, 0, 0));
                 select_obj->getComponent<GBody>().set_position(translation);
             }

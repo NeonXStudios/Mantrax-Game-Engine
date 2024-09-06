@@ -9,7 +9,8 @@ void CanvasManager::render_ui()
 {
     for (UIComponentsBehaviour *ui_behaviour : ui)
     {
-        ui_behaviour->draw();
+        if (ui_behaviour->component_enabled)
+            ui_behaviour->draw();
     }
 }
 
