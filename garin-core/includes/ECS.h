@@ -186,12 +186,14 @@ public:
 
 	void set_rotation(const glm::vec3 &eulerAngles)
 	{
-		glm::quat quaternion = glm::quat(glm::vec3(
-			glm::radians(eulerAngles.x),
-			glm::radians(eulerAngles.y),
-			glm::radians(eulerAngles.z)));
+		// Convertir ángulos de Euler de grados a radianes
+		glm::vec3 radians = glm::radians(eulerAngles);
 
-		rotation = quaternion;
+		// Crear un cuaternión a partir de ángulos de Euler (suponiendo el orden ZYX)
+		glm::quat quaternionRotation = glm::quat(glm::vec3(radians.x, radians.y, radians.z));
+
+		// Normalizar el cuaternión
+		rotation = glm::normalize(quaternionRotation);
 	}
 
 	glm::vec3 get_euler_angles() const

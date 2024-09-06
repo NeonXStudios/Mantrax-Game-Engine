@@ -90,7 +90,7 @@ void SceneUI::draw(Entity *select_obj)
                 transform->Position = translation;
                 transform->Scale = scale;
 
-                glm::quat quaternionRotation = glm::quat(glm::radians(eulerRotation));
+                // Establece la rotación utilizando ángulos de Euler en lugar de cuaterniones
                 transform->set_rotation(eulerRotation);
             }
             else
@@ -98,7 +98,7 @@ void SceneUI::draw(Entity *select_obj)
                 transform->Position = translation;
                 transform->Scale = scale;
 
-                glm::quat quaternionRotation = glm::quat(glm::radians(eulerRotation));
+                // Establece la rotación utilizando ángulos de Euler en lugar de cuaterniones
                 transform->set_rotation(eulerRotation);
 
                 // Actualizar componentes físicos
