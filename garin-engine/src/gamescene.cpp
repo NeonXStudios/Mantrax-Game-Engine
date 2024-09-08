@@ -5,6 +5,7 @@
 #include <thread>
 #include <SceneData.h>
 #include <RenderPipeline.h>
+#include <GarinIO.h>
 
 void gamescene::on_start()
 {
@@ -141,7 +142,9 @@ void gamescene::draw_ui()
                 {
                     SceneData::save_scene();
 
-                    string info = "Scene Saved: " + configs->current_scene;
+                    configs->save_config();
+
+                    string info = "Scene Saved + Game Config: " + configs->current_scene;
 
                     UINotification::AddNotification(info, 3.0f);
                 }
@@ -149,6 +152,32 @@ void gamescene::draw_ui()
                 {
                     string info = "You cannot save scene in playmode";
                     UINotification::AddNotification(info, 3.0f);
+                }
+            }
+        }
+
+        if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+        {
+            if (ImGui::IsKeyReleased(ImGuiKey_D))
+            {
+                if (select_obj != nullptr)
+                {
+                    Entity *new_entity = SceneManager::GetOpenScene()->make_entity();
+
+                    new_entity->get_transform()->Position = select_obj->get_transform()->Position;
+                    new_entity->get_transform()->rotation = select_obj->get_transform()->rotation;
+                    new_entity->get_transform()->Scale = select_obj->get_transform()->Scale;
+
+                    for (const auto &component : select_obj->GetAllComponent())
+                    {
+                        std::cout << "Cloning: (" << AComponent::demangle(typeid(*component).name()) << ")" << std::endl;
+                        Component *cloned_component = ComponentFactory::add_component(new_entity, AComponent::demangle(typeid(*component).name()));
+
+                        cloned_component->variableMap = component->variableMap;
+                        cloned_component->init();
+                    }
+
+                    set_object_select(new_entity);
                 }
             }
         }

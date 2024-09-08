@@ -8,6 +8,7 @@
 #include <Model.h>
 #include <Graphics.h>
 #include "Core.h"
+#include <FBXModelComponent.h>
 
 class GARINLIBS_API ModelComponent : public Component
 {

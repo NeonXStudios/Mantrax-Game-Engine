@@ -146,7 +146,7 @@ void AssetsUI::drawer_files(std::string extension, std::string file_name, std::s
 
 void AssetsUI::drawer_files_drag(std::string extension, std::string file_name, std::string complete_path)
 {
-    if (extension == ".fbx" || extension == ".obj")
+    if (extension == ".fbx" || extension == ".obj" || extension == ".dae")
     {
         EditorGUI::Drag("MODELCLASS", GarinIO::GetWithAfterAssetDir(complete_path));
     }

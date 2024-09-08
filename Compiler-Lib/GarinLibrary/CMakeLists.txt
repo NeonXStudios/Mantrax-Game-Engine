@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 if (MSVC)
     add_compile_options(/MP /w)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
 endif()
 
 # Buscar archivos fuente
@@ -19,6 +20,7 @@ file(GLOB_RECURSE GARIN_MATHS_SOURCES "../../garin-maths/src/*.cpp")
 file(GLOB_RECURSE GARIN_PHYSICS_SOURCES "../../garin-physics/src/*.cpp")
 file(GLOB_RECURSE GARIN_AUDIO_SOURCES "../../garin-audio/src/*.cpp")
 file(GLOB_RECURSE GARIN_GLAD "../../garin-graphics/libs/glad.c")
+file(GLOB_RECURSE GARIN_UFBX "../../garin-graphics/libs/ufbx.c")
 file(GLOB_RECURSE GARIN_SCRIPTING "../../garin-scripting/src/*.cpp")
 file(GLOB_RECURSE GARIN_ENGINE "../../garin-engine/src/*.cpp")
 
@@ -33,6 +35,7 @@ set(ALL_SOURCES
     ${GARIN_PHYSICS_SOURCES}
     ${GARIN_AUDIO_SOURCES}
     ${GARIN_GLAD}
+    ${GARIN_UFBX}
     ${GARIN_SCRIPTING}
     ${GARIN_ENGINE}
 )

@@ -29,7 +29,7 @@ void GizmoModels::draw()
             glm::mat4 FinalMatrix = rotationMatrix * modelMatrix;
 
             p_shader->setMat4("model", modelMatrix);
-            camera_gizmo->Draw(*p_shader);
+            camera_gizmo->Draw();
         }
     }
 }

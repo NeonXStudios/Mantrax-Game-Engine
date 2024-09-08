@@ -67,7 +67,7 @@ void RenderPipeline::render_all_data(glm::mat4 camera_matrix)
                 material.p_shader->setMat4("model", cmp->get_transform()->get_matrix());
                 // bool ambiencelight = std::any_cast<bool>(cmp->variableMap["CastAmbience"]);
                 // material.p_shader->setBool("castambiencelight", ambiencelight);
-                cmp->model->Draw(*material.p_shader);
+                cmp->model->Draw();
             }
         }
     }

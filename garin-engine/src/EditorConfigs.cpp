@@ -3,6 +3,7 @@
 
 #include <VarVerify.h>
 #include <GarinIO.h>
+#include <RenderPipeline.h>
 
 using namespace nlohmann;
 
@@ -13,12 +14,14 @@ void EditorConfigs::save_config()
     settings["start_scene"] = start_scene;
     settings["camera_state"] = SceneManager::GetOpenScene()->main_camera->use_projection;
 
-    FileManager::write_file(current_proyect + "/EngineSettings.data", settings.dump(4));
+    settings["settings_render"] = RenderPipeline::layers_to_render;
+
+    FileManager::write_file(current_proyect + "/GameSettings.data", settings.dump(4));
 }
 
 void EditorConfigs::load_config()
 {
-    json settings = json::parse(FileManager::read_file(current_proyect + "/EngineSettings.data"));
+    json settings = json::parse(FileManager::read_file(current_proyect + "/GameSettings.data"));
     std::cout << "JSON CONFIG DATA: " << settings.dump(4) << std::endl;
     current_scene = (std::string)settings["current_scene"];
     start_scene = (std::string)settings["start_scene"];
@@ -31,6 +34,13 @@ void EditorConfigs::load_config()
     else
     {
         std::cout << "Loading camera config" << std::endl;
+    }
+
+    RenderPipeline::layers_to_render.clear();
+
+    for (const auto &item : settings["settings_render"])
+    {
+        RenderPipeline::layers_to_render.insert(item.get<int>());
     }
 
     VarVerify::set_value_if_exists(settings, "camera_state", SceneManager::GetOpenScene()->main_camera->use_projection);

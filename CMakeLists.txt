@@ -4,18 +4,12 @@ project(${project_name})
 
 if (MSVC)
     add_compile_options(/w)
+    add_compile_options(/wd4251)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
 
-
-if (MSVC)
-    # Deshabilitar la advertencia específica
-    add_compile_options(/wd4251)
-endif()
-
-
-# Directorios de inclusión
 file(GLOB SOURCES
     "garin-engine/src/main.cpp"
 )
