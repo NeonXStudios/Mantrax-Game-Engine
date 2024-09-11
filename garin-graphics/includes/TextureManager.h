@@ -17,5 +17,6 @@ public:
 
     void active(int texture_index);
     void use_texture(GLuint ID);
+    void set_texture(GLuint ID);
     GLuint get_texture();
 };

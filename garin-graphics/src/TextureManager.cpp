@@ -58,3 +58,8 @@ GLuint TextureManager::get_texture()
 {
     return texture_maked;
 }
+
+void TextureManager::set_texture(GLuint ID)
+{
+    texture_maked = ID;
+}

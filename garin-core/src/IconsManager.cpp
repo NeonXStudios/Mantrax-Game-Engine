@@ -7,6 +7,7 @@ void IconsManager::init()
     IconsManager::icons = new IconsManager();
 
     std::cout << "Triying load texture from path: " << FileManager::get_execute_path() << std::endl;
+
     IconsManager::icons->float_icon = new TextureManager(FileManager::get_execute_path() + "icons/float.png");
     IconsManager::icons->int_icon = new TextureManager(FileManager::get_execute_path() + "icons/int.png");
     IconsManager::icons->string_icon = new TextureManager(FileManager::get_execute_path() + "icons/string.png");
@@ -19,8 +20,14 @@ void IconsManager::init()
     IconsManager::icons->entity_icon = new TextureManager(FileManager::get_execute_path() + "icons/entity.png");
     IconsManager::icons->sound_icon = new TextureManager(FileManager::get_execute_path() + "icons/sound.png");
     IconsManager::icons->pause_icon = new TextureManager(FileManager::get_execute_path() + "icons/pause.png");
+    IconsManager::icons->texture_error_icon = new TextureManager(FileManager::get_execute_path() + "icons/ErrorTexture.png");
 
     std::cout << "ICONS MANAGER SETUP CORRECTLY" << std::endl;
+}
+
+unsigned int IconsManager::TEXTURE_ERROR()
+{
+    return IconsManager::icons->texture_error_icon->get_texture();
 }
 
 unsigned int IconsManager::FLOAT()

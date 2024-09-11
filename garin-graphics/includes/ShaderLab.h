@@ -35,7 +35,6 @@ public:
         oss << qualifier << " " << glslType << " " << Name << ";";
         return oss.str();
     }
-    
 
 private:
     std::string TranslateVertexQualifier() const
@@ -285,6 +284,7 @@ private:
         {
             return str;
         }
+
         size_t last = str.find_last_not_of(' ');
         return str.substr(first, last - first + 1);
     }

@@ -21,6 +21,7 @@ public:
     TextureManager *entity_icon;
     TextureManager *sound_icon;
     TextureManager *pause_icon;
+    TextureManager *texture_error_icon;
 
     static unsigned int FLOAT();
     static unsigned int INT();
@@ -34,4 +35,5 @@ public:
     static unsigned int ENTITY();
     static unsigned int SOUND();
     static unsigned int PAUSE();
+    static unsigned int TEXTURE_ERROR();
 };

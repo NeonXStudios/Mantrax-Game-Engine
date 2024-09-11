@@ -1,5 +1,7 @@
 #include "../includes/ModelComponent.h"
 #include <RenderPipeline.h>
+#include <GarinIO.h>
+#include <IconsManager.h>
 
 using namespace nlohmann;
 
@@ -17,6 +19,14 @@ void ModelComponent::init()
     texture_sampler = new TextureManager(FileManager::get_project_path() + GETVAR(ColorBase, std::string));
     texture_normal = new TextureManager(FileManager::get_project_path() + GETVAR(NormalMap, std::string));
     std::string model_path = FileManager::get_project_path() + GETVAR(Model, std::string);
+
+    if (!FileManager::check_file_if_exist(FileManager::get_project_path() + GETVAR(ColorBase, std::string)))
+    {
+        texture_sampler->set_texture(IconsManager::TEXTURE_ERROR());
+        std::cout << "Error Texture ID: " << IconsManager::TEXTURE_ERROR() << std::endl;
+        std::cout << "Texture not found set error texture in bind id: " << texture_sampler->get_texture() << std::endl;
+    }
+
     model = new Model(model_path.c_str());
 
     texture_sampler->active(GL_TEXTURE0);

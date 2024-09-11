@@ -52,7 +52,19 @@ public:
         void save_file_data()
         {
             FileManager::write_file(file_path, code);
-            UINotification::AddNotification("Shader saved", 3.0f);
+            UINotification::AddNotification("Shader saved.", 3.0f);
+            UINotification::AddNotification("Recompiling scene shaders.", 5.0f);
+
+            for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
+            {
+                if (ent->hasComponent<GMaterial>())
+                {
+                    ent->getComponent<GMaterial>().clean();
+                    ent->getComponent<GMaterial>().init();
+                }
+            }
+
+            UINotification::AddNotification("All shaders were successfully recompiled.", 5.0f);
         }
     };
 
