@@ -113,6 +113,32 @@ private:
     }
 };
 
+class ShaderStruct : public ShaderElement
+{
+public:
+    std::string Name;
+    std::vector<ShaderVariable> Members;
+
+    ShaderStruct(const std::string &name) : Name(name) {}
+
+    void AddMember(const ShaderVariable &member)
+    {
+        Members.push_back(member);
+    }
+
+    std::string TranslateToGLSL(bool isVertexShader) const override
+    {
+        std::ostringstream oss;
+        oss << "struct " << Name << " {\n";
+        for (const auto &member : Members)
+        {
+            oss << "    " << member.Type << " " << member.Name << ";\n";
+        }
+        oss << "};";
+        return oss.str();
+    }
+};
+
 class CustomShader
 {
 public:
@@ -192,6 +218,7 @@ public:
         std::ifstream file(filePath);
         std::string line;
         ShaderFunction *currentFunction = nullptr;
+        ShaderStruct *currentStruct = nullptr;
         bool isVertex = false;
 
         while (std::getline(file, line))
@@ -240,7 +267,29 @@ public:
                     shader.AddElement(std::make_unique<ShaderVariable>(parts[5], parts[4], "in", location), isVertex);
                 }
             }
-            else if (trimmedLine.find("var") == 0)
+            else if (trimmedLine.find("table") == 0)
+            {
+                auto parts = Split(trimmedLine, " ");
+                if (parts.size() >= 2)
+                {
+                    auto structElem = std::make_unique<ShaderStruct>(parts[1]);
+                    currentStruct = structElem.get();
+                    shader.AddElement(std::move(structElem), isVertex);
+                }
+            }
+            else if (currentStruct && trimmedLine.find("}") == 0)
+            {
+                currentStruct = nullptr;
+            }
+            else if (currentStruct)
+            {
+                auto parts = Split(trimmedLine, " ");
+                if (parts.size() >= 2)
+                {
+                    currentStruct->AddMember(ShaderVariable(parts[1], parts[0]));
+                }
+            }
+            else if (trimmedLine.find("...") == 0)
             {
                 auto parts = Split(trimmedLine, " ");
                 if (parts.size() >= 3)

@@ -65,6 +65,18 @@ void RenderPipeline::render_all_data(glm::mat4 camera_matrix)
                 // material.p_shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
                 cmp->texture_sampler->use_texture(material.p_shader->ID);
                 material.p_shader->setMat4("model", cmp->get_transform()->get_matrix());
+
+                glm::vec3 lightPos(1.0f, 1.0f, 1.0f);
+                material.p_shader->setVec3("lightPos", lightPos);
+
+                glm::vec3 lightDir(0.0f, -1.0f, 0.0f);
+                material.p_shader->setVec3("lightDir", lightDir);
+
+                material.p_shader->setVec3("viewPos", SceneManager::GetOpenScene()->main_camera->cameraPosition);
+
+                glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
+                material.p_shader->setVec3("lightColor", lightColor);
+
                 // bool ambiencelight = std::any_cast<bool>(cmp->variableMap["CastAmbience"]);
                 // material.p_shader->setBool("castambiencelight", ambiencelight);
                 cmp->model->Draw();
