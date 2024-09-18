@@ -46,27 +46,43 @@ void gamescene::on_edition_mode(float delta_time)
 {
     if (ImGui::IsMouseDown(ImGuiMouseButton_Right) && configs->project_select)
     {
-        SceneManager::GetOpenScene()->main_camera->move_forward(delta_time, InputSystem::get_axis(GLFW_KEY_W, GLFW_KEY_S) * 10.0f * delta_time);
-        SceneManager::GetOpenScene()->main_camera->move_left(delta_time, InputSystem::get_axis(GLFW_KEY_A, GLFW_KEY_D) * 10.0f * delta_time);
+        auto &camera = SceneManager::GetOpenScene()->main_camera;
+        float forwardSpeed = InputSystem::get_axis(GLFW_KEY_W, GLFW_KEY_S) * 10.0f * delta_time;
+        float leftSpeed = InputSystem::get_axis(GLFW_KEY_A, GLFW_KEY_D) * 10.0f * delta_time;
+
+        camera->move_forward(delta_time, forwardSpeed);
+        camera->move_left(delta_time, leftSpeed);
 
         if (InputSystem::on_key_pressed(GLFW_KEY_Q))
         {
-            SceneManager::GetOpenScene()->main_camera->cameraPosition.y -= 10.0f * delta_time;
+            camera->cameraPosition.y -= 10.0f * delta_time;
         }
 
         if (InputSystem::on_key_pressed(GLFW_KEY_E))
         {
-            SceneManager::GetOpenScene()->main_camera->cameraPosition.y += 10.0f * delta_time;
+            camera->cameraPosition.y += 10.0f * delta_time;
         }
 
-        glm::vec3 newOrientation = glm::rotate(SceneManager::GetOpenScene()->main_camera->Orientation, glm::radians(InputSystem::get_mouse_y() * camera_speed_sens * delta_time), glm::normalize(glm::cross(SceneManager::GetOpenScene()->main_camera->Orientation, SceneManager::GetOpenScene()->main_camera->GetUp())));
+        float deltaX = -InputSystem::get_mouse_x() * camera_speed_sens * delta_time;
+        float deltaY = -InputSystem::get_mouse_y() * camera_speed_sens * delta_time;
 
-        if (abs(glm::angle(newOrientation, SceneManager::GetOpenScene()->main_camera->GetUp()) - glm::radians(90.0f)) <= glm::radians(85.0f))
-        {
-            SceneManager::GetOpenScene()->main_camera->Orientation = newOrientation;
-        }
+        static float yaw = 0.0f;
+        static float pitch = 0.0f;
 
-        SceneManager::GetOpenScene()->main_camera->Orientation = glm::rotate(SceneManager::GetOpenScene()->main_camera->Orientation, glm::radians(-InputSystem::get_mouse_x() * camera_speed_sens * delta_time), SceneManager::GetOpenScene()->main_camera->GetUp());
+        yaw += deltaX;
+        pitch += deltaY;
+
+        pitch = glm::clamp(pitch, -glm::half_pi<float>(), glm::half_pi<float>());
+
+        glm::quat rotationX = glm::angleAxis(pitch, glm::vec3(1.0f, 0.0f, 0.0f));
+        glm::quat rotationY = glm::angleAxis(yaw, glm::vec3(0.0f, 1.0f, 0.0f));
+
+        glm::quat targetRotation = glm::normalize(rotationY * rotationX);
+
+        const float smoothingFactor = 0.1f;
+        camera->cameraRotation = glm::slerp(camera->cameraRotation, targetRotation, smoothingFactor);
+
+        camera->cameraRotation = glm::normalize(camera->cameraRotation);
     }
 
     std::string window_name = "Garin Editor - " + SceneManager::GetOpenScene()->scene_name;

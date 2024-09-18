@@ -3,6 +3,7 @@
 #include <GarinEvents.h>
 #include <GarinMaths.h>
 #include <EventSystem.h>
+#include <RenderPipeline.h>
 
 using namespace ImGuizmo;
 
@@ -135,6 +136,42 @@ void SceneUI::draw(Entity *select_obj)
     if (ImGui::IsWindowHovered() && ImGui::IsKeyDown(ImGuiKey_F) && select_obj != nullptr)
     {
         SceneManager::GetOpenScene()->main_camera->cameraPosition = select_obj->get_transform()->Position;
+    }
+
+    ImGui::End();
+    ImGui::PopID();
+
+    ImGui::PushID(554345);
+    ImGui::Begin("Game", &is_open);
+
+    ImGuizmo::SetDrawlist();
+
+    Camera *camera_with_max_depth = nullptr;
+    float max_depth = -1.0f;
+
+    for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
+    {
+        if (ent->hasComponent<GCamera>())
+        {
+            GCamera &camera_component = ent->getComponent<GCamera>();
+            Camera *camera = camera_component.a_camera;
+
+            int current_depth = camera_component.Depth;
+
+            if (current_depth > max_depth)
+            {
+                max_depth = current_depth;
+                camera_with_max_depth = camera;
+            }
+        }
+    }
+
+    if (camera_with_max_depth != nullptr)
+    {
+        ImVec2 windowSize = ImGui::GetContentRegionAvail();
+
+        TextureTarget *max_depth_render_target = camera_with_max_depth->target_render;
+        ImGui::Image((void *)(intptr_t)max_depth_render_target->get_render(), ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(0, 1), ImVec2(1, 0));
     }
 
     ImGui::End();

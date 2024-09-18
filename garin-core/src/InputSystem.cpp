@@ -71,6 +71,41 @@ float InputSystem::get_mouse_y()
     return mouse_delta_y;
 }
 
+// Funciones para el joystick
+bool InputSystem::is_joystick_connected(int joystick_id)
+{
+    return glfwJoystickPresent(joystick_id) == GLFW_TRUE;
+}
+
+const float *InputSystem::get_joystick_axes(int joystick_id, int *count)
+{
+    if (is_joystick_connected(joystick_id))
+    {
+        return glfwGetJoystickAxes(joystick_id, count);
+    }
+    *count = 0;
+    return nullptr;
+}
+
+const unsigned char *InputSystem::get_joystick_buttons(int joystick_id, int *count)
+{
+    if (is_joystick_connected(joystick_id))
+    {
+        return glfwGetJoystickButtons(joystick_id, count);
+    }
+    *count = 0;
+    return nullptr;
+}
+
+const char *InputSystem::get_joystick_name(int joystick_id)
+{
+    if (is_joystick_connected(joystick_id))
+    {
+        return glfwGetJoystickName(joystick_id);
+    }
+    return "No conectado";
+}
+
 // glm::vec2 InputSystem::get_mouse()
 // {
 //     float sensitivity = 0.2f;

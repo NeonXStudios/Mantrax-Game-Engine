@@ -70,6 +70,9 @@ public:
     bool shouldScroll = false;
     float camera_speed_sens = 30.0f;
 
+    float cameraYaw = 0.0f;
+    float cameraPitch = 0.0f;
+
     void ReadBuffer(std::stringstream &buffer, std::string &target)
     {
         std::string line;

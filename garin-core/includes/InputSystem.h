@@ -26,6 +26,12 @@ public:
     static void initialize();
     static bool on_key_down(GLuint key);
 
+    // Soporte para joystick
+    static bool is_joystick_connected(int joystick_id);
+    static const float *get_joystick_axes(int joystick_id, int *count);
+    static const unsigned char *get_joystick_buttons(int joystick_id, int *count);
+    static const char *get_joystick_name(int joystick_id);
+
 private:
     static std::unordered_map<GLuint, bool> current_key_state;
     static std::unordered_map<GLuint, bool> previous_key_state;
