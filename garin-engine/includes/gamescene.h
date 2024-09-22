@@ -1,5 +1,4 @@
 #pragma once
-
 #include <GarinNatives.h>
 #include "WindowsCompiler.h"
 #include "UIEditorManager.h"
@@ -18,6 +17,7 @@
 #include <Core.h>
 #include <mutex>
 #include <sstream>
+#include <AssetsRegistry.h>
 
 class Drawer;
 class Camera;
@@ -58,6 +58,7 @@ public:
     GizmosDrawer *gizmos;
     UIEditorManager *uieditor;
     GizmoModels *gizmo_models;
+    AssetsRegistry *assets_registry;
 
     std::stringstream buffer_stdout;
     std::stringstream buffer_stderr;
@@ -66,9 +67,9 @@ public:
     std::streambuf *old_stdout;
     std::streambuf *old_stderr;
     std::mutex mutex;
+    bool first_frame_loaded_on_bucle;
 
     bool shouldScroll = false;
-    float camera_speed_sens = 30.0f;
 
     float cameraYaw = 0.0f;
     float cameraPitch = 0.0f;

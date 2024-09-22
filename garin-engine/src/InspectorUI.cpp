@@ -45,6 +45,7 @@ void InspectorUI::draw(Entity *select_obj)
         ImGui::Separator();
 
         UIAdministrator::draw_ui(select_obj);
+
         if (select_obj->hasComponent<GCamera>())
         {
             ImVec2 windowSize = ImVec2(ImGui::GetContentRegionAvail().x, 150);

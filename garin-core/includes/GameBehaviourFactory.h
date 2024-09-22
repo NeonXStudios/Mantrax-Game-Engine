@@ -22,19 +22,17 @@ public:
     {
         try
         {
-            std::cout << "Antes de mover el creator" << std::endl;
             creators[class_name] = std::move(creator);
-            std::cout << "Después de mover el creator" << std::endl;
 
-            // Verificación de inserción
-            if (creators.find(class_name) != creators.end())
-            {
-                std::cout << "Creator insertado en el mapa" << std::endl;
-            }
-            else
-            {
-                std::cout << "Error: Creator no se pudo insertar en el mapa" << std::endl;
-            }
+            // // Verificación de inserción
+            // if (creators.find(class_name) != creators.end())
+            // {
+            //     std::cout << "Creator insertado en el mapa" << std::endl;
+            // }
+            // else
+            // {
+            //     std::cout << "Error: Creator no se pudo insertar en el mapa" << std::endl;
+            // }
         }
         catch (const std::exception &e)
         {

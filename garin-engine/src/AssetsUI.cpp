@@ -88,28 +88,32 @@ void AssetsUI::ShowDirectoryTree(const std::filesystem::path &path)
                 }
                 else
                 {
-                    EditorGUI::DrawIcon(IconsManager::UNKNOWN());
+                    if (entry.path().extension() != ".garin")
+                        EditorGUI::DrawIcon(IconsManager::UNKNOWN());
                 }
 
-                if (ImGui::Selectable(entry.path().filename().string().c_str(), selected_item == entry.path().string()))
+                if (entry.path().extension() != ".garin")
                 {
-
-                    double current_time = ImGui::GetTime();
-                    if (current_time - last_click_time <= double_click_time)
+                    if (ImGui::Selectable(entry.path().filename().string().c_str(), selected_item == entry.path().string()))
                     {
-                        // Doble clic detectado
-                        selected_item = entry.path().string();
-                        std::filesystem::path selected_path(selected_item);
-                        extension = selected_path.extension().string();
-                        base_name = selected_path.stem().string();
 
-                        drawer_files(extension, base_name, entry.path().string());
-                        std::cout << "Opening File: " << base_name << std::endl;
-                    }
-                    else
-                    {
-                        // Solo primer clic
-                        last_click_time = current_time;
+                        double current_time = ImGui::GetTime();
+                        if (current_time - last_click_time <= double_click_time)
+                        {
+                            // Doble clic detectado
+                            selected_item = entry.path().string();
+                            std::filesystem::path selected_path(selected_item);
+                            extension = selected_path.extension().string();
+                            base_name = selected_path.stem().string();
+
+                            drawer_files(extension, base_name, entry.path().string());
+                            std::cout << "Opening File: " << base_name << std::endl;
+                        }
+                        else
+                        {
+                            // Solo primer clic
+                            last_click_time = current_time;
+                        }
                     }
                 }
             }
@@ -132,15 +136,14 @@ void AssetsUI::drawer_files(std::string extension, std::string file_name, std::s
             SceneData::load_scene(file_name);
         }
     }
-    else if (extension == ".lua")
+    else if (extension == ".slab" || extension == ".lua")
     {
         std::filesystem::current_path(FileManager::get_game_path() + "/assets/");
 
-        int result = system("code .");
-    }
-    else if (extension == ".slab")
-    {
-        CodeEditor::get_instance().setup_new_editor(file_path_complete);
+        std::string open_command = "code . " + file_path_complete;
+
+        int result = system(open_command.c_str());
+        // CodeEditor::get_instance().setup_new_editor(file_path_complete);
     }
 }
 

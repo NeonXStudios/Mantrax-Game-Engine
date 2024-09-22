@@ -14,7 +14,7 @@ public:
     physx::PxShape *shape = NULL;
     PxU32 layerMask0 = LAYER_1;
 
-    void defines();
+    void defines() override;
     void init() override;
     void update() override;
 };

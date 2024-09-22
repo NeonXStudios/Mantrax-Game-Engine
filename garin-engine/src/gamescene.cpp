@@ -40,6 +40,8 @@ void gamescene::on_start()
 
     gizmo_models = new GizmoModels();
     gizmo_models->init();
+
+    assets_registry = new AssetsRegistry("..", 5);
 }
 
 void gamescene::on_edition_mode(float delta_time)
@@ -47,42 +49,45 @@ void gamescene::on_edition_mode(float delta_time)
     if (ImGui::IsMouseDown(ImGuiMouseButton_Right) && configs->project_select)
     {
         auto &camera = SceneManager::GetOpenScene()->main_camera;
-        float forwardSpeed = InputSystem::get_axis(GLFW_KEY_W, GLFW_KEY_S) * 10.0f * delta_time;
-        float leftSpeed = InputSystem::get_axis(GLFW_KEY_A, GLFW_KEY_D) * 10.0f * delta_time;
-
-        camera->move_forward(delta_time, forwardSpeed);
-        camera->move_left(delta_time, leftSpeed);
-
-        if (InputSystem::on_key_pressed(GLFW_KEY_Q))
+        if (camera != nullptr)
         {
-            camera->cameraPosition.y -= 10.0f * delta_time;
+            float forwardSpeed = InputSystem::get_axis(GLFW_KEY_W, GLFW_KEY_S) * 10.0f * delta_time;
+            float leftSpeed = InputSystem::get_axis(GLFW_KEY_A, GLFW_KEY_D) * 10.0f * delta_time;
+
+            camera->move_forward(delta_time, forwardSpeed);
+            camera->move_left(delta_time, leftSpeed);
+
+            if (InputSystem::on_key_pressed(GLFW_KEY_Q))
+            {
+                camera->cameraPosition.y -= 10.0f * delta_time;
+            }
+
+            if (InputSystem::on_key_pressed(GLFW_KEY_E))
+            {
+                camera->cameraPosition.y += 10.0f * delta_time;
+            }
+
+            float deltaX = -InputSystem::get_mouse_x() * configs->camera_speed_sens * delta_time;
+            float deltaY = -InputSystem::get_mouse_y() * configs->camera_speed_sens * delta_time;
+
+            static float yaw = 0.0f;
+            static float pitch = 0.0f;
+
+            yaw += deltaX;
+            pitch += deltaY;
+
+            pitch = glm::clamp(pitch, -glm::half_pi<float>(), glm::half_pi<float>());
+
+            glm::quat rotationX = glm::angleAxis(pitch, glm::vec3(1.0f, 0.0f, 0.0f));
+            glm::quat rotationY = glm::angleAxis(yaw, glm::vec3(0.0f, 1.0f, 0.0f));
+
+            glm::quat targetRotation = glm::normalize(rotationY * rotationX);
+
+            const float smoothingFactor = 0.1f;
+            camera->cameraRotation = glm::slerp(camera->cameraRotation, targetRotation, smoothingFactor);
+
+            camera->cameraRotation = glm::normalize(camera->cameraRotation);
         }
-
-        if (InputSystem::on_key_pressed(GLFW_KEY_E))
-        {
-            camera->cameraPosition.y += 10.0f * delta_time;
-        }
-
-        float deltaX = -InputSystem::get_mouse_x() * camera_speed_sens * delta_time;
-        float deltaY = -InputSystem::get_mouse_y() * camera_speed_sens * delta_time;
-
-        static float yaw = 0.0f;
-        static float pitch = 0.0f;
-
-        yaw += deltaX;
-        pitch += deltaY;
-
-        pitch = glm::clamp(pitch, -glm::half_pi<float>(), glm::half_pi<float>());
-
-        glm::quat rotationX = glm::angleAxis(pitch, glm::vec3(1.0f, 0.0f, 0.0f));
-        glm::quat rotationY = glm::angleAxis(yaw, glm::vec3(0.0f, 1.0f, 0.0f));
-
-        glm::quat targetRotation = glm::normalize(rotationY * rotationX);
-
-        const float smoothingFactor = 0.1f;
-        camera->cameraRotation = glm::slerp(camera->cameraRotation, targetRotation, smoothingFactor);
-
-        camera->cameraRotation = glm::normalize(camera->cameraRotation);
     }
 
     std::string window_name = "Garin Editor - " + SceneManager::GetOpenScene()->scene_name;
@@ -90,6 +95,7 @@ void gamescene::on_edition_mode(float delta_time)
     for (Entity *entity : objects_worlds)
     {
         entity->transform_component->update();
+
         for (Entity *transform : entity->childrens)
         {
             transform->transform_component->update();
@@ -97,6 +103,13 @@ void gamescene::on_edition_mode(float delta_time)
     }
 
     Gfx::change_name(window_name);
+
+    if (configs->project_select == true && !first_frame_loaded_on_bucle)
+    {
+        assets_registry->directoryPath = configs->current_proyect + "/assets/";
+        assets_registry->start();
+        first_frame_loaded_on_bucle = true;
+    }
 }
 
 void gamescene::on_update(float delta_time)
@@ -126,47 +139,89 @@ void gamescene::draw_ui()
         ReadBuffer(buffer_stdout, stdout_buffer);
         ReadBuffer(buffer_stderr, stderr_buffer);
 
-        // notify->RenderNotifications();
         UINotification::instance.RenderNotifications();
 
         ImGui::Begin("Console");
         std::lock_guard<std::mutex> guard(mutex);
 
-        // if (ImGui::Button("Clear Console"))
-        // {
-        //     Clear();
-        // }
+        if (ImGui::Button("Clear Console")) // Botón para limpiar la consola
+        {
+            stdout_buffer.clear();
+            stderr_buffer.clear();
+        }
 
         ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
-        ImGui::TextUnformatted(stdout_buffer.c_str());
-        ImGui::TextUnformatted(stderr_buffer.c_str());
+
+        std::vector<std::string> console_lines;
+        std::istringstream stdout_stream(stdout_buffer);
+        std::istringstream stderr_stream(stderr_buffer);
+        std::string line;
+
+        while (std::getline(stdout_stream, line))
+        {
+            console_lines.push_back(line);
+        }
+        while (std::getline(stderr_stream, line))
+        {
+            console_lines.push_back(line);
+        }
+
+        for (int i = 0; i < console_lines.size(); ++i)
+        {
+            ImGui::PushID(i);
+
+            ImGui::Columns(2, nullptr, false);
+            ImGui::SetColumnWidth(0, 20);
+
+            // if (ImGui::Button("X"))
+            // {
+            //     console_lines.erase(console_lines.begin() + i);
+            //     i--;
+
+            //     stdout_buffer.clear();
+            //     stderr_buffer.clear();
+            //     for (const auto &msg : console_lines)
+            //     {
+            //         stdout_buffer += msg + "\n";
+            //     }
+            // }
+
+            ImGui::NextColumn();
+
+            ImGui::TextWrapped(console_lines[i].c_str());
+
+            ImGui::Columns(1);
+            ImGui::PopID();
+        }
 
         if (shouldScroll)
         {
             ImGui::SetScrollHereY(1.0f);
             shouldScroll = false;
         }
-        ImGui::EndChild();
 
+        ImGui::EndChild();
         ImGui::End();
 
+        // Guardado de la escena si Ctrl + S es presionado
         if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
         {
             if (ImGui::IsKeyReleased(ImGuiKey_S))
             {
                 if (!AppSettings::is_playing)
                 {
-                    SceneData::save_scene();
+                    std::string bg_pick_path = configs->current_proyect + "/gb.jpg";
+                    GarinIO::screenshot(Gfx::main_render->get_render(), Gfx::width, Gfx::height, bg_pick_path.c_str());
 
+                    SceneData::save_scene();
                     configs->save_config();
 
-                    string info = "Scene Saved + Game Config: " + configs->current_scene;
-
+                    std::string info = "Scene Saved + Game Config: " + configs->current_scene;
                     UINotification::AddNotification(info, 3.0f);
                 }
                 else
                 {
-                    string info = "You cannot save scene in playmode";
+                    std::string info = "You cannot save scene in playmode";
                     UINotification::AddNotification(info, 3.0f);
                 }
             }
@@ -204,6 +259,7 @@ void gamescene::draw_ui()
 
 void gamescene::on_destroy()
 {
+    assets_registry->stop();
     configs->save_config();
 }
 

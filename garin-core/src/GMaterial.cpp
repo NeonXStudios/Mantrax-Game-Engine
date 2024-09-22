@@ -23,13 +23,6 @@ void GMaterial::init()
 
     p_shader = new Shader(shader.VERTEX, shader.FRAGMENT);
 
-    std::cout << "Compiled VERTEX: \n"
-              << shader.VERTEX << std::endl
-              << std::endl;
-    std::cout << "Compiled FRAGMENT: \n"
-              << shader.FRAGMENT << std::endl
-              << std::endl;
-
     // p_gbuffer_shader = new Shader(GETVAR(VertexPathGbuffer, std::string).c_str(), GETVAR(FragmentPathGbuffer, std::string).c_str());
     // p_deferred_shader = new Shader(GETVAR(VertexPathDeferred, std::string).c_str(), GETVAR(FragmentPathDeferred, std::string).c_str());
 

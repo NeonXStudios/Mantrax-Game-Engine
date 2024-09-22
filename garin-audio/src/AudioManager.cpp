@@ -17,7 +17,6 @@ void AudioManager::create()
     {
         AudioManager::instance->StartSystem();
     }
-    std::cout << "AudioManager Created" << endl;
 }
 
 void AudioManager::StartSystem()

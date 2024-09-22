@@ -38,38 +38,45 @@ void TextureTarget::setup()
 
 void TextureTarget::draw(glm::mat4 camera_matrix)
 {
-    if (SceneManager::GetOpenScene()->main_camera == nullptr)
-        return;
+    try
+    {
+        if (SceneManager::GetOpenScene()->main_camera != nullptr)
+        {
+            int width, height;
+            glfwGetFramebufferSize(Gfx::get_game_window(), &width, &height);
 
-    int width, height;
-    glfwGetFramebufferSize(Gfx::get_game_window(), &width, &height);
+            glViewport(0, 0, Gfx::render_width, Gfx::render_height);
 
-    glViewport(0, 0, Gfx::render_width, Gfx::render_height);
+            glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            RenderPipeline::render_all_data(camera_matrix);
 
-    RenderPipeline::render_all_data(camera_matrix);
+            SceneManager::GetOpenScene()->on_draw();
 
-    SceneManager::GetOpenScene()->on_draw();
+            SceneManager::GetOpenScene()->draw_ui();
+            glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+            glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    SceneManager::GetOpenScene()->draw_ui();
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            RenderPipeline::render_all_data(camera_matrix);
 
-    RenderPipeline::render_all_data(camera_matrix);
+            SceneManager::GetOpenScene()->on_draw();
 
-    SceneManager::GetOpenScene()->on_draw();
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, Gfx::render_width, Gfx::render_height, 0);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, Gfx::render_width, Gfx::render_height, 0);
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-
-    SceneManager::GetOpenScene()->draw_ui();
+            SceneManager::GetOpenScene()->draw_ui();
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 unsigned int TextureTarget::get_render()

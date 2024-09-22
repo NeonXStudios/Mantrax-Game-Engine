@@ -119,20 +119,20 @@ std::wstring EngineHubUI::ObtenerRutaDocumentos()
 
 std::string EngineHubUI::replaceBackslashWithSlashstr(std::string &str)
 {
-    std::string result = str; // Trabajaremos sobre una copia para no modificar el original
+    std::string result = str;
 
     size_t pos = 0;
     while ((pos = result.find("\\\\", pos)) != std::string::npos)
     {
         result.replace(pos, 2, "/");
-        pos += 1; // Moverse más allá del carácter reemplazado
+        pos += 1;
     }
 
     pos = 0;
     while ((pos = result.find("\\", pos)) != std::string::npos)
     {
         result.replace(pos, 1, "/");
-        pos += 1; // Moverse más allá del carácter reemplazado
+        pos += 1;
     }
 
     return result;

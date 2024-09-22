@@ -8,15 +8,13 @@
 #include "LightingPass.h"
 #include "../includes/CanvasManager.h"
 #include <TextureTarget.h>
+#include <camera.h>
 
 class GARINLIBS_API RenderPipeline
 {
 public:
     static std::unordered_set<int> layers_to_render;
     static CanvasManager *canvas;
-
-    static Shader *geometryShader;
-    static Shader *lightingShader;
 
     static std::vector<ModelComponent *> renderables;
     static std::vector<TextureTarget *> render_targets;
@@ -28,5 +26,6 @@ public:
     static void delete_from_render(ModelComponent *renderable);
     static void addLayer(int layer);
     static void removeLayer(int layer);
+    static Camera *add_camera();
     static TextureTarget *add_render_texture();
 };

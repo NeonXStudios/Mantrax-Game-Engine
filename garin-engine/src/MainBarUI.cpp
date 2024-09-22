@@ -32,6 +32,9 @@ void MainBarUI::draw(Entity *owner)
             {
                 if (!AppSettings::is_playing)
                 {
+                    std::string bg_pick_path = configs->current_proyect + "/gb.jpg";
+                    GarinIO::screenshot(Gfx::main_render->get_render(), 1920, 1080, bg_pick_path.c_str());
+
                     SceneData::save_scene();
                 }
             }
@@ -285,7 +288,7 @@ void MainBarUI::draw(Entity *owner)
     ImGui::PopStyleVar();
 
     ImGui::Begin("Scene Settings");
-    gamescene::getInstance().camera_speed_sens = EditorGUI::Float("Camera sensitivity", gamescene::getInstance().camera_speed_sens);
+    gamescene::getInstance().configs->camera_speed_sens = EditorGUI::Float("Camera sensitivity", gamescene::getInstance().configs->camera_speed_sens);
     ImGui::End();
 }
 

@@ -33,8 +33,3 @@ void Camera::update()
     cameraPosition += cameraVelocity;
     cameraVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
 }
-
-Camera::Camera()
-{
-    RenderPipeline::camera_targets.push_back(this);
-}

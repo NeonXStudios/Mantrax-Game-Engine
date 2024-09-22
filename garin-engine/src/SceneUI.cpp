@@ -156,7 +156,7 @@ void SceneUI::draw(Entity *select_obj)
             GCamera &camera_component = ent->getComponent<GCamera>();
             Camera *camera = camera_component.a_camera;
 
-            int current_depth = camera_component.Depth;
+            int current_depth = std::any_cast<int>(camera_component.variableMap["Depth"]);
 
             if (current_depth > max_depth)
             {
@@ -166,7 +166,7 @@ void SceneUI::draw(Entity *select_obj)
         }
     }
 
-    if (camera_with_max_depth != nullptr)
+    if (camera_with_max_depth != nullptr && camera_with_max_depth->target_render != nullptr)
     {
         ImVec2 windowSize = ImGui::GetContentRegionAvail();
 

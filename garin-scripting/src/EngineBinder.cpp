@@ -87,7 +87,7 @@ void EngineBinder::BinderFunction(GScriptLua *luaParent)
 
     luaParent->lua["GetMainCamera"] = []()
     { 
-            Camera *camera_with_max_depth = nullptr;
+    Camera *camera_with_max_depth = nullptr;
     float max_depth = -1.0f;
 
     for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
@@ -97,7 +97,7 @@ void EngineBinder::BinderFunction(GScriptLua *luaParent)
             GCamera &camera_component = ent->getComponent<GCamera>();
             Camera *camera = camera_component.a_camera;
 
-            int current_depth = camera_component.Depth;
+            int current_depth = std::any_cast<int>(camera_component.variableMap["Depth"]);
 
             if (current_depth > max_depth)
             {

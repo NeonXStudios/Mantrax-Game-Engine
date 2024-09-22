@@ -85,7 +85,6 @@ public:
 
                 if (objD->get_transform() == nullptr)
                 {
-                    std::cout << "Transform null" << std::endl;
                     return false;
                 }
 

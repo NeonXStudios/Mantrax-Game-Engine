@@ -53,8 +53,6 @@ public:
 	{
 		clean();
 		clear_vars();
-
-		std::cout << "Cleaning component and variables" << std::endl;
 	}
 
 	void clear_vars()
@@ -92,8 +90,6 @@ public:
 		variableMap[name] = value;
 
 		std::string val = std::any_cast<std::string>(variableMap[name]);
-
-		std::cout << "New Value: " << val << std::endl;
 	}
 
 	virtual void defines() {}
@@ -459,15 +455,12 @@ public:
 
 		if (componentBitset[id])
 		{
-			std::cout << "Intentando borrar componente" << std::endl;
-
 			auto it = std::find_if(components.begin(), components.end(),
 								   [id](const Component *c)
 								   { return c->component_id == id; });
 
 			if (it != components.end())
 			{
-				std::cout << "Iniciando borrado del componente" << std::endl;
 				// Liberar la memoria del componente eliminado
 				delete *it;
 				components.erase(it);
@@ -535,12 +528,10 @@ public:
 		parent = newParent;
 		parent->addChild(this);
 
-		std::cout << "Childs: " << parent->childrens.size() << std::endl;
-
-		for (Entity *child : parent->childrens)
-		{
-			std::cout << "Child Object Name: " << child->ObjectName << std::endl;
-		}
+		// for (Entity *child : parent->childrens)
+		// {
+		// 	std::cout << "Child Object Name: " << child->ObjectName << std::endl;
+		// }
 	}
 };
 
