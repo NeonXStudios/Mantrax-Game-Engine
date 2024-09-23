@@ -5,6 +5,7 @@
 void GCamera::defines()
 {
     GVAR(Depth, RenderPipeline::camera_targets.size(), int);
+    GVAR(Projection, true, bool);
 }
 
 void GCamera::init()
@@ -33,10 +34,12 @@ void GCamera::update()
         glm::vec3 newOrientation = glm::normalize(glm::mat3_cast(qRotation) * a_camera->Orientation);
         a_camera->cameraRotation = get_transform()->rotation;
     }
+
+    a_camera->use_projection = GETVAR(Projection, bool);
 }
 
 void GCamera::clean()
 {
-    // auto &targets = RenderPipeline::camera_targets;
-    // targets.erase(std::remove(targets.begin(), targets.end(), a_camera), targets.end());
+    auto &targets = RenderPipeline::camera_targets;
+    targets.erase(std::remove(targets.begin(), targets.end(), a_camera), targets.end());
 }

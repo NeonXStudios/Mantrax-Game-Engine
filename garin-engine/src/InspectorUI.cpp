@@ -46,36 +46,6 @@ void InspectorUI::draw(Entity *select_obj)
 
         UIAdministrator::draw_ui(select_obj);
 
-        if (select_obj->hasComponent<GCamera>())
-        {
-            ImVec2 windowSize = ImVec2(ImGui::GetContentRegionAvail().x, 150);
-
-            if (ImGui::Button("Remove Camera", ImVec2(windowSize.x, 20)))
-            {
-                select_obj->removeComponent<GCamera>();
-            }
-            else
-            {
-                ImGui::Separator();
-
-                GCamera *cameraComponent = &select_obj->getComponent<GCamera>();
-
-                if (cameraComponent != nullptr)
-                {
-                    if (cameraComponent->a_camera->target_render != nullptr)
-                    {
-
-                        GLuint textureID = cameraComponent->a_camera->target_render->get_render();
-
-                        ImVec2 p = ImGui::GetCursorScreenPos();
-
-                        ImGui::Image((void *)(intptr_t)textureID, windowSize, ImVec2(0, 1), ImVec2(1, 0));
-                        cameraComponent->update();
-                    }
-                }
-            }
-        }
-
         ImGui::Separator();
 
         float buttonWidth = ImGui::GetContentRegionAvail().x;

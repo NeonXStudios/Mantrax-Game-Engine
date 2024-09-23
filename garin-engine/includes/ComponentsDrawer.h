@@ -26,7 +26,6 @@ public:
             {
                 EditorGUI::Draw_Component<T>(owner, cmap, demangle(typeid(cmap).name()), cmap->component_id, cmap, [cmap]() {});
             }
-            // cmp->draw(owner);
         }
     }
 

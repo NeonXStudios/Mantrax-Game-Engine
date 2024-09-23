@@ -324,6 +324,36 @@ public:
                     EditorGUI::DrawIcon(IconsManager::INT());
                     cpm->variableMap[key] = EditorGUI::Toggle(key, val);
                 }
+
+                if (typeid(component) == typeid(GCamera))
+                {
+                    ImVec2 windowSize = ImVec2(ImGui::GetContentRegionAvail().x, 150);
+
+                    if (ImGui::Button("Remove Camera", ImVec2(windowSize.x, 20)))
+                    {
+                        owner->removeComponent<GCamera>();
+                    }
+                    else
+                    {
+                        ImGui::Separator();
+
+                        GCamera *cameraComponent = &owner->getComponent<GCamera>();
+
+                        if (cameraComponent != nullptr)
+                        {
+                            if (cameraComponent->a_camera->target_render != nullptr)
+                            {
+
+                                GLuint textureID = cameraComponent->a_camera->target_render->get_render();
+
+                                ImVec2 p = ImGui::GetCursorScreenPos();
+
+                                ImGui::Image((void *)(intptr_t)textureID, windowSize, ImVec2(0, 1), ImVec2(1, 0));
+                                cameraComponent->update();
+                            }
+                        }
+                    }
+                }
             }
             ImGui::EndGroup();
             ImGui::Separator();

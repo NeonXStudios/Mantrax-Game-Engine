@@ -62,7 +62,7 @@ public:
 
 	Component()
 	{
-		component_id = IDGenerator::generate_id_component();
+		// component_id = IDGenerator::generate_id_component();
 	}
 
 	TransformComponent *get_transform()
@@ -313,10 +313,12 @@ public:
 		T *c = new T(std::forward<TArgs>(mArgs)...);
 		c->entity = this;
 		c->transform = transform_component;
+		c->component_id = IDGenerator::generate_id_component();
+		// c->component_id = getComponentTypeID<T>();
 		components.emplace_back(c);
 
-		componentArray[getComponentTypeID<T>()] = c;
-		componentBitset[getComponentTypeID<T>()] = true;
+		componentArray[c->component_id] = c;
+		componentBitset[c->component_id] = true;
 
 		if (c->enabled)
 		{
@@ -445,7 +447,7 @@ public:
 	// 	return false;
 	// }
 
-	bool Entity::removeComponentByID(int id)
+	bool removeComponentByID(int id)
 	{
 		if (id < 0 || id >= componentBitset.size())
 		{
@@ -453,24 +455,46 @@ public:
 			return false;
 		}
 
-		if (componentBitset[id])
+		// Verifica si el componente está activo en el bitset
+		if (!componentBitset[id])
 		{
-			auto it = std::find_if(components.begin(), components.end(),
-								   [id](const Component *c)
-								   { return c->component_id == id; });
-
-			if (it != components.end())
-			{
-				// Liberar la memoria del componente eliminado
-				delete *it;
-				components.erase(it);
-
-				componentArray[id] = nullptr;
-				componentBitset[id] = false;
-				return true;
-			}
+			std::cerr << "No hay componente con ese ID en el bitset." << std::endl;
+			return false;
 		}
-		return false;
+
+		// Obtén el componente a eliminar desde el array (verificamos el puntero)
+		Component *component = componentArray[id];
+		if (component == nullptr)
+		{
+			std::cerr << "Error: componentArray[" << id << "] es nullptr." << std::endl;
+			return false;
+		}
+
+		// Limpia el componente antes de eliminarlo
+		component->clean();
+
+		// Remueve el componente del vector components
+		auto it = std::remove_if(components.begin(), components.end(),
+								 [id](const Component *c)
+								 {
+									 return c->component_id == id;
+								 });
+
+		// Liberar memoria de los componentes que se van a eliminar
+		for (auto i = it; i != components.end(); ++i)
+		{
+			delete *i;
+		}
+
+		// Eliminar los elementos del vector
+		components.erase(it, components.end());
+
+		// Actualiza el array y el bitset
+		componentArray[id] = nullptr;
+		componentBitset[id] = false;
+
+		std::cerr << "Componente con ID " << id << " eliminado correctamente." << std::endl;
+		return true;
 	}
 
 	// bool removeComponentByID(int id)

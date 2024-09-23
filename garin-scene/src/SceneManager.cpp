@@ -184,10 +184,16 @@ void SceneManager::load_scene(std::string scene_name_new)
             VarVerify::set_value_if_exists(data_loaded[i], "sx", transform->Scale.x);
             VarVerify::set_value_if_exists(data_loaded[i], "sy", transform->Scale.y);
             VarVerify::set_value_if_exists(data_loaded[i], "sz", transform->Scale.z);
-            VarVerify::set_value_if_exists(data_loaded[i], "object_id", new_object->objectID);
+
+            int objectID = -1;
+
+            VarVerify::set_value_if_exists(data_loaded[i], "object_id", objectID);
             VarVerify::set_value_if_exists(data_loaded[i], "layer", new_object->Layer);
 
-            std::cout << "*******Loaded ID: " << new_object->ObjectSTRID << std::endl;
+            std::cout << "== Loaded ID: " << objectID << std::endl;
+
+            new_object->objectID = objectID;
+            new_object->ObjectSTRID = std::to_string(objectID);
 
             if (data_loaded[i].contains("components") && data_loaded[i]["components"].is_array())
             {

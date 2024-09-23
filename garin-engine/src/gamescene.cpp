@@ -96,9 +96,19 @@ void gamescene::on_edition_mode(float delta_time)
     {
         entity->transform_component->update();
 
+        if (entity->hasComponent<GCamera>())
+        {
+            entity->getComponent<GCamera>().update();
+        }
+
         for (Entity *transform : entity->childrens)
         {
             transform->transform_component->update();
+
+            if (transform->hasComponent<GCamera>())
+            {
+                transform->getComponent<GCamera>().update();
+            }
         }
     }
 
