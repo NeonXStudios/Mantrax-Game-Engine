@@ -1,8 +1,13 @@
 build/
 
-Compiler-Lib/GarinLibrary/*
+Compiler/LIB/*
+Compiler/COMPILER/*
 
-!Compiler-Lib/GarinLibrary/
-!Compiler-Lib/GarinLibrary/CMakeLists.txt
+!Compiler/COMPILER/
+!Compiler/LIB/
+!Compiler/LIB/CMakeLists.txt
+!Compiler/COMPILER/CMakeLists.txt
+
+!Compiler/CompileEngine_VS_19_2022.bat
 
 README.md

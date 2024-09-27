@@ -1,0 +1,287 @@
+[
+    {
+        "components": [
+            {
+                "name": "GMaterial",
+                "varsdata": [
+                    {
+                        "name": "FragmentPath",
+                        "type": "string",
+                        "value": "assets/shaders/mesh_fragment.glsl"
+                    },
+                    {
+                        "name": "FragmentPathDeferred",
+                        "type": "string",
+                        "value": "assets/shaders/deferred_shading_fragment.glsl"
+                    },
+                    {
+                        "name": "FragmentPathGbuffer",
+                        "type": "string",
+                        "value": "assets/shaders/g_buffer_fragment.glsl"
+                    },
+                    {
+                        "name": "VertexPath",
+                        "type": "string",
+                        "value": "assets/shaders/mesh_vertex.glsl"
+                    },
+                    {
+                        "name": "VertexPathDeferred",
+                        "type": "string",
+                        "value": "assets/shaders/deferred_shading_vertex.glsl"
+                    },
+                    {
+                        "name": "VertexPathGbuffer",
+                        "type": "string",
+                        "value": "assets/shaders/g_buffer_vertex.glsl"
+                    }
+                ]
+            },
+            {
+                "name": "ModelComponent",
+                "varsdata": [
+                    {
+                        "name": "ColorBase",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_Color.png"
+                    },
+                    {
+                        "name": "Model",
+                        "type": "string",
+                        "value": "assets/Box.fbx"
+                    },
+                    {
+                        "name": "NormalMap",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_NormalGL.png"
+                    }
+                ]
+            },
+            {
+                "name": "GCollision",
+                "varsdata": null
+            },
+            {
+                "name": "GBody",
+                "varsdata": [
+                    {
+                        "name": "isStatic",
+                        "type": "bool",
+                        "value": true
+                    },
+                    {
+                        "name": "mass",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "useGravity",
+                        "type": "bool",
+                        "value": false
+                    }
+                ]
+            }
+        ],
+        "name": "a",
+        "object_id": 1862600,
+        "px": 0.6450023651123047,
+        "py": -6.363999366760254,
+        "pz": 0.0,
+        "rw": 1.0,
+        "rx": 0.0,
+        "ry": -0.0,
+        "rz": 0.0,
+        "sx": 14.241035461425781,
+        "sy": 1.0,
+        "sz": 1.0
+    },
+    {
+        "components": [
+            {
+                "name": "GCollision",
+                "varsdata": null
+            },
+            {
+                "name": "GBody",
+                "varsdata": [
+                    {
+                        "name": "isStatic",
+                        "type": "bool",
+                        "value": false
+                    },
+                    {
+                        "name": "mass",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "useGravity",
+                        "type": "bool",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "GMaterial",
+                "varsdata": [
+                    {
+                        "name": "FragmentPath",
+                        "type": "string",
+                        "value": "assets/shaders/mesh_fragment.glsl"
+                    },
+                    {
+                        "name": "FragmentPathDeferred",
+                        "type": "string",
+                        "value": "assets/shaders/deferred_shading_fragment.glsl"
+                    },
+                    {
+                        "name": "FragmentPathGbuffer",
+                        "type": "string",
+                        "value": "assets/shaders/g_buffer_fragment.glsl"
+                    },
+                    {
+                        "name": "VertexPath",
+                        "type": "string",
+                        "value": "assets/shaders/mesh_vertex.glsl"
+                    },
+                    {
+                        "name": "VertexPathDeferred",
+                        "type": "string",
+                        "value": "assets/shaders/deferred_shading_vertex.glsl"
+                    },
+                    {
+                        "name": "VertexPathGbuffer",
+                        "type": "string",
+                        "value": "assets/shaders/g_buffer_vertex.glsl"
+                    }
+                ]
+            },
+            {
+                "name": "ModelComponent",
+                "varsdata": [
+                    {
+                        "name": "ColorBase",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_Color.png"
+                    },
+                    {
+                        "name": "Model",
+                        "type": "string",
+                        "value": "assets/Box.fbx"
+                    },
+                    {
+                        "name": "NormalMap",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_NormalGL.png"
+                    }
+                ]
+            }
+        ],
+        "name": "b",
+        "object_id": 1179623,
+        "px": -4.1279988288879395,
+        "py": 2.536999225616455,
+        "pz": 0.0,
+        "rw": 1.0,
+        "rx": 0.0,
+        "ry": -0.0,
+        "rz": 0.0,
+        "sx": 1.0,
+        "sy": 1.0,
+        "sz": 1.0
+    },
+    {
+        "components": [
+            {
+                "name": "GMaterial",
+                "varsdata": [
+                    {
+                        "name": "FragmentPath",
+                        "type": "string",
+                        "value": "assets/shaders/mesh_fragment.glsl"
+                    },
+                    {
+                        "name": "FragmentPathDeferred",
+                        "type": "string",
+                        "value": "assets/shaders/deferred_shading_fragment.glsl"
+                    },
+                    {
+                        "name": "FragmentPathGbuffer",
+                        "type": "string",
+                        "value": "assets/shaders/g_buffer_fragment.glsl"
+                    },
+                    {
+                        "name": "VertexPath",
+                        "type": "string",
+                        "value": "assets/shaders/mesh_vertex.glsl"
+                    },
+                    {
+                        "name": "VertexPathDeferred",
+                        "type": "string",
+                        "value": "assets/shaders/deferred_shading_vertex.glsl"
+                    },
+                    {
+                        "name": "VertexPathGbuffer",
+                        "type": "string",
+                        "value": "assets/shaders/g_buffer_vertex.glsl"
+                    }
+                ]
+            },
+            {
+                "name": "ModelComponent",
+                "varsdata": [
+                    {
+                        "name": "ColorBase",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_Color.png"
+                    },
+                    {
+                        "name": "Model",
+                        "type": "string",
+                        "value": "assets/Box.fbx"
+                    },
+                    {
+                        "name": "NormalMap",
+                        "type": "string",
+                        "value": "assets/Ground054_1K-PNG_NormalGL.png"
+                    }
+                ]
+            },
+            {
+                "name": "GCollision",
+                "varsdata": null
+            },
+            {
+                "name": "GBody",
+                "varsdata": [
+                    {
+                        "name": "isStatic",
+                        "type": "bool",
+                        "value": false
+                    },
+                    {
+                        "name": "mass",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "useGravity",
+                        "type": "bool",
+                        "value": true
+                    }
+                ]
+            }
+        ],
+        "name": "c",
+        "object_id": 1875338,
+        "px": -2.837998390197754,
+        "py": 5.718998432159424,
+        "pz": 0.0,
+        "rw": 1.0,
+        "rx": 0.0,
+        "ry": -0.0,
+        "rz": 0.0,
+        "sx": 1.0,
+        "sy": 1.0,
+        "sz": 1.0
+    }
+]
