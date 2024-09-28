@@ -24,4 +24,9 @@ mkdir bin
 cd bin
 cmake ..
 msbuild .\Mantrax_Engine.sln
+
+cd debug
+
+.\Mantrax_Engine.exe
+
 pause

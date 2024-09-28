@@ -111,7 +111,7 @@ public:
         return value;
     }
 
-    static float Int(const std::string &name, int value)
+    static int Int(const std::string &name, int value)
     {
         ImGui::DragInt(EditorGUI::_labelPrefix(name.c_str()).c_str(), &value);
         return value;
