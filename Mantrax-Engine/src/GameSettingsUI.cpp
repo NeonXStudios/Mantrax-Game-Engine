@@ -24,5 +24,6 @@ void GameSettingsUI::draw(EditorConfigs *configs)
         configs->save_config();
     }
 
+    RenderMemoryInfo();
     ImGui::End();
 }

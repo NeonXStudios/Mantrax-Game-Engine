@@ -7,6 +7,7 @@ void GraphicsManagerUI::draw(EditorConfigs *p_configs)
     configs = p_configs;
     ImGui::Begin("Graphics Settings", &is_open);
     ImGui::BeginChild("Layers");
+
     const std::vector<int> layerOptions = {
         LAYER_0, LAYER_1, LAYER_2, LAYER_3, LAYER_4,
         LAYER_5, LAYER_6, LAYER_7, LAYER_8, LAYER_9,
@@ -24,6 +25,7 @@ void GraphicsManagerUI::draw(EditorConfigs *p_configs)
                 RenderPipeline::removeLayer(layer);
         }
     }
+
     ImGui::EndChild();
     ImGui::End();
 }

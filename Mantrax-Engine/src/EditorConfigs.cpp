@@ -4,6 +4,7 @@
 #include <VarVerify.h>
 #include <GarinIO.h>
 #include <RenderPipeline.h>
+#include <UIStyle.h>
 
 using namespace nlohmann;
 
@@ -17,6 +18,8 @@ void EditorConfigs::save_config()
 
     settings["settings_render"] = RenderPipeline::layers_to_render;
 
+    settings["engine_theme"] = current_theme;
+
     FileManager::write_file(current_proyect + "/GameSettings.data", settings.dump(4));
 }
 
@@ -27,6 +30,36 @@ void EditorConfigs::load_config()
     VarVerify::set_value_if_exists(settings, "current_scene", current_scene);
     VarVerify::set_value_if_exists(settings, "start_scene", start_scene);
     VarVerify::set_value_if_exists(settings, "camera_sens", camera_speed_sens);
+    VarVerify::set_value_if_exists(settings, "engine_theme", current_theme);
+
+    if (current_theme == "DefaultClassic")
+    {
+        UIStyle::SetStyleUI(DefaultClassic);
+    }
+    else if (current_theme == "DefaultWhite")
+    {
+        UIStyle::SetStyleUI(DefaultWhite);
+    }
+    else if (current_theme == "DefaultDark")
+    {
+        UIStyle::SetStyleUI(DefaultDark);
+    }
+    else if (current_theme == "Darkness")
+    {
+        UIStyle::SetStyleUI(Darkness);
+    }
+    else if (current_theme == "Dracula")
+    {
+        UIStyle::SetStyleUI(Dracula);
+    }
+    else if (current_theme == "RedDark")
+    {
+        UIStyle::SetStyleUI(RedDark);
+    }
+    else if (current_theme == "Dark")
+    {
+        UIStyle::SetStyleUI(Dark);
+    }
 
     if (SceneManager::GetOpenScene()->main_camera == nullptr)
     {

@@ -209,7 +209,6 @@ public:
 
         if (treeNodeOpen)
         {
-            ImGui::Separator();
             ImGui::Spacing();
             // ImGui::Text(componentName.c_str());
             float inputTextWidth = ImGui::GetContentRegionAvail().x - 60.0f;
@@ -217,7 +216,6 @@ public:
             ImGui::BeginGroup();
 
             ImGui::SameLine();
-            ImGui::Separator();
 
             func();
 
@@ -336,7 +334,6 @@ public:
                     }
                     else
                     {
-                        ImGui::Separator();
 
                         GCamera *cameraComponent = &owner->getComponent<GCamera>();
 
@@ -360,8 +357,6 @@ public:
                 {
                     ImVec2 windowSize = ImVec2(ImGui::GetContentRegionAvail().x, 150);
 
-                    ImGui::Separator();
-
                     GNoise *noiseComponent = &owner->getComponent<GNoise>();
 
                     if (noiseComponent != nullptr)
@@ -373,7 +368,6 @@ public:
                 }
             }
             ImGui::EndGroup();
-            ImGui::Separator();
             ImGui::TreePop();
         }
 

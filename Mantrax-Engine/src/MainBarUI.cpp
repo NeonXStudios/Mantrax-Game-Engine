@@ -223,30 +223,37 @@ void MainBarUI::draw(Entity *owner)
             if (ImGui::MenuItem("Default Classic"))
             {
                 UIStyle::SetStyleUI(DefaultClassic);
+                configs->current_theme = "DefaultClassic";
             }
             if (ImGui::MenuItem("Default Light"))
             {
                 UIStyle::SetStyleUI(DefaultWhite);
+                configs->current_theme = "DefaultWhite";
             }
             if (ImGui::MenuItem("Default Dark"))
             {
                 UIStyle::SetStyleUI(DefaultDark);
+                configs->current_theme = "DefaultDark";
             }
             if (ImGui::MenuItem("Darkness"))
             {
                 UIStyle::SetStyleUI(Darkness);
+                configs->current_theme = "Darkness";
             }
             if (ImGui::MenuItem("Dracula"))
             {
                 UIStyle::SetStyleUI(Dracula);
+                configs->current_theme = "Dracula";
             }
             if (ImGui::MenuItem("RedDark"))
             {
                 UIStyle::SetStyleUI(RedDark);
+                configs->current_theme = "RedDark";
             }
             if (ImGui::MenuItem("Dark"))
             {
                 UIStyle::SetStyleUI(Dark);
+                configs->current_theme = "Dark";
             }
             ImGui::EndMenu();
         }
