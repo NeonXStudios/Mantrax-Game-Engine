@@ -19,6 +19,52 @@ std::vector<fs::directory_entry> FileManager::get_files_noT(const std::string &p
     return files;
 }
 
+void FileManager::copy_directory_contents(const std::filesystem::path &source, const std::filesystem::path &destination)
+{
+    try
+    {
+        // Verificar si el directorio fuente existe y es un directorio
+        if (!std::filesystem::exists(source) || !std::filesystem::is_directory(source))
+        {
+            std::cerr << "El directorio fuente no existe o no es un directorio." << std::endl;
+            return;
+        }
+
+        // Crear el directorio de destino si no existe
+        if (!std::filesystem::exists(destination))
+        {
+            std::filesystem::create_directories(destination);
+        }
+
+        // Iterar a través del directorio fuente
+        for (const auto &entry : std::filesystem::directory_iterator(source))
+        {
+            const auto &path = entry.path();                      // Ruta del archivo o subdirectorio
+            auto destinationPath = destination / path.filename(); // Ruta de destino
+
+            if (std::filesystem::is_directory(path))
+            {
+                // Copiar subdirectorios recursivamente
+                copy_directory_contents(path, destinationPath);
+            }
+            else if (std::filesystem::is_regular_file(path))
+            {
+                // Copiar archivos
+                std::filesystem::copy_file(path, destinationPath, std::filesystem::copy_options::overwrite_existing);
+            }
+            else
+            {
+                std::cerr << "Tipo de archivo no soportado: " << path << std::endl;
+            }
+        }
+    }
+    catch (const std::filesystem::filesystem_error &e)
+    {
+        // Capturar y reportar cualquier error relacionado con el sistema de archivos
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+}
+
 std::string FileManager::read_file(const std::string &file_name)
 {
     try

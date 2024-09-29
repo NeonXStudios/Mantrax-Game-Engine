@@ -14,6 +14,7 @@
 #include "GScriptLua.h"
 #include "GAnimator.h"
 #include "GCamera.h"
+#include "GNoise.h"
 #include <Scene.h>
 #include <GAudio.h>
 #include <AudioManager.h>

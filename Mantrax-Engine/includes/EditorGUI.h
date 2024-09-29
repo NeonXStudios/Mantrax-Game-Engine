@@ -6,6 +6,7 @@
 #include <GarinUI.h>
 #include <IconsManager.h>
 #include <Core.h>
+#include <GarinComponents.h>
 
 using namespace std;
 
@@ -354,6 +355,22 @@ public:
                         }
                     }
                 }
+
+                if (typeid(component) == typeid(GNoise))
+                {
+                    ImVec2 windowSize = ImVec2(ImGui::GetContentRegionAvail().x, 150);
+
+                    ImGui::Separator();
+
+                    GNoise *noiseComponent = &owner->getComponent<GNoise>();
+
+                    if (noiseComponent != nullptr)
+                    {
+                        ImVec2 p = ImGui::GetCursorScreenPos();
+
+                        ImGui::Image((void *)(intptr_t)noiseComponent->perlin->get_texture(), windowSize, ImVec2(0, 0), ImVec2(1, 1));
+                    }
+                }
             }
             ImGui::EndGroup();
             ImGui::Separator();
@@ -444,7 +461,6 @@ public:
                     const char *receivedString = static_cast<const char *>(payload->Data);
                     std::string convertedPath = receivedString;
 
-                    std::cout << "String recibido: " << convertedPath << std::endl;
                     ImGui::EndDragDropTarget();
                     return convertedPath;
                 }
@@ -459,10 +475,16 @@ public:
     static std::string _labelPrefix(const char *const label)
     {
         float width = ImGui::CalcItemWidth();
-
         float x = ImGui::GetCursorPosX();
+
+        float textHeight = ImGui::GetTextLineHeight();
+        float itemHeight = ImGui::GetFrameHeight();
+        float y = ImGui::GetCursorPosY();
+        ImGui::SetCursorPosY(y + (itemHeight - textHeight) * 0.5f);
+
         ImGui::Text(label);
         ImGui::SameLine();
+
         ImGui::SetCursorPosX(x + width * 0.5f + ImGui::GetStyle().ItemInnerSpacing.x);
         ImGui::SetNextItemWidth(-1);
 

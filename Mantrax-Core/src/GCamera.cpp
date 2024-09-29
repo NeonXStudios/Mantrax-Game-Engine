@@ -38,6 +38,7 @@ void GCamera::update()
     a_camera->use_projection = GETVAR(Projection, bool);
 }
 
+
 void GCamera::clean()
 {
     auto &targets = RenderPipeline::camera_targets;

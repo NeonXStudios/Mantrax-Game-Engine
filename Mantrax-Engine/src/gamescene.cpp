@@ -6,6 +6,7 @@
 #include <SceneData.h>
 #include <RenderPipeline.h>
 #include <GarinIO.h>
+#include <PerlinGenerator.h>
 
 void gamescene::on_start()
 {

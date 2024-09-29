@@ -3,6 +3,7 @@
 #include <GarinEvents.h>
 #include <SceneData.h>
 #include <nlohmann/json.hpp>
+#include <FileManager.h>
 
 void EngineHubUI::draw()
 {
@@ -30,7 +31,7 @@ void EngineHubUI::draw()
         std::string rutaDocumentosStr(rutaDocumentos.begin(), rutaDocumentos.end());
 
         ImGui::PushID("EngineHubPanel");
-        ImGui::Begin("Proyects");
+        ImGui::Begin("Projects");
         nlohmann::json data = json::parse(FileManager::read_file(FileManager::get_execute_path() + "EngineData.json"));
         std::string engine_projects_path = (std::string)data["projects_path"];
         ListarCarpetas(stringToWString(engine_projects_path));
@@ -39,7 +40,7 @@ void EngineHubUI::draw()
         ImGui::Begin("Options");
 
         project_name = EditorGUI::InputText("", project_name);
-        if (ImGui::Button("Create Proyect", ImVec2(ImGui::GetWindowWidth() - 30, 50)))
+        if (ImGui::Button("Create Project", ImVec2(ImGui::GetWindowWidth() - 30, 50)))
         {
             nlohmann::json data = json::parse(FileManager::read_file(FileManager::get_execute_path() + "EngineData.json"));
             std::string engine_projects_path = (std::string)data["projects_path"] + "/" + project_name;
@@ -49,7 +50,7 @@ void EngineHubUI::draw()
             {
                 if (fs::create_directories(engine_projects_path))
                 {
-                    copy_directory_contents(proyect_assets, engine_projects_path);
+                    FileManager::copy_directory_contents(proyect_assets, engine_projects_path);
                     std::cout << "Directory created successfully." << std::endl;
                 }
                 else
@@ -95,6 +96,46 @@ void EngineHubUI::draw()
         }
 
         ImGui::End();
+
+        // Mostrar opciones del proyecto seleccionado
+        if (!selected_project.empty())
+        {
+            ImGui::Begin("Project Options");
+            ImGui::Text(("Project: " + selected_project).c_str());
+
+            // Botón para abrir el proyecto
+            if (ImGui::Button("Open Project", ImVec2(ImGui::GetWindowWidth() - 30, 50)))
+            {
+                configs->current_proyect = selected_project;
+                configs->project_select = true;
+
+                FileManager::game_path = configs->current_proyect;
+                configs->load_config();
+                SceneData::load_scene(configs->current_scene);
+            }
+
+            // Botón para eliminar el proyecto
+            if (ImGui::Button("Delete Project", ImVec2(ImGui::GetWindowWidth() - 30, 50)))
+            {
+                if (fs::remove_all(selected_project))
+                {
+                    std::cout << "Project deleted successfully." << std::endl;
+                    selected_project = ""; // Limpiar la selección después de eliminar
+                }
+                else
+                {
+                    std::cerr << "Failed to delete project." << std::endl;
+                }
+            }
+
+            // Botón para abrir la carpeta que contiene el proyecto
+            if (ImGui::Button("Open Containing Folder", ImVec2(ImGui::GetWindowWidth() - 30, 50)))
+            {
+                openFileExplorer(selected_project);
+            }
+
+            ImGui::End();
+        }
 
         ImGui::PopID();
     }
@@ -144,7 +185,7 @@ void EngineHubUI::ReplaceBackslashWithSlash(std::wstring &str)
     while ((pos = str.find(L'\\', pos)) != std::wstring::npos)
     {
         str.replace(pos, 1, L"/");
-        pos += 1; // Moverse más allá del carácter reemplazado
+        pos += 1;
     }
 }
 
@@ -161,22 +202,15 @@ void EngineHubUI::ListarCarpetas(const std::wstring &ruta)
                 if (ImGui::Button(nombreCarpeta.c_str(), ImVec2(ImGui::GetWindowWidth() - 30, 50)))
                 {
                     std::string path = entry.path().string();
-
                     std::replace(path.begin(), path.end(), '\\', '/');
 
-                    configs->current_proyect = path;
-                    configs->project_select = true;
-
-                    FileManager::game_path = configs->current_proyect;
-                    configs->load_config();
-                    SceneData::load_scene(configs->current_scene);
+                    selected_project = path; // Guardar el proyecto seleccionado
                 }
             }
         }
     }
     catch (const std::filesystem::filesystem_error &e)
     {
-        // Capturar y reportar el error
         std::cerr << "Error al acceder al directorio: " << e.what() << std::endl;
     }
 }
@@ -213,68 +247,37 @@ std::string EngineHubUI::wstringToString(const std::wstring &wstr)
 
 std::string EngineHubUI::openFolderBrowser()
 {
-    BROWSEINFO bi = {0};
-    bi.lpszTitle = "Select a folder";
-    LPITEMIDLIST pidl = SHBrowseForFolder(&bi);
-    if (pidl != 0)
+    IFileDialog *pfd = NULL;
+    HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pfd));
+    std::string selectedFolderPath = "";
+
+    if (SUCCEEDED(hr))
     {
-        wchar_t path[MAX_PATH];
-        if (SHGetPathFromIDListW(pidl, path))
+        DWORD dwOptions;
+        pfd->GetOptions(&dwOptions);
+        pfd->SetOptions(dwOptions | FOS_PICKFOLDERS);
+
+        hr = pfd->Show(NULL);
+        if (SUCCEEDED(hr))
         {
-            std::wstring wfolderPath = path;
-            std::string folderPath = wstringToString(wfolderPath);
-
-            CoTaskMemFree(pidl);
-
-            return folderPath;
-        }
-        CoTaskMemFree(pidl);
-    }
-    return "";
-}
-
-void EngineHubUI::copy_directory_contents(const fs::path &source, const fs::path &destination)
-{
-    try
-    {
-        // Check if the source directory exists
-        if (!fs::exists(source) || !fs::is_directory(source))
-        {
-            std::cerr << "Source directory does not exist or is not a directory." << std::endl;
-            return;
-        }
-
-        // Create the destination directory if it does not exist
-        if (!fs::exists(destination))
-        {
-            fs::create_directories(destination);
-        }
-
-        // Iterate through the source directory
-        for (const auto &entry : fs::directory_iterator(source))
-        {
-            const auto &path = entry.path();
-            auto destinationPath = destination / path.filename();
-
-            if (fs::is_directory(path))
+            IShellItem *psiResult;
+            hr = pfd->GetResult(&psiResult);
+            if (SUCCEEDED(hr))
             {
-                // Recursively copy subdirectories
-                fs::create_directories(destinationPath);
-                copy_directory_contents(path, destinationPath);
-            }
-            else if (fs::is_regular_file(path))
-            {
-                // Copy files
-                fs::copy_file(path, destinationPath, fs::copy_options::overwrite_existing);
-            }
-            else
-            {
-                std::cerr << "Unsupported file type: " << path << std::endl;
+                PWSTR pszFilePath = NULL;
+                hr = psiResult->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+                if (SUCCEEDED(hr))
+                {
+                    selectedFolderPath = wstringToString(std::wstring(pszFilePath));
+                    CoTaskMemFree(pszFilePath);
+                }
+
+                psiResult->Release();
             }
         }
+        pfd->Release();
     }
-    catch (fs::filesystem_error &e)
-    {
-        std::cerr << "Error: " << e.what() << std::endl;
-    }
+
+    return selectedFolderPath;
 }

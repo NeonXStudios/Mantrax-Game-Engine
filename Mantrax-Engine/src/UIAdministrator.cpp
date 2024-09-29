@@ -13,4 +13,5 @@ void UIAdministrator::draw_ui(Entity *owner)
     ComponentsDrawer::updateUI<GScriptLua>(owner, 7, nullptr);
     ComponentsDrawer::updateUI<GAudio>(owner, 7, nullptr);
     ComponentsDrawer::updateUI<GCamera>(owner, 8, nullptr);
+    ComponentsDrawer::updateUI<GNoise>(owner, 9, nullptr);
 }

@@ -1,10 +1,14 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "F:\\GITHUB\\Garin\\garin-hub\\",
+  "WorkspaceRootPath": "F:\\GITHUB\\Garin\\Mantrax-Hub\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{AF89F5E0-BE94-427F-9F37-B8D2996DE2FF}|garin-hub.csproj|f:\\github\\garin\\garin-hub\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{AF89F5E0-BE94-427F-9F37-B8D2996DE2FF}|garin-hub.csproj|f:\\github\\garin\\mantrax-hub\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{AF89F5E0-BE94-427F-9F37-B8D2996DE2FF}|garin-hub.csproj|solutionrelative:form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AF89F5E0-BE94-427F-9F37-B8D2996DE2FF}|garin-hub.csproj|f:\\github\\garin\\mantrax-hub\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AF89F5E0-BE94-427F-9F37-B8D2996DE2FF}|garin-hub.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -20,13 +24,26 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Form1.cs [Dise\u00F1o]",
-              "DocumentMoniker": "F:\\GITHUB\\Garin\\garin-hub\\Form1.cs",
+              "DocumentMoniker": "F:\\GITHUB\\Garin\\Mantrax-Hub\\Form1.cs",
               "RelativeDocumentMoniker": "Form1.cs",
-              "ToolTip": "F:\\GITHUB\\Garin\\garin-hub\\Form1.cs [Dise\u00F1o]",
-              "RelativeToolTip": "Form1.cs [Dise\u00F1o]",
+              "ToolTip": "F:\\GITHUB\\Garin\\Mantrax-Hub\\Form1.cs [Dise\u00F1o]*",
+              "RelativeToolTip": "Form1.cs [Dise\u00F1o]*",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-14T04:10:32.797Z",
               "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "F:\\GITHUB\\Garin\\Mantrax-Hub\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "F:\\GITHUB\\Garin\\Mantrax-Hub\\Program.cs*",
+              "RelativeToolTip": "Program.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-29T00:56:32.265Z",
+              "EditorCaption": ""
             }
           ]
         }

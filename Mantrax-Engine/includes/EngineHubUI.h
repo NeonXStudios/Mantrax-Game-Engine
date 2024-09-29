@@ -14,6 +14,7 @@ class GARINLIBS_API EngineHubUI : public UIComponent
 public:
     EditorConfigs *configs;
     std::string project_name;
+    std::string selected_project;
 
     void draw() override;
     void ListarCarpetas(const std::wstring &ruta);
@@ -25,6 +26,7 @@ public:
     std::wstring charToWChar(const char *str);
     std::string wstringToString(const std::wstring &wstr);
     std::string replaceBackslashWithSlashstr(std::string &str);
+    void ListarCarpetasConIconos(const std::wstring &ruta);
 
     void copy_directory_contents(const fs::path &source, const fs::path &destination);
 };

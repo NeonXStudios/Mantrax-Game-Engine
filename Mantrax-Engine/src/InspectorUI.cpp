@@ -22,10 +22,12 @@ void InspectorUI::draw(Entity *select_obj)
             }
         }
 
+        select_obj->ObjectTag = EditorGUI::InputText("Tag", select_obj->ObjectTag);
+        ImGui::SameLine();
+
         if (ImGui::Combo("Layer", &currentLayer, layerNames.data(), layerNames.size()))
         {
             select_obj->Layer = 1 << currentLayer;
-            std::cout << "Changed layer to: " << select_obj->Layer << std::endl;
         }
 
         ImGui::Separator();
@@ -105,6 +107,12 @@ void InspectorUI::draw(Entity *select_obj)
             if (ImGui::Button("Audio Source", ImVec2(buttonWidth, 20)))
             {
                 select_obj->addComponent<GAudio>().init();
+                ImGui::CloseCurrentPopup();
+            }
+
+            if (ImGui::Button("Perlin Component", ImVec2(buttonWidth, 20)))
+            {
+                select_obj->addComponent<GNoise>().init();
                 ImGui::CloseCurrentPopup();
             }
 

@@ -26,6 +26,7 @@ public:
     static std::string get_execute_path();
     static std::string get_project_path();
     static bool check_file_if_exist(const std::string &path);
+    static void copy_directory_contents(const std::filesystem::path &source, const std::filesystem::path &destination);
 
     // EXECUTE GAME PATH
     static std::string game_path;
