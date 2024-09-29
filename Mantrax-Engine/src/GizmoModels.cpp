@@ -3,15 +3,15 @@
 
 void GizmoModels::init()
 {
-    camera_gizmo = new Model("packages/GizmoModels/camera.fbx");
+    // camera_gizmo = new Model("packages/GizmoModels/camera.fbx");
 
-    CustomShader shader = CustomShaderParser::ParseShaderFile("packages/Shaders/Standard.slab");
-    shader.SaveToVariables();
-    // std::string vertexpath = FileManager::get_project_path() + GETVAR(VertexPath, std::string);
-    // std::string fragpath = FileManager::get_project_path() + GETVAR(FragmentPath, std::string);
-    // p_shader = new Shader(vertexpath.c_str(), fragpath.c_str());
+    // CustomShader shader = CustomShaderParser::ParseShaderFile("packages/Shaders/Standard.slab");
+    // shader.SaveToVariables();
+    // // std::string vertexpath = FileManager::get_project_path() + GETVAR(VertexPath, std::string);
+    // // std::string fragpath = FileManager::get_project_path() + GETVAR(FragmentPath, std::string);
+    // // p_shader = new Shader(vertexpath.c_str(), fragpath.c_str());
 
-    p_shader = new Shader(shader.VERTEX, shader.FRAGMENT);
+    // p_shader = new Shader(shader.VERTEX, shader.FRAGMENT);
 }
 
 void GizmoModels::draw()

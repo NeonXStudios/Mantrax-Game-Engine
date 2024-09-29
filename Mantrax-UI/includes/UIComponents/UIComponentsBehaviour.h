@@ -44,12 +44,12 @@ public:
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
 
-        std::string slab_ui = "assets/shaders/ui.slab";
+        // std::string slab_ui = "assets/shaders/ui.slab";
 
-        CustomShader shader = CustomShaderParser::ParseShaderFile(slab_ui);
-        shader.SaveToVariables();
+        // CustomShader shader = CustomShaderParser::ParseShaderFile(slab_ui);
+        // shader.SaveToVariables();
 
-        shaderpr = new Shader(shader.VERTEX, shader.FRAGMENT);
+        shaderpr = new Shader("", "");
     }
 
     void draw()

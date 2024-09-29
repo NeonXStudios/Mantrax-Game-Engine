@@ -2,9 +2,9 @@
 
 void GMaterial::defines()
 {
-    // GVAR(VertexPath, "assets/shaders/mesh_vertex.glsl", std::string);
-    // GVAR(FragmentPath, "assets/shaders/mesh_fragment.glsl", std::string);
-    GVAR(SlabShader, "assets/shaders/Standard.slab", std::string);
+    GVAR(VertexPath, "assets/shaders/mesh_vertex.glsl", std::string);
+    GVAR(FragmentPath, "assets/shaders/mesh_fragment.glsl", std::string);
+    // GVAR(SlabShader, "assets/shaders/Standard.slab", std::string);
 
     // GVAR(VertexPathGbuffer, "assets/shaders/g_buffer_vertex.glsl", std::string);
     // GVAR(FragmentPathGbuffer, "assets/shaders/g_buffer_fragment.glsl", std::string);
@@ -17,11 +17,11 @@ void GMaterial::init()
 {
     CustomShader shader = CustomShaderParser::ParseShaderFile(FileManager::get_project_path() + GETVAR(SlabShader, std::string));
     shader.SaveToVariables();
-    // std::string vertexpath = FileManager::get_project_path() + GETVAR(VertexPath, std::string);
-    // std::string fragpath = FileManager::get_project_path() + GETVAR(FragmentPath, std::string);
-    // p_shader = new Shader(vertexpath.c_str(), fragpath.c_str());
+    std::string vertexpath = FileManager::get_project_path() + GETVAR(VertexPath, std::string);
+    std::string fragpath = FileManager::get_project_path() + GETVAR(FragmentPath, std::string);
+    p_shader = new Shader(vertexpath.c_str(), fragpath.c_str());
 
-    p_shader = new Shader(shader.VERTEX, shader.FRAGMENT);
+    // p_shader = new Shader(shader.VERTEX, shader.FRAGMENT);
 
     // p_gbuffer_shader = new Shader(GETVAR(VertexPathGbuffer, std::string).c_str(), GETVAR(FragmentPathGbuffer, std::string).c_str());
     // p_deferred_shader = new Shader(GETVAR(VertexPathDeferred, std::string).c_str(), GETVAR(FragmentPathDeferred, std::string).c_str());
