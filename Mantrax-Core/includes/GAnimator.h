@@ -2,6 +2,7 @@
 #include <GarinNatives.h>
 #include <GarinComponents.h>
 #include <GarinBehaviours.h>
+#include <TextureManager.h>
 #include "Core.h"
 
 class GARINLIBS_API GAnimator : public Component
@@ -10,11 +11,23 @@ public:
     struct Frame
     {
         std::string imagePath;
-        unsigned int textureId;
+        unsigned int textureId = -1;
         float duration;
+        TextureManager *texture_loaded = nullptr;
+
+    public:
+        void process_texture()
+        {
+            if (textureId == -1)
+            {
+                std::string texture_path = FileManager::get_game_path() + "assets/" + imagePath;
+                texture_loaded = new TextureManager(texture_path);
+
+                textureId = texture_loaded->get_texture();
+            }
+        }
     };
 
-    // Estructura para representar una animación
     struct Animation
     {
         std::string name;

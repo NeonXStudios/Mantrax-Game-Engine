@@ -1,4 +1,5 @@
 #include "../includes/AnimatorUI.h"
+#include <nlohmann/json.hpp>
 
 void AnimatorUI::draw()
 {
@@ -9,6 +10,67 @@ void AnimatorUI::draw()
             ImGui::End();
             return;
         }
+
+        if (ImGui::Button("Save"))
+        {
+            nlohmann::json animations_tree;
+            nlohmann::json animations_data;
+
+            animations_tree["animator_name"] = animator->_name;
+
+            for (int i = 0; i < animator->animations.size(); i++)
+            {
+                const auto &anim = animator->animations[i];
+
+                if (anim.name.empty())
+                {
+                    std::cerr << "Error: Animation name is empty." << std::endl;
+                    continue;
+                }
+
+                nlohmann::json animation_info;
+                animation_info["name_file"] = anim.name;
+                animation_info["loop"] = anim.loop;
+
+                nlohmann::json animation_frames;
+
+                for (int e = 0; e < anim.frames.size(); e++)
+                {
+                    const auto &frame = anim.frames[e];
+
+                    if (frame.imagePath.empty())
+                    {
+                        std::cerr << "Error: Frame image path is empty." << std::endl;
+                        continue;
+                    }
+
+                    nlohmann::json frame_data;
+                    frame_data["file_path"] = frame.imagePath;
+                    frame_data["frame_duration"] = frame.duration;
+
+                    animation_frames.push_back(frame_data);
+                }
+
+                animation_info["animations_frames"] = animation_frames;
+
+                animations_data.push_back(animation_info);
+            }
+
+            animations_tree["animations_data"] = animations_data;
+
+            std::string file_name = FileManager::get_project_path() + "assets/" + animator->_name + ".animation";
+            if (!file_name.empty())
+            {
+                FileManager::write_file(file_name, animations_tree.dump(4));
+                std::cout << "Animation data saved to: " << file_name << std::endl;
+            }
+            else
+            {
+                std::cerr << "Error: Invalid file name." << std::endl;
+            }
+        }
+
+        animator->_name = EditorGUI::InputText("Animator Name", animator->_name);
 
         static char animationName[128] = "";
         static char imagePath[128] = "";
@@ -23,6 +85,7 @@ void AnimatorUI::draw()
 
             if (ImGui::Button("Add Animation") && strlen(animationName) > 0)
             {
+                std::cout << "Adding animation" << std::endl;
                 animator->animations.push_back({animationName, {}, frameDuration, loop});
                 strcpy(animationName, "");
                 frameDuration = 0.1f;
@@ -75,7 +138,7 @@ void AnimatorUI::draw()
                     if (ImGui::Button("Delete Animation"))
                     {
                         animator->animations.erase(animator->animations.begin() + i);
-                        --i; // Adjust index to account for the removed element
+                        --i;
                     }
 
                     ImGui::Separator();
@@ -118,9 +181,13 @@ void AnimatorUI::draw()
             ImGui::InputFloat("Frame Duration", &individualFrameDuration);
             if (ImGui::Button("Add Frame") && strlen(imagePath) > 0)
             {
-                // LoadTexture(imagePath)
                 unsigned int textureId = 0;
-                animator->animations.back().frames.push_back({imagePath, textureId, individualFrameDuration});
+                GAnimator::Frame *new_frame = new GAnimator::Frame();
+                new_frame->imagePath = imagePath;
+                new_frame->duration = individualFrameDuration;
+                new_frame->process_texture();
+
+                animator->animations.back().frames.push_back(*new_frame);
                 strcpy(imagePath, "");
                 individualFrameDuration = 0.1f;
             }

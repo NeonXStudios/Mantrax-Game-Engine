@@ -17,7 +17,7 @@ class GARINLIBS_API ComponentsDrawer
 {
 public:
     template <typename T>
-    static void updateUI(Entity *owner, int id, AComponent *cmp)
+    static void draw_ui(Entity *owner, int id, AComponent *cmp)
     {
         if (owner->hasComponent<T>())
         {

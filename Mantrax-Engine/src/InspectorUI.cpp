@@ -23,7 +23,6 @@ void InspectorUI::draw(Entity *select_obj)
         }
 
         select_obj->ObjectTag = EditorGUI::InputText("Tag", select_obj->ObjectTag);
-        ImGui::SameLine();
 
         if (ImGui::Combo("Layer", &currentLayer, layerNames.data(), layerNames.size()))
         {
@@ -113,6 +112,12 @@ void InspectorUI::draw(Entity *select_obj)
             if (ImGui::Button("Perlin Component", ImVec2(buttonWidth, 20)))
             {
                 select_obj->addComponent<GNoise>().init();
+                ImGui::CloseCurrentPopup();
+            }
+
+            if (ImGui::Button("Animator", ImVec2(buttonWidth, 20)))
+            {
+                select_obj->addComponent<GAnimator>().init();
                 ImGui::CloseCurrentPopup();
             }
 

@@ -323,50 +323,109 @@ public:
                     EditorGUI::DrawIcon(IconsManager::INT());
                     cpm->variableMap[key] = EditorGUI::Toggle(key, val);
                 }
+            }
 
-                if (typeid(component) == typeid(GCamera))
+            if (typeid(component) == typeid(GCamera))
+            {
+                ImVec2 windowSize = ImVec2(ImGui::GetContentRegionAvail().x, 150);
+
+                if (ImGui::Button("Remove Camera", ImVec2(windowSize.x, 20)))
                 {
-                    ImVec2 windowSize = ImVec2(ImGui::GetContentRegionAvail().x, 150);
+                    owner->removeComponent<GCamera>();
+                }
+                else
+                {
 
-                    if (ImGui::Button("Remove Camera", ImVec2(windowSize.x, 20)))
+                    GCamera *cameraComponent = &owner->getComponent<GCamera>();
+
+                    if (cameraComponent != nullptr)
                     {
-                        owner->removeComponent<GCamera>();
-                    }
-                    else
-                    {
-
-                        GCamera *cameraComponent = &owner->getComponent<GCamera>();
-
-                        if (cameraComponent != nullptr)
+                        if (cameraComponent->a_camera->target_render != nullptr)
                         {
-                            if (cameraComponent->a_camera->target_render != nullptr)
-                            {
 
-                                GLuint textureID = cameraComponent->a_camera->target_render->get_render();
+                            GLuint textureID = cameraComponent->a_camera->target_render->get_render();
 
-                                ImVec2 p = ImGui::GetCursorScreenPos();
+                            ImVec2 p = ImGui::GetCursorScreenPos();
 
-                                ImGui::Image((void *)(intptr_t)textureID, windowSize, ImVec2(0, 1), ImVec2(1, 0));
-                                cameraComponent->update();
-                            }
+                            ImGui::Image((void *)(intptr_t)textureID, windowSize, ImVec2(0, 1), ImVec2(1, 0));
+                            cameraComponent->update();
                         }
                     }
                 }
+            }
 
-                if (typeid(component) == typeid(GNoise))
+            if (typeid(component) == typeid(GNoise))
+            {
+                ImVec2 windowSize = ImVec2(ImGui::GetContentRegionAvail().x, 150);
+
+                GNoise *noiseComponent = &owner->getComponent<GNoise>();
+
+                if (noiseComponent != nullptr)
                 {
-                    ImVec2 windowSize = ImVec2(ImGui::GetContentRegionAvail().x, 150);
-
-                    GNoise *noiseComponent = &owner->getComponent<GNoise>();
-
-                    if (noiseComponent != nullptr)
-                    {
-                        ImVec2 p = ImGui::GetCursorScreenPos();
-
-                        ImGui::Image((void *)(intptr_t)noiseComponent->perlin->get_texture(), windowSize, ImVec2(0, 0), ImVec2(1, 1));
-                    }
+                    ImVec2 p = ImGui::GetCursorScreenPos();
+                    ImGui::Image((void *)(intptr_t)noiseComponent->perlin->get_texture(), windowSize, ImVec2(0, 0), ImVec2(1, 1));
+                    std::cout << "Drawing perlin" << std::endl;
                 }
             }
+
+            // if (typeid(component) == typeid(GAnimator))
+            // {
+            //     GAnimator &animator = owner->getComponent<GAnimator>();
+
+            //     ImGui::Begin("Animation Graph");
+
+            //     std::cout << "Drawing animator graph" << std::endl;
+
+            //     for (size_t i = 0; i < animator.animations.size(); ++i)
+            //     {
+            //         GAnimator::Animation &anim = animator.animations[i];
+
+            //         if (ImGui::TreeNode(anim.name.c_str()))
+            //         {
+            //             char animNameBuffer[128];
+            //             strcpy(animNameBuffer, anim.name.c_str());
+            //             ImGui::InputText("Animation Name", animNameBuffer, sizeof(animNameBuffer));
+            //             anim.name = animNameBuffer;
+
+            //             ImGui::DragFloat("Frame Duration", &anim.frameDuration, 0.01f, 0.01f, 10.0f);
+
+            //             ImGui::Checkbox("Loop", &anim.loop);
+
+            //             for (size_t j = 0; j < anim.frames.size(); ++j)
+            //             {
+            //                 GAnimator::Frame &frame = anim.frames[j];
+
+            //                 if (ImGui::TreeNode((std::string("Frame ") + std::to_string(j)).c_str()))
+            //                 {
+            //                     char imagePathBuffer[128];
+            //                     strcpy(imagePathBuffer, frame.imagePath.c_str());
+            //                     ImGui::InputText("Image Path", imagePathBuffer, sizeof(imagePathBuffer));
+            //                     frame.imagePath = imagePathBuffer;
+
+            //                     ImGui::InputInt("Texture ID", (int *)&frame.textureId);
+
+            //                     ImGui::DragFloat("Frame Duration", &frame.duration, 0.01f, 0.01f, 10.0f);
+
+            //                     ImGui::TreePop();
+            //                 }
+            //             }
+
+            //             if (ImGui::Button("Add Frame"))
+            //             {
+            //                 anim.frames.push_back(GAnimator::Frame{"", 0, 0.1f});
+            //             }
+
+            //             ImGui::TreePop();
+            //         }
+            //     }
+
+            //     if (ImGui::Button("Add Animation"))
+            //     {
+            //         animator.animations.push_back(GAnimator::Animation{"New Animation", {}, 0.1f, false});
+            //     }
+            //     ImGui::End();
+            // }
+
             ImGui::EndGroup();
             ImGui::TreePop();
         }
