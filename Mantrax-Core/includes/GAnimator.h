@@ -8,14 +8,17 @@
 class GARINLIBS_API GAnimator : public Component
 {
 public:
+    bool pause;
+
     struct Frame
     {
         std::string imagePath;
         unsigned int textureId = -1;
         float duration;
-        TextureManager *texture_loaded = nullptr;
 
     public:
+        TextureManager *texture_loaded = nullptr;
+
         void process_texture()
         {
             if (textureId == -1)
@@ -24,6 +27,8 @@ public:
                 texture_loaded = new TextureManager(texture_path);
 
                 textureId = texture_loaded->get_texture();
+
+                texture_loaded->active(GL_TEXTURE0);
             }
         }
     };
@@ -42,4 +47,5 @@ public:
     void init() override;
     void update() override;
     void clean() override;
+    void next_frame();
 };

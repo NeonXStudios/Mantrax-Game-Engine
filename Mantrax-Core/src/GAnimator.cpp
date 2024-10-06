@@ -3,6 +3,7 @@
 void GAnimator::defines()
 {
     GVAR(AnimatorPath, "SETUP ANIMATOR PATH", std::string);
+    GVAR(SelectState, "NONE", std::string);
 }
 
 void GAnimator::init()
@@ -57,6 +58,11 @@ void GAnimator::init()
 
         std::cout << "Animator data loaded successfully from " << load_path << std::endl;
     }
+
+    std::thread t([this]()
+                  { next_frame(); });
+
+    t.detach();
 }
 
 void GAnimator::update()
@@ -65,4 +71,45 @@ void GAnimator::update()
 
 void GAnimator::clean()
 {
+    pause = true;
+}
+
+void GAnimator::next_frame()
+{
+    if (!pause)
+    {
+        int current_frame = 0;
+        float wait_time = 0.1f;
+
+        while (animations.size() > 0)
+        {
+
+            for (Animation &stateFound : animations)
+            {
+
+                if (stateFound.name == GETVAR(SelectState, std::string))
+                {
+                    if (entity->hasComponent<ModelComponent>() && stateFound.frames.size() > 0)
+                    {
+                        entity->getComponent<ModelComponent>().texture_sampler->set_texture(stateFound.frames[current_frame].texture_loaded->get_texture());
+                        wait_time = stateFound.frames[current_frame].duration;
+                    }
+                }
+
+                current_frame++;
+
+                if (current_frame >= stateFound.frames.size())
+                {
+                    current_frame = 0;
+                }
+            }
+
+            if (wait_time <= 0.0f)
+            {
+                wait_time = 0.1;
+            }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<long long>(wait_time * 1000)));
+        }
+    }
 }

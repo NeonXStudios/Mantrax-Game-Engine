@@ -21,6 +21,7 @@ void UIAdministrator::draw_ui(Entity *owner)
     {
         if (ImGui::Button("Open Animator Editor"))
         {
+            gamescene::getInstance().uieditor->animatorui->is_open = true;
             gamescene::getInstance().uieditor->animatorui->animator = &owner->getComponent<GAnimator>();
         }
     }

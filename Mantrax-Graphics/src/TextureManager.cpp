@@ -9,13 +9,11 @@ TextureManager::TextureManager(string texture_path)
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_2D, textureID);
 
-    // Configurar opciones de textura
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    // Cargar y generar la textura
     int width, height, nrChannels;
     unsigned char *data = stbi_load(texture_path.c_str(), &width, &height, &nrChannels, 0);
     if (data)
@@ -45,7 +43,7 @@ void TextureManager::use_texture(GLuint ID)
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_maked);
-    glUniform1i(glGetUniformLocation(ID, "texture_diffuse"), 0);
+    glUniform1i(glGetUniformLocation(ID, "_MainTexture"), 0);
 }
 
 void TextureManager::active(int texture_index)
