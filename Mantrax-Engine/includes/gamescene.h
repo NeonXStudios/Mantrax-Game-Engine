@@ -18,6 +18,7 @@
 #include <mutex>
 #include <sstream>
 #include <AssetsRegistry.h>
+#include <EditorGUI.h>
 
 class Drawer;
 class Camera;
@@ -73,6 +74,7 @@ public:
 
     float cameraYaw = 0.0f;
     float cameraPitch = 0.0f;
+
 
     void ReadBuffer(std::stringstream &buffer, std::string &target)
     {

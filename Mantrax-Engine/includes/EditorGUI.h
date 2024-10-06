@@ -13,13 +13,20 @@ using namespace std;
 class GARINLIBS_API EditorGUI
 {
 public:
-    static string InputText(string Name, string value)
+    static std::string InputText(const std::string &Name, const std::string &value, ImVec2 size = ImVec2(200, 20))
     {
         char GetName[128];
         strcpy_s(GetName, value.c_str());
-        ImGui::InputText(EditorGUI::_labelPrefix(Name.c_str()).c_str(), GetName, 50000, ImGuiInputTextFlags_AutoSelectAll);
 
-        return ((std::string)GetName);
+        ImGui::SetNextItemWidth(size.x);
+
+        ImGui::InputTextMultiline(
+            EditorGUI::_labelPrefix(Name.c_str()).c_str(),
+            GetName, sizeof(GetName),
+            ImVec2(size.x, size.y),
+            ImGuiInputTextFlags_AutoSelectAll);
+
+        return std::string(GetName);
     }
 
     static std::string InputTextWithRoute(const std::string &Name, std::string value)

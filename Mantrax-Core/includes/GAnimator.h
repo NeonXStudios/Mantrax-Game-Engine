@@ -23,7 +23,7 @@ public:
         {
             if (textureId == -1)
             {
-                std::string texture_path = FileManager::get_game_path() + "assets/" + imagePath;
+                std::string texture_path = FileManager::get_game_path() + imagePath;
                 texture_loaded = new TextureManager(texture_path);
 
                 textureId = texture_loaded->get_texture();

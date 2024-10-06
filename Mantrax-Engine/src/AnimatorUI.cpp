@@ -1,5 +1,6 @@
 #include "../includes/AnimatorUI.h"
 #include <nlohmann/json.hpp>
+#include <GarinIO.h>
 
 void AnimatorUI::draw()
 {
@@ -177,6 +178,14 @@ void AnimatorUI::draw()
         {
             ImGui::Text("Add Frame to Animation: %s", animator->animations.back().name.c_str());
             ImGui::InputText("Image Path", imagePath, IM_ARRAYSIZE(imagePath));
+
+            std::optional<std::string> get_value = EditorGUI::Drag_Objetive("IMAGECLASS");
+
+            if (get_value.has_value())
+            {
+                strcpy_s(imagePath, get_value.value().c_str());
+            }
+
             static float individualFrameDuration = 0.1f;
             ImGui::InputFloat("Frame Duration", &individualFrameDuration);
             if (ImGui::Button("Add Frame") && strlen(imagePath) > 0)

@@ -13,7 +13,7 @@ void EngineHubUI::draw()
 
         if (!rutaDocumentos.empty())
         {
-            rutaDocumentos += L"/GarinProjects";
+            rutaDocumentos += L"/MantraxProyects";
         }
         else
         {
