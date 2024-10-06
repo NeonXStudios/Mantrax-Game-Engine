@@ -5,6 +5,7 @@ project(${project_name})
 if (MSVC)
     add_compile_options(/w)
     add_compile_options(/wd4251)
+    add_compile_options(/bigobj)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
 endif()
 

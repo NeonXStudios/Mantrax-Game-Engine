@@ -24,6 +24,7 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
                                         "GetCharacter", &Entity::getComponent<GCharacter>,
                                         "GetModel", &Entity::getComponent<ModelComponent>,
                                         "GetBody", &Entity::getComponent<GBody>,
+                                        "GetAnimator", &Entity::getComponent<GAnimator>,
                                         "GetCharacterController", &Entity::getComponent<GCharacter>);
 
     luaParent->lua.new_usertype<GScriptLua>("GScriptLua",
@@ -32,6 +33,10 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
 
     luaParent->lua["FindScript"] = [](std::string script_name)
     { return find_script(script_name); };
+
+    luaParent->lua.new_usertype<GAnimator>("Animator",
+                                           "CurrentState", &GAnimator::current_state,
+                                           "SetState", &GAnimator::set_state);
 
     luaParent->lua.new_usertype<TransformComponent>("Transform",
                                                     "position", &TransformComponent::Position,
@@ -46,9 +51,6 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
                                               "ChangeScene", &SceneManager::LoadScene,
                                               "newEntity", &SceneManager::NewEntity,
                                               "Destroy", &SceneManager::Destroy);
-
-    // luaParent->lua.new_usertype<GCaster>("GCast",
-    //                                      "Cast", &GCaster::LineCast);
 
     luaParent->lua.new_usertype<GCaster>("GCaster",
                                          "LineCast", [](glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length, GCastHit &hit, unsigned int layerMask)

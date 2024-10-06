@@ -59,19 +59,32 @@ void GAnimator::init()
         std::cout << "Animator data loaded successfully from " << load_path << std::endl;
     }
 
-    std::thread t([this]()
-                  { next_frame(); });
-
-    t.detach();
+    animator_thread = std::thread([this]()
+                                  { next_frame(); });
 }
 
 void GAnimator::update()
 {
 }
 
+void GAnimator::set_state(std::string state_name)
+{
+    variableMap["SelectState"] = state_name;
+}
+
+std::string GAnimator::current_state()
+{
+    return std::any_cast<std::string>(variableMap["SelectState"]);
+}
+
 void GAnimator::clean()
 {
     pause = true;
+
+    if (animator_thread.joinable())
+    {
+        animator_thread.join();
+    }
 }
 
 void GAnimator::next_frame()
@@ -81,27 +94,38 @@ void GAnimator::next_frame()
         int current_frame = 0;
         float wait_time = 0.1f;
 
-        while (animations.size() > 0)
+        while (!pause)
         {
+            bool found_state = false;
 
             for (Animation &stateFound : animations)
             {
-
                 if (stateFound.name == GETVAR(SelectState, std::string))
                 {
+                    found_state = true;
+
                     if (entity->hasComponent<ModelComponent>() && stateFound.frames.size() > 0)
                     {
-                        entity->getComponent<ModelComponent>().texture_sampler->set_texture(stateFound.frames[current_frame].texture_loaded->get_texture());
-                        wait_time = stateFound.frames[current_frame].duration;
+                        if (current_frame < stateFound.frames.size())
+                        {
+                            entity->getComponent<ModelComponent>().texture_sampler->set_texture(stateFound.frames[current_frame].texture_loaded->get_texture());
+                            wait_time = stateFound.frames[current_frame].duration;
+                        }
+
+                        current_frame++;
+
+                        if (current_frame >= stateFound.frames.size())
+                        {
+                            current_frame = 0;
+                        }
                     }
                 }
+            }
 
-                current_frame++;
-
-                if (current_frame >= stateFound.frames.size())
-                {
-                    current_frame = 0;
-                }
+            if (!found_state)
+            {
+                std::cerr << "State not found: " << GETVAR(SelectState, std::string) << std::endl;
+                break;
             }
 
             if (wait_time <= 0.0f)

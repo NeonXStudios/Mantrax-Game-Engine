@@ -8,8 +8,6 @@
 class GARINLIBS_API GAnimator : public Component
 {
 public:
-    bool pause;
-
     struct Frame
     {
         std::string imagePath;
@@ -42,10 +40,15 @@ public:
     };
 
     std::vector<Animation> animations;
+    std::atomic<bool> pause{false};
+    std::thread animator_thread;
 
     void defines() override;
     void init() override;
     void update() override;
     void clean() override;
     void next_frame();
+
+    void set_state(std::string state_name);
+    std::string current_state();
 };

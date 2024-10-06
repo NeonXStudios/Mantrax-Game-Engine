@@ -23,6 +23,7 @@
 #include <optional>
 #include <stdexcept>
 #include <regex>
+#include <mutex>
 
 #ifdef byte
 #undef byte

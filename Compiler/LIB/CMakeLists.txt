@@ -8,6 +8,7 @@ set("Project_Name" MantraxCore)
 
 if (MSVC)
     add_compile_options(/MP /w)
+    add_compile_options(/bigobj)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
 endif()
 
