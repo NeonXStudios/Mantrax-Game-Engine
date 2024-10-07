@@ -1,23 +1,42 @@
 #include "../includes/GCharacter.h"
 #include <GarinGraphics.h>
 
+void GCharacter::defines()
+{
+    GVAR(Height, 2.0f, float);
+    GVAR(Radius, 2.0f, float);
+}
+
 void GCharacter::init()
 {
-    // Asegúrate de tener acceso correcto a la escena de PhysX y al material
     auto *physxScene = SceneManager::GetOpenScene()->physic_world->mScene;
     auto *physxMaterial = SceneManager::GetOpenScene()->physic_world->mMaterial;
 
-    // Configura la descripción del controlador de cápsula
     PxCapsuleControllerDesc desc;
-    desc.height = 2.0f;
-    desc.radius = 0.5f;
-    desc.position = PxExtendedVec3(0, 5, 0); // Ajusta la posición inicial según tu escena
+    desc.height = GETVAR(Height, float);
+    desc.radius = GETVAR(Radius, float);
+    desc.position = PxExtendedVec3(0, 5, 0);
     desc.material = physxMaterial;
 
-    // Crea el controlador de personaje
     gController = SceneManager::GetOpenScene()->physic_world->gManager->createController(desc);
 
     gController->setPosition(physx::PxExtendedVec3(entity->get_transform()->Position.x, entity->get_transform()->Position.y, entity->get_transform()->Position.z));
+}
+
+void GCharacter::modifyCapsule(float newHeight, float newRadius)
+{
+    if (gController)
+    {
+        gController->release();
+
+        PxCapsuleControllerDesc desc;
+        desc.height = newHeight;
+        desc.radius = newRadius;
+        desc.position = gController->getPosition();
+        desc.material = SceneManager::GetOpenScene()->physic_world->mMaterial;
+
+        gController = SceneManager::GetOpenScene()->physic_world->gManager->createController(desc);
+    }
 }
 
 void GCharacter::update()

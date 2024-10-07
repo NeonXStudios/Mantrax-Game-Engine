@@ -61,3 +61,9 @@ void TextureManager::set_texture(GLuint ID)
 {
     texture_maked = ID;
 }
+
+TextureManager::~TextureManager()
+{
+    glDeleteTextures(1, &texture_maked);
+    std::cout << "===> Cleaning textures" << std::endl;
+}
