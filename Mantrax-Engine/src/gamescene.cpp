@@ -155,7 +155,7 @@ void gamescene::draw_ui()
         ImGui::Begin("Console");
         std::lock_guard<std::mutex> guard(mutex);
 
-        if (ImGui::Button("Clear Console")) // Botón para limpiar la consola
+        if (ImGui::Button("Clear Console"))
         {
             stdout_buffer.clear();
             stderr_buffer.clear();

@@ -23,6 +23,12 @@ void GCharacter::init()
     gController->setPosition(physx::PxExtendedVec3(entity->get_transform()->Position.x, entity->get_transform()->Position.y, entity->get_transform()->Position.z));
 }
 
+void GCharacter::update()
+{
+
+    entity->get_transform()->Position = glm::vec3(gController->getPosition().x, gController->getPosition().y, gController->getPosition().z);
+}
+
 void GCharacter::modifyCapsule(float newHeight, float newRadius)
 {
     if (gController)
@@ -37,11 +43,6 @@ void GCharacter::modifyCapsule(float newHeight, float newRadius)
 
         gController = SceneManager::GetOpenScene()->physic_world->gManager->createController(desc);
     }
-}
-
-void GCharacter::update()
-{
-    entity->get_transform()->Position = glm::vec3(gController->getPosition().x, gController->getPosition().y, gController->getPosition().z);
 }
 
 void GCharacter::move(glm::vec3 move_direction)

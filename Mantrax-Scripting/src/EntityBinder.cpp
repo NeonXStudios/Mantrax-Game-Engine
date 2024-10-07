@@ -48,6 +48,8 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
     luaParent->lua.new_usertype<SceneManager>("SceneManager",
                                               "GetObjectPerID", &SceneManager::GetObjectByID,
                                               "GetObjectPerIndex", &SceneManager::GetObjectPerIndex,
+                                              "GetObjectPerName", &SceneManager::GetObjectPerName,
+                                              "GetObjectPerTag", &SceneManager::GetObjectPerTag,
                                               "ChangeScene", &SceneManager::LoadScene,
                                               "newEntity", &SceneManager::NewEntity,
                                               "Destroy", &SceneManager::Destroy);

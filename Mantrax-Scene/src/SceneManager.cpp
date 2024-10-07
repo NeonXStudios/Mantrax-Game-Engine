@@ -65,6 +65,32 @@ Entity *SceneManager::GetObjectByID(int id)
     return nullptr;
 }
 
+Entity *SceneManager::GetObjectPerTag(std::string tag)
+{
+    for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
+    {
+        if (ent->ObjectTag == tag)
+        {
+            return ent;
+        }
+    }
+
+    return nullptr;
+}
+
+Entity *SceneManager::GetObjectPerName(std::string name)
+{
+    for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
+    {
+        if (ent->ObjectName == name)
+        {
+            return ent;
+        }
+    }
+
+    return nullptr;
+}
+
 Entity *SceneManager::Destroy(Entity *obj)
 {
     if (obj != nullptr)
