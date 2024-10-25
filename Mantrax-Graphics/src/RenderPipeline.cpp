@@ -1,4 +1,5 @@
 #include "../includes/RenderPipeline.h"
+#include <Timer.h>
 
 std::unordered_set<int> RenderPipeline::layers_to_render;
 std::vector<ModelComponent *> RenderPipeline::renderables = std::vector<ModelComponent *>();
@@ -70,8 +71,6 @@ void RenderPipeline::render_all_data(glm::mat4 camera_matrix)
                 {
                     material.p_shader->use();
 
-                    material.p_shader->setMat4("camera_matrix", camera_matrix);
-
                     cmp->texture_sampler->use_texture(material.p_shader->ID);
 
                     material.p_shader->setMat4("model", cmp->get_transform()->get_matrix());
@@ -86,6 +85,16 @@ void RenderPipeline::render_all_data(glm::mat4 camera_matrix)
 
                     glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
                     material.p_shader->setVec3("lightColor", lightColor);
+
+                    // INFO CAMERA TO SHADER
+                    material.p_shader->setMat4("Projection", SceneManager::GetSceneManager()->GetOpenScene()->main_camera->GetProjectionMatrix());
+                    material.p_shader->setMat4("View", SceneManager::GetSceneManager()->GetOpenScene()->main_camera->GetView());
+                    material.p_shader->setMat4("CameraMatrix", camera_matrix);
+
+                    // TIME INFO TO SHADER
+                    material.p_shader->setFloat("DeltaTime", Timer::delta_time);
+                    material.p_shader->setFloat("SinTime", glm::sin(Timer::delta_time));
+                    material.p_shader->setFloat("CosTime", glm::acos(Timer::delta_time));
 
                     cmp->model->Draw();
                 }

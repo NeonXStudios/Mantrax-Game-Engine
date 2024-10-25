@@ -4,9 +4,6 @@ using namespace nlohmann;
 
 void Scene::init()
 {
-    // physic_world->start_world_physics();
-
-    // VIRTUAL START
     on_start();
 }
 
@@ -22,7 +19,6 @@ void Scene::update(float delta_time)
                 ent->update();
             }
 
-            // VIRTUAL UPDATE
             on_update(delta_time);
         }
         catch (const std::exception &e)

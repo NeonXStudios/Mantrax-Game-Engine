@@ -12,11 +12,12 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
     luaParent->lua["self"] = sol::make_object(luaParent->lua.lua_state(), luaParent->entity);
 
     luaParent->lua.new_usertype<Entity>("Object",
-                                        "name", &Entity::ObjectName,
-                                        "tag", &Entity::ObjectTag,
-                                        "id", &Entity::objectID,
-                                        "layer", &Entity::Layer,
-                                        "transform", &Entity::get_transform,
+                                        "Name", &Entity::ObjectName,
+                                        "Tag", &Entity::ObjectTag,
+                                        "ID", &Entity::objectID,
+                                        "Layer", &Entity::Layer,
+                                        "Transform", &Entity::transform_component,
+                                        "GetTransform", &Entity::get_transform,
                                         "GetAudioSource", &Entity::getComponent<GAudio>,
                                         "GetCollider", &Entity::getComponent<GCollision>,
                                         "GetMaterial", &Entity::getComponent<GMaterial>,
@@ -39,29 +40,29 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
                                            "SetState", &GAnimator::set_state);
 
     luaParent->lua.new_usertype<TransformComponent>("Transform",
-                                                    "position", &TransformComponent::Position,
-                                                    "rotation", &TransformComponent::rotation,
-                                                    "scale", &TransformComponent::Scale,
-                                                    "attachTo", &TransformComponent::attachTo);
+                                                    "Position", &TransformComponent::Position,
+                                                    "Rotation", &TransformComponent::rotation,
+                                                    "Scale", &TransformComponent::Scale,
+                                                    "AttachTo", &TransformComponent::attachTo);
 
     luaParent->lua["Scene"] = sol::make_object(luaParent->lua.lua_state(), SceneManager::GetSceneManager());
     luaParent->lua.new_usertype<SceneManager>("SceneManager",
-                                              "GetObjectPerID", &SceneManager::GetObjectByID,
-                                              "GetObjectPerIndex", &SceneManager::GetObjectPerIndex,
-                                              "GetObjectPerName", &SceneManager::GetObjectPerName,
-                                              "GetObjectPerTag", &SceneManager::GetObjectPerTag,
-                                              "ChangeScene", &SceneManager::LoadScene,
-                                              "newEntity", &SceneManager::NewEntity,
-                                              "Destroy", &SceneManager::Destroy);
+                                              "GID", &SceneManager::GetObjectByID,
+                                              "GIndex", &SceneManager::GetObjectPerIndex,
+                                              "GName", &SceneManager::GetObjectPerName,
+                                              "GTag", &SceneManager::GetObjectPerTag,
+                                              "Load", &SceneManager::LoadScene,
+                                              "new", &SceneManager::NewEntity,
+                                              "remove", &SceneManager::Destroy);
 
     luaParent->lua.new_usertype<GCaster>("GCaster",
                                          "LineCast", [](glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length, GCastHit &hit, unsigned int layerMask)
                                          { return GCaster::LineCast(RayOrigin, RayDirection, Length, &hit, layerMask); });
 
     luaParent->lua.new_usertype<GCastHit>("GCastHit",
-                                          "point", &GCastHit::point,
-                                          "normal", &GCastHit::normal,
-                                          "entity", &GCastHit::entity);
+                                          "Point", &GCastHit::point,
+                                          "Normal", &GCastHit::normal,
+                                          "Entity", &GCastHit::entity);
 
     luaParent->lua.new_usertype<Timer>("Time",
                                        "DeltaTime", []()
@@ -89,18 +90,18 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
     luaParent->lua["LAYER_19"] = LAYER_19;
 
     luaParent->lua.new_usertype<GBody>("RigidBody",
-                                       "position", &GBody::get_body_position,
+                                       "get_position", &GBody::get_body_position,
                                        "set_position", &GBody::set_position,
-                                       "impulse", &GBody::add_impulse,
-                                       "mass", sol::property([](GBody &self)
+                                       "Impulse", &GBody::add_impulse,
+                                       "Mass", sol::property([](GBody &self)
                                                              { return std::any_cast<float>(self.variableMap["mass"]); }, [](GBody &self, float value)
                                                              { self.variableMap["mass"] = value; }),
-                                       "isStatic", sol::property([](GBody &self)
-                                                                 { return std::any_cast<bool>(self.variableMap["isStatic"]); }, [](GBody &self, bool value)
-                                                                 { self.variableMap["isStatic"] = value; }),
-                                       "useGravity", sol::property([](GBody &self)
-                                                                   { return std::any_cast<bool>(self.variableMap["useGravity"]); }, [](GBody &self, bool value)
-                                                                   { self.variableMap["useGravity"] = value; }));
+                                       "Static", sol::property([](GBody &self)
+                                                               { return std::any_cast<bool>(self.variableMap["isStatic"]); }, [](GBody &self, bool value)
+                                                               { self.variableMap["isStatic"] = value; }),
+                                       "Gravity", sol::property([](GBody &self)
+                                                                { return std::any_cast<bool>(self.variableMap["useGravity"]); }, [](GBody &self, bool value)
+                                                                { self.variableMap["useGravity"] = value; }));
 
     // luaParent->lua.new_usertype<GBodySpace::force_mode>("ForceMode",
     //                                                     "impulse", GBodySpace::force_mode::Impulse,

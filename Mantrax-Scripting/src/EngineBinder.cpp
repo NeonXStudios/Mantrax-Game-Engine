@@ -3,9 +3,12 @@
 #include <iostream>
 #include "GMathfs.h"
 #include <camera.h>
+#include <mono/jit/jit.h>
 
 void EngineBinder::BinderFunction(GScriptLua *luaParent)
 {
+
+    auto m = mono_init("dd");
 
     // VECTORS
     luaParent->lua.new_usertype<glm::vec2>("vector2", sol::constructors<glm::vec2(float, float)>(),
@@ -56,12 +59,6 @@ void EngineBinder::BinderFunction(GScriptLua *luaParent)
     luaParent->lua.set_function("normalize", [](const glm::vec3 &v)
                                 { return glm::normalize(v); });
 
-    // TIMER
-    // luaParent->lua["GMathf"]["ClampFloat"] = [](float value, float min, float max)
-    // { return GMathfs::ClampFloat(value, min, max); };
-    // luaParent->lua["Time"]["DeltaTime"] = []()
-    // { return Timer::delta_time; };
-
     std::cout << "ENGINE BINDER" << std::endl;
 
     if (SceneManager::GetSceneManager() == nullptr)
@@ -77,15 +74,15 @@ void EngineBinder::BinderFunction(GScriptLua *luaParent)
     // GAME CAMERA
     luaParent->lua["GameCamera"] = sol::make_object(luaParent->lua.lua_state(), SceneManager::GetSceneManager()->OpenScene->main_camera);
     luaParent->lua.new_usertype<Camera>("Camera",
-                                        "position", &Camera::cameraPosition,
-                                        "fov", &Camera::zoom,
-                                        "rotation", &Camera::cameraRotation,
-                                        "orientation", &Camera::Orientation,
-                                        "forward", &Camera::GetForward,
-                                        "right", &Camera::GetRight,
-                                        "up", &Camera::GetUp);
+                                        "Position", &Camera::cameraPosition,
+                                        "Fov", &Camera::zoom,
+                                        "Rotation", &Camera::cameraRotation,
+                                        "Orientation", &Camera::Orientation,
+                                        "Forward", &Camera::GetForward,
+                                        "Right", &Camera::GetRight,
+                                        "Up", &Camera::GetUp);
 
-    luaParent->lua["GetMainCamera"] = []()
+    luaParent->lua["MainCamera"] = []()
     { 
     Camera *camera_with_max_depth = nullptr;
     float max_depth = -1.0f;
@@ -111,7 +108,6 @@ void EngineBinder::BinderFunction(GScriptLua *luaParent)
 
     luaParent->lua["GamePlaying"] = sol::make_object(luaParent->lua.lua_state(), AppSettings::is_playing);
 
-    // DEBUG SETTINGS
     luaParent->lua.set_function("print", [](sol::variadic_args args)
                                 {
             for (auto arg : args) {
