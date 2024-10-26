@@ -151,3 +151,8 @@ Camera *RenderPipeline::add_camera()
         std::cerr << e.what() << '\n';
     }
 }
+
+void RenderPipeline::test_mono()
+{
+    std::cout << "*/*/*/*/*/*/* HELLO FROM MONO BRO!" << std::endl;
+}

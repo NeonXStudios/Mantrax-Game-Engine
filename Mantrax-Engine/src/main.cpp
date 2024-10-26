@@ -6,6 +6,7 @@
 #include <GarinUI.h>
 #include <GameBehaviour.h>
 #include <RenderPipeline.h>
+#include <CSCompiler.h>
 
 SceneManager *sceneManager = new SceneManager();
 AudioManager *audioManager = new AudioManager();
@@ -13,8 +14,11 @@ DynamicLibLoader *lib_loader = new DynamicLibLoader();
 GameBehaviourFactory *factory_behaviour = new GameBehaviourFactory();
 RenderPipeline *piprender = new RenderPipeline();
 
+CSCompiler *cs = new CSCompiler();
+
 int main(void)
 {
+
     // start audio systems
     audioManager->create();
     audioManager->StartSystem();
@@ -38,6 +42,7 @@ int main(void)
 
     SceneManager::GetOpenScene()->init();
 
+    cs->setup_mono();
     std::cout << "All system started" << std::endl;
 
     while (!Gfx::try_window_close())
@@ -64,6 +69,7 @@ int main(void)
     SceneManager::GetOpenScene()->on_destroy();
     sceneManager->release();
     audioManager->release();
+    cs->release_mono();
 
     return 0;
 }

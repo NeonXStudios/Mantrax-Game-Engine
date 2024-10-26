@@ -1,0 +1,6 @@
+F:\GITHUB\Garin\MantraxGameCore\bin\Debug\MantraxGameCore.dll
+F:\GITHUB\Garin\MantraxGameCore\bin\Debug\MantraxGameCore.pdb
+F:\GITHUB\Garin\MantraxGameCore\obj\Debug\MantraxGameCore.csproj.AssemblyReference.cache
+F:\GITHUB\Garin\MantraxGameCore\obj\Debug\MantraxGameCore.csproj.CoreCompileInputs.cache
+F:\GITHUB\Garin\MantraxGameCore\obj\Debug\MantraxGameCore.dll
+F:\GITHUB\Garin\MantraxGameCore\obj\Debug\MantraxGameCore.pdb

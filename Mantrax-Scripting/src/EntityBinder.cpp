@@ -3,6 +3,8 @@
 
 void EntityBinder::BinderFunction(GScriptLua *luaParent)
 {
+
+
     if (luaParent->entity == nullptr)
     {
         std::cout << "ENTITY ITS NULL" << std::endl;

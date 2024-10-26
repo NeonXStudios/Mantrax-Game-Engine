@@ -26,6 +26,7 @@ public:
     static void delete_from_render(ModelComponent *renderable);
     static void addLayer(int layer);
     static void removeLayer(int layer);
+    static void test_mono();
     static Camera *add_camera();
     static TextureTarget *add_render_texture();
 };

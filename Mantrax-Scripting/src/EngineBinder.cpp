@@ -3,12 +3,9 @@
 #include <iostream>
 #include "GMathfs.h"
 #include <camera.h>
-#include <mono/jit/jit.h>
 
 void EngineBinder::BinderFunction(GScriptLua *luaParent)
 {
-
-    auto m = mono_init("dd");
 
     // VECTORS
     luaParent->lua.new_usertype<glm::vec2>("vector2", sol::constructors<glm::vec2(float, float)>(),
