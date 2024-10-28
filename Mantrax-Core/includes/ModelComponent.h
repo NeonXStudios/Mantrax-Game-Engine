@@ -19,12 +19,12 @@ public:
 
     Model *model = nullptr;
     Shader *get_mesh_shader();
+    void set_model(string path_load);
 
     void defines() override;
     void init() override;
     void update() override;
     void draw() override;
     void clean() override;
-    void set_model(string path_load);
     std::string serialize() override;
 };

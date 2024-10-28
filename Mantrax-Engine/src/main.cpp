@@ -43,6 +43,8 @@ int main(void)
     SceneManager::GetOpenScene()->init();
 
     cs->setup_mono();
+
+    cs->start_event();
     std::cout << "All system started" << std::endl;
 
     while (!Gfx::try_window_close())
@@ -54,10 +56,12 @@ int main(void)
         if (AppSettings::is_playing)
         {
             SceneManager::GetOpenScene()->update(Timer::delta_time);
+            cs->tick_event();
         }
         else
         {
             SceneManager::GetOpenScene()->on_edition_mode(Timer::delta_time);
+            cs->edition_event();
         }
 
         RenderPipeline::render();

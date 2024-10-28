@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MantraxGameCore.Interfaces
+namespace MantraxGameCore
 {
-    public interface IGame
+    public class TextureManager
     {
-        void Start();
-        void Update();
+
     }
 }

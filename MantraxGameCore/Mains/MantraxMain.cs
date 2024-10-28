@@ -1,14 +1,31 @@
-﻿using MantraxGameCore.Behaviours;
+﻿using MantraxGameCore;
 using MantraxGameCore.Interfaces;
+using MantraxGameCore.Runtime;
 using System;
 
 namespace MantraxGameCore
 {
     public class MantraxMain
     {
-        public static IGame main()
+        public static RuntimeManager runtimeManager;
+
+        public static void OnRunEngine()
         {
-            return new SceneManager("hola");
+           runtimeManager = new RuntimeManager();
+
+            SceneManager scene_test = new SceneManager();
+
+           runtimeManager.RunStart();
+        }
+
+        public static void OnUpdateEngine()
+        {
+            runtimeManager.RunUpdate();
+        }
+
+        public static void OnEditionEngine()
+        {
+            runtimeManager.RunEdition();
         }
     }
 }

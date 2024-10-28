@@ -3,29 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MantraxGameCore.Interfaces;
+using MantraxGameCore;
 
-namespace MantraxGameCore.Behaviours
+namespace MantraxGameCore
 {
-    public class SceneManager : IGame
+    public class SceneManager : MantraxBehaviour
     {
-        private string word;
-
-        public SceneManager(string RandomWord) 
-        {
-            word = RandomWord;
-
-            Console.WriteLine(word);
-        }
-
         public void Start()
         {
-            Console.WriteLine("PUTO DARIL TE SALUDO DESDE C#");
+            Console.WriteLine("My First Script C# Mantrax");
         }
 
         public void Update()
         {
-            Console.WriteLine("ESTE ES UN BUCLE RETRASADO DE MIERDA");
+            Console.WriteLine($"Delta Time: {Time.Delta}");
+        }
+
+        public void OnEdition()
+        {
+            Console.WriteLine("Im on edition mode");
         }
     }
 }
