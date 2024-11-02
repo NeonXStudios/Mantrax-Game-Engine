@@ -13,6 +13,17 @@ using namespace std;
 class GARINLIBS_API EditorGUI
 {
 public:
+    static void begin()
+    {
+        ImGui::Begin("z1");
+        ImGui::Text("JAKUNA MATATA");
+    }
+
+    static void end()
+    {
+        ImGui::End();
+    }
+
     static std::string InputText(const std::string &Name, const std::string &value, ImVec2 size = ImVec2(200, 20))
     {
         char GetName[128];

@@ -18,13 +18,10 @@ namespace MantraxGameCore.Runtime
                                        .GetTypes()
                                        .Where(t => t.IsSubclassOf(typeof(MantraxBehaviour)) && !t.IsAbstract);
 
-            foreach (var type in derivedTypes)
+            foreach (var instance in instances)
             {
-                var instance = (MantraxBehaviour)Activator.CreateInstance(type);
-                instances.Add(instance);
-
-                MethodInfo startMethod = type.GetMethod("Start");
-                startMethod?.Invoke(instance, null);
+                MethodInfo updateMethod = instance.GetType().GetMethod("Start");
+                updateMethod?.Invoke(instance, null);
             }
         }
 
@@ -42,6 +39,24 @@ namespace MantraxGameCore.Runtime
             foreach (var instance in instances)
             {
                 MethodInfo updateMethod = instance.GetType().GetMethod("OnEdition");
+                updateMethod?.Invoke(instance, null);
+            }
+        }
+
+        public void RunCleaner()
+        {
+            foreach (var instance in instances)
+            {
+                MethodInfo updateMethod = instance.GetType().GetMethod("OnClean");
+                updateMethod?.Invoke(instance, null);
+            }
+        }
+
+        public void RunEditorUI()
+        {
+            foreach (var instance in instances)
+            {
+                MethodInfo updateMethod = instance.GetType().GetMethod("OnDrawUIEditor");
                 updateMethod?.Invoke(instance, null);
             }
         }

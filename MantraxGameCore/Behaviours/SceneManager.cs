@@ -1,27 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using MantraxGameCore;
 
-namespace MantraxGameCore
+public class SceneManager : MantraxBehaviour
 {
-    public class SceneManager : MantraxBehaviour
+    public void Start()
     {
-        public void Start()
-        {
-            Console.WriteLine("My First Script C# Mantrax");
-        }
+        Console.WriteLine("My First Script C# Mantrax");
+    }
 
-        public void Update()
-        {
-            Console.WriteLine($"Delta Time: {Time.Delta}");
-        }
+    public void Update()
+    {
+    }
 
-        public void OnEdition()
-        {
-            Console.WriteLine("Im on edition mode");
-        }
+    public void OnEdition()
+    {
+    }
+
+    public void OnClean()
+    {
+        Console.WriteLine("BYE FROM C#");
+    }
+
+    public void OnDrawUIEditor()
+    {
+        GUIEditor.Begin();
+        GUIEditor.End();
     }
 }

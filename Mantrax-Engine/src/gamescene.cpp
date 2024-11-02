@@ -7,11 +7,14 @@
 #include <RenderPipeline.h>
 #include <GarinIO.h>
 #include <PerlinGenerator.h>
+#include <CSCompiler.h>
+
+CSCompiler *cs = new CSCompiler();
 
 void gamescene::on_start()
 {
-    old_stdout = std::cout.rdbuf(buffer_stdout.rdbuf());
-    old_stderr = std::cerr.rdbuf(buffer_stderr.rdbuf());
+    // old_stdout = std::cout.rdbuf(buffer_stdout.rdbuf());
+    // old_stderr = std::cerr.rdbuf(buffer_stderr.rdbuf());
 
     configs = new EditorConfigs();
 
@@ -43,6 +46,10 @@ void gamescene::on_start()
     gizmo_models->init();
 
     assets_registry = new AssetsRegistry("..", 5);
+
+    cs->setup_mono();
+
+    cs->start_event();
 }
 
 void gamescene::on_edition_mode(float delta_time)
@@ -121,6 +128,8 @@ void gamescene::on_edition_mode(float delta_time)
         assets_registry->start();
         first_frame_loaded_on_bucle = true;
     }
+
+    cs->edition_event();
 }
 
 void gamescene::on_update(float delta_time)
@@ -131,6 +140,8 @@ void gamescene::on_update(float delta_time)
     // {
     //     std::cout << "Casting: " << hit->entity->ObjectName << std::endl;
     // }
+
+    cs->tick_event();
 }
 
 void gamescene::on_draw()
@@ -147,74 +158,73 @@ void gamescene::draw_ui()
 
     if (configs->project_select == true)
     {
-        ReadBuffer(buffer_stdout, stdout_buffer);
-        ReadBuffer(buffer_stderr, stderr_buffer);
+        // ReadBuffer(buffer_stdout, stdout_buffer);
+        // ReadBuffer(buffer_stderr, stderr_buffer);
 
-        UINotification::instance.RenderNotifications();
+        // UINotification::instance.RenderNotifications();
 
-        ImGui::Begin("Console");
-        std::lock_guard<std::mutex> guard(mutex);
+        // ImGui::Begin("Console");
+        // std::lock_guard<std::mutex> guard(mutex);
 
-        if (ImGui::Button("Clear Console"))
-        {
-            stdout_buffer.clear();
-            stderr_buffer.clear();
-        }
+        // if (ImGui::Button("Clear Console"))
+        // {
+        //     stdout_buffer.clear();
+        //     stderr_buffer.clear();
+        // }
 
-        ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+        // ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 
-        std::vector<std::string> console_lines;
-        std::istringstream stdout_stream(stdout_buffer);
-        std::istringstream stderr_stream(stderr_buffer);
-        std::string line;
+        // std::vector<std::string> console_lines;
+        // std::istringstream stdout_stream(stdout_buffer);
+        // std::istringstream stderr_stream(stderr_buffer);
+        // std::string line;
 
-        while (std::getline(stdout_stream, line))
-        {
-            console_lines.push_back(line);
-        }
-        while (std::getline(stderr_stream, line))
-        {
-            console_lines.push_back(line);
-        }
+        // while (std::getline(stdout_stream, line))
+        // {
+        //     console_lines.push_back(line);
+        // }
+        // while (std::getline(stderr_stream, line))
+        // {
+        //     console_lines.push_back(line);
+        // }
 
-        for (int i = 0; i < console_lines.size(); ++i)
-        {
-            ImGui::PushID(i);
+        // for (int i = 0; i < console_lines.size(); ++i)
+        // {
+        //     ImGui::PushID(i);
 
-            ImGui::Columns(2, nullptr, false);
-            ImGui::SetColumnWidth(0, 20);
+        //     ImGui::Columns(2, nullptr, false);
+        //     ImGui::SetColumnWidth(0, 20);
 
-            // if (ImGui::Button("X"))
-            // {
-            //     console_lines.erase(console_lines.begin() + i);
-            //     i--;
+        //     // if (ImGui::Button("X"))
+        //     // {
+        //     //     console_lines.erase(console_lines.begin() + i);
+        //     //     i--;
 
-            //     stdout_buffer.clear();
-            //     stderr_buffer.clear();
-            //     for (const auto &msg : console_lines)
-            //     {
-            //         stdout_buffer += msg + "\n";
-            //     }
-            // }
+        //     //     stdout_buffer.clear();
+        //     //     stderr_buffer.clear();
+        //     //     for (const auto &msg : console_lines)
+        //     //     {
+        //     //         stdout_buffer += msg + "\n";
+        //     //     }
+        //     // }
 
-            ImGui::NextColumn();
+        //     ImGui::NextColumn();
 
-            ImGui::TextWrapped(console_lines[i].c_str());
+        //     ImGui::TextWrapped(console_lines[i].c_str());
 
-            ImGui::Columns(1);
-            ImGui::PopID();
-        }
+        //     ImGui::Columns(1);
+        //     ImGui::PopID();
+        // }
 
-        if (shouldScroll)
-        {
-            ImGui::SetScrollHereY(1.0f);
-            shouldScroll = false;
-        }
+        // if (shouldScroll)
+        // {
+        //     ImGui::SetScrollHereY(1.0f);
+        //     shouldScroll = false;
+        // }
 
-        ImGui::EndChild();
-        ImGui::End();
+        // ImGui::EndChild();
+        // ImGui::End();
 
-        // Guardado de la escena si Ctrl + S es presionado
         if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
         {
             if (ImGui::IsKeyReleased(ImGuiKey_S))
@@ -263,6 +273,8 @@ void gamescene::draw_ui()
                 }
             }
         }
+
+        cs->ui_event();
     }
 
     GarinUI::get_ui_manager()->render_ui_context();
@@ -270,6 +282,7 @@ void gamescene::draw_ui()
 
 void gamescene::on_destroy()
 {
+    cs->release_mono();
     assets_registry->stop();
     configs->save_config();
 }

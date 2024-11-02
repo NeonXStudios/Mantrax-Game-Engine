@@ -3,16 +3,24 @@
   "WorkspaceRootPath": "F:\\GITHUB\\Garin\\MantraxGameCore\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\mains\\mantraxmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:mains\\mantraxmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\behaviours\\runtimemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:behaviours\\runtimemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|f:\\github\\garin\\mantraxgamecore\\behaviours\\scenemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:behaviours\\scenemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\behaviours\\runtimemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:behaviours\\runtimemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\components\\guieditor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:components\\guieditor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\graphics\\renderpipeline.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:graphics\\renderpipeline.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\mains\\mantraxmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:mains\\mantraxmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,19 +30,32 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "MantraxMain.cs",
               "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Mains\\MantraxMain.cs",
               "RelativeDocumentMoniker": "Mains\\MantraxMain.cs",
               "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Mains\\MantraxMain.cs",
               "RelativeToolTip": "Mains\\MantraxMain.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-28T08:35:28.563Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "RuntimeManager.cs",
+              "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Behaviours\\RuntimeManager.cs",
+              "RelativeDocumentMoniker": "Behaviours\\RuntimeManager.cs",
+              "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Behaviours\\RuntimeManager.cs",
+              "RelativeToolTip": "Behaviours\\RuntimeManager.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAADwvy4AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-29T01:40:03.452Z",
               "EditorCaption": ""
             },
             {
@@ -45,7 +66,7 @@
               "RelativeDocumentMoniker": "Behaviours\\SceneManager.cs",
               "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Behaviours\\SceneManager.cs",
               "RelativeToolTip": "Behaviours\\SceneManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwBUAAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-28T08:37:03.826Z",
               "EditorCaption": ""
@@ -53,14 +74,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "RuntimeManager.cs",
-              "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Behaviours\\RuntimeManager.cs",
-              "RelativeDocumentMoniker": "Behaviours\\RuntimeManager.cs",
-              "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Behaviours\\RuntimeManager.cs",
-              "RelativeToolTip": "Behaviours\\RuntimeManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACsAAABRAAAAAAAAAA==",
+              "Title": "GUIEditor.cs",
+              "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\GUIEditor.cs",
+              "RelativeDocumentMoniker": "Components\\GUIEditor.cs",
+              "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\GUIEditor.cs",
+              "RelativeToolTip": "Components\\GUIEditor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwBAAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-28T08:40:25.146Z",
+              "WhenOpened": "2024-10-31T09:10:16.831Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "RenderPipeline.cs",
+              "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Graphics\\RenderPipeline.cs",
+              "RelativeDocumentMoniker": "Graphics\\RenderPipeline.cs",
+              "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Graphics\\RenderPipeline.cs",
+              "RelativeToolTip": "Graphics\\RenderPipeline.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-01T17:34:30.92Z",
               "EditorCaption": ""
             }
           ]

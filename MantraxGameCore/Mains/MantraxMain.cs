@@ -12,9 +12,9 @@ namespace MantraxGameCore
         public static void OnRunEngine()
         {
            runtimeManager = new RuntimeManager();
-
-            SceneManager scene_test = new SceneManager();
-
+           
+           SceneManager scene_test = new SceneManager();
+           
            runtimeManager.RunStart();
         }
 
@@ -26,6 +26,16 @@ namespace MantraxGameCore
         public static void OnEditionEngine()
         {
             runtimeManager.RunEdition();
+        }
+
+        public static void OnDrawUI()
+        {
+            runtimeManager.RunEditorUI();
+        }
+
+        public static void OnCloseEngine()
+        {
+            runtimeManager.RunCleaner();
         }
     }
 }

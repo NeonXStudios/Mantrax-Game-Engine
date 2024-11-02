@@ -50,6 +50,9 @@ public:
                     mono_add_internal_call("RenderPipeline::add_camera", &RenderPipeline::add_camera);
                     mono_add_internal_call("RenderPipeline::add_render_texture", &RenderPipeline::add_render_texture);
                     mono_add_internal_call("MantraxGameCore.Time::DeltaTime", &Timer::get_delta_time);
+
+                    mono_add_internal_call("MantraxGameCore.GUIEditor::Begin", &EditorGUI::begin);
+                    mono_add_internal_call("MantraxGameCore.GUIEditor::End", &EditorGUI::end);
                 }
                 else
                 {
@@ -65,165 +68,213 @@ public:
 
     void start_event()
     {
-        MonoClass *ptrIGameClass = mono_class_from_name(m_ptrGameAssemblyImage, "MantraxGameCore.Interfaces", "IMantrax");
-        MonoClass *ptrMainClass = mono_class_from_name(m_ptrGameAssemblyImage, "MantraxGameCore", "MantraxMain");
+        MonoMethodDesc *ptrMainMethodDesc = ptrMainMethodDesc = mono_method_desc_new("MantraxGameCore.MantraxMain:OnRunEngine()", false);
 
-        if (ptrIGameClass && ptrMainClass)
+        if (ptrMainMethodDesc)
         {
-            MonoMethodDesc *ptrMainMethodDesc = mono_method_desc_new("MantraxGameCore.MantraxMain:OnRunEngine()", false);
-
-            if (ptrMainMethodDesc)
+            MonoClass *ptrMainClass = mono_class_from_name(m_ptrGameAssemblyImage, "MantraxGameCore", "MantraxMain");
+            if (ptrMainClass)
             {
                 MonoMethod *ptrMainMethod = mono_method_desc_search_in_class(ptrMainMethodDesc, ptrMainClass);
-                mono_method_desc_free(ptrMainMethodDesc);
 
                 if (ptrMainMethod)
                 {
                     MonoObject *ptrExObject = nullptr;
-
-                    m_PtrGameObject = mono_runtime_invoke(ptrMainMethod, nullptr, nullptr, &ptrExObject);
-
-                    if (m_PtrGameObject)
-                    {
-                        std::cout << "-*-*-*-*-*-*-*-*-*-*-*-*-* Executing Main Class From Mono C#" << std::endl;
-                    }
-                    else
-                    {
-                        std::cerr << "Error: m_PtrGameObject is null. Method main() did not return a valid object." << std::endl;
-                    }
+                    mono_runtime_invoke(ptrMainMethod, nullptr, nullptr, &ptrExObject);
 
                     if (ptrExObject)
                     {
                         MonoString *exStr = mono_object_to_string(ptrExObject, nullptr);
                         char *exCString = mono_string_to_utf8(exStr);
-                        std::cerr << "Exception in C# method main(): " << exCString << std::endl;
+                        std::cerr << "Exception in C# method OnDrawUI(): " << exCString << std::endl;
                         mono_free(exCString);
                     }
                 }
                 else
                 {
-                    std::cerr << "Error: Could not find method main() in MantraxMain class." << std::endl;
+                    std::cerr << "Error: Could not find method OnDrawUI in MantraxMain class." << std::endl;
                 }
             }
             else
             {
-                std::cerr << "Error: Could not create method descriptor for MantraxMain:main()." << std::endl;
+                std::cerr << "Error: Could not find MantraxMain class in MantraxGameCore namespace." << std::endl;
             }
+
+            mono_method_desc_free(ptrMainMethodDesc);
         }
         else
         {
-            std::cerr << "Error: Could not find MantraxBehaviour or MantraxMain classes in their respective namespaces." << std::endl;
+            std::cerr << "Error: Could not create method descriptor for MantraxMain:OnDrawUI()." << std::endl;
         }
     }
 
     void tick_event()
     {
-        MonoClass *ptrIGameClass = mono_class_from_name(m_ptrGameAssemblyImage, "MantraxGameCore.Interfaces", "IMantrax");
-        MonoClass *ptrMainClass = mono_class_from_name(m_ptrGameAssemblyImage, "MantraxGameCore", "MantraxMain");
+        MonoMethodDesc *ptrMainMethodDesc = mono_method_desc_new("MantraxGameCore.MantraxMain:OnUpdateEngine()", false);
 
-        if (ptrIGameClass && ptrMainClass)
+        if (ptrMainMethodDesc)
         {
-            MonoMethodDesc *ptrMainMethodDesc = mono_method_desc_new("MantraxGameCore.MantraxMain:OnUpdateEngine()", false);
-
-            if (ptrMainMethodDesc)
+            MonoClass *ptrMainClass = mono_class_from_name(m_ptrGameAssemblyImage, "MantraxGameCore", "MantraxMain");
+            if (ptrMainClass)
             {
                 MonoMethod *ptrMainMethod = mono_method_desc_search_in_class(ptrMainMethodDesc, ptrMainClass);
-                mono_method_desc_free(ptrMainMethodDesc);
 
                 if (ptrMainMethod)
                 {
                     MonoObject *ptrExObject = nullptr;
-
-                    m_PtrGameObject = mono_runtime_invoke(ptrMainMethod, nullptr, nullptr, &ptrExObject);
-
-                    if (m_PtrGameObject)
-                    {
-                        std::cout << "-*-*-*-*-*-*-*-*-*-*-*-*-* Executing Main Class From Mono C#" << std::endl;
-                    }
-                    else
-                    {
-                        std::cerr << "Error: m_PtrGameObject is null. Method main() did not return a valid object." << std::endl;
-                    }
+                    mono_runtime_invoke(ptrMainMethod, nullptr, nullptr, &ptrExObject);
 
                     if (ptrExObject)
                     {
                         MonoString *exStr = mono_object_to_string(ptrExObject, nullptr);
                         char *exCString = mono_string_to_utf8(exStr);
-                        std::cerr << "Exception in C# method main(): " << exCString << std::endl;
+                        std::cerr << "Exception in C# method OnDrawUI(): " << exCString << std::endl;
                         mono_free(exCString);
                     }
                 }
                 else
                 {
-                    std::cerr << "Error: Could not find method main() in MantraxMain class." << std::endl;
+                    std::cerr << "Error: Could not find method OnDrawUI in MantraxMain class." << std::endl;
                 }
             }
             else
             {
-                std::cerr << "Error: Could not create method descriptor for MantraxMain:main()." << std::endl;
+                std::cerr << "Error: Could not find MantraxMain class in MantraxGameCore namespace." << std::endl;
             }
+
+            mono_method_desc_free(ptrMainMethodDesc);
         }
         else
         {
-            std::cerr << "Error: Could not find MantraxBehaviour or MantraxMain classes in their respective namespaces." << std::endl;
+            std::cerr << "Error: Could not create method descriptor for MantraxMain:OnDrawUI()." << std::endl;
         }
     }
 
     void edition_event()
     {
-        MonoClass *ptrIGameClass = mono_class_from_name(m_ptrGameAssemblyImage, "MantraxGameCore.Interfaces", "IMantrax");
-        MonoClass *ptrMainClass = mono_class_from_name(m_ptrGameAssemblyImage, "MantraxGameCore", "MantraxMain");
+        MonoMethodDesc *ptrMainMethodDesc = mono_method_desc_new("MantraxGameCore.MantraxMain:OnEditionEngine()", false);
 
-        if (ptrIGameClass && ptrMainClass)
+        if (ptrMainMethodDesc)
         {
-            MonoMethodDesc *ptrMainMethodDesc = mono_method_desc_new("MantraxGameCore.MantraxMain:OnEditionEngine()", false);
-
-            if (ptrMainMethodDesc)
+            MonoClass *ptrMainClass = mono_class_from_name(m_ptrGameAssemblyImage, "MantraxGameCore", "MantraxMain");
+            if (ptrMainClass)
             {
                 MonoMethod *ptrMainMethod = mono_method_desc_search_in_class(ptrMainMethodDesc, ptrMainClass);
-                mono_method_desc_free(ptrMainMethodDesc);
 
                 if (ptrMainMethod)
                 {
                     MonoObject *ptrExObject = nullptr;
-
-                    m_PtrGameObject = mono_runtime_invoke(ptrMainMethod, nullptr, nullptr, &ptrExObject);
-
-                    if (m_PtrGameObject)
-                    {
-                        std::cout << "-*-*-*-*-*-*-*-*-*-*-*-*-* Executing Main Class From Mono C#" << std::endl;
-                    }
-                    else
-                    {
-                        std::cerr << "Error: m_PtrGameObject is null. Method main() did not return a valid object." << std::endl;
-                    }
+                    mono_runtime_invoke(ptrMainMethod, nullptr, nullptr, &ptrExObject);
 
                     if (ptrExObject)
                     {
                         MonoString *exStr = mono_object_to_string(ptrExObject, nullptr);
                         char *exCString = mono_string_to_utf8(exStr);
-                        std::cerr << "Exception in C# method main(): " << exCString << std::endl;
+                        std::cerr << "Exception in C# method OnDrawUI(): " << exCString << std::endl;
                         mono_free(exCString);
                     }
                 }
                 else
                 {
-                    std::cerr << "Error: Could not find method main() in MantraxMain class." << std::endl;
+                    std::cerr << "Error: Could not find method OnDrawUI in MantraxMain class." << std::endl;
                 }
             }
             else
             {
-                std::cerr << "Error: Could not create method descriptor for MantraxMain:main()." << std::endl;
+                std::cerr << "Error: Could not find MantraxMain class in MantraxGameCore namespace." << std::endl;
             }
+
+            mono_method_desc_free(ptrMainMethodDesc);
         }
         else
         {
-            std::cerr << "Error: Could not find MantraxBehaviour or MantraxMain classes in their respective namespaces." << std::endl;
+            std::cerr << "Error: Could not create method descriptor for MantraxMain:OnDrawUI()." << std::endl;
+        }
+    }
+
+    void ui_event()
+    {
+        MonoMethodDesc *ptrMainMethodDesc = mono_method_desc_new("MantraxGameCore.MantraxMain:OnDrawUI()", false);
+
+        if (ptrMainMethodDesc)
+        {
+            MonoClass *ptrMainClass = mono_class_from_name(m_ptrGameAssemblyImage, "MantraxGameCore", "MantraxMain");
+            if (ptrMainClass)
+            {
+                MonoMethod *ptrMainMethod = mono_method_desc_search_in_class(ptrMainMethodDesc, ptrMainClass);
+
+                if (ptrMainMethod)
+                {
+                    MonoObject *ptrExObject = nullptr;
+                    mono_runtime_invoke(ptrMainMethod, nullptr, nullptr, &ptrExObject);
+
+                    if (ptrExObject)
+                    {
+                        MonoString *exStr = mono_object_to_string(ptrExObject, nullptr);
+                        char *exCString = mono_string_to_utf8(exStr);
+                        std::cerr << "Exception in C# method OnDrawUI(): " << exCString << std::endl;
+                        mono_free(exCString);
+                    }
+                }
+                else
+                {
+                    std::cerr << "Error: Could not find method OnDrawUI in MantraxMain class." << std::endl;
+                }
+            }
+            else
+            {
+                std::cerr << "Error: Could not find MantraxMain class in MantraxGameCore namespace." << std::endl;
+            }
+
+            mono_method_desc_free(ptrMainMethodDesc);
+        }
+        else
+        {
+            std::cerr << "Error: Could not create method descriptor for MantraxMain:OnDrawUI()." << std::endl;
         }
     }
 
     void release_mono()
     {
+        MonoMethodDesc *ptrMainMethodDesc = mono_method_desc_new("MantraxGameCore.MantraxMain:OnCloseEngine()", false);
+
+        if (ptrMainMethodDesc)
+        {
+            MonoClass *ptrMainClass = mono_class_from_name(m_ptrGameAssemblyImage, "MantraxGameCore", "MantraxMain");
+            if (ptrMainClass)
+            {
+                MonoMethod *ptrMainMethod = mono_method_desc_search_in_class(ptrMainMethodDesc, ptrMainClass);
+
+                if (ptrMainMethod)
+                {
+                    MonoObject *ptrExObject = nullptr;
+                    mono_runtime_invoke(ptrMainMethod, nullptr, nullptr, &ptrExObject);
+
+                    if (ptrExObject)
+                    {
+                        MonoString *exStr = mono_object_to_string(ptrExObject, nullptr);
+                        char *exCString = mono_string_to_utf8(exStr);
+                        std::cerr << "Exception in C# method OnDrawUI(): " << exCString << std::endl;
+                        mono_free(exCString);
+                    }
+                }
+                else
+                {
+                    std::cerr << "Error: Could not find method OnDrawUI in MantraxMain class." << std::endl;
+                }
+            }
+            else
+            {
+                std::cerr << "Error: Could not find MantraxMain class in MantraxGameCore namespace." << std::endl;
+            }
+
+            mono_method_desc_free(ptrMainMethodDesc);
+        }
+        else
+        {
+            std::cerr << "Error: Could not create method descriptor for MantraxMain:OnDrawUI()." << std::endl;
+        }
+
         if (m_ptrMonoDomain)
         {
             mono_jit_cleanup(m_ptrMonoDomain);
