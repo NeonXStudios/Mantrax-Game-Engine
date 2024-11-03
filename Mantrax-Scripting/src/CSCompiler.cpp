@@ -46,9 +46,7 @@ void CSCompiler::setup_mono()
                 mono_add_internal_call("MantraxGameCore.GUIEditor::InputField(string,string)", &EditorGUI::CSInputText);
                 mono_add_internal_call("MantraxGameCore.GUIEditor::Button(string)", &EditorGUI::CSButton);
 
-                mono_add_internal_call("MantraxGameCore.EngineCore::MakeEntity", &EntityWrapper::NewEntity);
-                mono_add_internal_call("MantraxGameCore.Entity::SetEntityName", &EntityWrapper::SetEntityName);
-                mono_add_internal_call("MantraxGameCore.Entity::GetEntityName", &EntityWrapper::GetEntityName);
+                EntityWrapper::entity_wrapper_setup();
             }
             else
             {

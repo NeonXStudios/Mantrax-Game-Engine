@@ -36,8 +36,10 @@ public class SceneManager : MantraxBehaviour
         if (GUIEditor.Button("TEST CLIC"))
         {
             Console.WriteLine("CLIC ME BUTTON");
+
             Entity g = EngineCore.NewObject();
             g.Name = _Value;
+            g.Tag = "Hello";
 
             Console.WriteLine($"Entity: {g.Name}");
         }

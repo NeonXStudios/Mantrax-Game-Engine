@@ -13,8 +13,8 @@ namespace MantraxGameCore
 
         public string Tag
         {
-            get => GetEntityName(p_pointer);
-            set => SetEntityName(p_pointer, value);
+            get => GetEntityTag(p_pointer);
+            set => SetEntityTag(p_pointer, value);
         }
 
         public IntPtr p_pointer;

@@ -3,20 +3,24 @@
   "WorkspaceRootPath": "F:\\GITHUB\\Garin\\MantraxGameCore\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\components\\entity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|f:\\github\\garin\\mantraxgamecore\\components\\texturemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:components\\texturemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\components\\guieditor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:components\\guieditor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|f:\\github\\garin\\mantraxgamecore\\components\\entity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:components\\entity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|f:\\github\\garin\\mantraxgamecore\\behaviours\\scenemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\behaviours\\scenemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:behaviours\\scenemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\components\\enginecore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:components\\enginecore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\components\\guieditor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:components\\guieditor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\behaviours\\runtimemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,11 +38,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
+              "Title": "TextureManager.cs",
+              "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\TextureManager.cs",
+              "RelativeDocumentMoniker": "Components\\TextureManager.cs",
+              "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\TextureManager.cs",
+              "RelativeToolTip": "Components\\TextureManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-03T22:24:15.053Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "GUIEditor.cs",
               "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\GUIEditor.cs",
               "RelativeDocumentMoniker": "Components\\GUIEditor.cs",
@@ -46,11 +63,12 @@
               "RelativeToolTip": "Components\\GUIEditor.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-31T09:10:16.831Z"
+              "WhenOpened": "2024-10-31T09:10:16.831Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "EngineCore.cs",
               "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\EngineCore.cs",
               "RelativeDocumentMoniker": "Components\\EngineCore.cs",
@@ -58,37 +76,38 @@
               "RelativeToolTip": "Components\\EngineCore.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAqwBMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-03T06:01:36.712Z"
+              "WhenOpened": "2024-11-03T06:01:36.712Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "SceneManager.cs",
               "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Behaviours\\SceneManager.cs",
               "RelativeDocumentMoniker": "Behaviours\\SceneManager.cs",
               "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Behaviours\\SceneManager.cs",
               "RelativeToolTip": "Behaviours\\SceneManager.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAQwCcAAAASAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAowCkAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-02T03:49:49.332Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Entity.cs",
               "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\Entity.cs",
               "RelativeDocumentMoniker": "Components\\Entity.cs",
               "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\Entity.cs",
               "RelativeToolTip": "Components\\Entity.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-03T03:41:50.869Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "RuntimeManager.cs",
               "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Behaviours\\RuntimeManager.cs",
               "RelativeDocumentMoniker": "Behaviours\\RuntimeManager.cs",
@@ -100,7 +119,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "MantraxMain.cs",
               "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Mains\\MantraxMain.cs",
               "RelativeDocumentMoniker": "Mains\\MantraxMain.cs",
