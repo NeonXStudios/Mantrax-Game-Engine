@@ -8,6 +8,8 @@ using MantraxGameCore;
 
 public class SceneManager : MantraxBehaviour
 {
+    public string _Value = "New Object";
+
     public void Start()
     {
         Console.WriteLine("My First Script C# Mantrax");
@@ -28,7 +30,18 @@ public class SceneManager : MantraxBehaviour
 
     public void OnDrawUIEditor()
     {
-        GUIEditor.Begin();
+        GUIEditor.Begin("A");
+        _Value = GUIEditor.InputField("hola", _Value);
+
+        if (GUIEditor.Button("TEST CLIC"))
+        {
+            Console.WriteLine("CLIC ME BUTTON");
+            Entity g = EngineCore.NewObject();
+            g.Name = _Value;
+
+            Console.WriteLine($"Entity: {g.Name}");
+        }
+
         GUIEditor.End();
     }
 }

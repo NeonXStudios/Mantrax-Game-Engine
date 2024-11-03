@@ -15,6 +15,7 @@ RenderPipeline *piprender = new RenderPipeline();
 
 int main(void)
 {
+    std::cout << "Running Mantrax Core" << std::endl;
 
     // start audio systems
     audioManager->create();

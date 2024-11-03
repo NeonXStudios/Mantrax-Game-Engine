@@ -10,7 +10,7 @@ namespace MantraxGameCore
     public class Time
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static float DeltaTime();
+        private extern static float DeltaTime();
 
         public static float Delta
         {

@@ -7,21 +7,66 @@
 #include <IconsManager.h>
 #include <Core.h>
 #include <GarinComponents.h>
+#include <mono/jit/jit.h>
+#include <mono/metadata/assembly.h>
+#include <mono/metadata/mono-gc.h>
+#include <mono/metadata/object.h>
+#include <mono/metadata/mono-config.h>
+#include <mono/metadata/mono-debug.h>
 
 using namespace std;
 
 class GARINLIBS_API EditorGUI
 {
 public:
-    static void begin()
+    static void CSBegin(MonoString *_Name)
     {
-        ImGui::Begin("z1");
-        ImGui::Text("JAKUNA MATATA");
+        std::string info = mono_string_to_utf8(_Name);
+        ImGui::Begin(info.c_str());
     }
 
-    static void end()
+    static void CSEnd()
     {
         ImGui::End();
+    }
+
+    static MonoString *CSInputText(MonoString *_Name, MonoString *_Value)
+    {
+        char *name_utf8 = mono_string_to_utf8(_Name);
+        char *value_utf8 = mono_string_to_utf8(_Value);
+
+        if (!name_utf8 || !value_utf8)
+        {
+            std::cerr << "Error: Failed to convert MonoString to UTF8." << std::endl;
+            if (name_utf8)
+                mono_free(name_utf8);
+            if (value_utf8)
+                mono_free(value_utf8);
+            return nullptr;
+        }
+
+        std::string p_name(name_utf8);
+        std::string p_value(value_utf8);
+
+        mono_free(name_utf8);
+        mono_free(value_utf8);
+
+        std::string p_result = EditorGUI::InputText(p_name, p_value);
+
+        MonoString *result = mono_string_new(mono_domain_get(), p_result.c_str());
+        if (!result)
+        {
+            std::cerr << "Error: Failed to create MonoString for result." << std::endl;
+        }
+
+        return result;
+    }
+
+    static bool CSButton(MonoString *_Name)
+    {
+        std::string p_name = mono_string_to_utf8(_Name);
+
+        return EditorGUI::Button(p_name, glm::vec2(200, 30));
     }
 
     static std::string InputText(const std::string &Name, const std::string &value, ImVec2 size = ImVec2(200, 20))

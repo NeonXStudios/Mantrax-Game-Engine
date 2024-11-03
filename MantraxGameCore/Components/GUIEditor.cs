@@ -9,10 +9,16 @@ namespace MantraxGameCore
 {
     public class GUIEditor
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static void Begin();
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static void Begin(string WindowsName);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
         public extern static void End();
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static string InputField(string _Name, string _Value);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        public extern static bool Button(string _Name);
     }
 }

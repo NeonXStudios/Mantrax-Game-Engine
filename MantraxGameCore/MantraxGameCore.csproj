@@ -46,15 +46,18 @@
     <Compile Include="Behaviours\RuntimeManager.cs" />
     <Compile Include="Behaviours\SceneManager.cs" />
     <Compile Include="Behaviours\Time.cs" />
+    <Compile Include="Components\EngineCore.cs" />
+    <Compile Include="Components\Entity.cs" />
     <Compile Include="Components\GUIEditor.cs" />
     <Compile Include="Components\ModelComponent.cs" />
     <Compile Include="Components\Shader.cs" />
     <Compile Include="Components\TextureManager.cs" />
     <Compile Include="Graphics\RenderPipeline.cs" />
     <Compile Include="Mains\MantraxMain.cs" />
-    <Compile Include="Interfaces\IMantrax.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
