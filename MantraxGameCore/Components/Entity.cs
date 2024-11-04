@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System;
+using System.ComponentModel;
 
 namespace MantraxGameCore
 {
@@ -30,5 +31,21 @@ namespace MantraxGameCore
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern string GetEntityTag(IntPtr entityPtr);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern Component AddComponent(Type type);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern Component GetComponent(Type type);
+
+        public T AddComponent<T>() where T : Component
+        {
+            return (T)AddComponent(typeof(T));
+        }
+
+        public T GetComponent<T>() where T : Component
+        {
+            return (T)GetComponent(typeof(T));
+        }
     }
 }

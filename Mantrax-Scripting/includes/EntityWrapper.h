@@ -232,6 +232,86 @@ public:
         return entityObject;
     }
 
+    // static MonoObject *AddComponent(MonoObject *entityObj, MonoString *componentTypeName)
+    // {
+    //     MonoClass *entityClass = mono_object_get_class(entityObj);
+    //     MonoClassField *nativeEntityField = mono_class_get_field_from_name(entityClass, "p_pointer");
+
+    //     void *nativePtr;
+    //     mono_field_get_value(entityObj, nativeEntityField, &nativePtr);
+
+    //     if (!nativePtr)
+    //     {
+    //         std::cerr << "Error: Entity pointer is null." << std::endl;
+    //         return nullptr;
+    //     }
+
+    //     Entity *entity = static_cast<Entity *>(nativePtr);
+
+    //     char *componentName = mono_string_to_utf8(componentTypeName);
+
+    //     if (strcmp(componentName, "TransformComponent") == 0)
+    //     {
+    //         auto &component = entity->addComponent<TransformComponent>();
+
+    //         MonoClass *componentClass = mono_class_from_name(CSCompiler::m_ptrGameAssemblyImage, "MantraxGameCore", componentName);
+    //         MonoObject *componentObject = mono_object_new(mono_domain_get(), componentClass);
+    //         mono_runtime_object_init(componentObject);
+
+    //         MonoClassField *nativeComponentField = mono_class_get_field_from_name(componentClass, "p_pointer");
+    //         void *nativeComponentPtr = reinterpret_cast<void *>(&component);
+    //         mono_field_set_value(componentObject, nativeComponentField, &nativeComponentPtr);
+
+    //         mono_free(componentName);
+    //         return componentObject;
+    //     }
+
+    //     mono_free(componentName);
+    //     std::cerr << "Error: Unknown component type." << std::endl;
+    //     return nullptr;
+    // }
+
+    // static MonoObject *GetComponent(MonoObject *entityObj, MonoString *componentTypeName)
+    // {
+    //     MonoClass *entityClass = mono_object_get_class(entityObj);
+    //     MonoClassField *nativeEntityField = mono_class_get_field_from_name(entityClass, "p_pointer");
+
+    //     void *nativePtr;
+    //     mono_field_get_value(entityObj, nativeEntityField, &nativePtr);
+
+    //     if (!nativePtr)
+    //     {
+    //         std::cerr << "Error: Entity pointer is null." << std::endl;
+    //         return nullptr;
+    //     }
+
+    //     Entity *entity = static_cast<Entity *>(nativePtr);
+    //     char *componentName = mono_string_to_utf8(componentTypeName);
+
+    //     if (strcmp(componentName, "TransformComponent") == 0)
+    //     {
+    //         TransformComponent *component = &entity->getComponent<TransformComponent>();
+
+    //         if (component)
+    //         {
+    //             MonoClass *componentClass = mono_class_from_name(CSCompiler::m_ptrGameAssemblyImage, "MantraxGameCore", componentName);
+    //             MonoObject *componentObject = mono_object_new(mono_domain_get(), componentClass);
+    //             mono_runtime_object_init(componentObject);
+
+    //             MonoClassField *nativeComponentField = mono_class_get_field_from_name(componentClass, "p_pointer");
+    //             void *nativeComponentPtr = reinterpret_cast<void *>(component);
+    //             mono_field_set_value(componentObject, nativeComponentField, &nativeComponentPtr);
+
+    //             mono_free(componentName);
+    //             return componentObject;
+    //         }
+    //     }
+
+    //     mono_free(componentName);
+    //     std::cerr << "Error: Component not found." << std::endl;
+    //     return nullptr;
+    // }
+
     static void entity_wrapper_setup()
     {
         mono_add_internal_call("MantraxGameCore.EngineCore::MakeEntity", &EntityWrapper::NewEntity);

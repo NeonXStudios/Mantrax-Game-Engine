@@ -2,6 +2,7 @@
 #include <RenderPipeline.h>
 #include <EditorGUI.h>
 #include <EntityWrapper.h>
+#include <VectorsWrapper.h>
 
 MonoDomain *CSCompiler::m_ptrMonoDomain = nullptr;
 MonoAssembly *CSCompiler::m_ptrGameAssembly = nullptr;
@@ -47,6 +48,7 @@ void CSCompiler::setup_mono()
                 mono_add_internal_call("MantraxGameCore.GUIEditor::Button(string)", &EditorGUI::CSButton);
 
                 EntityWrapper::entity_wrapper_setup();
+                VectorsWrapper::setup_vector3_wrapper();
             }
             else
             {

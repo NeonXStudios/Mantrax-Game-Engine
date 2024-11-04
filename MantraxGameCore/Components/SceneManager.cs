@@ -9,6 +9,10 @@ using MantraxGameCore;
 public class SceneManager : MantraxBehaviour
 {
     public string _Value = "New Object";
+    public float A = 0;
+    public float B = 50;
+    public Vector3 pos_a = new Vector3(0, 0, 0);
+    public Vector3 pos_b = new Vector3(50, 50, 50);
 
     public void Start()
     {
@@ -21,6 +25,18 @@ public class SceneManager : MantraxBehaviour
 
     public void OnEdition()
     {
+        A = MathF.Lerp(A, B, 0.1f * Time.Delta);
+
+        Console.WriteLine($"VALUE: {A}");
+
+        pos_a = Vector3.Lerp(pos_a, pos_b, 0.1f * Time.Delta);
+        float distance = Vector3.Distance(pos_a, pos_b);
+
+        Console.WriteLine($"X: {pos_a.x}");
+        Console.WriteLine($"Y: {pos_a.y}");
+        Console.WriteLine($"Z: {pos_a.z}");
+
+        Console.WriteLine($"DISTANCE: {distance}");
     }
 
     public void OnClean()
