@@ -1,5 +1,7 @@
 build/
 
+*.ilk
+
 Compiler/LIB/*
 Compiler/COMPILER/*
 
