@@ -1,0 +1,10 @@
+^F:\GARINPROYECTS\MYFIRSTGAME\WLIBSGPP\BIN\CMAKEFILES\46C3D7AFA5E977E7EBD64793B86939D7\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SF:/GarinProyects/MyFirstGame/wlibsgpp -BF:/GarinProyects/MyFirstGame/wlibsgpp/bin --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file F:/GarinProyects/MyFirstGame/wlibsgpp/bin/MantraxRuntimeCore.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

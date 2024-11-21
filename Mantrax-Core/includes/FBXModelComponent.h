@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <Core.h>
-#include <stb_image.h> // Necesitarás esta librería para cargar imágenes
+#include <stb_image.h> 
 
 class GARINLIBS_API FBXModelComponent
 {
@@ -15,7 +15,7 @@ private:
     FbxScene *scene;
     std::vector<GLuint> vaoList;
     std::vector<GLuint> vboList;
-    std::vector<GLuint> textureList; // Lista de texturas
+    std::vector<GLuint> textureList;
     std::vector<int> verticesCountList;
 
     void InitializeSdk()
@@ -58,13 +58,11 @@ private:
         glGenTextures(1, &textureID);
         glBindTexture(GL_TEXTURE_2D, textureID);
 
-        // Configuración de parámetros de textura
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        // Carga de imagen
         int width, height, nrChannels;
         unsigned char *data = stbi_load(filename, &width, &height, &nrChannels, 0);
         if (data)
@@ -186,7 +184,6 @@ private:
             }
         }
 
-        // Configuración de OpenGL...
 
         GLuint vao, vboVertices, vboUVs;
         glGenVertexArrays(1, &vao);

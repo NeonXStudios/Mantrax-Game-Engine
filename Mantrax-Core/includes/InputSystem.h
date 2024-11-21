@@ -17,6 +17,7 @@ public:
     static double lastY;
 
     static float get_axis(GLuint positive_key, GLuint negative_key);
+    static bool on_key_down(GLuint key);
     static bool on_key_pressed(GLuint key);
 
     static float get_mouse_x();
@@ -24,7 +25,6 @@ public:
 
     static void update_input();
     static void initialize();
-    static bool on_key_down(GLuint key);
 
     // Soporte para joystick
     static bool is_joystick_connected(int joystick_id);

@@ -1,0 +1,319 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\AppSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\ComponentFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\DynamicLibLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\FBXModelComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\FileManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\GAnimator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\GAudio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\GBody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\GCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\GCaster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\GCharacter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\GCollision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\GMaterial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\GNoise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\GScript.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\GScriptLua.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\GameBehaviour.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\GameBehaviourRunner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\GarinIO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\GarinUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\IconsManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\InputSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\LightComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\Lights.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\Loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\ModelComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Core\src\types.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Scene\src\Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Scene\src\SceneManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-UI\includes\ImGuizmo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-UI\includes\crude_json.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-UI\includes\imgui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-UI\includes\imgui_canvas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-UI\includes\imgui_demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-UI\includes\imgui_draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-UI\includes\imgui_impl_glfw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-UI\includes\imgui_impl_opengl3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-UI\includes\imgui_impl_vulkan.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-UI\includes\imgui_node_editor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-UI\includes\imgui_node_editor_api.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-UI\includes\imgui_tables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-UI\includes\imgui_widgets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-UI\src\UIComponents\Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-VR\src\vr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Graphics\libs\glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Graphics\src\CanvasManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Graphics\src\Drawer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Graphics\src\GBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Graphics\src\GeometryPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Graphics\src\Gfx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Graphics\src\Graphics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Graphics\src\LightingPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Graphics\src\RenderGraphics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Graphics\src\RenderPipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Graphics\src\TextureManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Graphics\src\TextureTarget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Graphics\src\Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Graphics\src\camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Maths\src\PerlinGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Physics\src\PhysicsEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Audio\src\AudioManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Graphics\libs\ufbx.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Scripting\src\CSCompiler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Scripting\src\EngineBinder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Scripting\src\EntityBinder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Scripting\src\EntityWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Scripting\src\InputBinder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\AComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\AnimatorUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\AssetsUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\CCharacter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\CCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\CGScript.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\CMaterial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\CModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\CRigidbody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\ComponentsDrawer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\EditorConfigs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\EngineHubUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\FileBrowser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\FilesUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\GameSettingsUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\GizmoModels.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\GraphicsManagerUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\HierarchyUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\InputSystemUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\InspectorUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\MainBarUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\MakerUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\MenuUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\Node.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\SceneData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\SceneFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\SceneUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\UIAdministrator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\UIEditorManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\UINotification.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\gamescene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\Mantrax-Engine\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\clscpp\ExampleClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\GarinGameCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="F:\GarinProyects\MyFirstGame\cpplibs\InputWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="F:\GarinProyects\MyFirstGame\wlibsgpp\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{48B12E37-A196-34FE-A103-D8807FBFBF76}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -13,6 +13,7 @@ public class SceneManager : MantraxBehaviour
     public float B = 50;
     public Vector3 pos_a = new Vector3(0, 0, 0);
     public Vector3 pos_b = new Vector3(50, 50, 50);
+    Entity new_obj;
 
     public void Start()
     {
@@ -25,18 +26,18 @@ public class SceneManager : MantraxBehaviour
 
     public void OnEdition()
     {
-        A = MathF.Lerp(A, B, 0.1f * Time.Delta);
+        //A = MathF.Lerp(A, B, 0.1f * Time.Delta);
 
-        Console.WriteLine($"VALUE: {A}");
+        //Console.WriteLine($"VALUE: {A}");
 
-        pos_a = Vector3.Lerp(pos_a, pos_b, 0.1f * Time.Delta);
-        float distance = Vector3.Distance(pos_a, pos_b);
+        //pos_a = Vector3.Lerp(pos_a, pos_b, 0.1f * Time.Delta);
+        //float distance = Vector3.Distance(pos_a, pos_b);
 
-        Console.WriteLine($"X: {pos_a.x}");
-        Console.WriteLine($"Y: {pos_a.y}");
-        Console.WriteLine($"Z: {pos_a.z}");
+        //Console.WriteLine($"X: {pos_a.x}");
+        //Console.WriteLine($"Y: {pos_a.y}");
+        //Console.WriteLine($"Z: {pos_a.z}");
 
-        Console.WriteLine($"DISTANCE: {distance}");
+        //Console.WriteLine($"DISTANCE: {distance}");
     }
 
     public void OnClean()
@@ -46,20 +47,21 @@ public class SceneManager : MantraxBehaviour
 
     public void OnDrawUIEditor()
     {
-        GUIEditor.Begin("A");
-        _Value = GUIEditor.InputField("hola", _Value);
+        //GUIEditor.Begin("A");
+        //_Value = GUIEditor.InputField("hola", _Value);
 
-        if (GUIEditor.Button("TEST CLIC"))
-        {
-            Console.WriteLine("CLIC ME BUTTON");
+        //if (GUIEditor.Button("TEST CLIC"))
+        //{
+        //    Console.WriteLine("CLIC ME BUTTON");
 
-            Entity g = EngineCore.NewObject();
-            g.Name = _Value;
-            g.Tag = "Hello";
+        //    Entity g = EngineCore.NewObject();
+        //    g.Name = _Value;
+        //    g.Tag = "Hello";
+        //    new_obj = g;
 
-            Console.WriteLine($"Entity: {g.Name}");
-        }
+        //    Console.WriteLine($"Entity: {g.Name}");
+        //}
 
-        GUIEditor.End();
+        //GUIEditor.End();
     }
 }

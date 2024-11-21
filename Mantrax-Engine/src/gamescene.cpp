@@ -7,18 +7,17 @@
 #include <RenderPipeline.h>
 #include <GarinIO.h>
 #include <PerlinGenerator.h>
-#include <CSCompiler.h>
 
-CSCompiler *cs = new CSCompiler();
+void gamescene::on_awake()
+{
+    GarinUI::make_ui_context(Gfx::get_game_window());
+}
 
 void gamescene::on_start()
 {
     old_stdout = std::cout.rdbuf(buffer_stdout.rdbuf());
     old_stderr = std::cerr.rdbuf(buffer_stderr.rdbuf());
 
-    configs = new EditorConfigs();
-
-    GarinUI::make_ui_context(Gfx::get_game_window());
     std::cout << "CARPETA DE EJECUCION: " << FileManager::get_execute_path() << std::endl;
 
     uieditor = new UIEditorManager();
@@ -46,6 +45,8 @@ void gamescene::on_start()
     gizmo_models->init();
 
     assets_registry = new AssetsRegistry("..", 5);
+
+    SceneData::load_scene(configs->current_scene);
 
     cs->setup_mono();
 
@@ -120,7 +121,7 @@ void gamescene::on_edition_mode(float delta_time)
         }
     }
 
-    Gfx::change_name(window_name);
+    // Gfx::change_name(window_name);
 
     if (configs->project_select == true && !first_frame_loaded_on_bucle)
     {
@@ -129,7 +130,7 @@ void gamescene::on_edition_mode(float delta_time)
         first_frame_loaded_on_bucle = true;
     }
 
-    cs->edition_event();
+    // cs->edition_event();
 }
 
 void gamescene::on_update(float delta_time)
@@ -141,7 +142,7 @@ void gamescene::on_update(float delta_time)
     //     std::cout << "Casting: " << hit->entity->ObjectName << std::endl;
     // }
 
-    cs->tick_event();
+    // cs->tick_event();
 }
 
 void gamescene::on_draw()
@@ -274,7 +275,7 @@ void gamescene::draw_ui()
             }
         }
 
-        cs->ui_event();
+        // cs->ui_event();
     }
 
     GarinUI::get_ui_manager()->render_ui_context();
@@ -282,7 +283,7 @@ void gamescene::draw_ui()
 
 void gamescene::on_destroy()
 {
-    cs->release_mono();
+    // cs->release_mono();
     assets_registry->stop();
     configs->save_config();
 }

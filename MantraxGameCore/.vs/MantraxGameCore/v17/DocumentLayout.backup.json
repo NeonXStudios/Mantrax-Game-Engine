@@ -7,20 +7,32 @@
       "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:components\\scenemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|f:\\github\\garin\\mantraxgamecore\\maths\\vector3.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:maths\\vector3.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\components\\enginecore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:components\\enginecore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\mains\\mantraxmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:mains\\mantraxmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\components\\entity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:components\\entity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\components\\shader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:components\\shader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\components\\modelcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:components\\modelcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\components\\guieditor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:components\\guieditor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\behaviours\\runtimemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:behaviours\\runtimemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|f:\\github\\garin\\mantraxgamecore\\behaviours\\mantraxbehaviour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:behaviours\\mantraxbehaviour.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|f:\\github\\garin\\mantraxgamecore\\behaviours\\time.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:behaviours\\time.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -40,61 +52,100 @@
               "RelativeDocumentMoniker": "Components\\SceneManager.cs",
               "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\SceneManager.cs",
               "RelativeToolTip": "Components\\SceneManager.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAQwCYAAAAkAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-04T02:24:21.853Z",
+              "WhenOpened": "2024-11-13T04:30:28.125Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Vector3.cs",
-              "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Maths\\Vector3.cs",
-              "RelativeDocumentMoniker": "Maths\\Vector3.cs",
-              "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Maths\\Vector3.cs",
-              "RelativeToolTip": "Maths\\Vector3.cs",
-              "ViewState": "AgIAAE8AAAAAAAAAAAAAwG0AAAAFAAAAAAAAAA==",
+              "DocumentIndex": 7,
+              "Title": "Time.cs",
+              "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Behaviours\\Time.cs",
+              "RelativeDocumentMoniker": "Behaviours\\Time.cs",
+              "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Behaviours\\Time.cs",
+              "RelativeToolTip": "Behaviours\\Time.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-03T22:35:55.301Z",
+              "WhenOpened": "2024-11-09T22:17:19.029Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "RuntimeManager.cs",
               "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Behaviours\\RuntimeManager.cs",
               "RelativeDocumentMoniker": "Behaviours\\RuntimeManager.cs",
               "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Behaviours\\RuntimeManager.cs",
               "RelativeToolTip": "Behaviours\\RuntimeManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAABQAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAAgwCcAAABUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-02T22:57:02.725Z",
+              "WhenOpened": "2024-11-09T22:17:16.474Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "GUIEditor.cs",
+              "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\GUIEditor.cs",
+              "RelativeDocumentMoniker": "Components\\GUIEditor.cs",
+              "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\GUIEditor.cs",
+              "RelativeToolTip": "Components\\GUIEditor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T22:17:07.211Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "MantraxMain.cs",
-              "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Mains\\MantraxMain.cs",
-              "RelativeDocumentMoniker": "Mains\\MantraxMain.cs",
-              "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Mains\\MantraxMain.cs",
-              "RelativeToolTip": "Mains\\MantraxMain.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAsAAAAAAAAAA==",
+              "Title": "Entity.cs",
+              "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\Entity.cs",
+              "RelativeDocumentMoniker": "Components\\Entity.cs",
+              "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\Entity.cs",
+              "RelativeToolTip": "Components\\Entity.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAQwBQAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-02T22:56:57.537Z",
+              "WhenOpened": "2024-11-09T22:17:06.738Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "EngineCore.cs",
+              "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\EngineCore.cs",
+              "RelativeDocumentMoniker": "Components\\EngineCore.cs",
+              "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\EngineCore.cs",
+              "RelativeToolTip": "Components\\EngineCore.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwBYAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T22:17:06.268Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "MantraxBehaviour.cs",
-              "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Behaviours\\MantraxBehaviour.cs",
-              "RelativeDocumentMoniker": "Behaviours\\MantraxBehaviour.cs",
-              "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Behaviours\\MantraxBehaviour.cs",
-              "RelativeToolTip": "Behaviours\\MantraxBehaviour.cs",
+              "Title": "ModelComponent.cs",
+              "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\ModelComponent.cs",
+              "RelativeDocumentMoniker": "Components\\ModelComponent.cs",
+              "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\ModelComponent.cs",
+              "RelativeToolTip": "Components\\ModelComponent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACUAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T22:16:57.86Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Shader.cs",
+              "DocumentMoniker": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\Shader.cs",
+              "RelativeDocumentMoniker": "Components\\Shader.cs",
+              "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\Shader.cs",
+              "RelativeToolTip": "Components\\Shader.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-04T02:24:16.637Z",
+              "WhenOpened": "2024-11-09T22:16:55.987Z",
               "EditorCaption": ""
             }
           ]

@@ -6,6 +6,8 @@ namespace MantraxGameCore
 {
     public class Entity
     {
+        public IntPtr p_pointer;
+
         public string Name
         {
             get => GetEntityName(p_pointer);
@@ -17,8 +19,6 @@ namespace MantraxGameCore
             get => GetEntityTag(p_pointer);
             set => SetEntityTag(p_pointer, value);
         }
-
-        public IntPtr p_pointer;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void SetEntityName(IntPtr entityPtr, string name);

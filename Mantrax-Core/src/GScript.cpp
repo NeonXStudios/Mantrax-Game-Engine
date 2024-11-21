@@ -4,7 +4,7 @@ void GScript::defines()
 {
     try
     {
-        GVAR(ClassName, "TestDllImport", std::string);
+        GVAR(ClassName, "NoneScript", std::string);
     }
     catch (const std::exception &e)
     {
@@ -31,12 +31,12 @@ void GScript::init()
         }
         else
         {
-            std::cerr << "Error: No se pudo crear una instancia de " << GETVAR(ClassName, std::string) << std::endl;
+            std::cerr << "Error: On Create Instace For " << GETVAR(ClassName, std::string) << std::endl;
         }
     }
     catch (const std::exception &e)
     {
-        std::string errorMessage = "Error en init: ";
+        std::string errorMessage = "Error on init: ";
         errorMessage += e.what();
         logError(errorMessage);
         std::cerr << errorMessage << std::endl;
@@ -52,7 +52,7 @@ void GScript::update()
     }
     catch (const std::exception &e)
     {
-        std::string errorMessage = "Error en init: ";
+        std::string errorMessage = "Error on update: ";
         errorMessage += e.what();
         logError(errorMessage);
         std::cerr << errorMessage << std::endl;

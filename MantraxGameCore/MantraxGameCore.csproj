@@ -52,6 +52,9 @@
     <Compile Include="Components\ModelComponent.cs" />
     <Compile Include="Components\Shader.cs" />
     <Compile Include="Components\TextureManager.cs" />
+    <Compile Include="Components\Transform.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Graphics\RenderPipeline.cs" />
     <Compile Include="Mains\MantraxMain.cs" />
     <Compile Include="Maths\Vector3.cs" />

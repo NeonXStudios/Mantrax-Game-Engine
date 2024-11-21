@@ -106,20 +106,17 @@ const char *InputSystem::get_joystick_name(int joystick_id)
     return "No conectado";
 }
 
-// glm::vec2 InputSystem::get_mouse()
+// extern "C" GARINLIBS_API bool is_key_down(GLuint key)
 // {
-//     float sensitivity = 0.2f;
-//     double mouseX, mouseY;
-//     glfwGetCursorPos(Graphics::get_game_window(), &mouseX, &mouseY);
+//     return InputSystem::on_key_down(key);
+// }
 
-//     float deltaX = static_cast<float>(mouseX - lastX);
-//     float deltaY = static_cast<float>(lastY - mouseY);
+// extern "C" GARINLIBS_API float get_mouse_delta_x()
+// {
+//     return InputSystem::get_mouse_x();
+// }
 
-//     lastX = mouseX;
-//     lastY = mouseY;
-
-//     float rotX = deltaY * sensitivity;
-//     float rotY = deltaX * sensitivity;
-
-//     return glm::vec2(rotY, rotX);
+// extern "C" GARINLIBS_API float get_mouse_delta_y()
+// {
+//     return InputSystem::get_mouse_y();
 // }

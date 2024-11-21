@@ -169,7 +169,7 @@ void MainBarUI::draw(Entity *owner)
                 {
                     if (entry.path().extension() == ".h")
                     {
-                        std::cout << "INSERTANDO ARCHIVO: " << entry.path().filename().stem().string() << std::endl;
+                        std::cout << "MAKING H CLASS GETTER: " << entry.path().filename().stem().string() << std::endl;
                         insert_register(register_core, entry.path().filename().stem().string());
                     }
                 }
@@ -180,13 +180,14 @@ void MainBarUI::draw(Entity *owner)
 
                 UINotification::AddNotification("Compiling libraries (wait for it)...", 10.0f);
 
-                std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/Compiler-Lib/GarinEditorEngine/";
+                std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/";
 
-                // Formar los comandos
-                std::string cmake_command = "cd /d " + cmake_path + " && cmake -G \"Visual Studio 17 2022\" .";
-                std::string msbuild_command = "cd /d " + cmake_path + " && msbuild GarinEditor.sln /p:Configuration=Debug";
+                std::string cmake_command =
+                    "cd /d " + cmake_path + 
+                    " && if not exist bin mkdir bin && cd bin && cmake ..";
 
-                // Ejecutar el comando CMake
+                std::string msbuild_command = "cd /d " + cmake_path + " && cd bin && msbuild MantraxRuntimeCore.sln /p:Configuration=Debug";
+
                 int result = system(cmake_command.c_str());
 
                 if (result == 0)
@@ -194,7 +195,6 @@ void MainBarUI::draw(Entity *owner)
                     UINotification::AddNotification("CMake Reloaded...", 10.0f);
                     UINotification::AddNotification("Starting compilation of the libraries (Wait)...", 10.0f);
 
-                    // Ejecutar el comando MSBuild
                     int result_build = system(msbuild_command.c_str());
 
                     if (result_build == 0)
@@ -265,7 +265,6 @@ void MainBarUI::draw(Entity *owner)
 
     if (ImGui::ImageButton((void *)(intptr_t)current_icon, ImVec2(16, 16)))
     {
-
         AppSettings::is_playing = !AppSettings::is_playing;
 
         if (AppSettings::is_playing)
@@ -282,6 +281,20 @@ void MainBarUI::draw(Entity *owner)
 
             if (selectobj != nullptr)
                 game->set_object_select(selectobj);
+
+            std::string command = ".\\data\\PlayBackEngine\\Mantrax_PlayBackEngine.exe";
+            std::string parameter = configs->current_proyect;
+
+            std::string fullCommand = command + " " + parameter;
+
+            std::string newWorkDir = FileManager::get_execute_path();
+            std::wstring wideWorkingDir(newWorkDir.begin(), newWorkDir.end());
+
+            if (!SetCurrentDirectoryW(wideWorkingDir.c_str())){
+                std::cerr << "Error on try create Play Back Engine" << std::endl;
+            }
+
+            int result_execution = system(fullCommand.c_str());
         }
         else
         {

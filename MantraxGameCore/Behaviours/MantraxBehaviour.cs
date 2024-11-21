@@ -15,7 +15,7 @@ namespace MantraxGameCore
              MantraxMain.runtimeManager.AddNewInstance(this);
         }
 
-        public void InvokeFun(string methodName, object[] parameters, int seconds)
+        public void InvokeFun(string methodName, int seconds, object[] parameters)
         {
             Task.Run(async () =>
             {

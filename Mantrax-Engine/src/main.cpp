@@ -6,6 +6,10 @@
 #include <GarinUI.h>
 #include <GameBehaviour.h>
 #include <RenderPipeline.h>
+#include <EditorConfigs.h>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 SceneManager *sceneManager = new SceneManager();
 AudioManager *audioManager = new AudioManager();
@@ -13,20 +17,22 @@ DynamicLibLoader *lib_loader = new DynamicLibLoader();
 GameBehaviourFactory *factory_behaviour = new GameBehaviourFactory();
 RenderPipeline *piprender = new RenderPipeline();
 
-int main(void)
+int main(int argc, char *arvg[])
 {
-    std::cout << "Running Mantrax Core" << std::endl;
+    if (argc == 0)
+    {
+        return -2;
+    }
 
-    // start audio systems
     audioManager->create();
     audioManager->StartSystem();
 
-    // Start ddl
-    lib_loader->create();
-
-    // start scene manager
     sceneManager->create();
+
     gamescene *scene_game = &gamescene::getInstance();
+
+    scene_game->configs = new EditorConfigs();
+
     SceneManager::GetSceneManager()->OpenScene = scene_game;
 
     settings_window window_config = settings_window();
@@ -37,14 +43,25 @@ int main(void)
 
     Gfx::create_windows(window_config);
     RenderPipeline::init();
+    SceneManager::GetOpenScene()->awake();
 
+    scene_game->configs->project_select = true;
+
+    fs::path project_path = fs::path(arvg[1]);
+
+    scene_game->configs->current_proyect = project_path.string() + "/";
+
+    scene_game->configs->load_config();
+
+    FileManager::game_path = scene_game->configs->current_proyect;
     SceneManager::GetOpenScene()->init();
-
-    std::cout << "All system started" << std::endl;
+    lib_loader->create();
 
     while (!Gfx::try_window_close())
     {
         Gfx::poll_events();
+        lib_loader->update();
+
         Gfx::timer_control();
         Gfx::process_window_size();
 

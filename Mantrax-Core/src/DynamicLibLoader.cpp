@@ -9,7 +9,6 @@ DynamicLibLoader *DynamicLibLoader::instance = nullptr;
 
 void DynamicLibLoader::create()
 {
-
     if (DynamicLibLoader::instance)
         throw std::exception("Dynamic lib loader already created.");
 
@@ -18,13 +17,17 @@ void DynamicLibLoader::create()
     if (DynamicLibLoader::instance != nullptr)
     {
         DynamicLibLoader::instance->load_components();
+
+        std::cout << "Lib Reloader Created" << endl;
     }
-    std::cout << "AudioManager Created" << endl;
 }
 
 void DynamicLibLoader::load_components()
 {
-    std::cout << "Realing components start" << std::endl;
+    dll_in_recompile = true;
+
+    std::cout << "Initializing DLL" << std::endl;
+
     auto copy_file = [](const std::filesystem::path &from, const std::filesystem::path &to)
     {
         std::ifstream src(from, std::ios::binary);
@@ -34,11 +37,28 @@ void DynamicLibLoader::load_components()
 
         dst << src.rdbuf();
     };
-    std::cout << "Triying reload dll" << std::endl;
-    loader->free();
 
-    auto from_dll_path = FileManager::get_project_path() + "wlibsgpp/Compiler-Lib/GarinEditorEngine/Debug/GarinLibraryEditor.dll";
-    auto dll_path = FileManager::get_project_path() + "cpplibs/GarinLibraryEditor.dll";
+    loader.get()->free();
+
+    from_dll_path = FileManager::get_project_path() + "wlibsgpp/bin/Debug/MantraxRuntimeCore.dll";
+    dll_path = FileManager::get_project_path() + "cpplibs/MantraxRuntimeCore.dll";
+
+    try
+    {
+        if (std::filesystem::exists(dll_path))
+        {
+            std::filesystem::remove(dll_path);
+            std::cout << "File Removed: " << dll_path << std::endl;
+        }
+        else
+        {
+            std::cout << "File Not Found: " << dll_path << std::endl;
+        }
+    }
+    catch (const std::filesystem::filesystem_error &e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
 
     if (!std::filesystem::exists(from_dll_path))
     {
@@ -47,41 +67,107 @@ void DynamicLibLoader::load_components()
 
     copy_file(from_dll_path, dll_path);
 
-    std::cout << "Triying load dll" << std::endl;
-    loader->load(dll_path.c_str());
+    loader.get()->load(dll_path.c_str());
 
-    typedef void (*FuncType)(GameBehaviourFactory *, AudioManager *, SceneManager *scenemanager, GLFWwindow *gfx_pass);
-    auto func = (FuncType)loader->get_function<FuncType>("REGISTER_COMPONENTS");
-
-    // typedef void (*FuncTypeAPI)(Scene *, GLFWindow *graphics);
-    // auto func_graphics = (FuncTypeAPI)loader->get_function<FuncTypeAPI>("REGISTER_APIS");
-
-    if (!func)
+    if (!std::filesystem::exists(dll_path))
     {
-        std::cout << "Failed to load components" << std::endl;
+        std::cout << "DLL not found!" << std::endl;
         return;
     }
 
-    // if (!func_graphics)
-    // {
-    //     std::cout << "Failed to load components API" << std::endl;
-    //     return;
-    // }
+    dll_in_recompile = false;
 
-    GameBehaviourFactory *factoryPtr = &GameBehaviourFactory::instance();
-    Scene *scene = SceneManager::GetOpenScene();
+    typedef void (*InitializeInputSystemFunc)(
+        bool (*isKeyDown)(GLuint),
+        bool (*isKeyPressed)(GLuint),
+        float (*getAxis)(GLuint, GLuint),
+        float (*getMouseDeltaX)(),
+        float (*getMouseDeltaY)());
 
-    if (Gfx::get_game_window() != nullptr)
+    auto init_input_system = (InitializeInputSystemFunc)loader.get()->get_function<InitializeInputSystemFunc>("InitializeInputSystem");
+
+    if (!init_input_system)
     {
-        std::cout << "Triying load Graphics in dll" << std::endl;
+        std::cerr << "Error: No se encontró la función InitializeInputSystem." << std::endl;
+        return;
     }
 
-    func(factoryPtr, AudioManager::GetManager(), SceneManager::GetSceneManager(), Gfx::get_game_window());
-    // func_graphics(scene, Gfx::get_game_window());
+    init_input_system(
+        InputSystem::on_key_down,
+        InputSystem::on_key_pressed,
+        InputSystem::get_axis,
+        InputSystem::get_mouse_x,
+        InputSystem::get_mouse_y);
 
+    assign_data();
     loader_dll_stamp = std::filesystem::last_write_time(from_dll_path).time_since_epoch().count();
+}
 
-    std::cout << "Components reloaded" << std::endl;
+void DynamicLibLoader::assign_data()
+{
+    try
+    {
+
+        typedef void (*FuncType)(GameBehaviourFactory *engine);
+        auto func = (FuncType)loader.get()->get_function<FuncType>("REGISTER_COMPONENTS");
+
+        typedef void (*FuncTypeAPI)(SceneManager *scene_api, GLFWwindow *window_api);
+        auto func_graphics = (FuncTypeAPI)loader.get()->get_function<FuncTypeAPI>("REGISTER_APIS");
+
+        if (!func)
+        {
+            std::cout << "Failed to load components" << std::endl;
+            return;
+        }
+
+        if (!func_graphics)
+        {
+            std::cout << "Failed to load components API" << std::endl;
+            return;
+        }
+
+        GameBehaviourFactory *factoryPtr = &GameBehaviourFactory::instance();
+        Scene *scene = SceneManager::GetOpenScene();
+
+        func(factoryPtr);
+        func_graphics(SceneManager::GetSceneManager(), Gfx::get_game_window());
+
+        typedef bool (*UpdateInputSystemFunc)();
+
+        auto update_input_system = (UpdateInputSystemFunc)loader.get()->get_function<UpdateInputSystemFunc>("update_input_system");
+
+        if (!update_input_system)
+        {
+            std::cerr << "Error: No se encontro la funcion update_input_system." << std::endl;
+            return;
+        }
+
+        update_input_system();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+}
+
+void DynamicLibLoader::update()
+{
+    if (loader != nullptr && dll_in_recompile == false)
+    {
+        if (loader->is_loaded())
+        {
+            assign_data();
+        }
+        else
+        {
+            std::cout << "DLL Not Loaded Error" << std::endl;
+            load_components();
+        }
+    }
+    else
+    {
+        std::cerr << "Loader is nullptr!" << std::endl;
+    }
 }
 
 void DynamicLibLoader::check_components_reload()

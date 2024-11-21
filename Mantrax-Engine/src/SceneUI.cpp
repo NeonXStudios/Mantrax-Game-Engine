@@ -38,8 +38,6 @@ void SceneUI::draw(Entity *select_obj)
 
                 if (EventSystem::MouseCast(WorldPoint, data))
                 {
-                    std::cout << "Selecting object: " << data->object->ObjectName << std::endl;
-
                     if (select_obj != data->object && game != nullptr)
                     {
                         game->set_object_select(data->object);
@@ -51,7 +49,6 @@ void SceneUI::draw(Entity *select_obj)
                     {
                         if (game != nullptr)
                         {
-                            std::cout << "Removing object from select" << std::endl;
                             game->set_object_select(nullptr);
                         }
                     }

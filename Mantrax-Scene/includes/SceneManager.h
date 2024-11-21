@@ -9,8 +9,10 @@ class Scene;
 class GARINLIBS_API SceneManager
 {
 public:
-    Scene *OpenScene;
     static SceneManager *instance;
+    
+    Scene *OpenScene;
+
     static void create();
     static void release();
 
@@ -18,6 +20,8 @@ public:
     static Scene *GetOpenScene();
     static string *GetOpenSceneName();
     static void LoadScene(string scenePath, string sceneName);
+    static void start_physic_world();
+    
     Entity *NewEntity();
     Entity *NewEntityNonSetupScene();
     Entity *GetObjectByID(int id);

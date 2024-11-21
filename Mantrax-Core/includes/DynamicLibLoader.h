@@ -23,6 +23,10 @@ public:
     std::unique_ptr<Loader> loader;
     uint64_t loader_dll_stamp;
 
+    std::string from_dll_path;
+    std::string dll_path;
+    bool dll_in_recompile = false;
+
     DynamicLibLoader()
     {
         loader = std::make_unique<Loader>();
@@ -33,6 +37,8 @@ public:
     void load_components();
     void check_components_reload();
     void reset_component_registry();
+    void update();
+    void assign_data();
 
     // GARIN_API void register_component(const std::string &name, Function<Shared<Component>()> factory);
     Shared<Component> create_component(const std::string &name) const;

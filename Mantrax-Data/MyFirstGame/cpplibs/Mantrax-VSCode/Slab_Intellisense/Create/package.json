@@ -1,0 +1,61 @@
+{
+  "name": "slab",
+  "displayName": "Slab Language Support",
+  "description": "Slab language support",
+  "version": "0.0.1",
+  "publisher": "yourname",
+  "engines": {
+    "vscode": "^1.92.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "slab",
+        "aliases": [
+          "Slab",
+          "slab"
+        ],
+        "extensions": [
+          ".slab"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "slab",
+        "scopeName": "source.slab",
+        "path": "./syntaxes/slab.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "slab",
+        "path": "./snippets/slab.code-snippets"
+      }
+    ],
+    "completionItemProvider": [
+      {
+        "language": "slab",
+        "triggerCharacters": [
+          ".",
+          "_"
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc",
+    "lint": "eslint src --ext .ts",
+    "test": "npm run lint && node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.3",
+    "@types/vscode": "^1.92.0",
+    "typescript": "^5.5.4"
+  }
+}

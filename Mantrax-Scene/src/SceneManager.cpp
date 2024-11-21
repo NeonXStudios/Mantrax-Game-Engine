@@ -147,30 +147,24 @@ void SceneManager::load_scene(std::string scene_name_new)
 
     std::cout << "Loading scene from: " << file_path << std::endl;
 
+
     try
     {
-        SceneManager::GetOpenScene()->unload_scene = true;
+        SceneManager::start_physic_world();
 
-        if (SceneManager::GetOpenScene()->physic_world == nullptr)
+        while (SceneManager::GetOpenScene()->physic_world->mScene == nullptr || SceneManager::GetOpenScene()->physic_world->mMaterial == nullptr)
         {
-            SceneManager::GetOpenScene()->physic_world = new PhysicsEngine();
-        }
-
-        SceneManager::GetOpenScene()->physic_world->delete_phys_world();
-
-        try
-        {
-            for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
-            {
-                ent->ClearAllComponentes();
+            if (SceneManager::GetOpenScene()->physic_world->mScene == nullptr){
+                std::cout << "The world physics not created" << std::endl;
+            }else{
+                std::cout << "World physics created" << std::endl;
             }
-        }
-        catch (const std::exception &e)
-        {
-            std::cerr << e.what() << '\n';
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
 
-        SceneManager::GetOpenScene()->physic_world->start_world_physics();
+
+        SceneManager::GetOpenScene()->unload_scene = true;
 
         SceneManager::GetOpenScene()->objects_worlds.clear();
         SceneManager::GetOpenScene()->scene_name = scene_name_new;
@@ -187,7 +181,6 @@ void SceneManager::load_scene(std::string scene_name_new)
         json data_loaded;
         file >> data_loaded;
 
-        // Verificar que data_loaded sea un array
         if (!data_loaded.is_array())
         {
             std::cerr << "Error: data_loaded is not an array" << std::endl;
@@ -216,8 +209,6 @@ void SceneManager::load_scene(std::string scene_name_new)
 
             VarVerify::set_value_if_exists(data_loaded[i], "object_id", objectID);
             VarVerify::set_value_if_exists(data_loaded[i], "layer", new_object->Layer);
-
-            std::cout << "== Loaded ID: " << objectID << std::endl;
 
             new_object->objectID = objectID;
             new_object->ObjectSTRID = std::to_string(objectID);
@@ -264,7 +255,6 @@ void SceneManager::load_scene(std::string scene_name_new)
             new_object->get_transform()->update();
         }
 
-        // ATTACH WITH PARENTS
         for (size_t i = 0; i < data_loaded.size(); i++)
         {
             int objectID = -1;
@@ -287,17 +277,72 @@ void SceneManager::load_scene(std::string scene_name_new)
         {
             for (Component *comp : ent->GetAllComponent())
             {
-                comp->init();
+                if (typeid(*comp) != typeid(GScriptLua) && typeid(*comp) != typeid(GScript)){
+                    comp->init();
+                }
             }
         }
 
+        try
+        {
+            for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
+            {
+                for (Component *comp : ent->GetAllComponent())
+                {
+                    if (typeid(*comp) == typeid(GScriptLua)){
+                        comp->init();
+                    }
+                }
+            }
+
+            for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
+            {
+                for (Component *comp : ent->GetAllComponent())
+                {
+                    if (typeid(*comp) == typeid(GScript)){
+                        comp->init();
+                    }
+                }
+            }
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+
         SceneManager::GetOpenScene()->unload_scene = false;
-        std::cout << "Loaded Scene: " << scene_name_new << std::endl;
     }
     catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }
+}
+
+void SceneManager::start_physic_world (){
+
+    if (SceneManager::GetOpenScene()->physic_world == nullptr)
+    {
+        SceneManager::GetOpenScene()->physic_world = new PhysicsEngine();
+    }
+
+    SceneManager::GetOpenScene()->physic_world->delete_phys_world();
+
+    
+    try
+    {
+        for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
+        {
+            ent->ClearAllComponentes();
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+
+    SceneManager::GetOpenScene()->physic_world->start_world_physics();
+
+    std::cout << "Physic World Started" << std::endl;
 }
 
 extern "C" GARINLIBS_API SceneManager *GetSceneManager()
