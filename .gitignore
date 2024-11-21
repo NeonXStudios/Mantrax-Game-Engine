@@ -4,7 +4,13 @@ Compiler/LIB/*
 Compiler/COMPILER/*
 
 !Compiler/COMPILER/
-!Compiler/LIB/
+
+Compiler/COMPILER/bin
+Compiler/LIB/bin
+
+Compiler-Mantrax-PlayBackEngine/COMPILER/bin
+Compiler-Mantrax-PlayBackEngine/LIB/bin
+
 !Compiler/LIB/CMakeLists.txt
 !Compiler/COMPILER/CMakeLists.txt
 
