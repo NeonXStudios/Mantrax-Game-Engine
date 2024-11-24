@@ -142,11 +142,7 @@ void SceneManager::LoadScene(string scenePath, string sceneName)
 
 void SceneManager::load_scene(std::string scene_name_new)
 {
-    std::cout << "Starting load scene" << std::endl;
     std::string file_path = FileManager::get_project_path() + "assets/" + scene_name_new + ".scene";
-
-    std::cout << "Loading scene from: " << file_path << std::endl;
-
 
     try
     {
@@ -154,15 +150,17 @@ void SceneManager::load_scene(std::string scene_name_new)
 
         while (SceneManager::GetOpenScene()->physic_world->mScene == nullptr || SceneManager::GetOpenScene()->physic_world->mMaterial == nullptr)
         {
-            if (SceneManager::GetOpenScene()->physic_world->mScene == nullptr){
+            if (SceneManager::GetOpenScene()->physic_world->mScene == nullptr)
+            {
                 std::cout << "The world physics not created" << std::endl;
-            }else{
+            }
+            else
+            {
                 std::cout << "World physics created" << std::endl;
             }
 
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-
 
         SceneManager::GetOpenScene()->unload_scene = true;
 
@@ -277,7 +275,8 @@ void SceneManager::load_scene(std::string scene_name_new)
         {
             for (Component *comp : ent->GetAllComponent())
             {
-                if (typeid(*comp) != typeid(GScriptLua)){
+                if (typeid(*comp) != typeid(GScriptLua))
+                {
                     comp->init();
                 }
             }
@@ -289,14 +288,15 @@ void SceneManager::load_scene(std::string scene_name_new)
             {
                 for (Component *comp : ent->GetAllComponent())
                 {
-                    if (typeid(*comp) == typeid(GScriptLua)){
+                    if (typeid(*comp) == typeid(GScriptLua))
+                    {
                         std::cout << typeid(*comp).name() << std::endl;
                         comp->init();
                     }
                 }
             }
         }
-        catch(const std::exception& e)
+        catch (const std::exception &e)
         {
             std::cerr << e.what() << '\n';
         }
@@ -309,7 +309,8 @@ void SceneManager::load_scene(std::string scene_name_new)
     }
 }
 
-void SceneManager::start_physic_world (){
+void SceneManager::start_physic_world()
+{
 
     if (SceneManager::GetOpenScene()->physic_world == nullptr)
     {
@@ -318,7 +319,6 @@ void SceneManager::start_physic_world (){
 
     SceneManager::GetOpenScene()->physic_world->delete_phys_world();
 
-    
     try
     {
         for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)

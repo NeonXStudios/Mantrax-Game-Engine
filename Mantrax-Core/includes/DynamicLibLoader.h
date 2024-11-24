@@ -34,7 +34,7 @@ public:
 
     void create();
     void release();
-    void load_components();
+    void load_components(std::string _path);
     void check_components_reload();
     void reset_component_registry();
     void update();

@@ -105,18 +105,3 @@ const char *InputSystem::get_joystick_name(int joystick_id)
     }
     return "No conectado";
 }
-
-// extern "C" GARINLIBS_API bool is_key_down(GLuint key)
-// {
-//     return InputSystem::on_key_down(key);
-// }
-
-// extern "C" GARINLIBS_API float get_mouse_delta_x()
-// {
-//     return InputSystem::get_mouse_x();
-// }
-
-// extern "C" GARINLIBS_API float get_mouse_delta_y()
-// {
-//     return InputSystem::get_mouse_y();
-// }

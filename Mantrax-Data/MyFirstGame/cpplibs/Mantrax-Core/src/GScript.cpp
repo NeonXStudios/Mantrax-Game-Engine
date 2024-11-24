@@ -20,14 +20,16 @@ void GScript::init()
     try
     {
         std::cout << "Loading script: " << GETVAR(ClassName, std::string) << std::endl;
-        behaviour = GameBehaviourFactory::instance().create_instance_by_name(GETVAR(ClassName, std::string));
+        // behaviour = GameBehaviourFactory::instance().create_instance_by_name(GETVAR(ClassName, std::string));
 
         if (behaviour != nullptr)
         {
+
             behaviour.get()->self = entity;
             behaviour.get()->on_init();
-
             std::cout << "Starting script class: " << GETVAR(ClassName, std::string) << std::endl;
+
+            _started = true;
         }
         else
         {
@@ -47,7 +49,7 @@ void GScript::update()
 {
     try
     {
-        if (behaviour != nullptr)
+        if (behaviour != nullptr && _started == true)
             behaviour.get()->on_tick();
     }
     catch (const std::exception &e)

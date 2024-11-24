@@ -31,7 +31,7 @@
       "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:behaviours\\runtimemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|f:\\github\\garin\\mantraxgamecore\\behaviours\\time.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|F:\\GITHUB\\Garin\\MantraxGameCore\\behaviours\\time.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BD864D0C-03C1-4381-B641-2B74BC72E880}|MantraxGameCore.csproj|solutionrelative:behaviours\\time.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -52,7 +52,7 @@
               "RelativeDocumentMoniker": "Components\\SceneManager.cs",
               "ToolTip": "F:\\GITHUB\\Garin\\MantraxGameCore\\Components\\SceneManager.cs",
               "RelativeToolTip": "Components\\SceneManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAXAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-13T04:30:28.125Z",
               "EditorCaption": ""
@@ -67,8 +67,7 @@
               "RelativeToolTip": "Behaviours\\Time.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-09T22:17:19.029Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-09T22:17:19.029Z"
             },
             {
               "$type": "Document",
@@ -80,8 +79,7 @@
               "RelativeToolTip": "Behaviours\\RuntimeManager.cs",
               "ViewState": "AgIAABMAAAAAAAAAAAAgwCcAAABUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-09T22:17:16.474Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-09T22:17:16.474Z"
             },
             {
               "$type": "Document",
@@ -93,8 +91,7 @@
               "RelativeToolTip": "Components\\GUIEditor.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-09T22:17:07.211Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-09T22:17:07.211Z"
             },
             {
               "$type": "Document",
@@ -106,8 +103,7 @@
               "RelativeToolTip": "Components\\Entity.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAAQwBQAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-09T22:17:06.738Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-09T22:17:06.738Z"
             },
             {
               "$type": "Document",
@@ -119,8 +115,7 @@
               "RelativeToolTip": "Components\\EngineCore.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAqwBYAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-09T22:17:06.268Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-09T22:17:06.268Z"
             },
             {
               "$type": "Document",
@@ -132,8 +127,7 @@
               "RelativeToolTip": "Components\\ModelComponent.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACUAAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-09T22:16:57.86Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-09T22:16:57.86Z"
             },
             {
               "$type": "Document",
@@ -145,8 +139,7 @@
               "RelativeToolTip": "Components\\Shader.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-09T22:16:55.987Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-09T22:16:55.987Z"
             }
           ]
         }

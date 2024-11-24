@@ -4,7 +4,7 @@ void GScript::defines()
 {
     try
     {
-        GVAR(ClassName, "NoneScript", std::string);
+        GVAR(ClassName, "ExampleClass", std::string);
     }
     catch (const std::exception &e)
     {
@@ -19,27 +19,32 @@ void GScript::init()
 {
     try
     {
-        std::cout << "Loading script: " << GETVAR(ClassName, std::string) << std::endl;
-        behaviour = GameBehaviourFactory::instance().create_instance_by_name(GETVAR(ClassName, std::string));
+        auto className = GETVAR(ClassName, std::string);
+        std::cout << "ClassName: " << className << std::endl;
+        behaviour = GameBehaviourFactory::instance().create_instance_by_name(className);
 
-        if (behaviour != nullptr)
+        if (behaviour == nullptr)
         {
-            behaviour.get()->self = entity;
-            behaviour.get()->on_init();
-
-            std::cout << "Starting script class: " << GETVAR(ClassName, std::string) << std::endl;
+            std::cerr << "Factory returned nullptr for ClassName: " << className << std::endl;
         }
         else
         {
-            std::cerr << "Error: On Create Instace For " << GETVAR(ClassName, std::string) << std::endl;
+            try
+            {
+                behaviour.get()->self = this->entity;
+                behaviour.get()->on_init();
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << e.what() << '\n';
+            }
+
+            std::cerr << "Factory returned " << className << std::endl;
         }
     }
     catch (const std::exception &e)
     {
         std::string errorMessage = "Error on init: ";
-        errorMessage += e.what();
-        logError(errorMessage);
-        std::cerr << errorMessage << std::endl;
     }
 }
 
@@ -48,14 +53,13 @@ void GScript::update()
     try
     {
         if (behaviour != nullptr)
-            behaviour.get()->on_tick();
+        {
+            behaviour->on_tick();
+        }
     }
     catch (const std::exception &e)
     {
-        std::string errorMessage = "Error on update: ";
-        errorMessage += e.what();
-        logError(errorMessage);
-        std::cerr << errorMessage << std::endl;
+        std::cerr << "Error en update: " << e.what() << '\n';
     }
 }
 
@@ -63,10 +67,10 @@ void GScript::clean()
 {
     try
     {
-        if (behaviour != nullptr)
+        if (behaviour.get() != nullptr)
         {
             behaviour.reset();
-            behaviour = nullptr; // `reset()` ya maneja `release()`
+            behaviour = nullptr;
         }
     }
     catch (const std::exception &e)

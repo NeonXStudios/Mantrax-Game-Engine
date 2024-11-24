@@ -176,14 +176,14 @@ void MainBarUI::draw(Entity *owner)
 
                 UINotification::AddNotification("Recompiling libraries...", 10.0f);
 
-                GameBehaviourFactory::instance().reload_components();
+                // GameBehaviourFactory::instance().reload_components();
 
                 UINotification::AddNotification("Compiling libraries (wait for it)...", 10.0f);
 
                 std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/";
 
                 std::string cmake_command =
-                    "cd /d " + cmake_path + 
+                    "cd /d " + cmake_path +
                     " && if not exist bin mkdir bin && cd bin && cmake ..";
 
                 std::string msbuild_command = "cd /d " + cmake_path + " && cd bin && msbuild MantraxRuntimeCore.sln /p:Configuration=Debug";
@@ -213,7 +213,7 @@ void MainBarUI::draw(Entity *owner)
                     std::cerr << "Error during cmake execution, result code: " << result << std::endl;
                 }
 
-                DynamicLibLoader::instance->load_components();
+                // DynamicLibLoader::instance->load_components();
             }
             ImGui::EndMenu();
         }
@@ -265,41 +265,42 @@ void MainBarUI::draw(Entity *owner)
 
     if (ImGui::ImageButton((void *)(intptr_t)current_icon, ImVec2(16, 16)))
     {
-        AppSettings::is_playing = !AppSettings::is_playing;
+        std::string command = ".\\data\\PlayBackEngine\\Mantrax_PlayBackEngine.exe";
+        std::string parameter = configs->current_proyect;
+
+        std::string fullCommand = command + " " + parameter;
+
+        std::string newWorkDir = FileManager::get_execute_path();
+        std::wstring wideWorkingDir(newWorkDir.begin(), newWorkDir.end());
+
+        if (!SetCurrentDirectoryW(wideWorkingDir.c_str()))
+        {
+            std::cerr << "Error on try create Play Back Engine" << std::endl;
+        }
+
+        int result_execution = system(fullCommand.c_str());
+
+        // AppSettings::is_playing = !AppSettings::is_playing;
 
         if (AppSettings::is_playing)
         {
-            Entity *selectobj = owner;
+            // Entity *selectobj = owner;
 
-            if (selectobj != nullptr)
-            {
-                selectobj = owner;
-            }
+            // if (selectobj != nullptr)
+            // {
+            //     selectobj = owner;
+            // }
 
-            SceneData::save_scene();
-            SceneData::load_scene(SceneManager::GetOpenScene()->scene_name);
+            // SceneData::save_scene();
+            // SceneData::load_scene(SceneManager::GetOpenScene()->scene_name);
 
-            if (selectobj != nullptr)
-                game->set_object_select(selectobj);
-
-            std::string command = ".\\data\\PlayBackEngine\\Mantrax_PlayBackEngine.exe";
-            std::string parameter = configs->current_proyect;
-
-            std::string fullCommand = command + " " + parameter;
-
-            std::string newWorkDir = FileManager::get_execute_path();
-            std::wstring wideWorkingDir(newWorkDir.begin(), newWorkDir.end());
-
-            if (!SetCurrentDirectoryW(wideWorkingDir.c_str())){
-                std::cerr << "Error on try create Play Back Engine" << std::endl;
-            }
-
-            int result_execution = system(fullCommand.c_str());
+            // if (selectobj != nullptr)
+            //     game->set_object_select(selectobj);
         }
-        else
-        {
-            SceneData::load_scene(SceneManager::GetOpenScene()->scene_name);
-        }
+        // else
+        // {
+        //     SceneData::load_scene(SceneManager::GetOpenScene()->scene_name);
+        // }
 
         std::cout << "Entering play mode" << std::endl;
     }

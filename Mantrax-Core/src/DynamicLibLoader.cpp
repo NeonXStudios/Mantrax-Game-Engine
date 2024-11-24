@@ -13,19 +13,10 @@ void DynamicLibLoader::create()
         throw std::exception("Dynamic lib loader already created.");
 
     DynamicLibLoader::instance = new DynamicLibLoader();
-
-    if (DynamicLibLoader::instance != nullptr)
-    {
-        DynamicLibLoader::instance->load_components();
-
-        std::cout << "Lib Reloader Created" << endl;
-    }
 }
 
-void DynamicLibLoader::load_components()
+void DynamicLibLoader::load_components(std::string _path)
 {
-    dll_in_recompile = true;
-
     std::cout << "Initializing DLL" << std::endl;
 
     auto copy_file = [](const std::filesystem::path &from, const std::filesystem::path &to)
@@ -38,10 +29,14 @@ void DynamicLibLoader::load_components()
         dst << src.rdbuf();
     };
 
-    loader.get()->free();
+    if (loader.get()->is_loaded())
+    {
+        loader.get()->free();
+        loader.reset();
+    }
 
-    from_dll_path = FileManager::get_project_path() + "wlibsgpp/bin/Debug/MantraxRuntimeCore.dll";
-    dll_path = FileManager::get_project_path() + "cpplibs/MantraxRuntimeCore.dll";
+    from_dll_path = _path + "wlibsgpp/bin/Debug/MantraxRuntimeCore.dll";
+    dll_path = _path + "cpplibs/MantraxRuntimeCore.dll";
 
     try
     {
@@ -75,8 +70,6 @@ void DynamicLibLoader::load_components()
         return;
     }
 
-    dll_in_recompile = false;
-
     typedef void (*InitializeInputSystemFunc)(
         bool (*isKeyDown)(GLuint),
         bool (*isKeyPressed)(GLuint),
@@ -99,15 +92,8 @@ void DynamicLibLoader::load_components()
         InputSystem::get_mouse_x,
         InputSystem::get_mouse_y);
 
-    assign_data();
-    loader_dll_stamp = std::filesystem::last_write_time(from_dll_path).time_since_epoch().count();
-}
-
-void DynamicLibLoader::assign_data()
-{
     try
     {
-
         typedef void (*FuncType)(GameBehaviourFactory *engine);
         auto func = (FuncType)loader.get()->get_function<FuncType>("REGISTER_COMPONENTS");
 
@@ -116,9 +102,18 @@ void DynamicLibLoader::assign_data()
 
         if (!func)
         {
-            std::cout << "Failed to load components" << std::endl;
+            std::cerr << "Error: No se pudo cargar la función 'REGISTER_COMPONENTS'." << std::endl;
             return;
         }
+
+        GameBehaviourFactory *factoryPtr = &GameBehaviourFactory::instance();
+        if (!factoryPtr)
+        {
+            std::cerr << "---------- Error: No se pudo obtener la instancia de GameBehaviourFactory." << std::endl;
+            return;
+        }
+
+        func(factoryPtr);
 
         if (!func_graphics)
         {
@@ -126,48 +121,36 @@ void DynamicLibLoader::assign_data()
             return;
         }
 
-        GameBehaviourFactory *factoryPtr = &GameBehaviourFactory::instance();
         Scene *scene = SceneManager::GetOpenScene();
-
-        func(factoryPtr);
         func_graphics(SceneManager::GetSceneManager(), Gfx::get_game_window());
-
-        typedef bool (*UpdateInputSystemFunc)();
-
-        auto update_input_system = (UpdateInputSystemFunc)loader.get()->get_function<UpdateInputSystemFunc>("update_input_system");
-
-        if (!update_input_system)
-        {
-            std::cerr << "Error: No se encontro la funcion update_input_system." << std::endl;
-            return;
-        }
-
-        update_input_system();
     }
     catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }
+
+    std::cerr << "Started DLL System" << std::endl;
+    dll_in_recompile = true;
+
+    loader_dll_stamp = std::filesystem::last_write_time(from_dll_path).time_since_epoch().count();
+}
+
+void DynamicLibLoader::assign_data()
+{
 }
 
 void DynamicLibLoader::update()
 {
-    if (loader != nullptr && dll_in_recompile == false)
-    {
-        if (loader->is_loaded())
-        {
-            assign_data();
-        }
-        else
-        {
-            std::cout << "DLL Not Loaded Error" << std::endl;
-            load_components();
-        }
-    }
-    else
-    {
-        std::cerr << "Loader is nullptr!" << std::endl;
-    }
+    // if (loader != nullptr && dll_in_recompile == false)
+    // {
+    //     if (loader->is_loaded())
+    //     {
+    //     }
+    //     else
+    //     {
+    //         std::cout << "DLL Not Loaded Error" << std::endl;
+    //     }
+    // }
 }
 
 void DynamicLibLoader::check_components_reload()
@@ -179,7 +162,6 @@ void DynamicLibLoader::check_components_reload()
     if (stamp != loader_dll_stamp)
     {
         std::cout << "Reloading components..." << std::endl;
-        load_components();
     }
 }
 

@@ -13,7 +13,6 @@ namespace fs = std::filesystem;
 
 SceneManager *sceneManager = new SceneManager();
 AudioManager *audioManager = new AudioManager();
-DynamicLibLoader *lib_loader = new DynamicLibLoader();
 GameBehaviourFactory *factory_behaviour = new GameBehaviourFactory();
 RenderPipeline *piprender = new RenderPipeline();
 
@@ -55,13 +54,10 @@ int main(int argc, char *arvg[])
 
     FileManager::game_path = scene_game->configs->current_proyect;
     SceneManager::GetOpenScene()->init();
-    lib_loader->create();
 
     while (!Gfx::try_window_close())
     {
         Gfx::poll_events();
-        lib_loader->update();
-
         Gfx::timer_control();
         Gfx::process_window_size();
 

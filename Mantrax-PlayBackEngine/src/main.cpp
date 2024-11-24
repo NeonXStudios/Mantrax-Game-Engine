@@ -21,10 +21,12 @@ bool first_frame_loaded;
 
 int main(int argc, char *arvg[])
 {
-    if (argc == 0){
+    if (argc == 0)
+    {
         return -2;
     }
-    
+    fs::path project_path = fs::path(arvg[1]);
+
     audioManager->create();
     audioManager->StartSystem();
 
@@ -47,37 +49,39 @@ int main(int argc, char *arvg[])
     {
         AppSettings::is_playing = true;
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }
-    
 
     Gfx::create_windows(window_config);
     RenderPipeline::init();
     SceneManager::GetOpenScene()->awake();
 
-    fs::path project_path = fs::path(arvg[1]);
-
     scene_game->configs->current_proyect = project_path.string() + "/";
 
     scene_game->configs->load_config();
-    
+
     FileManager::game_path = scene_game->configs->current_proyect;
-    
+
     scene_game->configs->project_select = true;
+
+    DynamicLibLoader::instance->load_components(project_path.string() + "/");
+
+    while (DynamicLibLoader::instance->dll_in_recompile == false)
+    {
+        std::cout << "DLL NOT LOADED WAIT..." << std::endl;
+    }
+
     SceneManager::GetOpenScene()->init();
 
     std::cout << "All Data Started" << std::endl;
-
 
     while (!Gfx::try_window_close())
     {
         Gfx::poll_events();
         Gfx::timer_control();
         Gfx::process_window_size();
-
-        lib_loader->update();
 
         SceneManager::GetOpenScene()->update(Timer::delta_time);
 

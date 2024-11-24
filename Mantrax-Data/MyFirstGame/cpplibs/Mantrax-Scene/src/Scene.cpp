@@ -2,7 +2,8 @@
 
 using namespace nlohmann;
 
-void Scene::awake(){
+void Scene::awake()
+{
     on_awake();
 }
 
@@ -18,21 +19,18 @@ void Scene::update(float delta_time)
         try
         {
             physic_world->update_world_physics();
-            
 
             for (Entity *ent : objects_worlds)
-            {                
+            {
                 try
                 {
                     ent->update();
                 }
-                catch(const std::exception& e)
+                catch (const std::exception &e)
                 {
                     std::cerr << e.what() << '\n';
                 }
-                
             }
-
 
             on_update(delta_time);
         }

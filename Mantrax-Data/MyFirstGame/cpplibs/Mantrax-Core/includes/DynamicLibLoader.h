@@ -22,6 +22,7 @@ public:
     std::unordered_map<std::string, Function<Shared<Component>()>> factories;
     std::unique_ptr<Loader> loader;
     uint64_t loader_dll_stamp;
+    bool loader_lib_started;
 
     DynamicLibLoader()
     {
@@ -30,6 +31,7 @@ public:
 
     void create();
     void release();
+    void load_in_dll();
     void load_components();
     void check_components_reload();
     void reset_component_registry();

@@ -5,7 +5,6 @@
 #include "Core.h"
 
 class GARINLIBS_API GameBehaviour;
-
 class GARINLIBS_API GameBehaviourFactory
 {
 public:
@@ -22,17 +21,9 @@ public:
     {
         try
         {
+            std::cout << "Registrando clase: " << class_name << std::endl;
             creators[class_name] = std::move(creator);
-
-            // // Verificación de inserción
-            // if (creators.find(class_name) != creators.end())
-            // {
-            //     std::cout << "Creator insertado en el mapa" << std::endl;
-            // }
-            // else
-            // {
-            //     std::cout << "Error: Creator no se pudo insertar en el mapa" << std::endl;
-            // }
+            std::cout << "/////////////*/*/*/*/*/*/*/*/Instancias Totales: " << creators.size() << std::endl;
         }
         catch (const std::exception &e)
         {

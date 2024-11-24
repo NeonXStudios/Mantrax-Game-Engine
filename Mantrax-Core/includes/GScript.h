@@ -8,6 +8,7 @@ class GARINLIBS_API GScript : public Component
 {
 public:
     std::unique_ptr<GameBehaviour> behaviour;
+    bool _started;
 
     void defines() override;
     void init() override;

@@ -30,7 +30,8 @@ void GCharacter::init()
 
     gController = SceneManager::GetOpenScene()->physic_world->gManager->createController(desc);
 
-    if (!gController) {
+    if (!gController)
+    {
         std::cout << "Failed to create the character controller!" << std::endl;
         return;
     }
@@ -40,8 +41,9 @@ void GCharacter::init()
 
 void GCharacter::update()
 {
-    if (entity != nullptr && gController){
-       entity->get_transform()->Position = glm::vec3(gController->getPosition().x, gController->getPosition().y, gController->getPosition().z);
+    if (entity != nullptr && gController)
+    {
+        entity->get_transform()->Position = glm::vec3(gController->getPosition().x, gController->getPosition().y, gController->getPosition().z);
     }
 }
 
@@ -61,26 +63,31 @@ void GCharacter::modifyCapsule(float newHeight, float newRadius)
     }
 }
 
-bool GCharacter::is_valid_float(float value) {
-    return value == value;
+bool GCharacter::is_valid_float(float value)
+{
+    return std::isfinite(value);
 }
 
 void GCharacter::move(glm::vec3 move_direction)
 {
-    if (!is_valid_float(move_direction.x) || !is_valid_float(move_direction.y) || !is_valid_float(move_direction.z)) {
+    if (!is_valid_float(move_direction.x) || !is_valid_float(move_direction.y) || !is_valid_float(move_direction.z))
+    {
         std::cerr << "Invalid move_direction: NaN detected" << std::endl;
         return;
     }
-    
+
     try
     {
-        if (gController) {
+        if (gController)
+        {
             gController->move(physx::PxVec3((float)move_direction.x, (float)move_direction.y, (float)move_direction.z), 0.01f, 1.0f, PxControllerFilters());
-        } else {
+        }
+        else
+        {
             std::cout << "gController is null, cannot move!" << std::endl;
         }
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }

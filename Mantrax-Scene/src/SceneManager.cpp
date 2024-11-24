@@ -147,22 +147,23 @@ void SceneManager::load_scene(std::string scene_name_new)
 
     std::cout << "Loading scene from: " << file_path << std::endl;
 
-
     try
     {
         SceneManager::start_physic_world();
 
         while (SceneManager::GetOpenScene()->physic_world->mScene == nullptr || SceneManager::GetOpenScene()->physic_world->mMaterial == nullptr)
         {
-            if (SceneManager::GetOpenScene()->physic_world->mScene == nullptr){
+            if (SceneManager::GetOpenScene()->physic_world->mScene == nullptr)
+            {
                 std::cout << "The world physics not created" << std::endl;
-            }else{
+            }
+            else
+            {
                 std::cout << "World physics created" << std::endl;
             }
 
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-
 
         SceneManager::GetOpenScene()->unload_scene = true;
 
@@ -273,23 +274,14 @@ void SceneManager::load_scene(std::string scene_name_new)
             }
         }
 
-        for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
-        {
-            for (Component *comp : ent->GetAllComponent())
-            {
-                if (typeid(*comp) != typeid(GScriptLua) && typeid(*comp) != typeid(GScript)){
-                    comp->init();
-                }
-            }
-        }
-
         try
         {
             for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
             {
                 for (Component *comp : ent->GetAllComponent())
                 {
-                    if (typeid(*comp) == typeid(GScriptLua)){
+                    if (typeid(*comp) != typeid(GScriptLua) && typeid(*comp) != typeid(GScript))
+                    {
                         comp->init();
                     }
                 }
@@ -299,18 +291,31 @@ void SceneManager::load_scene(std::string scene_name_new)
             {
                 for (Component *comp : ent->GetAllComponent())
                 {
-                    if (typeid(*comp) == typeid(GScript)){
+                    if (typeid(*comp) == typeid(GScript))
+                    {
+                        comp->init();
+                    }
+                }
+            }
+
+            for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
+            {
+                for (Component *comp : ent->GetAllComponent())
+                {
+                    if (typeid(*comp) == typeid(GScriptLua))
+                    {
                         comp->init();
                     }
                 }
             }
         }
-        catch(const std::exception& e)
+        catch (const std::exception &e)
         {
             std::cerr << e.what() << '\n';
         }
 
         SceneManager::GetOpenScene()->unload_scene = false;
+        std::cout << "----------------> Already Loade Scene" << std::endl;
     }
     catch (const std::exception &e)
     {
@@ -318,7 +323,8 @@ void SceneManager::load_scene(std::string scene_name_new)
     }
 }
 
-void SceneManager::start_physic_world (){
+void SceneManager::start_physic_world()
+{
 
     if (SceneManager::GetOpenScene()->physic_world == nullptr)
     {
@@ -327,7 +333,6 @@ void SceneManager::start_physic_world (){
 
     SceneManager::GetOpenScene()->physic_world->delete_phys_world();
 
-    
     try
     {
         for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
