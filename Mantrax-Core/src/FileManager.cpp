@@ -36,8 +36,8 @@ void FileManager::copy_directory_contents(const std::filesystem::path &source, c
 
         for (const auto &entry : std::filesystem::directory_iterator(source))
         {
-            const auto &path = entry.path();                      
-            auto destinationPath = destination / path.filename(); 
+            const auto &path = entry.path();
+            auto destinationPath = destination / path.filename();
 
             if (std::filesystem::is_directory(path))
             {

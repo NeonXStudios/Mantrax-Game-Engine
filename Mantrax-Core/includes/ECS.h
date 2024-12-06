@@ -92,6 +92,13 @@ public:
 		std::string val = std::any_cast<std::string>(variableMap[name]);
 	}
 
+	void setup_var(const std::string &name, const glm::vec3 &value)
+	{
+		variableMap[name] = value;
+
+		glm::vec3 val = std::any_cast<glm::vec3>(variableMap[name]);
+	}
+
 	virtual void defines() {}
 	virtual void init() {}
 	virtual void update() {}
@@ -115,6 +122,7 @@ public:
 	glm::vec3 EulerRotation;
 	glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 Scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec4 Anchors;
 	Entity *entity;
 
 	TransformComponent *parent = nullptr;

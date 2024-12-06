@@ -16,7 +16,23 @@ AudioManager *audioManager = new AudioManager();
 GameBehaviourFactory *factory_behaviour = new GameBehaviourFactory();
 RenderPipeline *piprender = new RenderPipeline();
 
-int main(int argc, char *arvg[])
+int start_engine(int argc, char *argv[]);
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+    HWND hWnd = GetConsoleWindow();
+    if (hWnd)
+    {
+        ShowWindow(hWnd, SW_HIDE);
+    }
+
+    const char *args[] = {"MantraxEngine", lpCmdLine};
+    int argc = sizeof(args) / sizeof(args[0]);
+
+    return start_engine(argc, const_cast<char **>(args));
+}
+
+int start_engine(int argc, char *arvg[])
 {
     if (argc == 0)
     {
@@ -35,24 +51,24 @@ int main(int argc, char *arvg[])
     SceneManager::GetSceneManager()->OpenScene = scene_game;
 
     settings_window window_config = settings_window();
-    window_config.window_name = "Garin Engine";
+    window_config.window_name = "Mantrax Engine";
     window_config.width = 1920;
     window_config.height = 1080;
     window_config.maximized = true;
 
     Gfx::create_windows(window_config);
-    RenderPipeline::init();
-    SceneManager::GetOpenScene()->awake();
 
     scene_game->configs->project_select = true;
-
     fs::path project_path = fs::path(arvg[1]);
 
     scene_game->configs->current_proyect = project_path.string() + "/";
+    FileManager::game_path = scene_game->configs->current_proyect;
+
+    RenderPipeline::init();
+    SceneManager::GetOpenScene()->awake();
 
     scene_game->configs->load_config();
 
-    FileManager::game_path = scene_game->configs->current_proyect;
     SceneManager::GetOpenScene()->init();
 
     while (!Gfx::try_window_close())
@@ -61,16 +77,9 @@ int main(int argc, char *arvg[])
         Gfx::timer_control();
         Gfx::process_window_size();
 
-        if (AppSettings::is_playing)
-        {
-            SceneManager::GetOpenScene()->update(Timer::delta_time);
-        }
-        else
-        {
-            SceneManager::GetOpenScene()->on_edition_mode(Timer::delta_time);
-        }
-
         RenderPipeline::render();
+
+        SceneManager::GetOpenScene()->on_edition_mode(Timer::delta_time);
 
         Gfx::swap_buffer();
     }

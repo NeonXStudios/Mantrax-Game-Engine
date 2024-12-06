@@ -4,6 +4,7 @@
 void GCollision::defines()
 {
     GVAR(IsTrigger, false, bool);
+    GVAR(boxSize, glm::vec3(1.0f), glm::vec3);
 }
 
 void GCollision::init()
@@ -42,7 +43,7 @@ void GCollision::update()
 {
     if (shape)
     {
-        glm::vec3 newsize = boxSize * entity->get_transform()->Scale;
+        glm::vec3 newsize = GETVAR(boxSize, glm::vec3) * entity->get_transform()->Scale;
 
         physx::PxBoxGeometry newGeometry(newsize.x, newsize.y, newsize.z);
         shape->setGeometry(newGeometry);

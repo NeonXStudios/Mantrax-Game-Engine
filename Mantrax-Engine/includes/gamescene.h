@@ -3,15 +3,12 @@
 #include "WindowsCompiler.h"
 #include "UIEditorManager.h"
 
-#include <GizmosDrawer.h>
-
 #include <GarinComponents.h>
 #include <GarinBehaviours.h>
 #include <GarinMaths.h>
 #include <GarinGraphics.h>
 #include <GarinEvents.h>
 #include <GarinUI.h>
-#include <GizmoModels.h>
 
 #include <IconsManager.h>
 #include <Core.h>
@@ -19,9 +16,11 @@
 #include <sstream>
 #include <AssetsRegistry.h>
 #include <EditorGUI.h>
-#include <CSCompiler.h>
+#include <TimeWatcher.h>
+#include <UIComponentsBehaviour.h>
 
-class Drawer;
+#include <GizmoCube.h>
+
 class Camera;
 class Entity;
 class EditorConfigs;
@@ -38,9 +37,11 @@ class UINotification;
 class EngineHubUI;
 class InputSystemUI;
 class AnimatorUI;
-class GizmosDrawer;
 class gamescene;
 class UIEditorManager;
+class GizmoCube;
+class GizmoCircle;
+class GizmoSphere;
 
 class GARINLIBS_API gamescene : public Scene
 {
@@ -54,14 +55,15 @@ public:
     gamescene(const gamescene &) = delete;
     void operator=(const gamescene &) = delete;
 
-    Drawer *drawcube;
     Entity *select_obj;
     EditorConfigs *configs;
-    GizmosDrawer *gizmos;
     UIEditorManager *uieditor;
-    GizmoModels *gizmo_models;
     AssetsRegistry *assets_registry;
-    CSCompiler *cs = new CSCompiler();
+    TimeWatcher *watcher;
+    GizmoCube *cube_gizmo;
+    GizmoCircle *circle_gizmo;
+    GizmoSphere *sphere_gizmo;
+    UIComponentsBehaviour *ui_behaviour;
 
     std::stringstream buffer_stdout;
     std::stringstream buffer_stderr;
@@ -76,7 +78,6 @@ public:
 
     float cameraYaw = 0.0f;
     float cameraPitch = 0.0f;
-
 
     void ReadBuffer(std::stringstream &buffer, std::string &target)
     {

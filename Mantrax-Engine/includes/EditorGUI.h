@@ -77,7 +77,7 @@ public:
         ImGui::SetNextItemWidth(size.x);
 
         ImGui::InputTextMultiline(
-            EditorGUI::_labelPrefix(Name.c_str()).c_str(),
+            Name.c_str(),
             GetName, sizeof(GetName),
             ImVec2(size.x, size.y),
             ImGuiInputTextFlags_AutoSelectAll);
@@ -171,13 +171,13 @@ public:
 
     static float Float(const std::string &name, float value)
     {
-        ImGui::DragFloat(EditorGUI::_labelPrefix(name.c_str()).c_str(), &value);
+        ImGui::DragFloat(name.c_str(), &value);
         return value;
     }
 
     static int Int(const std::string &name, int value)
     {
-        ImGui::DragInt(EditorGUI::_labelPrefix(name.c_str()).c_str(), &value);
+        ImGui::DragInt(name.c_str(), &value);
         return value;
     }
 
@@ -187,7 +187,7 @@ public:
             vector.x,
             vector.y};
 
-        ImGui::DragFloat2(EditorGUI::_labelPrefix(Name.c_str()).c_str(), v);
+        ImGui::DragFloat2(Name.c_str(), v);
 
         return glm::vec2(v[0], v[1]);
     }
@@ -205,7 +205,7 @@ public:
             vector.y,
             vector.z};
 
-        ImGui::DragFloat3(EditorGUI::_labelPrefix(Name.c_str()).c_str(), v, 0.01f);
+        ImGui::DragFloat3(Name.c_str(), v, 0.01f);
 
         return glm::vec3(v[0], v[1], v[2]);
     }
@@ -218,7 +218,7 @@ public:
             vector.z,
             vector.w};
 
-        ImGui::DragFloat4(EditorGUI::_labelPrefix(Name.c_str()).c_str(), v);
+        ImGui::DragFloat4(Name.c_str(), v);
 
         return glm::vec4(v[0], v[1], v[2], v[3]);
     }
@@ -230,7 +230,7 @@ public:
             quaternion.y,
             quaternion.z};
 
-        ImGui::DragFloat3(EditorGUI::_labelPrefix(Name.c_str()).c_str(), v, 0.0001f);
+        ImGui::DragFloat3(Name.c_str(), v, 0.0001f);
 
         return glm::quat(glm::vec3((v[0]), (v[1]), (v[2])));
     }
@@ -242,7 +242,7 @@ public:
 
     static float Slider(string name, float value, float min, float max)
     {
-        ImGui::SliderFloat(_labelPrefix(name.c_str()).c_str(), &value, min, max);
+        ImGui::SliderFloat(name.c_str(), &value, min, max);
         return value;
     }
 
@@ -265,7 +265,7 @@ public:
         ImGui::PopStyleVar(2);
 
         ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
-        if (ImGui::Button("X"))
+        if (ImGui::ImageButton((void *)(intptr_t)IconsManager::TRASH(), (ImVec2(16, 16))))
         {
             owner->removeComponent<T>();
         }
@@ -282,111 +282,9 @@ public:
 
             func();
 
-            for (const auto &[key, value] : cpm->variableMap)
-            {
-                if (value.type() == typeid(std::string))
-                {
-                    std::string val = std::any_cast<std::string>(value);
-                    EditorGUI::DrawIcon(IconsManager::STRING());
-                    cpm->variableMap[key] = EditorGUI::InputText(key, val);
+            ImGui::Spacing();
 
-                    if (key == "Model")
-                    {
-                        auto result = EditorGUI::Drag_Objetive("MODELCLASS");
-                        if (result.has_value())
-                        {
-                            cpm->variableMap[key] = result.value();
-
-                            cpm->clean();
-                            cpm->init();
-                        }
-                    }
-                    else if (key == "ColorBase")
-                    {
-                        auto result = EditorGUI::Drag_Objetive("IMAGECLASS");
-                        if (result.has_value())
-                        {
-                            cpm->variableMap[key] = result.value();
-
-                            cpm->clean();
-                            cpm->init();
-                        }
-                    }
-                    else if (key == "NormalMap")
-                    {
-                        auto result = EditorGUI::Drag_Objetive("IMAGECLASS");
-                        if (result.has_value())
-                        {
-                            cpm->variableMap[key] = result.value();
-
-                            cpm->clean();
-                            cpm->init();
-                        }
-                    }
-                    else if (key == "SlabShader")
-                    {
-                        auto result = EditorGUI::Drag_Objetive("SHADERCLASS");
-                        if (result.has_value())
-                        {
-                            cpm->variableMap[key] = result.value();
-
-                            cpm->clean();
-                            cpm->init();
-                        }
-                    }
-                    else if (key == "ClassName")
-                    {
-                        auto result = EditorGUI::Drag_Objetive("SCRIPTCLASS");
-                        if (result.has_value())
-                        {
-                            cpm->variableMap[key] = result.value();
-
-                            cpm->clean();
-                            cpm->init();
-                        }
-                    }
-                    else if (key == "ScriptPath")
-                    {
-                        auto result = EditorGUI::Drag_Objetive("SCRIPTCLASSLUA");
-                        if (result.has_value())
-                        {
-                            cpm->variableMap[key] = result.value();
-
-                            cpm->clean();
-                            cpm->init();
-                        }
-                    }
-                    else if (key == "AudioPath")
-                    {
-                        auto result = EditorGUI::Drag_Objetive("AUDIOCLASS");
-                        if (result.has_value())
-                        {
-                            cpm->variableMap[key] = result.value();
-
-                            cpm->clean();
-                            cpm->init();
-                        }
-                    }
-                }
-                else if (value.type() == typeid(float))
-                {
-                    float val = std::any_cast<float>(value);
-                    EditorGUI::DrawIcon(IconsManager::FLOAT());
-                    cpm->variableMap[key] = EditorGUI::Float(key, val);
-                }
-                else if (value.type() == typeid(int))
-                {
-                    int val = std::any_cast<int>(value);
-                    EditorGUI::DrawIcon(IconsManager::INT());
-                    cpm->variableMap[key] = EditorGUI::Int(key, val);
-                }
-                else if (value.type() == typeid(bool))
-                {
-                    bool val = std::any_cast<bool>(value);
-                    EditorGUI::DrawIcon(IconsManager::INT());
-                    cpm->variableMap[key] = EditorGUI::Toggle(key, val);
-                }
-            }
+            draw_object_field(cpm);
 
             if (typeid(component) == typeid(GCamera))
             {
@@ -431,69 +329,168 @@ public:
                 }
             }
 
-            // if (typeid(component) == typeid(GAnimator))
-            // {
-            //     GAnimator &animator = owner->getComponent<GAnimator>();
-
-            //     ImGui::Begin("Animation Graph");
-
-            //     std::cout << "Drawing animator graph" << std::endl;
-
-            //     for (size_t i = 0; i < animator.animations.size(); ++i)
-            //     {
-            //         GAnimator::Animation &anim = animator.animations[i];
-
-            //         if (ImGui::TreeNode(anim.name.c_str()))
-            //         {
-            //             char animNameBuffer[128];
-            //             strcpy(animNameBuffer, anim.name.c_str());
-            //             ImGui::InputText("Animation Name", animNameBuffer, sizeof(animNameBuffer));
-            //             anim.name = animNameBuffer;
-
-            //             ImGui::DragFloat("Frame Duration", &anim.frameDuration, 0.01f, 0.01f, 10.0f);
-
-            //             ImGui::Checkbox("Loop", &anim.loop);
-
-            //             for (size_t j = 0; j < anim.frames.size(); ++j)
-            //             {
-            //                 GAnimator::Frame &frame = anim.frames[j];
-
-            //                 if (ImGui::TreeNode((std::string("Frame ") + std::to_string(j)).c_str()))
-            //                 {
-            //                     char imagePathBuffer[128];
-            //                     strcpy(imagePathBuffer, frame.imagePath.c_str());
-            //                     ImGui::InputText("Image Path", imagePathBuffer, sizeof(imagePathBuffer));
-            //                     frame.imagePath = imagePathBuffer;
-
-            //                     ImGui::InputInt("Texture ID", (int *)&frame.textureId);
-
-            //                     ImGui::DragFloat("Frame Duration", &frame.duration, 0.01f, 0.01f, 10.0f);
-
-            //                     ImGui::TreePop();
-            //                 }
-            //             }
-
-            //             if (ImGui::Button("Add Frame"))
-            //             {
-            //                 anim.frames.push_back(GAnimator::Frame{"", 0, 0.1f});
-            //             }
-
-            //             ImGui::TreePop();
-            //         }
-            //     }
-
-            //     if (ImGui::Button("Add Animation"))
-            //     {
-            //         animator.animations.push_back(GAnimator::Animation{"New Animation", {}, 0.1f, false});
-            //     }
-            //     ImGui::End();
-            // }
-
             ImGui::EndGroup();
             ImGui::TreePop();
         }
 
         ImGui::PopID();
+    }
+
+    template <typename T>
+    static void draw_object_field(T *cpm)
+    {
+        for (const auto &[key, value] : cpm->variableMap)
+        {
+            ImGui::Dummy(ImVec2(10.0f, 0.0f));
+            ImGui::SameLine();
+            ImGui::Separator();
+
+            if (value.type() == typeid(std::string))
+            {
+
+                std::string val = std::any_cast<std::string>(value);
+                // EditorGUI::DrawIcon(IconsManager::STRING());
+                // cpm->variableMap[key] = EditorGUI::InputText(key, val);
+
+                std::string key_str = static_cast<std::string>(key);
+                std::string val_str = GarinIO::GetFileNameWithoutExtension(static_cast<std::string>(val));
+
+                if (val_str.empty())
+                {
+                    val_str = "None Select (|)";
+                }
+
+                ImGui::Text("%s", key_str.c_str());
+
+                float space_offset = 120.0f;
+                ImGui::SameLine(20.0f, space_offset);
+
+                ImVec2 val_text_size = ImGui::CalcTextSize(val_str.c_str());
+                ImVec2 val_pos = ImGui::GetCursorScreenPos();
+
+                float offset = 2.0f;
+                float rounding = 2.0f;
+                ImDrawList *draw_list = ImGui::GetWindowDrawList();
+                ImVec4 bg_color = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+                draw_list->AddRectFilled(
+                    ImVec2(val_pos.x - offset, val_pos.y - offset),
+                    ImVec2(val_pos.x + val_text_size.x + offset, val_pos.y + val_text_size.y + offset),
+                    ImGui::GetColorU32(bg_color),
+                    rounding);
+
+                ImGui::Text("%s", val_str.c_str());
+
+                if (key == "Model")
+                {
+                    auto result = EditorGUI::Drag_Objetive("MODELCLASS");
+                    if (result.has_value())
+                    {
+                        cpm->variableMap[key] = result.value();
+
+                        cpm->clean();
+                        cpm->init();
+                    }
+                }
+                else if (key == "ColorBase")
+                {
+                    auto result = EditorGUI::Drag_Objetive("IMAGECLASS");
+                    if (result.has_value())
+                    {
+                        cpm->variableMap[key] = result.value();
+
+                        cpm->clean();
+                        cpm->init();
+                    }
+                }
+                else if (key == "NormalMap")
+                {
+                    auto result = EditorGUI::Drag_Objetive("IMAGECLASS");
+                    if (result.has_value())
+                    {
+                        cpm->variableMap[key] = result.value();
+
+                        cpm->clean();
+                        cpm->init();
+                    }
+                }
+                else if (key == "VertexPath")
+                {
+                    auto result = EditorGUI::Drag_Objetive("SHADERCLASS");
+                    if (result.has_value())
+                    {
+                        cpm->variableMap[key] = result.value();
+
+                        cpm->clean();
+                        cpm->init();
+                    }
+                }
+                else if (key == "FragmentPath")
+                {
+                    auto result = EditorGUI::Drag_Objetive("SHADERCLASS");
+                    if (result.has_value())
+                    {
+                        cpm->variableMap[key] = result.value();
+
+                        cpm->clean();
+                        cpm->init();
+                    }
+                }
+                else if (key == "ClassName")
+                {
+                    auto result = EditorGUI::Drag_Objetive("SCRIPTCLASSCPP");
+                    if (result.has_value())
+                    {
+                        cpm->variableMap[key] = result.value();
+                    }
+                }
+                else if (key == "ScriptPath")
+                {
+                    auto result = EditorGUI::Drag_Objetive("SCRIPTCLASSLUA");
+                    if (result.has_value())
+                    {
+                        cpm->variableMap[key] = result.value();
+
+                        cpm->clean();
+                        cpm->init();
+                    }
+                }
+                else if (key == "AudioPath")
+                {
+                    auto result = EditorGUI::Drag_Objetive("AUDIOCLASS");
+                    if (result.has_value())
+                    {
+                        cpm->variableMap[key] = result.value();
+
+                        cpm->clean();
+                        cpm->init();
+                    }
+                }
+            }
+            else if (value.type() == typeid(float))
+            {
+                float val = std::any_cast<float>(value);
+                // EditorGUI::DrawIcon(IconsManager::FLOAT());
+                cpm->variableMap[key] = EditorGUI::Float(key, val);
+            }
+            else if (value.type() == typeid(int))
+            {
+                int val = std::any_cast<int>(value);
+                // EditorGUI::DrawIcon(IconsManager::INT());
+                cpm->variableMap[key] = EditorGUI::Int(key, val);
+            }
+            else if (value.type() == typeid(bool))
+            {
+                bool val = std::any_cast<bool>(value);
+                // EditorGUI::DrawIcon(IconsManager::INT());
+                cpm->variableMap[key] = EditorGUI::Toggle(key, val);
+            }
+            else if (value.type() == typeid(glm::vec3))
+            {
+                glm::vec3 val = std::any_cast<glm::vec3>(value);
+                // EditorGUI::DrawIcon(IconsManager::INT());
+                cpm->variableMap[key] = EditorGUI::Vector3(key, val);
+            }
+        }
     }
 
     template <typename T, typename MemberType>

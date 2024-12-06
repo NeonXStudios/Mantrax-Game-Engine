@@ -2,10 +2,16 @@
 #include "GarinGraphics.h"
 #include "Core.h"
 #include <GarinMaths.h>
+#include <RenderPipeline.h>
 
 struct GARINLIBS_API CastData
 {
     Entity *object;
+};
+
+struct GARINLIBS_API CastDataUI
+{
+    UIComponentsBehaviour *object;
 };
 
 class GARINLIBS_API EventSystem
@@ -70,52 +76,130 @@ public:
         return glm::vec2(NormalMousePosX, NormalMousePosY);
     }
 
+    static glm::vec2 MouseToScreenPos(glm::vec2 ViewportRenderPosition, glm::vec2 WindowSize)
+    {
+        double x, y;
+        glfwGetCursorPos(Gfx::get_game_window(), &x, &y);
+
+        double windowMousePosX = x - ViewportRenderPosition.x;
+        double windowMousePosY = y - ViewportRenderPosition.y;
+
+        double NormalMousePosX = (windowMousePosX / Gfx::render_width);
+        double NormalMousePosY = (-windowMousePosY / Gfx::render_height);
+
+        // CALCULAR CENTRO DE LA TEXTURA CON EL MOUSE (0, 0)
+        double centeredMousePosX = ((NormalMousePosX * 2.0f - 1.0f) * (Gfx::render_width / 2) * RenderPipeline::canvas->zoom);
+        double centeredMousePosY = ((NormalMousePosY * 2.0f + 1.0f) * (Gfx::render_height / 2) * RenderPipeline::canvas->zoom);
+
+        double WorldPointX = centeredMousePosX;
+        double WorldPointY = centeredMousePosY;
+
+        return glm::vec2(WorldPointX, WorldPointY);
+    }
+
     static bool MouseCast(glm::vec2 coords, CastData *data)
     {
         try
         {
-        if (SceneManager::GetSceneManager()->OpenScene != nullptr){
-            float closestZ = std::numeric_limits<float>::lowest();
-            Entity *closestObject = nullptr;
-
-            for (int i = 0; i < SceneManager::GetSceneManager()->OpenScene->objects_worlds.size(); i++)
+            if (SceneManager::GetSceneManager()->OpenScene != nullptr)
             {
+                float closestZ = std::numeric_limits<float>::lowest();
+                Entity *closestObject = nullptr;
 
-                Entity *objD = SceneManager::GetSceneManager()->OpenScene->objects_worlds[i];
-
-                if (objD->get_transform() == nullptr)
-                {
-                    return false;
-                }
-
-                glm::vec3 PosCam = objD->get_transform()->Position;
-
-                glm::vec3 &obj = PosCam;
-                float objWidth = objD->get_transform()->Scale.x;
-                float objHeight = objD->get_transform()->Scale.y;
-
-                float radians = objD->get_transform()->rotation.x;
-
-                glm::vec2 localPoint = RotatePoint(coords, obj, radians);
-
-                if (localPoint.x >= obj.x - objWidth && localPoint.x <= obj.x + objWidth &&
-                    localPoint.y >= obj.y - objHeight && localPoint.y <= obj.y + objHeight)
+                for (int i = 0; i < SceneManager::GetSceneManager()->OpenScene->objects_worlds.size(); i++)
                 {
 
-                    if (obj.z > closestZ)
+                    Entity *objD = SceneManager::GetSceneManager()->OpenScene->objects_worlds[i];
+
+                    if (objD->get_transform() == nullptr)
                     {
-                        closestZ = obj.z;
-                        closestObject = objD;
+                        return false;
+                    }
+
+                    glm::vec3 PosCam = objD->get_transform()->Position;
+
+                    glm::vec3 &obj = PosCam;
+                    float objWidth = objD->get_transform()->Scale.x;
+                    float objHeight = objD->get_transform()->Scale.y;
+
+                    float radians = objD->get_transform()->rotation.x;
+
+                    glm::vec2 localPoint = RotatePoint(coords, obj, radians);
+
+                    if (localPoint.x >= obj.x - objWidth && localPoint.x <= obj.x + objWidth &&
+                        localPoint.y >= obj.y - objHeight && localPoint.y <= obj.y + objHeight)
+                    {
+
+                        if (obj.z > closestZ)
+                        {
+                            closestZ = obj.z;
+                            closestObject = objD;
+                        }
                     }
                 }
-            }
 
-            if (closestObject != nullptr)
-            {
-                data->object = closestObject;
-                return true;
+                if (closestObject != nullptr)
+                {
+                    data->object = closestObject;
+                    return true;
+                }
             }
-            }   
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+
+        return false;
+    }
+
+    static bool MouseCastUI(glm::vec2 coords, CastDataUI *data)
+    {
+        try
+        {
+            if (SceneManager::GetSceneManager()->OpenScene != nullptr)
+            {
+                float closestZ = std::numeric_limits<float>::lowest();
+                UIComponentsBehaviour *closestObject = nullptr;
+
+                for (int i = 0; i < RenderPipeline::canvas->ui.size(); i++)
+                {
+
+                    UIComponentsBehaviour *objD = RenderPipeline::canvas->ui[i];
+
+                    if (objD->transform == nullptr)
+                    {
+                        return false;
+                    }
+
+                    glm::vec3 PosCam = objD->Position;
+
+                    glm::vec3 &obj = PosCam;
+                    float objWidth = objD->Scale.x;
+                    float objHeight = objD->Scale.y;
+
+                    float radians = objD->rotation.x;
+
+                    glm::vec2 localPoint = RotatePoint(coords, obj, radians);
+
+                    if (localPoint.x >= obj.x - objWidth && localPoint.x <= obj.x + objWidth &&
+                        localPoint.y >= obj.y - objHeight && localPoint.y <= obj.y + objHeight)
+                    {
+
+                        if (obj.z > closestZ)
+                        {
+                            closestZ = obj.z;
+                            closestObject = objD;
+                        }
+                    }
+                }
+
+                if (closestObject != nullptr)
+                {
+                    data->object = closestObject;
+                    return true;
+                }
+            }
         }
         catch (const std::exception &e)
         {

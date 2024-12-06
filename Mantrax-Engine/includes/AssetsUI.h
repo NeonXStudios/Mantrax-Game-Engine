@@ -3,11 +3,21 @@
 #include <AppSettings.h>
 #include <Core.h>
 
+struct SelectAsset
+{
+    std::string asset_name;
+    std::string asset_type;
+    std::string asset_complete_path;
+};
+
 class GARINLIBS_API AssetsUI : public UIComponent
 {
 public:
     EditorConfigs *configs;
     bool show_script_popup = false;
+    bool asset_selected = false;
+    SelectAsset *asset_selected_struct = new SelectAsset();
+
     char script_name[128] = "";
     std::string selected_item;
 

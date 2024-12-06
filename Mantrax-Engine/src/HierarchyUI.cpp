@@ -19,6 +19,13 @@ void HierarchyUI::draw(Entity *select_obj)
     {
         if (ImGui::MenuItem("Create New Object"))
         {
+            Entity *_ent = SceneManager::GetOpenScene()->make_entity();
+            _ent->addComponent<GMaterial>();
+            _ent->addComponent<ModelComponent>();
+        }
+
+        if (ImGui::MenuItem("Create New Object (Empty)"))
+        {
             SceneManager::GetOpenScene()->make_entity();
         }
 
@@ -82,9 +89,12 @@ void HierarchyUI::drawEntityNode(Entity *entity)
 
         if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
         {
-            if (game->select_obj != entity){
+            if (game->select_obj != entity)
+            {
                 game->set_object_select(entity);
-            }else{
+            }
+            else
+            {
                 game->set_object_select(nullptr);
             }
         }
@@ -103,9 +113,12 @@ void HierarchyUI::drawEntityNode(Entity *entity)
         EditorGUI::DrawIcon(IconsManager::ENTITY());
         if (ImGui::Selectable(name_tree.c_str(), selected))
         {
-            if (game->select_obj != entity){
+            if (game->select_obj != entity)
+            {
                 game->set_object_select(entity);
-            }else{
+            }
+            else
+            {
                 game->set_object_select(nullptr);
             }
         }

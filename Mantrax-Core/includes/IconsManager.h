@@ -22,13 +22,19 @@ public:
     TextureManager *sound_icon;
     TextureManager *pause_icon;
     TextureManager *texture_error_icon;
+    TextureManager *text_file_icon;
+    TextureManager *cpp_script_icon;
+    TextureManager *trash_icon;
 
     static unsigned int FLOAT();
+    static unsigned int TRASH();
     static unsigned int INT();
     static unsigned int STRING();
     static unsigned int PLAY();
     static unsigned int LUA();
+    static unsigned int CPP();
     static unsigned int FOLDER();
+    static unsigned int FILETEXT();
     static unsigned int UNKNOWN();
     static unsigned int MODEL();
     static unsigned int SCENE();

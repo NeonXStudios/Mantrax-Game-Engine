@@ -62,6 +62,7 @@ public:
     static bool try_window_close();
     static void poll_events();
     static void timer_control();
+    static void clear_render();
     static void process_window_size();
     static void swap_buffer();
     static void change_name(std::string name);

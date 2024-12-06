@@ -21,8 +21,26 @@ void IconsManager::init()
     IconsManager::icons->sound_icon = new TextureManager(FileManager::get_execute_path() + "icons/sound.png");
     IconsManager::icons->pause_icon = new TextureManager(FileManager::get_execute_path() + "icons/pause.png");
     IconsManager::icons->texture_error_icon = new TextureManager(FileManager::get_execute_path() + "icons/ErrorTexture.png");
+    IconsManager::icons->text_file_icon = new TextureManager(FileManager::get_execute_path() + "icons/textfile.png");
+    IconsManager::icons->cpp_script_icon = new TextureManager(FileManager::get_execute_path() + "icons/CPP.png");
+    IconsManager::icons->trash_icon = new TextureManager(FileManager::get_execute_path() + "icons/trash.png");
 
     std::cout << "ICONS MANAGER SETUP CORRECTLY" << std::endl;
+}
+
+unsigned int IconsManager::TRASH()
+{
+    return IconsManager::icons->trash_icon->get_texture();
+}
+
+unsigned int IconsManager::FILETEXT()
+{
+    return IconsManager::icons->text_file_icon->get_texture();
+}
+
+unsigned int IconsManager::CPP()
+{
+    return IconsManager::icons->cpp_script_icon->get_texture();
 }
 
 unsigned int IconsManager::TEXTURE_ERROR()

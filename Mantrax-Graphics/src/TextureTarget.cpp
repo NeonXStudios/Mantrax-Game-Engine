@@ -45,8 +45,7 @@ void TextureTarget::draw(glm::mat4 camera_matrix)
 
             glViewport(0, 0, Gfx::render_width, Gfx::render_height);
 
-            glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            Gfx::clear_render();
 
             RenderPipeline::render_all_data(camera_matrix);
 
@@ -54,8 +53,7 @@ void TextureTarget::draw(glm::mat4 camera_matrix)
 
             SceneManager::GetOpenScene()->draw_ui();
             glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-            glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            Gfx::clear_render();
 
             RenderPipeline::render_all_data(camera_matrix);
 

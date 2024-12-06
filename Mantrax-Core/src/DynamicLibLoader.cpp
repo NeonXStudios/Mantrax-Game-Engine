@@ -97,7 +97,7 @@ void DynamicLibLoader::load_components(std::string _path)
         typedef void (*FuncType)(GameBehaviourFactory *engine);
         auto func = (FuncType)loader.get()->get_function<FuncType>("REGISTER_COMPONENTS");
 
-        typedef void (*FuncTypeAPI)(SceneManager *scene_api, GLFWwindow *window_api);
+        typedef void (*FuncTypeAPI)(SceneManager *scene_api, GLFWwindow *window_api, float *time_delta);
         auto func_graphics = (FuncTypeAPI)loader.get()->get_function<FuncTypeAPI>("REGISTER_APIS");
 
         if (!func)
@@ -122,7 +122,7 @@ void DynamicLibLoader::load_components(std::string _path)
         }
 
         Scene *scene = SceneManager::GetOpenScene();
-        func_graphics(SceneManager::GetSceneManager(), Gfx::get_game_window());
+        func_graphics(SceneManager::GetSceneManager(), Gfx::get_game_window(), &Timer::delta_time);
     }
     catch (const std::exception &e)
     {

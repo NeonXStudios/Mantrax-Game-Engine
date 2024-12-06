@@ -10,18 +10,18 @@
 
 void gamescene::on_awake()
 {
+    old_stdout = std::cout.rdbuf(buffer_stdout.rdbuf());
+    old_stderr = std::cerr.rdbuf(buffer_stderr.rdbuf());
     GarinUI::make_ui_context(Gfx::get_game_window());
+    watcher = new TimeWatcher();
 }
 
 void gamescene::on_start()
 {
-    old_stdout = std::cout.rdbuf(buffer_stdout.rdbuf());
-    old_stderr = std::cerr.rdbuf(buffer_stderr.rdbuf());
 
     std::cout << "CARPETA DE EJECUCION: " << FileManager::get_execute_path() << std::endl;
 
     uieditor = new UIEditorManager();
-    gizmos = new GizmosDrawer();
 
     uieditor->configs = configs;
     uieditor->game = this;
@@ -33,51 +33,62 @@ void gamescene::on_start()
 
     uieditor->setup();
 
-    gizmos->config_line();
-
     IconsManager::init();
 
     string info = "OPEN FILE: " + configs->current_scene;
 
     UINotification::AddNotification(info, 3.0f);
 
-    gizmo_models = new GizmoModels();
-    gizmo_models->init();
-
     assets_registry = new AssetsRegistry("..", 5);
 
     SceneData::load_scene(configs->current_scene);
 
-    cs->setup_mono();
-
-    cs->start_event();
+    cube_gizmo = new GizmoCube();
+    circle_gizmo = new GizmoCircle();
+    sphere_gizmo = new GizmoSphere();
 }
 
 void gamescene::on_edition_mode(float delta_time)
 {
+    std::string directory_path = FileManager::get_game_path() + "/clscpp";
+
+    watcher->start_file_watcher(directory_path, []() {});
+
     if (ImGui::IsMouseDown(ImGuiMouseButton_Right) && configs->project_select)
     {
         auto &camera = SceneManager::GetOpenScene()->main_camera;
+
         if (camera != nullptr)
         {
-            float forwardSpeed = InputSystem::get_axis(GLFW_KEY_W, GLFW_KEY_S) * 10.0f * delta_time;
-            float leftSpeed = InputSystem::get_axis(GLFW_KEY_A, GLFW_KEY_D) * 10.0f * delta_time;
-
-            camera->move_forward(delta_time, forwardSpeed);
-            camera->move_left(delta_time, leftSpeed);
-
-            if (InputSystem::on_key_pressed(GLFW_KEY_Q))
-            {
-                camera->cameraPosition.y -= 10.0f * delta_time;
-            }
-
-            if (InputSystem::on_key_pressed(GLFW_KEY_E))
-            {
-                camera->cameraPosition.y += 10.0f * delta_time;
-            }
-
             float deltaX = -InputSystem::get_mouse_x() * configs->camera_speed_sens * delta_time;
             float deltaY = -InputSystem::get_mouse_y() * configs->camera_speed_sens * delta_time;
+
+            if (camera->use_projection)
+            {
+                if (InputSystem::on_key_pressed(GLFW_KEY_Q))
+                {
+                    camera->cameraPosition.y -= 10.0f * delta_time;
+                }
+
+                if (InputSystem::on_key_pressed(GLFW_KEY_E))
+                {
+                    camera->cameraPosition.y += 10.0f * delta_time;
+                }
+
+                float forwardSpeed = InputSystem::get_axis(GLFW_KEY_W, GLFW_KEY_S) * 10.0f * delta_time;
+                float leftSpeed = InputSystem::get_axis(GLFW_KEY_A, GLFW_KEY_D) * 10.0f * delta_time;
+
+                camera->move_forward(delta_time, forwardSpeed);
+                camera->move_left(delta_time, leftSpeed);
+            }
+            else
+            {
+                if (ImGui::IsMouseDown(ImGuiMouseButton_Right))
+                {
+                    camera->cameraPosition.y -= deltaY;
+                    camera->move_left(delta_time, deltaX);
+                }
+            }
 
             static float yaw = 0.0f;
             static float pitch = 0.0f;
@@ -93,13 +104,18 @@ void gamescene::on_edition_mode(float delta_time)
             glm::quat targetRotation = glm::normalize(rotationY * rotationX);
 
             const float smoothingFactor = 0.1f;
-            camera->cameraRotation = glm::slerp(camera->cameraRotation, targetRotation, smoothingFactor);
 
-            camera->cameraRotation = glm::normalize(camera->cameraRotation);
+            if (camera->use_projection)
+            {
+                camera->cameraRotation = glm::slerp(camera->cameraRotation, targetRotation, smoothingFactor);
+                camera->cameraRotation = glm::normalize(camera->cameraRotation);
+            }
+            else
+            {
+                camera->cameraRotation = glm::quat(0.0f, 0.0f, 0.0f, 0.0f);
+            }
         }
     }
-
-    std::string window_name = "Garin Editor - " + SceneManager::GetOpenScene()->scene_name;
 
     for (Entity *entity : objects_worlds)
     {
@@ -121,7 +137,9 @@ void gamescene::on_edition_mode(float delta_time)
         }
     }
 
-    // Gfx::change_name(window_name);
+    std::string window_name = "Mantrax Editor - " + SceneManager::GetOpenScene()->scene_name;
+
+    Gfx::change_name(window_name);
 
     if (configs->project_select == true && !first_frame_loaded_on_bucle)
     {
@@ -129,8 +147,6 @@ void gamescene::on_edition_mode(float delta_time)
         assets_registry->start();
         first_frame_loaded_on_bucle = true;
     }
-
-    // cs->edition_event();
 }
 
 void gamescene::on_update(float delta_time)
@@ -141,14 +157,29 @@ void gamescene::on_update(float delta_time)
     // {
     //     std::cout << "Casting: " << hit->entity->ObjectName << std::endl;
     // }
-
-    // cs->tick_event();
 }
 
 void gamescene::on_draw()
 {
-    gizmos->draw_line(glm::vec3(0.0f), glm::vec3(20.0f, 2.0f, 0.0f), glm::vec3(0.0f), glm::vec3(5.0f));
-    gizmo_models->draw();
+    if (select_obj != nullptr && select_obj->hasComponent<GCollision>())
+    {
+        cube_gizmo->render(SceneManager::GetOpenScene()->main_camera->GetView(),
+                           SceneManager::GetOpenScene()->main_camera->GetProjectionMatrix(),
+                           select_obj->get_transform()->Position, select_obj->get_transform()->Scale * std::any_cast<glm::vec3>(select_obj->getComponent<GCollision>().variableMap["boxSize"]));
+    }
+    if (select_obj != nullptr && select_obj->hasComponent<GAudio>())
+    {
+        glm::vec3 t_min = glm::vec3(std::any_cast<float>(select_obj->getComponent<GAudio>().variableMap["AudioMin"]));
+        glm::vec3 t_max = glm::vec3(std::any_cast<float>(select_obj->getComponent<GAudio>().variableMap["AudioMax"]));
+
+        sphere_gizmo->render(SceneManager::GetOpenScene()->main_camera->GetView(),
+                             SceneManager::GetOpenScene()->main_camera->GetProjectionMatrix(),
+                             select_obj->get_transform()->Position, t_max, glm::vec3(0.0f));
+
+        sphere_gizmo->render(SceneManager::GetOpenScene()->main_camera->GetView(),
+                             SceneManager::GetOpenScene()->main_camera->GetProjectionMatrix(),
+                             select_obj->get_transform()->Position, t_min, glm::vec3(0.0f));
+    }
 }
 
 void gamescene::draw_ui()
@@ -274,8 +305,6 @@ void gamescene::draw_ui()
                 }
             }
         }
-
-        // cs->ui_event();
     }
 
     GarinUI::get_ui_manager()->render_ui_context();
@@ -283,7 +312,6 @@ void gamescene::draw_ui()
 
 void gamescene::on_destroy()
 {
-    // cs->release_mono();
     assets_registry->stop();
     configs->save_config();
 }

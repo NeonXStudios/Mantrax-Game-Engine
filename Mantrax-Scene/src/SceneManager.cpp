@@ -244,6 +244,15 @@ void SceneManager::load_scene(std::string scene_name_new)
                             {
                                 cmpGet->setup_var(var_object["name"], (bool)var_object["value"]);
                             }
+                            else if (var_object["type"] == "v3")
+                            {
+                                glm::vec3 val;
+                                val.x = var_object["value"][0].get<float>();
+                                val.y = var_object["value"][1].get<float>();
+                                val.z = var_object["value"][2].get<float>();
+
+                                cmpGet->setup_var(var_object["name"], val);
+                            }
                         }
                     }
                 }

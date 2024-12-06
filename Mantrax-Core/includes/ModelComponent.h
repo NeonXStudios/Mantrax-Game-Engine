@@ -14,7 +14,6 @@ class GARINLIBS_API ModelComponent : public Component
 {
 public:
     string model_path;
-    TextureManager *texture_normal;
     TextureManager *texture_sampler;
 
     Model *model = nullptr;

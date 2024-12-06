@@ -86,13 +86,20 @@ public:
 			colors[ImGuiCol_DockingPreview] = ImVec4{0.44f, 0.37f, 0.61f, 1.0f};
 
 			auto &style = ImGui::GetStyle();
-			style.TabRounding = 4;
-			style.ScrollbarRounding = 9;
-			style.WindowRounding = 7;
-			style.GrabRounding = 3;
-			style.FrameRounding = 3;
-			style.PopupRounding = 4;
-			style.ChildRounding = 4;
+			// style.TabRounding = 4;
+			// style.ScrollbarRounding = 9;
+			// style.WindowRounding = 7;
+			// style.GrabRounding = 3;
+			// style.FrameRounding = 3;
+			// style.PopupRounding = 4;
+			// style.ChildRounding = 4;
+			style.TabRounding = 0;
+			style.ScrollbarRounding = 0;
+			style.WindowRounding = 0;
+			style.GrabRounding = 0;
+			style.FrameRounding = 0;
+			style.PopupRounding = 0;
+			style.ChildRounding = 0;
 			break;
 		}
 
@@ -149,7 +156,7 @@ public:
 			style.Colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
 			style.Colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
 			style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
-			style.GrabRounding = style.FrameRounding = 2.3f;
+			style.GrabRounding = style.FrameRounding = 0.0f;
 			break;
 		}
 
@@ -288,14 +295,22 @@ public:
 			style.PopupBorderSize = 1;
 			style.FrameBorderSize = 1;
 			style.TabBorderSize = 1;
-			style.WindowRounding = 7;
-			style.ChildRounding = 4;
-			style.FrameRounding = 3;
-			style.PopupRounding = 4;
-			style.ScrollbarRounding = 9;
-			style.GrabRounding = 3;
+			// style.WindowRounding = 7;
+			// style.ChildRounding = 4;
+			// style.FrameRounding = 3;
+			// style.PopupRounding = 4;
+			// style.ScrollbarRounding = 9;
+			// style.GrabRounding = 3;
+			// style.TabRounding = 4;
+
+			style.WindowRounding = 0;
+			style.ChildRounding = 0;
+			style.FrameRounding = 0;
+			style.PopupRounding = 0;
+			style.ScrollbarRounding = 0;
+			style.GrabRounding = 0;
+			style.TabRounding = 0;
 			style.LogSliderDeadzone = 4;
-			style.TabRounding = 4;
 			break;
 		}
 		DefaultDark:

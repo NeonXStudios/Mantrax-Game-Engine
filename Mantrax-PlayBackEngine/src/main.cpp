@@ -19,13 +19,30 @@ RenderPipeline *piprender = new RenderPipeline();
 
 bool first_frame_loaded;
 
-int main(int argc, char *arvg[])
+int start_engine(int argc, char *argv[]);
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+    HWND hWnd = GetConsoleWindow();
+    if (hWnd)
+    {
+        ShowWindow(hWnd, SW_HIDE);
+    }
+
+    const char *args[] = {"MantraxEngine", lpCmdLine};
+    int argc = sizeof(args) / sizeof(args[0]);
+
+    return start_engine(argc, const_cast<char **>(args));
+}
+
+int start_engine(int argc, char *arvg[])
 {
     if (argc == 0)
     {
         return -2;
     }
-    fs::path project_path = fs::path(arvg[1]);
+
+    AppSettings::is_playing = true;
 
     audioManager->create();
     audioManager->StartSystem();
@@ -35,36 +52,29 @@ int main(int argc, char *arvg[])
     sceneManager->create();
 
     gamescene *scene_game = &gamescene::getInstance();
+
     scene_game->configs = new EditorConfigs();
 
     SceneManager::GetSceneManager()->OpenScene = scene_game;
 
     settings_window window_config = settings_window();
-    window_config.window_name = "Garin Engine";
+    window_config.window_name = "Mantrax Engine";
     window_config.width = 1920;
     window_config.height = 1080;
     window_config.maximized = true;
 
-    try
-    {
-        AppSettings::is_playing = true;
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-
     Gfx::create_windows(window_config);
+
+    scene_game->configs->project_select = true;
+    fs::path project_path = fs::path(arvg[1]);
+
+    scene_game->configs->current_proyect = project_path.string() + "/";
+    FileManager::game_path = scene_game->configs->current_proyect;
+
     RenderPipeline::init();
     SceneManager::GetOpenScene()->awake();
 
-    scene_game->configs->current_proyect = project_path.string() + "/";
-
     scene_game->configs->load_config();
-
-    FileManager::game_path = scene_game->configs->current_proyect;
-
-    scene_game->configs->project_select = true;
 
     DynamicLibLoader::instance->load_components(project_path.string() + "/");
 
@@ -74,8 +84,6 @@ int main(int argc, char *arvg[])
     }
 
     SceneManager::GetOpenScene()->init();
-
-    std::cout << "All Data Started" << std::endl;
 
     while (!Gfx::try_window_close())
     {

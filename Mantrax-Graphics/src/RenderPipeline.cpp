@@ -35,7 +35,7 @@ void RenderPipeline::render()
     for (int i = 0; i < RenderPipeline::camera_targets.size(); i++)
     {
         Camera *camera = RenderPipeline::camera_targets[i];
-        
+
         if (camera == nullptr)
         {
             std::cerr << "Error: camera es nullptr" << std::endl;
@@ -67,7 +67,7 @@ void RenderPipeline::render_all_data(glm::mat4 camera_matrix)
             {
                 GMaterial &material = cmp->entity->getComponent<GMaterial>();
 
-                if (layers_to_render.find(cmp->entity->Layer) != layers_to_render.end())
+                if (layers_to_render.find(cmp->entity->Layer) != layers_to_render.end() && material.enabled)
                 {
                     material.p_shader->use();
 
@@ -150,9 +150,4 @@ Camera *RenderPipeline::add_camera()
     {
         std::cerr << e.what() << '\n';
     }
-}
-
-void RenderPipeline::test_mono()
-{
-    std::cout << "*/*/*/*/*/*/* HELLO FROM MONO BRO!" << std::endl;
 }

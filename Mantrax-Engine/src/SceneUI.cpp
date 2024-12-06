@@ -54,6 +54,109 @@ void SceneUI::draw(Entity *select_obj)
                     }
                 }
             }
+
+            CastDataUI *data_ui = new CastDataUI();
+
+            ScreenPoint = EventSystem::MouseToScreenPos(glm::vec2(p.x, p.y), glm::vec2(Gfx::render_width, Gfx::render_height));
+
+            if (ImGui::IsMouseClicked(0))
+            {
+                if (EventSystem::MouseCastUI(ScreenPoint, data_ui))
+                {
+                    if (data_ui->object != nullptr)
+                    {
+                        game->ui_behaviour = data_ui->object;
+                    }
+                    else
+                    {
+                        game->ui_behaviour = nullptr;
+                    }
+                }
+                else
+                {
+                    game->ui_behaviour = nullptr;
+                }
+            }
+
+            if (ImGui::IsMouseDragging(0) && game->ui_behaviour != nullptr)
+            {
+                game->ui_behaviour->transform->Position = glm::vec3(ScreenPoint.x, ScreenPoint.y, game->ui_behaviour->transform->Position.z);
+            }
+        }
+
+        if (game->ui_behaviour != nullptr)
+        {
+            ImGui::Begin("UI Behaviour Configuration");
+
+            if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                if (ImGui::TreeNode("Position"))
+                {
+                    glm::vec3 &position = game->ui_behaviour->Position;
+                    ImGui::Text("Position (X, Y, Z):");
+                    ImGui::DragFloat3("##Position", &position.x, 0.1f);
+                    ImGui::TreePop();
+                }
+
+                ImGui::Separator();
+
+                if (ImGui::TreeNode("Scale"))
+                {
+                    glm::vec3 &scale = game->ui_behaviour->Scale;
+                    ImGui::Text("Scale (X, Y, Z):");
+                    ImGui::DragFloat3("##Scale", &scale.x, 0.1f);
+                    ImGui::TreePop();
+                }
+
+                if (ImGui::TreeNode("Canvas Size"))
+                {
+                    glm::vec2 &scale = glm::vec2(RenderPipeline::canvas->width, RenderPipeline::canvas->height);
+
+                    EditorGUI::Vector2("Canvas Screen Size: ", scale);
+
+                    RenderPipeline::canvas->width = scale.x;
+                    RenderPipeline::canvas->height = scale.y;
+
+                    ImGui::TreePop();
+                }
+
+                ImGui::Separator();
+            }
+
+            ImGui::Separator();
+
+            if (ImGui::CollapsingHeader("Anchors", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                glm::vec4 &anchors = game->ui_behaviour->transform->Anchors;
+
+                if (ImGui::TreeNode("Min Anchors"))
+                {
+                    ImGui::Text("Min (X, Y):");
+                    ImGui::DragFloat2("##MinAnchors", &anchors.x, 0.01f, 0.0f, 1.0f);
+                    ImGui::TreePop();
+                }
+
+                ImGui::Separator();
+
+                if (ImGui::TreeNode("Max Anchors"))
+                {
+                    ImGui::Text("Max (X, Y):");
+                    ImGui::DragFloat2("##MaxAnchors", &anchors.z, 0.01f, 0.0f, 1.0f);
+                    ImGui::TreePop();
+                }
+            }
+
+            ImGui::Separator();
+
+            if (ImGui::Button("Reset Transform", ImVec2(-1, 0)))
+            {
+                game->ui_behaviour->transform->Position = glm::vec3(0.0f);
+                game->ui_behaviour->transform->Scale = glm::vec3(1.0f);
+                game->ui_behaviour->transform->rotation = glm::quat(glm::vec3(0.0f));
+                game->ui_behaviour->transform->Anchors = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+            }
+
+            ImGui::End();
         }
     }
     catch (const std::exception &e)

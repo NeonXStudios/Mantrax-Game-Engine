@@ -83,6 +83,12 @@ void Gfx::poll_events()
     InputSystem::update_input();
 }
 
+void Gfx::clear_render()
+{
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 void Gfx::timer_control()
 {
     currentTime = glfwGetTime();
@@ -104,6 +110,12 @@ void Gfx::timer_control()
 void Gfx::process_window_size()
 {
     glfwGetWindowSize(window, &width, &height);
+
+    if (AppSettings::is_playing)
+    {
+        Gfx::render_width = width;
+        Gfx::render_height = height;
+    }
 }
 
 void Gfx::swap_buffer()

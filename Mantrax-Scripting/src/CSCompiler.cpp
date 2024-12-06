@@ -42,7 +42,6 @@ void CSCompiler::setup_mono()
                 mono_add_internal_call("RenderPipeline::delete_from_render", &RenderPipeline::delete_from_render);
                 mono_add_internal_call("RenderPipeline::addLayer", &RenderPipeline::addLayer);
                 mono_add_internal_call("RenderPipeline::removeLayer", &RenderPipeline::removeLayer);
-                mono_add_internal_call("RenderPipeline::test_mono", &RenderPipeline::test_mono);
                 mono_add_internal_call("RenderPipeline::add_camera", &RenderPipeline::add_camera);
                 mono_add_internal_call("RenderPipeline::add_render_texture", &RenderPipeline::add_render_texture);
                 mono_add_internal_call("MantraxGameCore.Time::DeltaTime", &Timer::get_delta_time);

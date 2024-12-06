@@ -8,6 +8,10 @@
 class GARINLIBS_API CanvasManager
 {
 public:
+    float width = 1920.0f;
+    float height = 1080.0f;
+    float zoom = 0.043f;
+
     std::vector<UIComponentsBehaviour *> ui = std::vector<UIComponentsBehaviour *>();
 
     void init_ui();

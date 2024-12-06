@@ -13,7 +13,7 @@ void RenderPipeline::init()
     RenderPipeline::canvas = new CanvasManager();
     RenderPipeline::canvas->init_ui();
 
-    if (SceneManager::GetOpenScene()->main_camera == nullptr)
+    if (SceneManager::GetOpenScene()->main_camera == nullptr && !AppSettings::is_playing)
     {
         SceneManager::GetOpenScene()->main_camera = new Camera();
         SceneManager::GetOpenScene()->main_camera->target_render = Gfx::main_render;
@@ -35,7 +35,7 @@ void RenderPipeline::render()
     for (int i = 0; i < RenderPipeline::camera_targets.size(); i++)
     {
         Camera *camera = RenderPipeline::camera_targets[i];
-        
+
         if (camera == nullptr)
         {
             std::cerr << "Error: camera es nullptr" << std::endl;
@@ -95,6 +95,7 @@ void RenderPipeline::render_all_data(glm::mat4 camera_matrix)
                     material.p_shader->setFloat("DeltaTime", Timer::delta_time);
                     material.p_shader->setFloat("SinTime", glm::sin(Timer::delta_time));
                     material.p_shader->setFloat("CosTime", glm::acos(Timer::delta_time));
+                    material.p_shader->setFloat("ElapsedTime", Timer::elapsed_time);
 
                     cmp->model->Draw();
                 }
@@ -128,6 +129,9 @@ TextureTarget *RenderPipeline::add_render_texture()
     TextureTarget *target_t = new TextureTarget();
     target_t->setup();
     render_targets.push_back(target_t);
+
+    std::cout << "New Render Created" << std::endl;
+
     return target_t;
 }
 
@@ -150,9 +154,4 @@ Camera *RenderPipeline::add_camera()
     {
         std::cerr << e.what() << '\n';
     }
-}
-
-void RenderPipeline::test_mono()
-{
-    std::cout << "*/*/*/*/*/*/* HELLO FROM MONO BRO!" << std::endl;
 }

@@ -79,6 +79,13 @@ void SceneData::save_scene()
                         datavar["value"] = val;
                         datavar["type"] = "bool";
                     }
+                    else if (value.type() == typeid(glm::vec3))
+                    {
+                        glm::vec3 val = std::any_cast<glm::vec3>(value);
+                        datavar["name"] = key;
+                        datavar["value"] = {val.x, val.y, val.z};
+                        datavar["type"] = "v3";
+                    }
 
                     varsdata.push_back(datavar);
                 }

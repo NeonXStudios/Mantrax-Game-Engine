@@ -118,11 +118,10 @@ void PhysicsEngine::start_world_physics()
 #pragma endregion
 }
 
-
-
 void PhysicsEngine::update_world_physics()
 {
-    if (mScene != nullptr){
+    if (mScene != nullptr)
+    {
         mScene->simulate(1.0f / 60.0f);
         mScene->fetchResults(true);
     }
