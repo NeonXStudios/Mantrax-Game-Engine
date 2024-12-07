@@ -24,7 +24,8 @@ public:
             auto modelComponents = owner->getComponents<T>();
             for (auto *cmap : modelComponents)
             {
-                EditorGUI::Draw_Component<T>(owner, cmap, demangle(typeid(cmap).name()), cmap->component_id, cmap, [cmap]() {});
+                EditorGUI::Draw_Component<T>(owner, cmap, demangle(typeid(*cmap).name()),
+                                             cmap->component_id, cmap, [cmap]() {});
             }
         }
     }

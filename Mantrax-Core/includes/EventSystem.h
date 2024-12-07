@@ -3,6 +3,7 @@
 #include "Core.h"
 #include <GarinMaths.h>
 #include <RenderPipeline.h>
+#include <UIBehaviour.h>
 
 struct GARINLIBS_API CastData
 {
@@ -11,7 +12,7 @@ struct GARINLIBS_API CastData
 
 struct GARINLIBS_API CastDataUI
 {
-    UIComponentsBehaviour *object;
+    UIBehaviour *object;
 };
 
 class GARINLIBS_API EventSystem
@@ -160,25 +161,25 @@ public:
             if (SceneManager::GetSceneManager()->OpenScene != nullptr)
             {
                 float closestZ = std::numeric_limits<float>::lowest();
-                UIComponentsBehaviour *closestObject = nullptr;
+                UIBehaviour *closestObject = nullptr;
 
                 for (int i = 0; i < RenderPipeline::canvas->ui.size(); i++)
                 {
 
-                    UIComponentsBehaviour *objD = RenderPipeline::canvas->ui[i];
+                    UIBehaviour *objD = RenderPipeline::canvas->ui[i];
 
-                    if (objD->transform == nullptr)
+                    if (objD == nullptr)
                     {
                         return false;
                     }
 
-                    glm::vec3 PosCam = objD->Position;
+                    glm::vec3 PosCam = objD->behaviour->Position;
 
                     glm::vec3 &obj = PosCam;
-                    float objWidth = objD->Scale.x;
-                    float objHeight = objD->Scale.y;
+                    float objWidth = objD->behaviour->Scale.x;
+                    float objHeight = objD->behaviour->Scale.y;
 
-                    float radians = objD->rotation.x;
+                    float radians = objD->behaviour->rotation.x;
 
                     glm::vec2 localPoint = RotatePoint(coords, obj, radians);
 

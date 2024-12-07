@@ -80,7 +80,7 @@ void SceneUI::draw(Entity *select_obj)
 
             if (ImGui::IsMouseDragging(0) && game->ui_behaviour != nullptr)
             {
-                game->ui_behaviour->transform->Position = glm::vec3(ScreenPoint.x, ScreenPoint.y, game->ui_behaviour->transform->Position.z);
+                game->ui_behaviour->behaviour->Position = glm::vec3(ScreenPoint.x, ScreenPoint.y, game->ui_behaviour->behaviour->Position.z);
             }
         }
 
@@ -92,7 +92,7 @@ void SceneUI::draw(Entity *select_obj)
             {
                 if (ImGui::TreeNode("Position"))
                 {
-                    glm::vec3 &position = game->ui_behaviour->Position;
+                    glm::vec3 &position = game->ui_behaviour->behaviour->Position;
                     ImGui::Text("Position (X, Y, Z):");
                     ImGui::DragFloat3("##Position", &position.x, 0.1f);
                     ImGui::TreePop();
@@ -102,7 +102,7 @@ void SceneUI::draw(Entity *select_obj)
 
                 if (ImGui::TreeNode("Scale"))
                 {
-                    glm::vec3 &scale = game->ui_behaviour->Scale;
+                    glm::vec3 &scale = game->ui_behaviour->behaviour->Scale;
                     ImGui::Text("Scale (X, Y, Z):");
                     ImGui::DragFloat3("##Scale", &scale.x, 0.1f);
                     ImGui::TreePop();
@@ -125,35 +125,11 @@ void SceneUI::draw(Entity *select_obj)
 
             ImGui::Separator();
 
-            if (ImGui::CollapsingHeader("Anchors", ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                glm::vec4 &anchors = game->ui_behaviour->transform->Anchors;
-
-                if (ImGui::TreeNode("Min Anchors"))
-                {
-                    ImGui::Text("Min (X, Y):");
-                    ImGui::DragFloat2("##MinAnchors", &anchors.x, 0.01f, 0.0f, 1.0f);
-                    ImGui::TreePop();
-                }
-
-                ImGui::Separator();
-
-                if (ImGui::TreeNode("Max Anchors"))
-                {
-                    ImGui::Text("Max (X, Y):");
-                    ImGui::DragFloat2("##MaxAnchors", &anchors.z, 0.01f, 0.0f, 1.0f);
-                    ImGui::TreePop();
-                }
-            }
-
-            ImGui::Separator();
-
             if (ImGui::Button("Reset Transform", ImVec2(-1, 0)))
             {
-                game->ui_behaviour->transform->Position = glm::vec3(0.0f);
-                game->ui_behaviour->transform->Scale = glm::vec3(1.0f);
-                game->ui_behaviour->transform->rotation = glm::quat(glm::vec3(0.0f));
-                game->ui_behaviour->transform->Anchors = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+                game->ui_behaviour->behaviour->Position = glm::vec3(0.0f);
+                game->ui_behaviour->behaviour->Scale = glm::vec3(1.0f);
+                game->ui_behaviour->behaviour->rotation = glm::quat(glm::vec3(0.0f));
             }
 
             ImGui::End();
@@ -191,7 +167,6 @@ void SceneUI::draw(Entity *select_obj)
                 transform->Position = translation;
                 transform->Scale = scale;
 
-                // Establece la rotación utilizando ángulos de Euler en lugar de cuaterniones
                 transform->set_rotation(eulerRotation);
             }
             else
@@ -199,10 +174,8 @@ void SceneUI::draw(Entity *select_obj)
                 transform->Position = translation;
                 transform->Scale = scale;
 
-                // Establece la rotación utilizando ángulos de Euler en lugar de cuaterniones
                 transform->set_rotation(eulerRotation);
 
-                // Actualizar componentes físicos
                 select_obj->getComponent<GBody>().body->setLinearVelocity(PxVec3(0, 0, 0));
                 select_obj->getComponent<GBody>().set_position(translation);
             }

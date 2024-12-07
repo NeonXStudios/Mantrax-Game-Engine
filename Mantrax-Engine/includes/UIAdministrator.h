@@ -28,4 +28,5 @@ class GARINLIBS_API UIAdministrator
 {
 public:
     static void draw_ui(Entity *owner);
+    static void draw_ui_in_order(Entity *owner, std::string component_name);
 };

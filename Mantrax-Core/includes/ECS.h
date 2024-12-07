@@ -240,13 +240,13 @@ class GARINLIBS_API Entity
 {
 private:
 	bool active = true;
-	std::vector<Component *> components;
 
 	ComponentArray componentArray;
 	ComponentBitSet componentBitset;
 	GroupBitset groupBitset;
 
 public:
+	std::vector<Component *> components;
 	int Layer = LAYER_1;
 	std::string ObjectName = "New Entity";
 	std::string ObjectTag = "None";

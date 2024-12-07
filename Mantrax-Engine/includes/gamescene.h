@@ -17,7 +17,7 @@
 #include <AssetsRegistry.h>
 #include <EditorGUI.h>
 #include <TimeWatcher.h>
-#include <UIComponentsBehaviour.h>
+#include <UIBehaviour.h>
 
 #include <GizmoCube.h>
 
@@ -63,7 +63,7 @@ public:
     GizmoCube *cube_gizmo;
     GizmoCircle *circle_gizmo;
     GizmoSphere *sphere_gizmo;
-    UIComponentsBehaviour *ui_behaviour;
+    UIBehaviour *ui_behaviour;
 
     std::stringstream buffer_stdout;
     std::stringstream buffer_stderr;

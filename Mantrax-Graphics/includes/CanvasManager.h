@@ -3,7 +3,8 @@
 #include <GarinIO.h>
 #include <GarinMaths.h>
 #include <Core.h>
-#include <UIComponentsBehaviour.h>
+#include <UIBehaviour.h>
+#include <Text.h>
 
 class GARINLIBS_API CanvasManager
 {
@@ -12,9 +13,11 @@ public:
     float height = 1080.0f;
     float zoom = 0.043f;
 
-    std::vector<UIComponentsBehaviour *> ui = std::vector<UIComponentsBehaviour *>();
+    std::vector<UIBehaviour *> ui = std::vector<UIBehaviour *>();
 
     void init_ui();
     void render_ui();
-    UIComponentsBehaviour *add_new_ui_component();
+
+    // UI COMPONENTS
+    UIBehaviour *add_new_ui_component_type_text();
 };

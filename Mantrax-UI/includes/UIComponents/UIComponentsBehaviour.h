@@ -42,18 +42,9 @@ public:
     glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 LocalPosition = glm::vec3(1.0f, 1.0f, 1.0f);
     glm::vec3 Rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-    glm::vec3 Scale = glm::vec3(700.0f, 200.0f, 1.0f);
+    glm::vec3 Scale = glm::vec3(100.0f, 100.0f, 1.0f);
     glm::vec3 Offset = glm::vec3(0.0f, 0.0f, 0.0f);
-
-    float normalXSize = 0;
-    float NormalYSize = 0;
-
-    AnchorUI currentAnchor = AnchorUI::None;
-    glm::vec3 RectPosition;
-    glm::vec3 RectScale;
-    glm::vec3 RectRot;
-
-    TransformComponent *transform = new TransformComponent();
+    glm::mat4 projection;
 
     std::unordered_map<std::string, AnchorPoint> anchorPoints = {
         {"Center", {{0, 0, 0}, {0.5f, 0.5f}}},
@@ -106,27 +97,24 @@ public:
 
     void draw()
     {
-        if (transform != nullptr)
-        {
-            anchorPoints = {
-                {"Center", {{0, 0, 0}, {0.5f, 0.5f}}},
-                {"Left", {{-Gfx::render_width, 0, 0}, {0.0f, 0.5f}}},
-                {"Right", {{Gfx::render_width, 0, 0}, {1.0f, 0.5f}}},
-                {"Top", {{0, Gfx::render_height, 0}, {0.5f, 1.0f}}},
-                {"Bottom", {{0, -Gfx::render_height, 0}, {0.5f, 0.0f}}}};
+        anchorPoints = {
+            {"Center", {{0, 0, 0}, {0.5f, 0.5f}}},
+            {"Left", {{-Gfx::render_width, 0, 0}, {0.0f, 0.5f}}},
+            {"Right", {{Gfx::render_width, 0, 0}, {1.0f, 0.5f}}},
+            {"Top", {{0, Gfx::render_height, 0}, {0.5f, 1.0f}}},
+            {"Bottom", {{0, -Gfx::render_height, 0}, {0.5f, 0.0f}}}};
 
-            shaderpr->use();
+        shaderpr->use();
 
-            glm::mat4 projection = glm::ortho(float(-Gfx::render_width), float(Gfx::render_width), float(-Gfx::render_height), float(Gfx::render_height), -1000.0f, 1000.0f);
-            shaderpr->setMat4("projection", projection);
+        projection = glm::ortho(float(-Gfx::render_width), float(Gfx::render_width), float(-Gfx::render_height), float(Gfx::render_height), -1000.0f, 1000.0f);
+        shaderpr->setMat4("projection", projection);
 
-            ApplyAnchorTransform("Left", Position * glm::vec3(1.0f, -1.0f, 1.0f), Offset, Scale, Rotation);
+        ApplyAnchorTransform("Left", Position * glm::vec3(1.0f, -1.0f, 1.0f), Offset, Scale, Rotation);
 
-            texture->use_texture(shaderpr->ID);
+        texture->use_texture(shaderpr->ID);
 
-            glBindVertexArray(VAO);
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        }
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
 
     void AddAnchorPoint(const std::string &name, glm::vec3 position, glm::vec2 alignment)
@@ -162,6 +150,7 @@ public:
 
         shaderpr->setMat4("model", model);
     }
+
     void on_click(std::function<void(void)> func)
     {
         func();

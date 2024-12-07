@@ -28,4 +28,5 @@ public:
     static void removeLayer(int layer);
     static Camera *add_camera();
     static TextureTarget *add_render_texture();
+    static void renderQuad();
 };

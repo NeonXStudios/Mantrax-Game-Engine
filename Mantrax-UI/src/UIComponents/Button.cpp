@@ -1,9 +1,9 @@
 #include <Button.h>
 
-void Button::init()
+void Button::on_setup()
 {
 }
 
-void Button::draw()
+void Button::on_draw()
 {
 }

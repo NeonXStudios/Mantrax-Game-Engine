@@ -1,12 +1,16 @@
 #pragma once
-
+#include <GarinMaths.h>
 #include <GarinNatives.h>
+#include <UIComponentsBehaviour.h>
 
 class UIBehaviour
 {
 public:
     bool enabled;
 
-    virtual void init() = 0;
-    virtual void draw() = 0;
+    UIComponentsBehaviour *behaviour = new UIComponentsBehaviour();
+
+    virtual void on_setup() {};
+
+    virtual void on_draw() {};
 };

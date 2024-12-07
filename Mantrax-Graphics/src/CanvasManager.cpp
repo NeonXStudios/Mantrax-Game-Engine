@@ -2,32 +2,30 @@
 
 void CanvasManager::init_ui()
 {
-    add_new_ui_component();
+    add_new_ui_component_type_text();
 }
 
 void CanvasManager::render_ui()
 {
-    for (UIComponentsBehaviour *ui_behaviour : ui)
+    for (UIBehaviour *ui_behaviour : ui)
     {
-        if (ui_behaviour->component_enabled)
+        if (ui_behaviour->behaviour->component_enabled)
         {
-            ui_behaviour->canvas_height = height;
-            ui_behaviour->canvas_width = width;
+            ui_behaviour->behaviour->canvas_height = height;
+            ui_behaviour->behaviour->canvas_width = width;
 
-            ui_behaviour->transform->update();
-
-            ui_behaviour->draw();
+            ui_behaviour->on_draw();
         }
     }
 }
 
-UIComponentsBehaviour *CanvasManager::add_new_ui_component()
+UIBehaviour *CanvasManager::add_new_ui_component_type_text()
 {
-    UIComponentsBehaviour *ui_cmp = new UIComponentsBehaviour();
-    ui_cmp->canvas_height = height;
-    ui_cmp->canvas_width = width;
+    TextRenderer *ui_cmp = new TextRenderer();
+    ui_cmp->behaviour->canvas_height = height;
+    ui_cmp->behaviour->canvas_width = width;
 
-    ui_cmp->setup();
+    ui_cmp->on_setup();
 
     ui.push_back(ui_cmp);
 

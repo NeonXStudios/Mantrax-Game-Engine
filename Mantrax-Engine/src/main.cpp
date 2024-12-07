@@ -16,23 +16,23 @@ AudioManager *audioManager = new AudioManager();
 GameBehaviourFactory *factory_behaviour = new GameBehaviourFactory();
 RenderPipeline *piprender = new RenderPipeline();
 
-int start_engine(int argc, char *argv[]);
+// int start_engine(int argc, char *argv[]);
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-{
-    HWND hWnd = GetConsoleWindow();
-    if (hWnd)
-    {
-        ShowWindow(hWnd, SW_HIDE);
-    }
+// int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+// {
+//     HWND hWnd = GetConsoleWindow();
+//     if (hWnd)
+//     {
+//         ShowWindow(hWnd, SW_HIDE);
+//     }
 
-    const char *args[] = {"MantraxEngine", lpCmdLine};
-    int argc = sizeof(args) / sizeof(args[0]);
+//     const char *args[] = {"MantraxEngine", lpCmdLine};
+//     int argc = sizeof(args) / sizeof(args[0]);
 
-    return start_engine(argc, const_cast<char **>(args));
-}
+//     return start_engine(argc, const_cast<char **>(args));
+// }
 
-int start_engine(int argc, char *arvg[])
+int main(int argc, char *arvg[])
 {
     if (argc == 0)
     {

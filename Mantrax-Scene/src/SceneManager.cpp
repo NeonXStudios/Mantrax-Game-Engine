@@ -289,7 +289,7 @@ void SceneManager::load_scene(std::string scene_name_new)
             {
                 for (Component *comp : ent->GetAllComponent())
                 {
-                    if (typeid(*comp) != typeid(GScriptLua) && typeid(*comp) != typeid(GScript))
+                    if (typeid(*comp) != typeid(GScript))
                     {
                         comp->init();
                     }
@@ -301,17 +301,6 @@ void SceneManager::load_scene(std::string scene_name_new)
                 for (Component *comp : ent->GetAllComponent())
                 {
                     if (typeid(*comp) == typeid(GScript))
-                    {
-                        comp->init();
-                    }
-                }
-            }
-
-            for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
-            {
-                for (Component *comp : ent->GetAllComponent())
-                {
-                    if (typeid(*comp) == typeid(GScriptLua))
                     {
                         comp->init();
                     }

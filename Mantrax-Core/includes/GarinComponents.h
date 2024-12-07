@@ -11,7 +11,6 @@
 #include "GCharacter.h"
 #include "GCaster.h"
 #include "LayerManager.h"
-#include "GScriptLua.h"
 #include "GAnimator.h"
 #include "GCamera.h"
 #include "GNoise.h"

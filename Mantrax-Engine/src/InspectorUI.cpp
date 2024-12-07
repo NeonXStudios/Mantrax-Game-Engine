@@ -85,15 +85,9 @@ void InspectorUI::draw(Entity *select_obj)
                 ImGui::CloseCurrentPopup();
             }
 
-            if (ImGui::Button("Game Script (C++ Alpha)", ImVec2(buttonWidth, 20)))
+            if (ImGui::Button("Game Script", ImVec2(buttonWidth, 20)))
             {
                 select_obj->addComponent<GScript>().init();
-                ImGui::CloseCurrentPopup();
-            }
-
-            if (ImGui::Button("Game Script (Lua)", ImVec2(buttonWidth, 20)))
-            {
-                select_obj->addComponent<GScriptLua>();
                 ImGui::CloseCurrentPopup();
             }
 
