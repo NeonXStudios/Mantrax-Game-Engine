@@ -14,7 +14,7 @@ void GBody::init()
 {
     try
     {
-        mPhysics = SceneManager::GetOpenScene()->physic_world->mPhysics;
+        mPhysics = SceneManager::GetSceneManager()->physic_world->mPhysics;
 
         // shape = mPhysics->createShape(physx::PxBoxGeometry(halfExtent, halfExtent, halfExtent), *SceneManager::GetSceneManager()->OpenScene->mMaterial, 1);
         physx::PxVec3 position_start = physx::PxVec3(entity->get_transform()->Position.x, entity->get_transform()->Position.y, entity->get_transform()->Position.z);
@@ -28,23 +28,23 @@ void GBody::init()
         body->setName(entity->ObjectSTRID.c_str());
 
         physx::PxRigidBodyExt::updateMassAndInertia(*body, GETVAR(mass, float));
-        SceneManager::GetOpenScene()->physic_world->mScene->addActor(*body);
+        SceneManager::GetSceneManager()->physic_world->mScene->addActor(*body);
 
         body->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, GETVAR(isStatic, bool));
         body->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !GETVAR(useGravity, bool));
 
         body->wakeUp();
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }
-    
 }
 
 void GBody::update()
 {
-    if (body != nullptr && SceneManager::GetOpenScene()->physic_world != nullptr && SceneManager::GetOpenScene()->physic_world->mScene != nullptr) {
+    if (body != nullptr && SceneManager::GetSceneManager()->physic_world != nullptr && SceneManager::GetSceneManager()->physic_world->mScene != nullptr)
+    {
         if (entity->hasComponent<GCollision>() && !shapeAttached)
         {
             body->attachShape(*entity->getComponent<GCollision>().shape);
@@ -86,21 +86,21 @@ void GBody::add_impulse(glm::vec3 direction, GBodySpace::force_mode mode)
 {
     switch (mode)
     {
-        case GBodySpace::Impulse:
-        {
-            body->addForce(physx::PxVec3(direction.x, direction.y, direction.z), physx::PxForceMode::eIMPULSE, true);
-            break;
-        }
-        case GBodySpace::Acceleration:
-        {
-            body->addForce(physx::PxVec3(direction.x, direction.y, direction.z), physx::PxForceMode::eACCELERATION, true);
-            break;
-        }
-        case GBodySpace::Velocity:
-        {
-            body->addForce(physx::PxVec3(direction.x, direction.y, direction.z), physx::PxForceMode::eVELOCITY_CHANGE, true);
-            break;
-        }
+    case GBodySpace::Impulse:
+    {
+        body->addForce(physx::PxVec3(direction.x, direction.y, direction.z), physx::PxForceMode::eIMPULSE, true);
+        break;
+    }
+    case GBodySpace::Acceleration:
+    {
+        body->addForce(physx::PxVec3(direction.x, direction.y, direction.z), physx::PxForceMode::eACCELERATION, true);
+        break;
+    }
+    case GBodySpace::Velocity:
+    {
+        body->addForce(physx::PxVec3(direction.x, direction.y, direction.z), physx::PxForceMode::eVELOCITY_CHANGE, true);
+        break;
+    }
     }
 }
 

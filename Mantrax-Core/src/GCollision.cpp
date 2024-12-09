@@ -9,9 +9,9 @@ void GCollision::defines()
 
 void GCollision::init()
 {
-    if (SceneManager::GetOpenScene()->physic_world != nullptr && SceneManager::GetOpenScene()->physic_world->mScene != nullptr)
+    if (SceneManager::GetSceneManager()->physic_world != nullptr && SceneManager::GetSceneManager()->physic_world->mScene != nullptr)
     {
-        shape = SceneManager::GetOpenScene()->physic_world->mPhysics->createShape(physx::PxBoxGeometry(boxSize.x, boxSize.y, boxSize.z), *SceneManager::GetOpenScene()->physic_world->mMaterial, true);
+        shape = SceneManager::GetSceneManager()->physic_world->mPhysics->createShape(physx::PxBoxGeometry(boxSize.x, boxSize.y, boxSize.z), *SceneManager::GetSceneManager()->physic_world->mMaterial, true);
 
         if (shape)
         {

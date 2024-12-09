@@ -4,39 +4,46 @@ void HierarchyUI::draw(Entity *select_obj)
 {
     ImGui::Begin("Hierarchy", &is_open);
 
-    if (ImGui::IsMouseClicked(1))
+    for (Scene *p_scene : SceneManager::GetSceneManager()->opened_scenes)
     {
-        right_click_held = true;
-    }
-
-    if (ImGui::IsMouseDown(1) && ImGui::IsWindowHovered() && right_click_held)
-    {
-        ImGui::OpenPopup("MenuHierarchy");
-        right_click_held = false;
-    }
-
-    if (ImGui::BeginPopup("MenuHierarchy"))
-    {
-        if (ImGui::MenuItem("Create New Object"))
+        if (ImGui::TreeNode(p_scene->scene_name.c_str()))
         {
-            Entity *_ent = SceneManager::GetOpenScene()->make_entity();
-            _ent->addComponent<GMaterial>();
-            _ent->addComponent<ModelComponent>();
-        }
+            if (ImGui::IsMouseClicked(1))
+            {
+                right_click_held = true;
+            }
 
-        if (ImGui::MenuItem("Create New Object (Empty)"))
-        {
-            SceneManager::GetOpenScene()->make_entity();
-        }
+            if (ImGui::IsMouseDown(1) && ImGui::IsWindowHovered() && right_click_held)
+            {
+                ImGui::OpenPopup("MenuHierarchy");
+                right_click_held = false;
+            }
 
-        ImGui::EndPopup();
-    }
+            if (ImGui::BeginPopup("MenuHierarchy"))
+            {
+                if (ImGui::MenuItem("Create New Object"))
+                {
+                    Entity *_ent = p_scene->make_entity();
+                    _ent->addComponent<GMaterial>();
+                    _ent->addComponent<ModelComponent>();
+                }
 
-    for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
-    {
-        if (ent->get_transform()->parent == nullptr)
-        {
-            drawEntityNode(ent);
+                if (ImGui::MenuItem("Create New Object (Empty)"))
+                {
+                    p_scene->make_entity();
+                }
+
+                ImGui::EndPopup();
+            }
+
+            for (Entity *ent : p_scene->objects_worlds)
+            {
+                if (ent->get_transform()->parent == nullptr)
+                {
+                    drawEntityNode(ent);
+                }
+            }
+            ImGui::TreePop();
         }
     }
 
@@ -79,7 +86,7 @@ void HierarchyUI::drawEntityNode(Entity *entity)
     bool node_open = false;
     bool selected = (entity == game->select_obj);
 
-    std::string name_tree = entity->ObjectName + " (" + entity->ObjectSTRID + ")";
+    std::string name_tree = entity->ObjectName;
 
     if (!entity->get_transform()->childrens.empty())
     {

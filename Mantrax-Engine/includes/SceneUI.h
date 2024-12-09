@@ -3,14 +3,14 @@
 #include <GarinEvents.h>
 #include <ImGuizmo.h>
 #include <Core.h>
-#include "gamescene.h"
+#include "EngineUI.h"
 #include <UIComponentsBehaviour.h>
 
-class gamescene;
+class EngineUI;
 class GARINLIBS_API SceneUI : public UIComponent
 {
 public:
-    gamescene *game;
+    EngineUI *game;
     ImVec2 imageSizeSCENE;
     ImVec2 imagePosition;
     glm::vec2 WorldPoint = glm::vec2(0, 0);

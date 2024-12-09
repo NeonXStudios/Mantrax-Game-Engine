@@ -1,6 +1,7 @@
 #include "../includes/MakerUI.h"
+#include <EngineUI.h>
 
-void MakerUI::draw(Scene *scene)
+void MakerUI::draw()
 {
     if (!is_open)
     {

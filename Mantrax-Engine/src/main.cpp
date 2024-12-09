@@ -1,4 +1,4 @@
-#include "../includes/gamescene.h"
+#include "../includes/EngineUI.h"
 #include <windows.h>
 #include <iostream>
 #include <SceneManager.h>
@@ -8,6 +8,7 @@
 #include <RenderPipeline.h>
 #include <EditorConfigs.h>
 #include <filesystem>
+#include <EngineUI.h>
 
 namespace fs = std::filesystem;
 
@@ -15,6 +16,7 @@ SceneManager *sceneManager = new SceneManager();
 AudioManager *audioManager = new AudioManager();
 GameBehaviourFactory *factory_behaviour = new GameBehaviourFactory();
 RenderPipeline *piprender = new RenderPipeline();
+EngineUI *engine = new EngineUI();
 
 // int start_engine(int argc, char *argv[]);
 
@@ -44,11 +46,9 @@ int main(int argc, char *arvg[])
 
     sceneManager->create();
 
-    gamescene *scene_game = &gamescene::getInstance();
+    EngineUI *scene_game = &EngineUI::getInstance();
 
     scene_game->configs = new EditorConfigs();
-
-    SceneManager::GetSceneManager()->OpenScene = scene_game;
 
     settings_window window_config = settings_window();
     window_config.window_name = "Mantrax Engine";
@@ -57,6 +57,7 @@ int main(int argc, char *arvg[])
     window_config.maximized = true;
 
     Gfx::create_windows(window_config);
+    scene_game->on_awake();
 
     scene_game->configs->project_select = true;
     fs::path project_path = fs::path(arvg[1]);
@@ -64,12 +65,16 @@ int main(int argc, char *arvg[])
     scene_game->configs->current_proyect = project_path.string() + "/";
     FileManager::game_path = scene_game->configs->current_proyect;
 
+    SceneManager::load_scene(scene_game->configs->start_scene);
+
     RenderPipeline::init();
-    SceneManager::GetOpenScene()->awake();
+    SceneManager::on_awake();
+    std::cout << "************************" << std::endl;
 
     scene_game->configs->load_config();
 
-    SceneManager::GetOpenScene()->init();
+    scene_game->on_start();
+    SceneManager::on_start();
 
     while (!Gfx::try_window_close())
     {
@@ -78,13 +83,14 @@ int main(int argc, char *arvg[])
         Gfx::process_window_size();
 
         RenderPipeline::render();
-
-        SceneManager::GetOpenScene()->on_edition_mode(Timer::delta_time);
+        scene_game->on_edition_mode(Timer::delta_time);
+        SceneManager::on_edition_mode();
+        scene_game->draw_ui();
 
         Gfx::swap_buffer();
     }
 
-    SceneManager::GetOpenScene()->on_destroy();
+    SceneManager::on_clean_scenes();
     Gfx::clear_graphics();
     sceneManager->release();
     audioManager->release();

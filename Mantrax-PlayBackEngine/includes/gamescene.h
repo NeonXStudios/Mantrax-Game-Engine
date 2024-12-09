@@ -20,19 +20,19 @@ class Camera;
 class Entity;
 class EditorConfigs;
 class GameBehaviourRunner;
-class gamescene;
+class EngineUI;
 
-class GARINLIBS_API gamescene : public Scene
+class GARINLIBS_API EngineUI : public Scene
 {
 public:
-    static gamescene &getInstance()
+    static EngineUI &getInstance()
     {
-        static gamescene instance;
+        static EngineUI instance;
         return instance;
     }
 
-    gamescene(const gamescene &) = delete;
-    void operator=(const gamescene &) = delete;
+    EngineUI(const EngineUI &) = delete;
+    void operator=(const EngineUI &) = delete;
 
     Entity *select_obj;
     EditorConfigs *configs;
@@ -44,7 +44,6 @@ public:
 
     float cameraYaw = 0.0f;
     float cameraPitch = 0.0f;
-
 
     void purpledark();
     void embraceTheDarkness();
@@ -61,6 +60,6 @@ public:
     std::string demangle(const char *name);
 
 public:
-    gamescene() = default;
-    ~gamescene() = default;
+    EngineUI() = default;
+    ~EngineUI() = default;
 };

@@ -147,7 +147,15 @@ void SceneUI::draw(Entity *select_obj)
 
         TransformComponent *transform = select_obj->get_transform();
 
+        // Obtener la matriz del objeto seleccionado
         glm::mat4 matrix = transform->get_matrix();
+
+        // Si tiene padre, necesitamos la matriz del padre para las transformaciones locales
+        glm::mat4 parentMatrix(1.0f);
+        if (transform->parent)
+        {
+            parentMatrix = transform->parent->get_matrix();
+        }
 
         float *projection = (float *)glm::value_ptr(SceneManager::GetOpenScene()->main_camera->GetProjectionMatrix());
         float *view = (float *)glm::value_ptr(SceneManager::GetOpenScene()->main_camera->GetView());
@@ -159,25 +167,87 @@ void SceneUI::draw(Entity *select_obj)
 
         if (res)
         {
-            glm::vec3 translation, eulerRotation, scale;
-            ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(matrix), glm::value_ptr(translation), glm::value_ptr(eulerRotation), glm::value_ptr(scale));
-
-            if (!select_obj->hasComponent<GBody>())
+            if (transform->parent)
             {
+                glm::mat4 localMatrix = glm::inverse(parentMatrix) * matrix;
+
+                glm::vec3 translation = glm::vec3(localMatrix[3]);
+
+                glm::vec3 scale(
+                    glm::length(glm::vec3(localMatrix[0])),
+                    glm::length(glm::vec3(localMatrix[1])),
+                    glm::length(glm::vec3(localMatrix[2])));
+
+                glm::mat3 rotationMat(
+                    glm::vec3(localMatrix[0]) / scale.x,
+                    glm::vec3(localMatrix[1]) / scale.y,
+                    glm::vec3(localMatrix[2]) / scale.z);
+
+                glm::quat rotation = glm::quat_cast(rotationMat);
+                glm::vec3 eulerRotation = glm::degrees(glm::eulerAngles(rotation));
+
+                for (int i = 0; i < 3; i++)
+                {
+                    if (std::abs(eulerRotation[i]) < 0.0001f)
+                    {
+                        eulerRotation[i] = 0.0f;
+                    }
+                    while (eulerRotation[i] > 180.0f)
+                        eulerRotation[i] -= 360.0f;
+                    while (eulerRotation[i] < -180.0f)
+                        eulerRotation[i] += 360.0f;
+                }
+
+                // Aplicar transformaciones locales
                 transform->Position = translation;
                 transform->Scale = scale;
-
                 transform->set_rotation(eulerRotation);
             }
             else
             {
-                transform->Position = translation;
-                transform->Scale = scale;
+                // Para objetos sin padre, mantener el comportamiento original
+                glm::vec3 translation = glm::vec3(matrix[3]);
 
-                transform->set_rotation(eulerRotation);
+                glm::vec3 scale(
+                    glm::length(glm::vec3(matrix[0])),
+                    glm::length(glm::vec3(matrix[1])),
+                    glm::length(glm::vec3(matrix[2])));
 
-                select_obj->getComponent<GBody>().body->setLinearVelocity(PxVec3(0, 0, 0));
-                select_obj->getComponent<GBody>().set_position(translation);
+                glm::mat3 rotationMat(
+                    glm::vec3(matrix[0]) / scale.x,
+                    glm::vec3(matrix[1]) / scale.y,
+                    glm::vec3(matrix[2]) / scale.z);
+
+                glm::quat rotation = glm::quat_cast(rotationMat);
+                glm::vec3 eulerRotation = glm::degrees(glm::eulerAngles(rotation));
+
+                for (int i = 0; i < 3; i++)
+                {
+                    if (std::abs(eulerRotation[i]) < 0.0001f)
+                    {
+                        eulerRotation[i] = 0.0f;
+                    }
+                    while (eulerRotation[i] > 180.0f)
+                        eulerRotation[i] -= 360.0f;
+                    while (eulerRotation[i] < -180.0f)
+                        eulerRotation[i] += 360.0f;
+                }
+
+                if (!select_obj->hasComponent<GBody>())
+                {
+                    transform->Position = translation;
+                    transform->Scale = scale;
+                    transform->set_rotation(eulerRotation);
+                }
+                else
+                {
+                    transform->Position = translation;
+                    transform->Scale = scale;
+                    transform->set_rotation(eulerRotation);
+
+                    select_obj->getComponent<GBody>().body->setLinearVelocity(PxVec3(0, 0, 0));
+                    select_obj->getComponent<GBody>().set_position(translation);
+                }
             }
         }
 
@@ -187,12 +257,10 @@ void SceneUI::draw(Entity *select_obj)
             {
                 gizmoOperation = ImGuizmo::TRANSLATE;
             }
-
             if (InputSystem::on_key_pressed(GLFW_KEY_Q))
             {
                 gizmoOperation = ImGuizmo::ROTATE;
             }
-
             if (InputSystem::on_key_pressed(GLFW_KEY_E))
             {
                 gizmoOperation = ImGuizmo::SCALE;

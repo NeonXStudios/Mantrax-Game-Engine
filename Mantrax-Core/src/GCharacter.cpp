@@ -9,18 +9,18 @@ void GCharacter::defines()
 
 void GCharacter::init()
 {
-    if (SceneManager::GetOpenScene()->physic_world->mScene == nullptr)
+    if (SceneManager::GetSceneManager()->physic_world->mScene == nullptr)
     {
         std::cout << "physxScene Component Null" << std::endl;
     }
 
-    if (SceneManager::GetOpenScene()->physic_world->mMaterial == nullptr)
+    if (SceneManager::GetSceneManager()->physic_world->mMaterial == nullptr)
     {
         std::cout << "physxMaterial Component Null" << std::endl;
     }
 
-    auto *physxScene = SceneManager::GetOpenScene()->physic_world->mScene;
-    auto *physxMaterial = SceneManager::GetOpenScene()->physic_world->mMaterial;
+    auto *physxScene = SceneManager::GetSceneManager()->physic_world->mScene;
+    auto *physxMaterial = SceneManager::GetSceneManager()->physic_world->mMaterial;
 
     PxCapsuleControllerDesc desc;
     desc.height = GETVAR(Height, float);
@@ -28,7 +28,7 @@ void GCharacter::init()
     desc.position = PxExtendedVec3(0, 5, 0);
     desc.material = physxMaterial;
 
-    gController = SceneManager::GetOpenScene()->physic_world->gManager->createController(desc);
+    gController = SceneManager::GetSceneManager()->physic_world->gManager->createController(desc);
 
     if (!gController)
     {
@@ -57,9 +57,9 @@ void GCharacter::modifyCapsule(float newHeight, float newRadius)
         desc.height = newHeight;
         desc.radius = newRadius;
         desc.position = gController->getPosition();
-        desc.material = SceneManager::GetOpenScene()->physic_world->mMaterial;
+        desc.material = SceneManager::GetSceneManager()->physic_world->mMaterial;
 
-        gController = SceneManager::GetOpenScene()->physic_world->gManager->createController(desc);
+        gController = SceneManager::GetSceneManager()->physic_world->gManager->createController(desc);
     }
 }
 

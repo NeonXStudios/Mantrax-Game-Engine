@@ -9,5 +9,5 @@ public:
     ImVec2 imageSizeSCENE;
     ImVec2 imagePosition;
 
-    void draw(Scene *scene) override;
+    void draw() override;
 };

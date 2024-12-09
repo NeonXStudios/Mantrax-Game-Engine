@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <Core.h>
 #include <GarinMaths.h>
+#include <GarinNatives.h>
 
 class GARINLIBS_API TextureTarget
 {
@@ -19,6 +20,7 @@ public:
 
     void setup();
     void draw(glm::mat4 camera_matrix);
+    void draw(std::function<void()> func);
     unsigned int get_render();
 
     ~TextureTarget();

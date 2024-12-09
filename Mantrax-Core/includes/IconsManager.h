@@ -25,7 +25,9 @@ public:
     TextureManager *text_file_icon;
     TextureManager *cpp_script_icon;
     TextureManager *trash_icon;
+    TextureManager *engine_logo;
 
+    static unsigned int ENGINE_LOGO();
     static unsigned int FLOAT();
     static unsigned int TRASH();
     static unsigned int INT();

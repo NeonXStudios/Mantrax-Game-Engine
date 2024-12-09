@@ -244,7 +244,7 @@ void AssetsUI::drawer_files(std::string extension, std::string file_name, std::s
     {
         if (!AppSettings::is_playing)
         {
-            SceneData::load_scene(file_name);
+            SceneData::load_scene(file_name, false);
         }
     }
     else if (extension == ".slab" || extension == ".lua" || extension == ".glsl")

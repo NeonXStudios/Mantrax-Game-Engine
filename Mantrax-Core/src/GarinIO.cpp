@@ -34,13 +34,29 @@ void GarinIO::screenshot(unsigned int textureID, int width, int height, const ch
     glBindTexture(GL_TEXTURE_2D, textureID);
 
     unsigned char *pixels = new unsigned char[width * height * 4];
+    unsigned char *flipped = new unsigned char[width * height * 4];
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
     glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
-    stbi_write_jpg(filename, width, height, 4, pixels, 100);
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            int srcPos = (y * width + x) * 4;
+            int dstPos = ((height - 1 - y) * width + x) * 4;
+
+            flipped[dstPos + 0] = pixels[srcPos + 0]; // R
+            flipped[dstPos + 1] = pixels[srcPos + 1]; // G
+            flipped[dstPos + 2] = pixels[srcPos + 2]; // B
+            flipped[dstPos + 3] = pixels[srcPos + 3]; // A
+        }
+    }
+
+    stbi_write_jpg(filename, width, height, 4, flipped, 100);
 
     delete[] pixels;
+    delete[] flipped;
     glBindTexture(GL_TEXTURE_2D, 0);
 }

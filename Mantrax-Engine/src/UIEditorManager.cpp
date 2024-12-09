@@ -14,7 +14,7 @@
 #include "AnimatorUI.h"
 #include "EditorConfigs.h"
 #include "GraphicsManagerUI.h"
-#include "gamescene.h"
+#include "EngineUI.h"
 
 void UIEditorManager::setup()
 {
@@ -31,6 +31,7 @@ void UIEditorManager::setup()
     animatorui = new AnimatorUI();
     graphicsui = new GraphicsManagerUI();
     makerui = new MakerUI();
+    ui_editor = new UIEditor();
 
     hub->configs = configs;
     mainbar->configs = configs;
@@ -51,14 +52,15 @@ void UIEditorManager::draw()
 {
     if (configs->project_select)
     {
+
         if (hierarchyui->is_open)
             hierarchyui->game = game;
 
         if (mainbar->is_open)
             mainbar->draw(select_obj);
 
-        // if (inspector->is_open)
-        inspector->draw(select_obj);
+        if (inspector->is_open)
+            inspector->draw(select_obj);
 
         if (sceneui->is_open)
             sceneui->draw(select_obj);
@@ -84,7 +86,10 @@ void UIEditorManager::draw()
         if (graphicsui->is_open)
             graphicsui->draw(configs);
 
-        makerui->draw(game);
+        if (ui_editor->is_open)
+            ui_editor->draw();
+
+        makerui->draw();
 
         CodeEditor::get_instance().render_editors();
     }

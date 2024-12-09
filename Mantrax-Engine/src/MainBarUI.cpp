@@ -10,6 +10,7 @@
 #include <SceneData.h>
 #include <filesystem>
 #include <GraphicsManagerUI.h>
+#include <IconsManager.h>
 
 namespace fs = std::filesystem;
 
@@ -21,6 +22,9 @@ void MainBarUI::draw(Entity *owner)
 
     if (ImGui::BeginMainMenuBar())
     {
+        ImGui::Image((void *)(intptr_t)IconsManager::ENGINE_LOGO(), ImVec2(32, 28));
+        ImGui::SameLine();
+
         if (ImGui::BeginMenu("File"))
         {
             if (ImGui::MenuItem("New Scene"))
@@ -136,14 +140,6 @@ void MainBarUI::draw(Entity *owner)
                         std::cout << "Folder already exists: " << path << std::endl;
                     }
                 };
-
-                // create_directory_if_not_exists(build_path);
-                // create_directory_if_not_exists(build_path + "scenes/");
-                // create_directory_if_not_exists(build_path + "packages/");
-                // create_directory_if_not_exists(build_path + "packages/shaders/");
-                // create_directory_if_not_exists(build_path + "packages/models/");
-                // create_directory_if_not_exists(build_path + "packages/audios/");
-                // create_directory_if_not_exists(data_path);
 
                 std::thread compile_thread(WindowsCompiler::compile_windows);
 
@@ -309,7 +305,7 @@ void MainBarUI::draw(Entity *owner)
     ImGui::PopStyleVar();
 
     ImGui::Begin("Scene Settings");
-    gamescene::getInstance().configs->camera_speed_sens = EditorGUI::Float("Camera sensitivity", gamescene::getInstance().configs->camera_speed_sens);
+    EngineUI::getInstance().configs->camera_speed_sens = EditorGUI::Float("Camera sensitivity", EngineUI::getInstance().configs->camera_speed_sens);
     ImGui::End();
 }
 

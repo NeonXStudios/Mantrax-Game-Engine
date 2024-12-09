@@ -3,12 +3,13 @@
 #include <iostream>
 #include <Core.h>
 #include <GarinGraphics.h>
-#include "GBuffer.h"
-#include "GeometryPass.h"
-#include "LightingPass.h"
-#include "../includes/CanvasManager.h"
+#include <GBuffer.h>
+#include <GeometryPass.h>
+#include <LightingPass.h>
 #include <TextureTarget.h>
 #include <camera.h>
+#include <functional>
+#include <CanvasManager.h>
 
 class GARINLIBS_API RenderPipeline
 {
@@ -19,9 +20,11 @@ public:
     static std::vector<ModelComponent *> renderables;
     static std::vector<TextureTarget *> render_targets;
     static std::vector<Camera *> camera_targets;
+    static std::unordered_map<std::string, TextureTarget *> view_renders;
 
     static void init();
     static void render();
+
     static void render_all_data(glm::mat4 camera_matrix);
     static void delete_from_render(ModelComponent *renderable);
     static void addLayer(int layer);

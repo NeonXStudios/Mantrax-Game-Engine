@@ -23,7 +23,7 @@ public:
         double x, y;
         glfwGetCursorPos(Gfx::get_game_window(), &x, &y);
 
-        Camera *cam = SceneManager::GetOpenScene()->main_camera;
+        Camera *cam = SceneManager::get_current_scene()->main_camera;
 
         double windowMousePosX = x - ViewportRenderPosition.x;
         double windowMousePosY = y - ViewportRenderPosition.y;
@@ -102,15 +102,15 @@ public:
     {
         try
         {
-            if (SceneManager::GetSceneManager()->OpenScene != nullptr)
+            if (SceneManager::get_current_scene() != nullptr)
             {
                 float closestZ = std::numeric_limits<float>::lowest();
                 Entity *closestObject = nullptr;
 
-                for (int i = 0; i < SceneManager::GetSceneManager()->OpenScene->objects_worlds.size(); i++)
+                for (int i = 0; i < SceneManager::get_current_scene()->objects_worlds.size(); i++)
                 {
 
-                    Entity *objD = SceneManager::GetSceneManager()->OpenScene->objects_worlds[i];
+                    Entity *objD = SceneManager::get_current_scene()->objects_worlds[i];
 
                     if (objD->get_transform() == nullptr)
                     {
@@ -158,7 +158,7 @@ public:
     {
         try
         {
-            if (SceneManager::GetSceneManager()->OpenScene != nullptr)
+            if (SceneManager::get_current_scene() != nullptr)
             {
                 float closestZ = std::numeric_limits<float>::lowest();
                 UIBehaviour *closestObject = nullptr;

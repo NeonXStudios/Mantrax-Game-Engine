@@ -1,7 +1,7 @@
 #include "../includes/UIAdministrator.h"
 #include "../includes/ComponentsDrawer.h"
 #include <GarinComponents.h>
-#include <gamescene.h>
+#include <EngineUI.h>
 
 void UIAdministrator::draw_ui(Entity *owner)
 {
@@ -14,8 +14,8 @@ void UIAdministrator::draw_ui(Entity *owner)
     {
         if (ImGui::Button("Open Animator Editor"))
         {
-            gamescene::getInstance().uieditor->animatorui->is_open = true;
-            gamescene::getInstance().uieditor->animatorui->animator = &owner->getComponent<GAnimator>();
+            EngineUI::getInstance().uieditor->animatorui->is_open = true;
+            EngineUI::getInstance().uieditor->animatorui->animator = &owner->getComponent<GAnimator>();
         }
     }
 }

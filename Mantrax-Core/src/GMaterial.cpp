@@ -3,8 +3,8 @@
 
 void GMaterial::defines()
 {
-    GVAR(VertexPath, "shaders/mesh_vertex.glsl", std::string);
-    GVAR(FragmentPath, "shaders/mesh_fragment.glsl", std::string);
+    GVAR(VertexPath, "assets/shaders/mesh_vertex.glsl", std::string);
+    GVAR(FragmentPath, "assets/shaders/mesh_fragment.glsl", std::string);
 }
 
 void GMaterial::init()

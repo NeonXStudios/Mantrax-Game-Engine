@@ -1,8 +1,8 @@
 #include "../includes/SceneData.h"
 
-void SceneData::load_scene(std::string scene_name_new)
+void SceneData::load_scene(std::string scene_name_new, bool is_additive)
 {
-    SceneManager::load_scene(scene_name_new);
+    SceneManager::load_scene(scene_name_new, is_additive);
 }
 
 void SceneData::save_scene()

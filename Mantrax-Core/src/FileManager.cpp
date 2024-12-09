@@ -134,3 +134,42 @@ bool FileManager::check_file_if_exist(const std::string &path)
 {
     return std::filesystem::exists(path);
 }
+
+FileData FileManager::get_file_info(std::string file_path)
+{
+    std::filesystem::path path(file_path);
+
+    FileData data;
+    data.file_name = path.filename().string();
+    data.file_stem = path.stem().string();
+    data.file_extension = path.extension().string();
+
+    return data;
+}
+
+std::vector<std::string> FileManager::get_files_by_extension(std::string dir_to_it, std::string file_extension)
+{
+    std::vector<std::string> files;
+
+    try
+    {
+        for (const auto &entry : std::filesystem::recursive_directory_iterator(dir_to_it, std::filesystem::directory_options::skip_permission_denied))
+        {
+            if (entry.is_regular_file())
+            {
+                std::string filename = entry.path().filename().string();
+
+                if (!filename.empty() && filename[0] != '.' && entry.path().extension() == file_extension)
+                {
+                    files.push_back(entry.path().string());
+                }
+            }
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+
+    return files;
+}

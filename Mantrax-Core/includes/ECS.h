@@ -132,49 +132,40 @@ public:
 	bool adaptRotation = true;
 	bool adaptScale = false;
 
-	void TransformComponent::update()
+	void update()
 	{
-		// Inicializa la matriz local con la identidad
 		MatrixLocal = glm::mat4(1.0f);
 
-		// Aplica la traslación
 		MatrixLocal = glm::translate(MatrixLocal, Position);
 
-		// Convierte la rotación a una matriz de rotación y multiplícala
 		glm::mat4 rotationMatrix = glm::toMat4(rotation);
 		MatrixLocal *= rotationMatrix;
 
-		// Aplica la escala
 		MatrixLocal = glm::scale(MatrixLocal, Scale);
-
-		// Actualiza ángulos de Euler desde el cuaternión
-		EulerRotation = glm::degrees(glm::eulerAngles(rotation));
 
 		if (parent)
 		{
-			// Obtén la matriz del padre
 			glm::mat4 parentMatrix = parent->get_matrix();
 
-			// Si no se debe adaptar la posición, elimina la traslación del padre
 			if (!adaptPosition)
 			{
 				parentMatrix[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 			}
 
-			// Si no se debe adaptar la rotación, elimina la rotación del padre
 			if (!adaptRotation)
 			{
-				parentMatrix = glm::mat4(1.0f); // Solo matriz identidad para rotación
+				glm::vec3 parentPos(parentMatrix[3]);
+				parentMatrix = glm::mat4(1.0f);
+				parentMatrix[3] = glm::vec4(parentPos, 1.0f);
 			}
 
-			// Si no se debe adaptar la escala, elimina la escala del padre
 			if (!adaptScale)
 			{
 				glm::vec3 parentScale = parent->Scale;
-				parentMatrix = glm::scale(parentMatrix, glm::vec3(1.0f / parentScale.x, 1.0f / parentScale.y, 1.0f / parentScale.z));
+				parentMatrix = glm::scale(parentMatrix,
+										  glm::vec3(1.0f / parentScale.x, 1.0f / parentScale.y, 1.0f / parentScale.z));
 			}
 
-			// Multiplica la matriz del padre con la matriz local
 			Matrix = parentMatrix * MatrixLocal;
 		}
 		else
@@ -190,14 +181,15 @@ public:
 
 	void set_rotation(const glm::vec3 &eulerAngles)
 	{
-		// Convertir ángulos de Euler de grados a radianes
+		EulerRotation = eulerAngles;
+
 		glm::vec3 radians = glm::radians(eulerAngles);
 
-		// Crear un cuaternión a partir de ángulos de Euler (suponiendo el orden ZYX)
-		glm::quat quaternionRotation = glm::quat(glm::vec3(radians.x, radians.y, radians.z));
+		glm::quat quatX = glm::angleAxis(radians.x, glm::vec3(1, 0, 0));
+		glm::quat quatY = glm::angleAxis(radians.y, glm::vec3(0, 1, 0));
+		glm::quat quatZ = glm::angleAxis(radians.z, glm::vec3(0, 0, 1));
 
-		// Normalizar el cuaternión
-		rotation = glm::normalize(quaternionRotation);
+		rotation = glm::normalize(quatZ * quatY * quatX);
 	}
 
 	glm::vec3 get_euler_angles() const

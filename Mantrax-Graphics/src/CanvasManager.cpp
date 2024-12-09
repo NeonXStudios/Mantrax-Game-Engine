@@ -1,8 +1,8 @@
 #include <CanvasManager.h>
+#include <RenderPipeline.h>
 
 void CanvasManager::init_ui()
 {
-    add_new_ui_component_type_text();
 }
 
 void CanvasManager::render_ui()

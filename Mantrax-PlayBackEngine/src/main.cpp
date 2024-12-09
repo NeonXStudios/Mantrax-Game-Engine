@@ -1,4 +1,4 @@
-#include "../includes/gamescene.h"
+#include "../includes/EngineUI.h"
 #include <windows.h>
 #include <iostream>
 #include <SceneManager.h>
@@ -51,7 +51,7 @@ int start_engine(int argc, char *arvg[])
 
     sceneManager->create();
 
-    gamescene *scene_game = &gamescene::getInstance();
+    EngineUI *scene_game = &EngineUI::getInstance();
 
     scene_game->configs = new EditorConfigs();
 

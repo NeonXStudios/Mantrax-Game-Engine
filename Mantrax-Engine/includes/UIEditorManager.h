@@ -5,8 +5,9 @@
 #include "EditorGUI.h"
 #include "EditorConfigs.h"
 #include "UIAdministrator.h"
-#include "gamescene.h"
+#include "EngineUI.h"
 #include <CodeEditor.h>
+#include "UIEditor.h"
 
 class Drawer;
 class Camera;
@@ -27,9 +28,10 @@ class InputSystemUI;
 class AnimatorUI;
 class GizmosDrawer;
 class GraphicsManagerUI;
-class gamescene;
+class EngineUI;
 class CodeEditor;
 class MakerUI;
+class UIEditor;
 
 class UIEditorManager
 {
@@ -51,8 +53,9 @@ public:
     Entity *select_obj;
     GraphicsManagerUI *graphicsui;
     MakerUI *makerui;
+    UIEditor *ui_editor;
 
-    gamescene *game;
+    EngineUI *game;
 
     void setup();
     void draw();

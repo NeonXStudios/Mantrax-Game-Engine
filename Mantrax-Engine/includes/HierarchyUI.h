@@ -1,14 +1,14 @@
 #pragma once
 #include "UIComponent.h"
-#include "gamescene.h"
+#include "EngineUI.h"
 #include <Core.h>
 
-class gamescene;
+class EngineUI;
 
 class GARINLIBS_API HierarchyUI : public UIComponent
 {
 public:
-    gamescene *game;
+    EngineUI *game;
     bool right_click_held = false;
     bool show_script_popup = false;
 
