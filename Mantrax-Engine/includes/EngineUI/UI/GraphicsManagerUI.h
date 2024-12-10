@@ -1,15 +1,14 @@
 #pragma once
-#include "UIComponent.h"
+#include "../EngineUIBehaviour.h"
 #include <AppSettings.h>
 #include <Core.h>
 
-class GARINLIBS_API GraphicsManagerUI : public UIComponent
+class GraphicsManagerUI : public EngineUIBehaviour
 {
 public:
-    EditorConfigs *configs;
     bool show_script_popup = false;
     char script_name[128] = "";
     std::string selected_item;
 
-    void draw(EditorConfigs *p_configs) override;
+    void on_draw() override;
 };

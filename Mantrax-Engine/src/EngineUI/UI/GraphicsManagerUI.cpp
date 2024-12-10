@@ -1,10 +1,9 @@
-#include "../includes/GraphicsManagerUI.h"
+#include <GraphicsManagerUI.h>
 #include <SceneData.h>
 #include <RenderPipeline.h>
 
-void GraphicsManagerUI::draw(EditorConfigs *p_configs)
+void GraphicsManagerUI::on_draw()
 {
-    configs = p_configs;
     ImGui::Begin("Graphics Settings", &is_open);
     ImGui::BeginChild("Layers");
 

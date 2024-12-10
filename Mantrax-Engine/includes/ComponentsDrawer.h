@@ -1,5 +1,4 @@
 #pragma once
-#include "AComponent.h"
 #include <ECS.h>
 #include <iostream>
 #include <imgui.h>
@@ -11,7 +10,7 @@ class GARINLIBS_API ComponentsDrawer
 {
 public:
     template <typename T>
-    static void draw_ui(Entity *owner, int id, AComponent *cmp)
+    static void draw_ui(Entity *owner, int id)
     {
         if (owner->hasComponent<T>())
         {

@@ -7,7 +7,6 @@
 #include <RenderPipeline.h>
 #include <GarinIO.h>
 #include <PerlinGenerator.h>
-#include <AComponent.h>
 
 void EngineUI::on_awake()
 {
@@ -259,13 +258,13 @@ void EngineUI::draw_ui()
                     new_entity->get_transform()->rotation = select_obj->get_transform()->rotation;
                     new_entity->get_transform()->Scale = select_obj->get_transform()->Scale;
 
-                    for (const auto &component : select_obj->GetAllComponent())
-                    {
-                        Component *cloned_component = ComponentFactory::add_component(new_entity, AComponent::demangle(typeid(*component).name()));
+                    // for (const auto &component : select_obj->GetAllComponent())
+                    // {
+                    //     Component *cloned_component = ComponentFactory::add_component(new_entity, AComponent::demangle(typeid(*component).name()));
 
-                        cloned_component->variableMap = component->variableMap;
-                        cloned_component->init();
-                    }
+                    //     cloned_component->variableMap = component->variableMap;
+                    //     cloned_component->init();
+                    // }
 
                     set_object_select(new_entity);
                 }
