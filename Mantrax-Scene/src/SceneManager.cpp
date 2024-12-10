@@ -13,7 +13,7 @@ void SceneManager::on_awake()
 {
     SceneManager::start_physic_world();
 
-    for (Scene *scn : SceneManager::GetSceneManager()->opened_scenes)
+    for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
     {
         scn->awake();
     }
@@ -21,7 +21,7 @@ void SceneManager::on_awake()
 
 void SceneManager::on_start()
 {
-    for (Scene *scn : SceneManager::GetSceneManager()->opened_scenes)
+    for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
     {
         scn->on_start();
     }
@@ -29,9 +29,9 @@ void SceneManager::on_start()
 
 void SceneManager::on_update()
 {
-    SceneManager::GetSceneManager()->physic_world->update_world_physics();
+    SceneManager::get_scene_manager()->physic_world->update_world_physics();
 
-    for (Scene *scn : SceneManager::GetSceneManager()->opened_scenes)
+    for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
     {
         scn->on_update(Timer::delta_time);
     }
@@ -39,7 +39,7 @@ void SceneManager::on_update()
 
 void SceneManager::on_edition_mode()
 {
-    for (Scene *scn : SceneManager::GetSceneManager()->opened_scenes)
+    for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
     {
         scn->on_edition_mode(Timer::delta_time);
     }
@@ -47,7 +47,7 @@ void SceneManager::on_edition_mode()
 
 void SceneManager::on_clean_scenes()
 {
-    for (Scene *scn : SceneManager::GetSceneManager()->opened_scenes)
+    for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
     {
         scn->on_destroy();
     }
@@ -69,108 +69,22 @@ void SceneManager::release()
     delete SceneManager::instance;
 }
 
-SceneManager *SceneManager::GetSceneManager()
+SceneManager *SceneManager::get_scene_manager()
 {
     return instance;
 }
 
-Entity *SceneManager::NewEntity()
-{
-    Entity *entity_maked = new Entity();
-    std::cout << "New entity created" << std::endl;
-    entity_maked->objectID = IDGenerator::generate_id();
-    entity_maked->ObjectSTRID = std::to_string(entity_maked->objectID);
-
-    SceneManager::GetOpenScene()->objects_worlds.push_back(entity_maked);
-
-    return entity_maked;
-}
-
-Entity *SceneManager::NewEntityNonSetupScene()
-{
-    Entity *entity_maked = new Entity();
-    std::cout << "New entity created" << std::endl;
-    entity_maked->objectID = IDGenerator::generate_id();
-    entity_maked->ObjectSTRID = std::to_string(entity_maked->objectID);
-
-    return entity_maked;
-}
-
-Entity *SceneManager::GetObjectByID(int id)
-{
-    for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
-    {
-        if (ent->objectID == id)
-        {
-            return ent;
-        }
-    }
-
-    return nullptr;
-}
-
-Entity *SceneManager::GetObjectPerTag(std::string tag)
-{
-    for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
-    {
-        if (ent->ObjectTag == tag)
-        {
-            return ent;
-        }
-    }
-
-    return nullptr;
-}
-
-Entity *SceneManager::GetObjectPerName(std::string name)
-{
-    for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
-    {
-        if (ent->ObjectName == name)
-        {
-            return ent;
-        }
-    }
-
-    return nullptr;
-}
-
-Entity *SceneManager::Destroy(Entity *obj)
-{
-    if (obj != nullptr)
-    {
-        auto it = std::find(SceneManager::get_current_scene()->objects_worlds.begin(), SceneManager::get_current_scene()->objects_worlds.end(), obj);
-        if (it != SceneManager::get_current_scene()->objects_worlds.end())
-        {
-            obj->ClearAllComponentes();
-            SceneManager::get_current_scene()->objects_worlds.erase(it);
-        }
-    }
-    return nullptr;
-}
-
-Entity *SceneManager::GetObjectPerIndex(int index)
-{
-    return SceneManager::get_current_scene()->objects_worlds[index];
-}
-
-Scene *SceneManager::GetOpenScene()
+Scene *SceneManager::get_open_scene()
 {
     return SceneManager::get_current_scene();
 }
 
-string *SceneManager::GetOpenSceneName()
+string *SceneManager::get_open_scene_name()
 {
     return &SceneManager::get_current_scene()->scene_name;
 }
 
-Entity *SceneManager::CloneEntity(Entity *entity)
-{
-    std::cout << "Components to clone: " << entity->GetAllComponent().size() << std::endl;
-    return entity;
-}
-
-void SceneManager::ClearOpenScene()
+void SceneManager::clear_open_scene()
 {
     for (Entity *g : SceneManager::get_current_scene()->objects_worlds)
     {
@@ -182,22 +96,20 @@ void SceneManager::ClearOpenScene()
 
 void SceneManager::link_scene(Scene *scene_to_link)
 {
-    SceneManager::GetSceneManager()->opened_scenes.push_back(scene_to_link);
+    SceneManager::get_scene_manager()->opened_scenes.push_back(scene_to_link);
 }
 
 void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
 {
 
-    if (!is_additive && SceneManager::GetSceneManager()->opened_scenes.size() > 0)
+    if (!is_additive && SceneManager::get_scene_manager()->opened_scenes.size() > 0)
     {
         SceneManager::get_current_scene()->clean_all_components();
 
-        for (Scene *scn : SceneManager::GetSceneManager()->opened_scenes)
+        for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
         {
             scn->on_destroy();
         }
-
-        SceneManager::GetSceneManager()->opened_scenes.clear();
     }
 
     Scene *new_scene = new Scene();
@@ -370,9 +282,11 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
             std::cerr << e.what() << '\n';
         }
 
+        SceneManager::get_scene_manager()->opened_scenes.clear();
+
         if (new_scene != nullptr)
         {
-            SceneManager::GetSceneManager()->opened_scenes.push_back(new_scene);
+            SceneManager::get_scene_manager()->opened_scenes.push_back(new_scene);
             new_scene->scene_name = scene_name_new;
         }
 
@@ -387,20 +301,20 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
 
 Scene *SceneManager::get_current_scene()
 {
-    return SceneManager::GetSceneManager()->opened_scenes[0];
+    return SceneManager::get_scene_manager()->opened_scenes[0];
 }
 
 void SceneManager::start_physic_world()
 {
 
-    if (SceneManager::GetSceneManager()->physic_world == nullptr)
+    if (SceneManager::get_scene_manager()->physic_world == nullptr)
     {
-        SceneManager::GetSceneManager()->physic_world = new PhysicsEngine();
+        SceneManager::get_scene_manager()->physic_world = new PhysicsEngine();
     }
 
-    SceneManager::GetSceneManager()->physic_world->delete_phys_world();
+    SceneManager::get_scene_manager()->physic_world->delete_phys_world();
 
-    SceneManager::GetSceneManager()->physic_world->start_world_physics();
+    SceneManager::get_scene_manager()->physic_world->start_world_physics();
 
     std::cout << "Physic World Started" << std::endl;
 }

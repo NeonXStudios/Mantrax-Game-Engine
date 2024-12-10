@@ -2,6 +2,8 @@
 #include "../includes/ComponentsDrawer.h"
 #include <GarinComponents.h>
 #include <EngineUI.h>
+#include <UIAdministrator.h>
+#include <AnimatorView.h>
 
 void UIAdministrator::draw_ui(Entity *owner)
 {
@@ -14,8 +16,8 @@ void UIAdministrator::draw_ui(Entity *owner)
     {
         if (ImGui::Button("Open Animator Editor"))
         {
-            EngineUI::getInstance().uieditor->animatorui->is_open = true;
-            EngineUI::getInstance().uieditor->animatorui->animator = &owner->getComponent<GAnimator>();
+            UIMasterDrawer::get_instance().get_component<AnimatorView>()->is_open;
+            UIMasterDrawer::get_instance().get_component<AnimatorView>()->animator = &owner->getComponent<GAnimator>();
         }
     }
 }

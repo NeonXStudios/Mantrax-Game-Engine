@@ -14,7 +14,7 @@ void GBody::init()
 {
     try
     {
-        mPhysics = SceneManager::GetSceneManager()->physic_world->mPhysics;
+        mPhysics = SceneManager::get_scene_manager()->physic_world->mPhysics;
 
         // shape = mPhysics->createShape(physx::PxBoxGeometry(halfExtent, halfExtent, halfExtent), *SceneManager::GetSceneManager()->OpenScene->mMaterial, 1);
         physx::PxVec3 position_start = physx::PxVec3(entity->get_transform()->Position.x, entity->get_transform()->Position.y, entity->get_transform()->Position.z);
@@ -28,7 +28,7 @@ void GBody::init()
         body->setName(entity->ObjectSTRID.c_str());
 
         physx::PxRigidBodyExt::updateMassAndInertia(*body, GETVAR(mass, float));
-        SceneManager::GetSceneManager()->physic_world->mScene->addActor(*body);
+        SceneManager::get_scene_manager()->physic_world->mScene->addActor(*body);
 
         body->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, GETVAR(isStatic, bool));
         body->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !GETVAR(useGravity, bool));
@@ -43,7 +43,7 @@ void GBody::init()
 
 void GBody::update()
 {
-    if (body != nullptr && SceneManager::GetSceneManager()->physic_world != nullptr && SceneManager::GetSceneManager()->physic_world->mScene != nullptr)
+    if (body != nullptr && SceneManager::get_scene_manager()->physic_world != nullptr && SceneManager::get_scene_manager()->physic_world->mScene != nullptr)
     {
         if (entity->hasComponent<GCollision>() && !shapeAttached)
         {

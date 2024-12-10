@@ -1,7 +1,6 @@
 #pragma once
 #include <GarinNatives.h>
 #include "WindowsCompiler.h"
-#include "UIEditorManager.h"
 
 #include <GarinComponents.h>
 #include <GarinBehaviours.h>
@@ -20,28 +19,8 @@
 #include <UIBehaviour.h>
 
 #include <GizmoCube.h>
-
-class Camera;
-class Entity;
-class EditorConfigs;
-class GameBehaviourRunner;
-class InspectorUI;
-class MainBarUI;
-class SceneUI;
-class FilesUI;
-class AssetsUI;
-class GameSettingsUI;
-class HierarchyUI;
-class MenuUI;
-class UINotification;
-class EngineHubUI;
-class InputSystemUI;
-class AnimatorUI;
-class EngineUI;
-class UIEditorManager;
-class GizmoCube;
-class GizmoCircle;
-class GizmoSphere;
+#include <UIMasterDrawer.h>
+#include <EditorConfigs.h>
 
 class GARINLIBS_API EngineUI
 {
@@ -57,7 +36,6 @@ public:
 
     Entity *select_obj;
     EditorConfigs *configs;
-    UIEditorManager *uieditor;
     AssetsRegistry *assets_registry;
     TimeWatcher *watcher;
     GizmoCube *cube_gizmo;

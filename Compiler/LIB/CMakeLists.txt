@@ -24,7 +24,7 @@ file(GLOB_RECURSE GARIN_AUDIO_SOURCES "../../Mantrax-Audio/src/*.cpp")
 file(GLOB_RECURSE GARIN_GLAD "../../Mantrax-Graphics/libs/glad.c")
 file(GLOB_RECURSE GARIN_UFBX "../../Mantrax-Graphics/libs/ufbx.c")
 file(GLOB_RECURSE GARIN_SCRIPTING "../../Mantrax-Scripting/src/*.cpp")
-file(GLOB_RECURSE GARIN_ENGINE "../../Mantrax-Engine/src/*.cpp")
+file(GLOB_RECURSE GARIN_ENGINE "../../Mantrax-Engine/src/*.cpp" "../../Mantrax-Engine/src/EngineUI/*.cpp" "../../Mantrax-Engine/src/EngineUI/UI/*.cpp")
 
 # Combinar todos los archivos fuente
 set(ALL_SOURCES
@@ -52,6 +52,8 @@ add_library(${Project_Name} SHARED ${ALL_SOURCES})
 target_include_directories(${Project_Name} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Mantrax-Core/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Mantrax-Engine/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Mantrax-Engine/includes/EngineUI
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Mantrax-Engine/includes/EngineUI/UI
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Mantrax-Graphics/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Mantrax-Scene/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Mantrax-UI/includes

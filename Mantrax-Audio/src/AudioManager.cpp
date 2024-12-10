@@ -45,7 +45,7 @@ void AudioManager::StartSystem()
 
 void AudioManager::Update()
 {
-    Camera *cam = SceneManager::GetOpenScene()->main_camera;
+    Camera *cam = SceneManager::get_open_scene()->main_camera;
 
     FMOD_VECTOR position = {cam->cameraPosition.x, cam->cameraPosition.y, cam->cameraPosition.z};
     FMOD_VECTOR velocity = {cam->cameraVelocity.x, cam->cameraVelocity.y, cam->cameraVelocity.z};

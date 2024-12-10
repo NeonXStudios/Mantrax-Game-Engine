@@ -182,7 +182,7 @@ MonoString *EntityWrapper::GetEntityTag(MonoObject *entityObj)
 
 MonoObject *EntityWrapper::NewEntity()
 {
-    Entity *entity = SceneManager::GetOpenScene()->make_entity();
+    Entity *entity = SceneManager::get_open_scene()->make_entity();
     if (!entity)
     {
         std::cerr << "Error: Failed to create native entity." << std::endl;

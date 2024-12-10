@@ -7,6 +7,7 @@
 #include <RenderPipeline.h>
 #include <GarinIO.h>
 #include <PerlinGenerator.h>
+#include <AComponent.h>
 
 void EngineUI::on_awake()
 {
@@ -19,19 +20,8 @@ void EngineUI::on_awake()
 void EngineUI::on_start()
 {
 
+    UIMasterDrawer::get_instance().register_uis();
     std::cout << "CARPETA DE EJECUCION: " << FileManager::get_execute_path() << std::endl;
-
-    uieditor = new UIEditorManager();
-
-    uieditor->configs = configs;
-    uieditor->game = this;
-
-    if (uieditor->game != nullptr)
-    {
-        std::cout << "Correctly game scene setup in editor UI" << std::endl;
-    }
-
-    uieditor->setup();
 
     IconsManager::init();
 
@@ -54,7 +44,7 @@ void EngineUI::on_edition_mode(float delta_time)
 
     if (ImGui::IsMouseDown(ImGuiMouseButton_Right) && configs->project_select)
     {
-        auto &camera = SceneManager::GetOpenScene()->main_camera;
+        auto &camera = SceneManager::get_open_scene()->main_camera;
 
         if (camera != nullptr)
         {
@@ -135,7 +125,7 @@ void EngineUI::on_edition_mode(float delta_time)
         }
     }
 
-    std::string window_name = "Mantrax Editor - " + SceneManager::GetOpenScene()->scene_name;
+    std::string window_name = "Mantrax Editor - " + SceneManager::get_open_scene()->scene_name;
 
     Gfx::change_name(window_name);
 
@@ -178,12 +168,10 @@ void EngineUI::draw_ui()
 {
     GarinUI::get_ui_manager()->render_new_frame_ui_context(true);
 
-    uieditor->draw();
-
     if (configs->project_select == true)
     {
-        ReadBuffer(buffer_stdout, stdout_buffer);
-        ReadBuffer(buffer_stderr, stderr_buffer);
+        // ReadBuffer(buffer_stdout, stdout_buffer);
+        // ReadBuffer(buffer_stderr, stderr_buffer);
 
         UINotification::instance.RenderNotifications();
 
@@ -265,7 +253,7 @@ void EngineUI::draw_ui()
             {
                 if (select_obj != nullptr)
                 {
-                    Entity *new_entity = SceneManager::GetOpenScene()->make_entity();
+                    Entity *new_entity = SceneManager::get_open_scene()->make_entity();
 
                     new_entity->get_transform()->Position = select_obj->get_transform()->Position;
                     new_entity->get_transform()->rotation = select_obj->get_transform()->rotation;
@@ -273,7 +261,6 @@ void EngineUI::draw_ui()
 
                     for (const auto &component : select_obj->GetAllComponent())
                     {
-                        std::cout << "Cloning: (" << AComponent::demangle(typeid(*component).name()) << ")" << std::endl;
                         Component *cloned_component = ComponentFactory::add_component(new_entity, AComponent::demangle(typeid(*component).name()));
 
                         cloned_component->variableMap = component->variableMap;
@@ -285,6 +272,8 @@ void EngineUI::draw_ui()
             }
         }
     }
+
+    UIMasterDrawer::get_instance().on_draw();
 
     GarinUI::get_ui_manager()->render_ui_context();
 }
@@ -298,5 +287,4 @@ void EngineUI::on_destroy()
 void EngineUI::set_object_select(Entity *obj)
 {
     select_obj = obj;
-    uieditor->select_obj = select_obj;
 }

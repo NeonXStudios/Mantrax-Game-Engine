@@ -13,10 +13,10 @@ void RenderPipeline::init()
     RenderPipeline::canvas = new CanvasManager();
     RenderPipeline::canvas->init_ui();
 
-    if (SceneManager::GetOpenScene()->main_camera == nullptr)
+    if (SceneManager::get_open_scene()->main_camera == nullptr)
     {
-        SceneManager::GetOpenScene()->main_camera = new Camera();
-        SceneManager::GetOpenScene()->main_camera->target_render = Gfx::main_render;
+        SceneManager::get_open_scene()->main_camera = new Camera();
+        SceneManager::get_open_scene()->main_camera->target_render = Gfx::main_render;
     }
 
     if (Gfx::main_render == nullptr)
@@ -29,8 +29,8 @@ void RenderPipeline::init()
 
 void RenderPipeline::render()
 {
-    SceneManager::GetOpenScene()->main_camera->update();
-    SceneManager::GetOpenScene()->main_camera->target_render->draw(SceneManager::GetOpenScene()->main_camera->GetCameraMatrix());
+    SceneManager::get_open_scene()->main_camera->update();
+    SceneManager::get_open_scene()->main_camera->target_render->draw(SceneManager::get_open_scene()->main_camera->GetCameraMatrix());
 
     for (int i = 0; i < RenderPipeline::camera_targets.size(); i++)
     {
@@ -74,7 +74,7 @@ void RenderPipeline::render_all_data(glm::mat4 camera_matrix)
                     cmp->texture_sampler->use_texture(material.p_shader->ID);
 
                     material.p_shader->setMat4("model", cmp->get_transform()->get_matrix());
-                    material.p_shader->setVec3("viewPos", SceneManager::GetOpenScene()->main_camera->cameraPosition);
+                    material.p_shader->setVec3("viewPos", SceneManager::get_open_scene()->main_camera->cameraPosition);
 
                     material.p_shader->setVec3("ambientColor", glm::vec3(1.0f, 1.0f, 1.0f));
                     material.p_shader->setFloat("ambientStrength", 0.1f);
@@ -87,8 +87,8 @@ void RenderPipeline::render_all_data(glm::mat4 camera_matrix)
                     material.p_shader->setBool("showBothSides", false);
 
                     // INFO CAMERA TO SHADER
-                    material.p_shader->setMat4("Projection", SceneManager::GetSceneManager()->GetOpenScene()->main_camera->GetProjectionMatrix());
-                    material.p_shader->setMat4("View", SceneManager::GetSceneManager()->GetOpenScene()->main_camera->GetView());
+                    material.p_shader->setMat4("Projection", SceneManager::get_scene_manager()->get_open_scene()->main_camera->GetProjectionMatrix());
+                    material.p_shader->setMat4("View", SceneManager::get_scene_manager()->get_open_scene()->main_camera->GetView());
                     material.p_shader->setMat4("CameraMatrix", camera_matrix);
 
                     // TIME INFO TO SHADER

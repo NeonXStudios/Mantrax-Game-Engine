@@ -8,7 +8,7 @@ bool GCaster::RayCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length,
     PxReal maxDistance = Length;
     PxRaycastBuffer hit;
 
-    if (SceneManager::GetSceneManager()->physic_world->mScene->raycast(rayOrigin, rayDir, maxDistance, hit))
+    if (SceneManager::get_scene_manager()->physic_world->mScene->raycast(rayOrigin, rayDir, maxDistance, hit))
     {
         PxVec3 hitPosition = hit.block.position;
         PxVec3 hitNormal = hit.block.normal;
@@ -34,7 +34,7 @@ bool GCaster::LineCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length
     PxQueryFilterData filterData;
     filterData.data.word0 = layerMask;
 
-    if (SceneManager::GetSceneManager()->physic_world->mScene->raycast(rayOrigin, rayDir, maxDistance, hit, PxHitFlags(PxHitFlag::eDEFAULT), filterData))
+    if (SceneManager::get_scene_manager()->physic_world->mScene->raycast(rayOrigin, rayDir, maxDistance, hit, PxHitFlags(PxHitFlag::eDEFAULT), filterData))
     {
         // Hit information
         PxVec3 hitPosition = hit.block.position;
@@ -43,11 +43,11 @@ bool GCaster::LineCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length
 
         const char *shapeName = hit.block.shape->getName();
 
-        if (SceneManager::GetOpenScene()->get_entity_by_id_string(shapeName) != nullptr)
+        if (SceneManager::get_open_scene()->get_entity_by_id_string(shapeName) != nullptr)
         {
             hitinfo->point = glm::vec3(hitPosition.x, hitPosition.y, hitPosition.z);
             hitinfo->normal = glm::vec3(hitNormal.x, hitNormal.y, hitNormal.z);
-            hitinfo->entity = SceneManager::GetOpenScene()->get_entity_by_id_string(shapeName);
+            hitinfo->entity = SceneManager::get_open_scene()->get_entity_by_id_string(shapeName);
         }
         else
         {

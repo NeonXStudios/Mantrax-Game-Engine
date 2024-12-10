@@ -55,7 +55,7 @@ int start_engine(int argc, char *arvg[])
 
     scene_game->configs = new EditorConfigs();
 
-    SceneManager::GetSceneManager()->OpenScene = scene_game;
+    SceneManager::get_scene_manager()->OpenScene = scene_game;
 
     settings_window window_config = settings_window();
     window_config.window_name = "Mantrax Engine";
@@ -72,7 +72,7 @@ int start_engine(int argc, char *arvg[])
     FileManager::game_path = scene_game->configs->current_proyect;
 
     RenderPipeline::init();
-    SceneManager::GetOpenScene()->awake();
+    SceneManager::get_open_scene()->awake();
 
     scene_game->configs->load_config();
 
@@ -83,7 +83,7 @@ int start_engine(int argc, char *arvg[])
         std::cout << "DLL NOT LOADED WAIT..." << std::endl;
     }
 
-    SceneManager::GetOpenScene()->init();
+    SceneManager::get_open_scene()->init();
 
     while (!Gfx::try_window_close())
     {
@@ -91,14 +91,14 @@ int start_engine(int argc, char *arvg[])
         Gfx::timer_control();
         Gfx::process_window_size();
 
-        SceneManager::GetOpenScene()->update(Timer::delta_time);
+        SceneManager::get_open_scene()->update(Timer::delta_time);
 
         RenderPipeline::render();
 
         Gfx::swap_buffer();
     }
 
-    SceneManager::GetOpenScene()->on_destroy();
+    SceneManager::get_open_scene()->on_destroy();
     Gfx::clear_graphics();
     sceneManager->release();
     audioManager->release();

@@ -92,9 +92,9 @@ void GAudio::SetPauseState(bool pauseState)
 void GAudio::update()
 {
 
-    if (IsSpatial3D && SceneManager::GetOpenScene()->main_camera != nullptr && entity != nullptr)
+    if (IsSpatial3D && SceneManager::get_open_scene()->main_camera != nullptr && entity != nullptr)
     {
-        Camera *cam = SceneManager::GetOpenScene()->main_camera;
+        Camera *cam = SceneManager::get_open_scene()->main_camera;
 
         FMOD_VECTOR position = {entity->get_transform()->Position.x, entity->get_transform()->Position.y, cam->cameraPosition.z};
         FMOD_VECTOR velocity = {cam->cameraVelocity.x, cam->cameraVelocity.y, cam->cameraVelocity.z};

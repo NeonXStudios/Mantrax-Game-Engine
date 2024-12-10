@@ -36,7 +36,7 @@ void TextureTarget::setup()
 
 void TextureTarget::draw(std::function<void()> func)
 {
-    if (SceneManager::GetOpenScene()->main_camera != nullptr)
+    if (SceneManager::get_open_scene()->main_camera != nullptr)
     {
         int width, height;
         glfwGetFramebufferSize(Gfx::get_game_window(), &width, &height);
@@ -47,15 +47,15 @@ void TextureTarget::draw(std::function<void()> func)
 
         func();
 
-        SceneManager::GetOpenScene()->on_draw();
+        SceneManager::get_open_scene()->on_draw();
 
-        SceneManager::GetOpenScene()->draw_ui();
+        SceneManager::get_open_scene()->draw_ui();
         glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
         Gfx::clear_render();
 
         func();
 
-        SceneManager::GetOpenScene()->on_draw();
+        SceneManager::get_open_scene()->on_draw();
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -64,13 +64,13 @@ void TextureTarget::draw(std::function<void()> func)
         glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, Gfx::render_width, Gfx::render_height, 0);
         glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
-        SceneManager::GetOpenScene()->draw_ui();
+        SceneManager::get_open_scene()->draw_ui();
     }
 }
 
 void TextureTarget::draw(glm::mat4 camera_matrix)
 {
-    if (SceneManager::GetOpenScene()->main_camera != nullptr)
+    if (SceneManager::get_open_scene()->main_camera != nullptr)
     {
         int width, height;
         glfwGetFramebufferSize(Gfx::get_game_window(), &width, &height);
@@ -81,15 +81,15 @@ void TextureTarget::draw(glm::mat4 camera_matrix)
 
         RenderPipeline::render_all_data(camera_matrix);
 
-        SceneManager::GetOpenScene()->on_draw();
+        SceneManager::get_open_scene()->on_draw();
 
-        SceneManager::GetOpenScene()->draw_ui();
+        SceneManager::get_open_scene()->draw_ui();
         glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
         Gfx::clear_render();
 
         RenderPipeline::render_all_data(camera_matrix);
 
-        SceneManager::GetOpenScene()->on_draw();
+        SceneManager::get_open_scene()->on_draw();
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -98,7 +98,7 @@ void TextureTarget::draw(glm::mat4 camera_matrix)
         glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, Gfx::render_width, Gfx::render_height, 0);
         glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
-        SceneManager::GetOpenScene()->draw_ui();
+        SceneManager::get_open_scene()->draw_ui();
     }
 }
 

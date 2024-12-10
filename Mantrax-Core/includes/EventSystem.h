@@ -59,7 +59,7 @@ public:
     {
         double x, y;
         glfwGetCursorPos(Gfx::get_game_window(), &x, &y);
-        Camera *cam = SceneManager::GetOpenScene()->main_camera;
+        Camera *cam = SceneManager::get_open_scene()->main_camera;
 
         double windowMousePosX = x - ViewportRenderPosition.x;
         double windowMousePosY = y - ViewportRenderPosition.y;

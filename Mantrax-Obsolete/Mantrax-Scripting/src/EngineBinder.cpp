@@ -58,18 +58,18 @@ void EngineBinder::BinderFunction(GScriptLua *luaParent)
 
     std::cout << "ENGINE BINDER" << std::endl;
 
-    if (SceneManager::GetSceneManager() == nullptr)
+    if (SceneManager::get_scene_manager() == nullptr)
     {
         std::cout << "SCENE MANAGER ITS NULL" << std::endl;
     }
 
-    if (SceneManager::GetSceneManager()->OpenScene->main_camera == nullptr)
+    if (SceneManager::get_scene_manager()->OpenScene->main_camera == nullptr)
     {
         std::cout << "SCENE CAMERA ITS NULL" << std::endl;
     }
 
     // GAME CAMERA
-    luaParent->lua["GameCamera"] = sol::make_object(luaParent->lua.lua_state(), SceneManager::GetSceneManager()->OpenScene->main_camera);
+    luaParent->lua["GameCamera"] = sol::make_object(luaParent->lua.lua_state(), SceneManager::get_scene_manager()->OpenScene->main_camera);
     luaParent->lua.new_usertype<Camera>("Camera",
                                         "Position", &Camera::cameraPosition,
                                         "Fov", &Camera::zoom,
@@ -84,7 +84,7 @@ void EngineBinder::BinderFunction(GScriptLua *luaParent)
     Camera *camera_with_max_depth = nullptr;
     float max_depth = -1.0f;
 
-    for (Entity *ent : SceneManager::GetOpenScene()->objects_worlds)
+    for (Entity *ent : SceneManager::get_open_scene()->objects_worlds)
     {
         if (ent->hasComponent<GCamera>())
         {

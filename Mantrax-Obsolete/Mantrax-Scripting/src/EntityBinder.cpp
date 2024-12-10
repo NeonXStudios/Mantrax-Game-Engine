@@ -46,7 +46,7 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
                                                     "Scale", &TransformComponent::Scale,
                                                     "AttachTo", &TransformComponent::attachTo);
 
-    luaParent->lua["Scene"] = sol::make_object(luaParent->lua.lua_state(), SceneManager::GetSceneManager());
+    luaParent->lua["Scene"] = sol::make_object(luaParent->lua.lua_state(), SceneManager::get_scene_manager());
     luaParent->lua.new_usertype<SceneManager>("SceneManager",
                                               "GID", &SceneManager::GetObjectByID,
                                               "GIndex", &SceneManager::GetObjectPerIndex,
@@ -131,7 +131,7 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
 
 GScriptLua *EntityBinder::find_script(const std::string &script_name)
 {
-    for (Entity *script_get : SceneManager::GetOpenScene()->objects_worlds)
+    for (Entity *script_get : SceneManager::get_open_scene()->objects_worlds)
     {
         for (GScriptLua *get_script : script_get->getComponents<GScriptLua>())
         {

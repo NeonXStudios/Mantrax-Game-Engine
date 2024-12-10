@@ -10,9 +10,9 @@ void SceneData::save_scene()
     try
     {
         json object;
-        for (size_t i = 0; i < SceneManager::GetOpenScene()->objects_worlds.size(); i++)
+        for (size_t i = 0; i < SceneManager::get_open_scene()->objects_worlds.size(); i++)
         {
-            Entity *ent = SceneManager::GetOpenScene()->objects_worlds[i];
+            Entity *ent = SceneManager::get_open_scene()->objects_worlds[i];
 
             json dataOBJ;
             dataOBJ["name"] = ent->ObjectName;
@@ -99,7 +99,7 @@ void SceneData::save_scene()
             object.push_back(dataOBJ);
         }
 
-        std::string file_path = FileManager::get_project_path() + "assets/" + SceneManager::GetOpenScene()->scene_name + ".scene";
+        std::string file_path = FileManager::get_project_path() + "assets/" + SceneManager::get_open_scene()->scene_name + ".scene";
         FileManager::write_file(file_path, object.dump(4));
     }
     catch (const std::exception &e)

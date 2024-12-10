@@ -24,6 +24,8 @@ add_executable(${project_name} ${SOURCES})
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Mantrax-Core/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Mantrax-Engine/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Mantrax-Engine/includes/EngineUI/UI
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Mantrax-Engine/includes/EngineUI
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Mantrax-Graphics/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Mantrax-Scene/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Mantrax-UI/includes
