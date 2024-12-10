@@ -227,6 +227,29 @@ public:
 	void setAdaptPosition(bool adapt) { adaptPosition = adapt; }
 	void setAdaptRotation(bool adapt) { adaptRotation = adapt; }
 	void setAdaptScale(bool adapt) { adaptScale = adapt; }
+
+	void detach_from_parent()
+	{
+		if (parent)
+		{
+			glm::mat4 worldMatrix = get_matrix();
+
+			auto &siblings = parent->childrens;
+			siblings.erase(std::remove(siblings.begin(), siblings.end(), this), siblings.end());
+
+			parent = nullptr;
+
+			Position = glm::vec3(worldMatrix[3]);
+			rotation = glm::quat_cast(worldMatrix);
+			Scale = glm::vec3(
+				glm::length(glm::vec3(worldMatrix[0])),
+				glm::length(glm::vec3(worldMatrix[1])),
+				glm::length(glm::vec3(worldMatrix[2])));
+
+			update();
+		}
+	}
+
 	glm::mat4 get_matrix() const
 	{
 		return Matrix;
