@@ -118,14 +118,7 @@ void Hierarchy::draw_entity_node(Entity *entity)
             IM_ASSERT(payload->DataSize == sizeof(Entity *));
             Entity *droppedEntity = *(Entity **)payload->Data;
 
-            if (droppedEntity->get_transform()->parent)
-            {
-                auto &siblings = droppedEntity->get_transform()->parent->childrens;
-                siblings.erase(std::remove(siblings.begin(), siblings.end(), droppedEntity->get_transform()), siblings.end());
-            }
-
-            droppedEntity->get_transform()->parent = entity->get_transform();
-            entity->get_transform()->childrens.push_back(droppedEntity->get_transform());
+            droppedEntity->get_transform()->attach_to(entity->get_transform());
         }
         ImGui::EndDragDropTarget();
     }

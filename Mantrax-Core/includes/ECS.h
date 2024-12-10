@@ -132,10 +132,60 @@ public:
 	bool adaptRotation = true;
 	bool adaptScale = false;
 
+	void setPosition(const glm::vec3 &pos) { Position = pos; }
+	void setRotation(const glm::quat &rot) { rotation = rot; }
+	void setScale(const glm::vec3 &scale) { Scale = scale; }
+
+	glm::vec3 getPosition() const { return Position; }
+	glm::quat getRotation() const { return rotation; }
+	glm::vec3 getScale() const { return Scale; }
+
+	void attach_to(TransformComponent *newParent)
+	{
+		if (newParent != parent)
+		{
+			if (newParent)
+			{
+				glm::mat4 currentWorldMatrix = get_matrix();
+				glm::vec3 worldPos = glm::vec3(currentWorldMatrix[3]);
+				glm::quat worldRot = glm::quat_cast(currentWorldMatrix);
+				glm::vec3 worldScale = glm::vec3(
+					glm::length(glm::vec3(currentWorldMatrix[0])),
+					glm::length(glm::vec3(currentWorldMatrix[1])),
+					glm::length(glm::vec3(currentWorldMatrix[2])));
+
+				parent = newParent;
+
+				glm::mat4 inverseParentMatrix = glm::inverse(parent->get_matrix());
+
+				glm::vec4 newLocalPos = inverseParentMatrix * glm::vec4(worldPos, 1.0f);
+				Position = glm::vec3(newLocalPos);
+
+				glm::quat parentRot = glm::quat_cast(parent->get_matrix());
+				rotation = glm::inverse(parentRot) * worldRot;
+
+				glm::vec3 parentScale = parent->getScale();
+				Scale = worldScale / parentScale;
+			}
+			else
+			{
+				glm::mat4 currentWorldMatrix = get_matrix();
+				Position = glm::vec3(currentWorldMatrix[3]);
+				rotation = glm::quat_cast(currentWorldMatrix);
+				Scale = glm::vec3(
+					glm::length(glm::vec3(currentWorldMatrix[0])),
+					glm::length(glm::vec3(currentWorldMatrix[1])),
+					glm::length(glm::vec3(currentWorldMatrix[2])));
+				parent = nullptr;
+			}
+
+			this->parent->childrens.push_back(this);
+		}
+	}
+
 	void update()
 	{
 		MatrixLocal = glm::mat4(1.0f);
-
 		MatrixLocal = glm::translate(MatrixLocal, Position);
 
 		glm::mat4 rotationMatrix = glm::toMat4(rotation);
@@ -161,7 +211,7 @@ public:
 
 			if (!adaptScale)
 			{
-				glm::vec3 parentScale = parent->Scale;
+				glm::vec3 parentScale = parent->getScale();
 				parentMatrix = glm::scale(parentMatrix,
 										  glm::vec3(1.0f / parentScale.x, 1.0f / parentScale.y, 1.0f / parentScale.z));
 			}
@@ -174,6 +224,9 @@ public:
 		}
 	}
 
+	void setAdaptPosition(bool adapt) { adaptPosition = adapt; }
+	void setAdaptRotation(bool adapt) { adaptRotation = adapt; }
+	void setAdaptScale(bool adapt) { adaptScale = adapt; }
 	glm::mat4 get_matrix() const
 	{
 		return Matrix;
@@ -197,35 +250,11 @@ public:
 		return glm::eulerAngles(rotation);
 	}
 
-	void attachTo(TransformComponent *parent_obj)
-	{
-		if (parent_obj != nullptr)
-		{
-			auto &siblings = parent_obj->childrens;
-			siblings.erase(std::remove(siblings.begin(), siblings.end(), this), siblings.end());
-		}
-
-		this->parent = parent_obj;
-		parent->childrens.push_back(this);
-	}
-
 	glm::vec3 GetPosition() const { return Position; }
 	void SetPosition(const glm::vec3 &pos) { Position = pos; }
 
 	glm::vec3 GetScale() const { return Scale; }
 	void SetScale(const glm::vec3 &scale) { Scale = scale; }
-
-	void detach_from_parent()
-	{
-		// if (parent != nullptr)
-		// {
-		// 	auto it = std::find(parent->childrens.begin(), parent->childrens.end(), this);
-		// 	if (it != parent->childrens.end())
-		// 	{
-		// 		parent->childrens.erase(it);
-		// 	}
-		// }
-	}
 };
 
 class GARINLIBS_API Entity
