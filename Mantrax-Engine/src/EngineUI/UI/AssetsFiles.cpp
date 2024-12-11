@@ -296,4 +296,8 @@ void AssetsFiles::drawer_files_drag(std::string extension, std::string file_name
     {
         EditorGUI::Drag("SCRIPTCLASSCPP", GarinIO::GetFileNameWithoutExtension(complete_path));
     }
+    else if (extension == ".anim" || extension == ".animation")
+    {
+        EditorGUI::Drag("ANIMATORCLASS", GarinIO::GetWithAfterAssetDir(complete_path));
+    }
 }

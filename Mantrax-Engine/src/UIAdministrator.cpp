@@ -16,7 +16,7 @@ void UIAdministrator::draw_ui(Entity *owner)
     {
         if (ImGui::Button("Open Animator Editor"))
         {
-            UIMasterDrawer::get_instance().get_component<AnimatorView>()->is_open;
+            UIMasterDrawer::get_instance().get_component<AnimatorView>()->is_open = true;
             UIMasterDrawer::get_instance().get_component<AnimatorView>()->animator = &owner->getComponent<GAnimator>();
         }
     }

@@ -20,6 +20,34 @@ void Hierarchy::draw_entity_node(Entity *entity)
                                       ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick |
                                           (selected ? ImGuiTreeNodeFlags_Selected : 0));
 
+        if (ImGui::IsMouseClicked(1))
+        {
+            right_click_held = true;
+        }
+
+        if (ImGui::IsMouseDown(1) && ImGui::IsWindowHovered() && right_click_held)
+        {
+            ImGui::OpenPopup("MenuHierarchy");
+            right_click_held = false;
+        }
+
+        if (ImGui::BeginPopup("MenuHierarchy"))
+        {
+            if (ImGui::MenuItem("Create New Object"))
+            {
+                Entity *_ent = SceneManager::get_current_scene()->make_entity();
+                _ent->addComponent<GMaterial>();
+                _ent->addComponent<ModelComponent>();
+            }
+
+            if (ImGui::MenuItem("Create New Object (Empty)"))
+            {
+                SceneManager::get_current_scene()->make_entity();
+            }
+
+            ImGui::EndPopup();
+        }
+
         if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
         {
             if (EngineUI::getInstance().select_obj != entity)

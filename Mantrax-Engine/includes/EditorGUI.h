@@ -346,6 +346,17 @@ public:
                         cpm->init();
                     }
                 }
+                else if (key == "AnimatorPath")
+                {
+                    auto result = EditorGUI::Drag_Objetive("ANIMATORCLASS");
+                    if (result.has_value())
+                    {
+                        cpm->variableMap[key] = result.value();
+
+                        cpm->clean();
+                        cpm->init();
+                    }
+                }
                 else if (key == "NormalMap")
                 {
                     auto result = EditorGUI::Drag_Objetive("IMAGECLASS");
