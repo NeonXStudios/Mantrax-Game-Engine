@@ -1,4 +1,4 @@
-#include "AnimatorView.h"
+#include <AnimatorView.h>
 #include <nlohmann/json.hpp>
 #include <EditorGUI.h>
 #include <cmath>
@@ -99,6 +99,9 @@ void AnimatorView::on_draw()
                 {
                     std::cerr << "Error: Invalid file name." << std::endl;
                 }
+
+                animator->clean();
+                animator->init();
             }
             ImGui::EndMenu();
         }

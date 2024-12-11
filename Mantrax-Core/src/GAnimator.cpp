@@ -8,6 +8,8 @@ void GAnimator::defines()
 
 void GAnimator::init()
 {
+    clean();
+
     std::string load_path = FileManager::get_game_path() + GETVAR(AnimatorPath, std::string);
     std::string file_content = FileManager::read_file(load_path);
 
@@ -22,6 +24,10 @@ void GAnimator::init()
         return;
     }
 
+    animations.clear();
+    transitions.clear();
+    _name.clear();
+
     if (animations_tree.contains("animator_name"))
     {
         _name = animations_tree["animator_name"].get<std::string>();
@@ -29,8 +35,6 @@ void GAnimator::init()
 
     if (animations_tree.contains("animations_data"))
     {
-        animations.clear();
-
         for (const auto &animation_info : animations_tree["animations_data"])
         {
             GAnimator::Animation anim;
@@ -57,8 +61,33 @@ void GAnimator::init()
         }
     }
 
-    animator_thread = std::thread([this]()
-                                  { next_frame(); });
+    if (animations_tree.contains("transitions"))
+    {
+        for (const auto &transition_info : animations_tree["transitions"])
+        {
+            Transition t;
+            t.fromIndex = transition_info.value("fromIndex", -1);
+            t.toIndex = transition_info.value("toIndex", -1);
+            t.name = transition_info.value("name", "");
+            t.conditionType = static_cast<ConditionType>(
+                transition_info.value("condition_type", static_cast<int>(ConditionType::None)));
+
+            t.conditionInt = transition_info.value("condition_int", 0);
+            t.conditionFloat = transition_info.value("condition_float", 0.0f);
+            t.conditionString = transition_info.value("condition_string", "");
+            t.conditionBool = transition_info.value("condition_bool", false);
+
+            transitions.push_back(t);
+        }
+    }
+
+    // Iniciar el hilo de animación
+    if (!animator_thread.joinable())
+    {
+        pause = false;
+        animator_thread = std::thread([this]()
+                                      { next_frame(); });
+    }
 }
 
 void GAnimator::update()
@@ -83,6 +112,8 @@ void GAnimator::clean()
     {
         animator_thread.join();
     }
+
+    pause = false;
 }
 
 void GAnimator::next_frame()

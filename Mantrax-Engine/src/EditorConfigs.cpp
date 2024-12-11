@@ -13,10 +13,11 @@ void EditorConfigs::save_config()
     json settings;
 
     settings["current_scene"] = SceneManager::get_open_scene()->scene_name;
-    settings["start_scene"] = start_scene;
     settings["camera_state"] = SceneManager::get_open_scene()->main_camera->use_projection;
-    settings["camera_sens"] = camera_speed_sens;
     settings["settings_render"] = RenderPipeline::layers_to_render;
+
+    settings["start_scene"] = start_scene;
+    settings["camera_sens"] = camera_speed_sens;
     settings["engine_theme"] = current_theme;
 
     FileManager::write_file(current_proyect + "/GameSettings.data", settings.dump(4));
