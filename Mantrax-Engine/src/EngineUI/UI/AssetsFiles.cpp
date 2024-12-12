@@ -42,7 +42,7 @@ void AssetsFiles::on_draw()
             }
         }
 
-        if (ImGui::Button("Open Visual Code Work Space", ImVec2(ImGui::GetWindowSize().x, 30)))
+        if (ImGui::Button("Open Visual Code Work Space", ImVec2(-1, 30)))
         {
             std::filesystem::current_path(FileManager::get_game_path() + "/");
             std::string open_command = "code . " + FileManager::get_project_path() + "/clscpp";
@@ -69,27 +69,23 @@ void AssetsFiles::on_draw()
             static std::unique_ptr<TextureManager> texture_manager = nullptr;
             static std::string last_loaded_path;
 
-            // Si se selecciona un nuevo archivo o no hay textura cargada
             if (!texture_manager || last_loaded_path != asset_selected_struct->asset_complete_path)
             {
-                // Elimina la textura anterior
                 if (texture_manager)
                 {
                     GLuint old_texture = texture_manager->get_texture();
                     if (old_texture)
                     {
-                        glDeleteTextures(1, &old_texture); // Libera la textura anterior
+                        glDeleteTextures(1, &old_texture);
                     }
-                    texture_manager.reset(); // Libera el puntero
+                    texture_manager.reset();
                 }
 
-                // Carga la nueva textura
                 try
                 {
                     texture_manager = std::make_unique<TextureManager>(asset_selected_struct->asset_complete_path);
                     last_loaded_path = asset_selected_struct->asset_complete_path;
 
-                    // Verificar si se cargó correctamente
                     GLuint new_texture = texture_manager->get_texture();
                     if (!new_texture)
                     {
@@ -102,14 +98,13 @@ void AssetsFiles::on_draw()
                 }
             }
 
-            // Renderiza la textura
             if (texture_manager)
             {
                 GLuint texture_id = texture_manager->get_texture();
                 if (texture_id)
                 {
                     ImGui::Text("Preview:");
-                    ImVec2 texture_size = ImVec2(200, 200); // Tamaño deseado para la vista previa
+                    ImVec2 texture_size = ImVec2(200, 200);
                     ImGui::Image((void *)(intptr_t)texture_id, texture_size);
                 }
                 else

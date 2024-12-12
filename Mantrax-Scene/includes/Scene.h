@@ -42,6 +42,7 @@ public:
     Entity *get_entity_by_id(int id);
     Entity *get_entity_by_id_string(std::string id);
     Entity *get_entity_by_name(string index);
+    Entity *Scene::find_entity_by_id(int id);
 
     void destroy(Entity *object_to_destroy);
 

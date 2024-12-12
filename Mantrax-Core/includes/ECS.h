@@ -123,7 +123,7 @@ public:
 	glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 Scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec4 Anchors;
-	Entity *entity;
+	Entity *entity = nullptr;
 
 	TransformComponent *parent = nullptr;
 	vector<TransformComponent *> childrens;
@@ -132,55 +132,64 @@ public:
 	bool adaptRotation = true;
 	bool adaptScale = false;
 
-	void setPosition(const glm::vec3 &pos) { Position = pos; }
-	void setRotation(const glm::quat &rot) { rotation = rot; }
-	void setScale(const glm::vec3 &scale) { Scale = scale; }
-
-	glm::vec3 getPosition() const { return Position; }
-	glm::quat getRotation() const { return rotation; }
-	glm::vec3 getScale() const { return Scale; }
-
-	void attach_to(TransformComponent *newParent)
+	void attach_to(TransformComponent *newParent, bool keepWorldPosition = false)
 	{
 		if (newParent != parent)
 		{
 			if (newParent)
 			{
-				glm::mat4 currentWorldMatrix = get_matrix();
-				glm::vec3 worldPos = glm::vec3(currentWorldMatrix[3]);
-				glm::quat worldRot = glm::quat_cast(currentWorldMatrix);
-				glm::vec3 worldScale = glm::vec3(
-					glm::length(glm::vec3(currentWorldMatrix[0])),
-					glm::length(glm::vec3(currentWorldMatrix[1])),
-					glm::length(glm::vec3(currentWorldMatrix[2])));
+				if (keepWorldPosition)
+				{
+					// Guardar la posición mundial actual
+					glm::mat4 currentWorldMatrix = get_matrix();
+					glm::vec3 worldPos = glm::vec3(currentWorldMatrix[3]);
+					glm::quat worldRot = glm::quat_cast(currentWorldMatrix);
+					glm::vec3 worldScale = glm::vec3(
+						glm::length(glm::vec3(currentWorldMatrix[0])),
+						glm::length(glm::vec3(currentWorldMatrix[1])),
+						glm::length(glm::vec3(currentWorldMatrix[2])));
 
-				parent = newParent;
+					parent = newParent;
 
-				glm::mat4 inverseParentMatrix = glm::inverse(parent->get_matrix());
+					// Calcular las transformaciones locales
+					glm::mat4 inverseParentMatrix = glm::inverse(parent->get_matrix());
+					glm::vec4 newLocalPos = inverseParentMatrix * glm::vec4(worldPos, 1.0f);
+					Position = glm::vec3(newLocalPos);
 
-				glm::vec4 newLocalPos = inverseParentMatrix * glm::vec4(worldPos, 1.0f);
-				Position = glm::vec3(newLocalPos);
+					glm::quat parentRot = glm::quat_cast(parent->get_matrix());
+					rotation = glm::inverse(parentRot) * worldRot;
 
-				glm::quat parentRot = glm::quat_cast(parent->get_matrix());
-				rotation = glm::inverse(parentRot) * worldRot;
-
-				glm::vec3 parentScale = parent->getScale();
-				Scale = worldScale / parentScale;
+					glm::vec3 parentScale = parent->getScale();
+					Scale = worldScale / parentScale;
+				}
+				else
+				{
+					parent = newParent;
+				}
 			}
 			else
 			{
-				glm::mat4 currentWorldMatrix = get_matrix();
-				Position = glm::vec3(currentWorldMatrix[3]);
-				rotation = glm::quat_cast(currentWorldMatrix);
-				Scale = glm::vec3(
-					glm::length(glm::vec3(currentWorldMatrix[0])),
-					glm::length(glm::vec3(currentWorldMatrix[1])),
-					glm::length(glm::vec3(currentWorldMatrix[2])));
+				if (keepWorldPosition)
+				{
+					// Convertir a posición mundial si se está desconectando
+					glm::mat4 currentWorldMatrix = get_matrix();
+					Position = glm::vec3(currentWorldMatrix[3]);
+					rotation = glm::quat_cast(currentWorldMatrix);
+					Scale = glm::vec3(
+						glm::length(glm::vec3(currentWorldMatrix[0])),
+						glm::length(glm::vec3(currentWorldMatrix[1])),
+						glm::length(glm::vec3(currentWorldMatrix[2])));
+				}
 				parent = nullptr;
 			}
 
-			this->parent->childrens.push_back(this);
+			if (parent)
+			{
+				parent->childrens.push_back(this);
+			}
 		}
+
+		update();
 	}
 
 	void update()
@@ -273,11 +282,85 @@ public:
 		return glm::eulerAngles(rotation);
 	}
 
-	glm::vec3 GetPosition() const { return Position; }
-	void SetPosition(const glm::vec3 &pos) { Position = pos; }
+	void setPosition(const glm::vec3 &pos)
+	{
+		Position = pos;
+		if (parent)
+		{
+			glm::mat4 worldMatrix = parent->get_matrix();
+			Position = glm::vec3(glm::inverse(worldMatrix) * glm::vec4(pos, 1.0f));
+		}
+	}
 
-	glm::vec3 GetScale() const { return Scale; }
-	void SetScale(const glm::vec3 &scale) { Scale = scale; }
+	void setRotation(const glm::quat &rot)
+	{
+		rotation = rot;
+		if (parent)
+		{
+			glm::quat parentRot = glm::quat_cast(parent->get_matrix());
+			rotation = glm::inverse(parentRot) * rot;
+		}
+	}
+
+	void setScale(const glm::vec3 &scale)
+	{
+		Scale = scale;
+		if (parent)
+		{
+			glm::vec3 parentScale = parent->getScale();
+			Scale = scale / parentScale;
+		}
+	}
+
+	void setPositionLocal(const glm::vec3 &pos)
+	{
+		Position = pos;
+	}
+
+	void setRotationLocal(const glm::quat &rot)
+	{
+		rotation = rot;
+	}
+
+	void setScaleLocal(const glm::vec3 &scale)
+	{
+		Scale = scale;
+	}
+
+	glm::vec3 getPosition() const
+	{
+		if (parent)
+		{
+			glm::vec4 worldPos = parent->get_matrix() * glm::vec4(Position, 1.0f);
+			return glm::vec3(worldPos);
+		}
+		return Position;
+	}
+
+	glm::quat getRotation() const
+	{
+		if (parent)
+		{
+			glm::quat parentRot = glm::quat_cast(parent->get_matrix());
+			return parentRot * rotation;
+		}
+		return rotation;
+	}
+
+	glm::vec3 getScale() const
+	{
+		if (parent)
+		{
+			glm::vec3 parentScale = parent->getScale();
+			return Scale * parentScale;
+		}
+		return Scale;
+	}
+
+	// Obtener valores en espacio local
+	glm::vec3 getPositionLocal() const { return Position; }
+	glm::quat getRotationLocal() const { return rotation; }
+	glm::vec3 getScaleLocal() const { return Scale; }
 };
 
 class GARINLIBS_API Entity

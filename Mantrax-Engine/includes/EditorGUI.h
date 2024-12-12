@@ -94,15 +94,6 @@ public:
         ImGui::Image((void *)(intptr_t)texture_id, ImVec2(16, 16));
         ImGui::SameLine();
 
-        // ImGui::PushItemWidth(inputTextWidth);
-        // ImGui::InputText("##FileName", fileNameBuffer, sizeof(fileNameBuffer), ImGuiInputTextFlags_ReadOnly);
-        // ImGui::PopItemWidth();
-
-        // if (ImGui::Button("..."))
-        // {
-        //     ImGui::OpenPopup("File Browser");
-        // }
-
         ImGui::EndGroup();
         ImGui::SameLine();
     }

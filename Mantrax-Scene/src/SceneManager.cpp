@@ -101,7 +101,6 @@ void SceneManager::link_scene(Scene *scene_to_link)
 
 void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
 {
-
     if (!is_additive && SceneManager::get_scene_manager()->opened_scenes.size() > 0)
     {
         SceneManager::get_current_scene()->clean_all_components();
@@ -138,46 +137,57 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
             if (!std::filesystem::exists(file_path))
             {
                 std::cerr << "File does not exist: " << file_path << std::endl;
-                return;
             }
 
-            new_scene->scene_name = "Error Scene";
-            std::cerr << "Error opening file: " << file_path << std::endl;
-            return;
+            new_scene->scene_name = "New Scene";
+            SceneManager::get_scene_manager()->opened_scenes.push_back(new_scene);
+            std::cerr << "Error opening file creating new file for scene: " << file_path << std::endl;
         }
 
         json data_loaded;
-        file >> data_loaded;
 
-        if (!data_loaded.is_array())
+        if (file)
         {
-            std::cerr << "Error: data_loaded is not an array" << std::endl;
-            return;
+            file >> data_loaded;
+
+            if (!data_loaded.is_array())
+            {
+                std::cerr << "Error: data_loaded is not an array" << std::endl;
+                return;
+            }
         }
 
+        // Primera pasada: Crear entidades y cargar transformaciones como locales
         for (size_t i = 0; i < data_loaded.size(); i++)
         {
             Entity *new_object = new_scene->make_entity();
             VarVerify::set_value_if_exists(data_loaded[i], "name", new_object->ObjectName);
 
             auto transform = new_object->get_transform();
-            VarVerify::set_value_if_exists(data_loaded[i], "px", transform->Position.x);
-            VarVerify::set_value_if_exists(data_loaded[i], "py", transform->Position.y);
-            VarVerify::set_value_if_exists(data_loaded[i], "pz", transform->Position.z);
 
-            VarVerify::set_value_if_exists(data_loaded[i], "rx", transform->rotation.x);
-            VarVerify::set_value_if_exists(data_loaded[i], "ry", transform->rotation.y);
-            VarVerify::set_value_if_exists(data_loaded[i], "rz", transform->rotation.z);
-            VarVerify::set_value_if_exists(data_loaded[i], "rw", transform->rotation.w);
+            // Guardar transformaciones como locales
+            glm::vec3 localPosition;
+            VarVerify::set_value_if_exists(data_loaded[i], "px", localPosition.x);
+            VarVerify::set_value_if_exists(data_loaded[i], "py", localPosition.y);
+            VarVerify::set_value_if_exists(data_loaded[i], "pz", localPosition.z);
+            transform->setPositionLocal(localPosition);
 
-            VarVerify::set_value_if_exists(data_loaded[i], "sx", transform->Scale.x);
-            VarVerify::set_value_if_exists(data_loaded[i], "sy", transform->Scale.y);
-            VarVerify::set_value_if_exists(data_loaded[i], "sz", transform->Scale.z);
+            glm::quat localRotation;
+            VarVerify::set_value_if_exists(data_loaded[i], "rx", localRotation.x);
+            VarVerify::set_value_if_exists(data_loaded[i], "ry", localRotation.y);
+            VarVerify::set_value_if_exists(data_loaded[i], "rz", localRotation.z);
+            VarVerify::set_value_if_exists(data_loaded[i], "rw", localRotation.w);
+            transform->setRotationLocal(localRotation);
+
+            glm::vec3 localScale;
+            VarVerify::set_value_if_exists(data_loaded[i], "sx", localScale.x);
+            VarVerify::set_value_if_exists(data_loaded[i], "sy", localScale.y);
+            VarVerify::set_value_if_exists(data_loaded[i], "sz", localScale.z);
+            transform->setScaleLocal(localScale);
 
             VarVerify::set_value_if_exists(data_loaded[i], "tag", new_object->ObjectTag);
 
             int objectID = -1;
-
             VarVerify::set_value_if_exists(data_loaded[i], "object_id", objectID);
             VarVerify::set_value_if_exists(data_loaded[i], "layer", new_object->Layer);
 
@@ -231,8 +241,6 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
             {
                 std::cerr << "Warning: 'components' is missing or not an array in entity " << i << std::endl;
             }
-
-            new_object->get_transform()->update();
         }
 
         for (size_t i = 0; i < data_loaded.size(); i++)
@@ -247,9 +255,12 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
             {
                 Entity *new_object_child = new_scene->get_entity_by_id(objectID);
                 Entity *new_object_parent = new_scene->get_entity_by_id(parentID);
-                new_object_child->get_transform()->parent = new_object_parent->get_transform();
 
-                new_object_parent->get_transform()->childrens.push_back(new_object_child->get_transform());
+                if (new_object_child && new_object_parent)
+                {
+                    // Usar attach_to con keepWorldPosition = false para mantener las transformaciones locales
+                    new_object_child->get_transform()->attach_to(new_object_parent->transform_component, false);
+                }
             }
         }
 
@@ -291,7 +302,7 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
         }
 
         new_scene->unload_scene = false;
-        std::cout << "----------------> Already Loade Scene" << std::endl;
+        std::cout << "----------------> Already Loaded Scene" << std::endl;
     }
     catch (const std::exception &e)
     {
@@ -301,6 +312,12 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
 
 Scene *SceneManager::get_current_scene()
 {
+    if (SceneManager::get_scene_manager()->opened_scenes.size() <= 0)
+    {
+        std::cout << "Error not existe scene" << std::endl;
+        return nullptr;
+    }
+
     return SceneManager::get_scene_manager()->opened_scenes[0];
 }
 

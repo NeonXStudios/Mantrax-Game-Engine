@@ -17,6 +17,10 @@ public:
     static void create();
     static void release();
 
+    static glm::vec3 CalculateLocalPosition(const glm::vec3 &globalPos, const glm::quat &parentRot, const glm::vec3 &parentScale);
+    static glm::quat CalculateLocalRotation(const glm::quat &globalRot, const glm::quat &parentRot);
+    static glm::vec3 CalculateLocalScale(const glm::vec3 &globalScale, const glm::vec3 &parentScale);
+
     static SceneManager *get_scene_manager();
     static string *get_open_scene_name();
     static Scene *get_open_scene();

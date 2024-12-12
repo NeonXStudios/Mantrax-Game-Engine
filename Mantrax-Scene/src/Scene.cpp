@@ -113,3 +113,15 @@ void Scene::destroy(Entity *object_to_destroy)
         }
     }
 }
+
+Entity *Scene::find_entity_by_id(int id)
+{
+    for (Entity *entity : objects_worlds)
+    {
+        if (entity->objectID == id)
+        {
+            return entity;
+        }
+    }
+    return nullptr;
+}

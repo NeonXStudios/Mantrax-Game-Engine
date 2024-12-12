@@ -37,7 +37,7 @@ void SceneView::on_draw()
         {
             WorldPoint = EventSystem::ScreenToViewPort(glm::vec2(p.x, p.y), glm::vec2(Gfx::render_width, Gfx::render_height));
 
-            if (EventSystem::MouseCast(WorldPoint, data))
+            if (EventSystem::MouseCast(WorldPoint, data, Gfx::render_width, Gfx::render_height))
             {
                 if (EngineUI::getInstance().select_obj != data->object)
                 {
