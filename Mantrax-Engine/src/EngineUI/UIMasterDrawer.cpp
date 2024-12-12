@@ -1,13 +1,4 @@
 #include <UIMasterDrawer.h>
-#include <Hierarchy.h>
-#include <MainBar.h>
-#include <FileBar.h>
-#include <AssetsFiles.h>
-#include <Inspector.h>
-#include <SceneView.h>
-#include <EngineSettings.h>
-#include <AnimatorView.h>
-#include <UIEditor.h>
 
 void UIMasterDrawer::register_uis()
 {
@@ -20,6 +11,17 @@ void UIMasterDrawer::register_uis()
     ADD_UI_BEHAVIOUR(EngineSettings);
     ADD_UI_BEHAVIOUR(AnimatorView);
     ADD_UI_BEHAVIOUR(UIEditor);
+    ADD_UI_BEHAVIOUR(CompilerView);
+
+    get_component<CompilerView>()->is_open = false;
+    get_component<Hierarchy>()->is_open = true;
+    get_component<FileBar>()->is_open = true;
+    get_component<AssetsFiles>()->is_open = true;
+    get_component<Inspector>()->is_open = false;
+    get_component<SceneView>()->is_open = true;
+    get_component<EngineSettings>()->is_open = false;
+    get_component<AnimatorView>()->is_open = false;
+    get_component<UIEditor>()->is_open = false;
 }
 
 void UIMasterDrawer::on_draw()

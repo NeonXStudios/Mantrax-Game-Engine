@@ -5,7 +5,16 @@
 #include <type_traits>
 
 // ENGINE UI`s
-#include "UI/Hierarchy.h"
+#include <Hierarchy.h>
+#include <MainBar.h>
+#include <FileBar.h>
+#include <AssetsFiles.h>
+#include <Inspector.h>
+#include <SceneView.h>
+#include <EngineSettings.h>
+#include <AnimatorView.h>
+#include <UIEditor.h>
+#include <CompilerView.h>
 
 // BEHAVIOUR
 #include <EngineUIBehaviour.h>

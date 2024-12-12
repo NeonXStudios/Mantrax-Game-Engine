@@ -120,7 +120,7 @@ void Hierarchy::draw_entity_node(Entity *entity)
 
                 remove_entity_from_all_folders(droppedEntity);
 
-                droppedEntity->get_transform()->attach_to(entity->get_transform());
+                droppedEntity->get_transform()->attach_to(entity->get_transform(), true);
 
                 std::string org_path = FileManager::get_project_path() + "organizer.json";
                 save_to_json(org_path);
@@ -170,6 +170,11 @@ void Hierarchy::on_draw()
             Entity *droppedEntity = *(Entity **)payload->Data;
 
             remove_entity_from_all_folders(droppedEntity);
+
+            if (droppedEntity->get_transform()->parent != nullptr)
+            {
+                droppedEntity->get_transform()->detach_from_parent();
+            }
 
             std::string org_path = FileManager::get_project_path() + "organizer.json";
             save_to_json(org_path);
@@ -260,6 +265,32 @@ void Hierarchy::on_draw()
 
                 bool is_open = ImGui::TreeNodeEx(folder->container_name.c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
 
+                if (ImGui::BeginDragDropTarget())
+                {
+                    if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY_CELL"))
+                    {
+                        IM_ASSERT(payload->DataSize == sizeof(Entity *));
+                        Entity *droppedEntity = *(Entity **)payload->Data;
+
+                        remove_entity_from_all_folders(droppedEntity);
+
+                        ObjectMap *new_object_map = new ObjectMap();
+                        new_object_map->object = droppedEntity;
+                        new_object_map->container_id = folder->container_id;
+
+                        folder->objects_map.push_back(new_object_map);
+
+                        if (droppedEntity->get_transform()->parent != nullptr)
+                        {
+                            droppedEntity->get_transform()->detach_from_parent();
+                        }
+
+                        std::string org_path = FileManager::get_project_path() + "organizer.json";
+                        save_to_json(org_path);
+                    }
+                    ImGui::EndDragDropTarget();
+                }
+
                 if (ImGui::IsItemClicked(1))
                 {
                     ImGui::OpenPopup(("FolderContextMenu" + folder->container_id).c_str());
@@ -276,6 +307,7 @@ void Hierarchy::on_draw()
                     ImGui::EndPopup();
                 }
 
+                // Dibujar las entidades dentro de la carpeta si está abierta
                 if (is_open)
                 {
                     for (ObjectMap *obj : folder->objects_map)
@@ -340,6 +372,7 @@ void Hierarchy::on_draw()
 
     ImGui::End();
 }
+
 void Hierarchy::delete_folder(FolderMap *folder)
 {
     for (ObjectMap *obj : folder->objects_map)

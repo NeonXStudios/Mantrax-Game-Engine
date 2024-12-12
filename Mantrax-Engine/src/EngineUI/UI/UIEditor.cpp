@@ -5,7 +5,7 @@
 
 void UIEditor::on_draw()
 {
-    ImGui::Begin("UI Editor", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar);
+    ImGui::Begin("UI Editor", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDecoration);
 
     ImGuiID dockspace_id = ImGui::GetID("UIEditorDockspace");
     ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
@@ -13,16 +13,14 @@ void UIEditor::on_draw()
     ImGui::SetNextWindowDockID(dockspace_id, ImGuiCond_FirstUseEver);
     ImGui::Begin("UI Elements", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
 
-    float calc_x = ImGui::GetWindowSize().x - 5;
+    ImGui::Button("Image", ImVec2(-1, 50));
 
-    ImGui::Button("Image", ImVec2(calc_x, 50));
-
-    if (ImGui::Button("Text", ImVec2(calc_x, 50)))
+    if (ImGui::Button("Text", ImVec2(-1, 50)))
     {
         RenderPipeline::canvas->add_new_ui_component_type_text();
     }
 
-    ImGui::Button("Button", ImVec2(calc_x, 50));
+    ImGui::Button("Button", ImVec2(-1, 50));
     ImGui::End();
 
     ImGui::SetNextWindowDockID(dockspace_id, ImGuiCond_FirstUseEver);

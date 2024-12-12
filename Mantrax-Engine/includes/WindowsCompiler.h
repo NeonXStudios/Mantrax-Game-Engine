@@ -14,6 +14,43 @@ namespace fs = std::filesystem;
 class GARINLIBS_API WindowsCompiler
 {
 public:
+    static void run_command(const std::string &command, const std::string &notification)
+    {
+        try
+        {
+            std::array<char, 128> buffer;
+            std::string result;
+            FILE *pipe = _popen(command.c_str(), "r");
+            if (!pipe)
+            {
+                throw std::runtime_error("Failed to execute command: " + command);
+            }
+
+            while (fgets(buffer.data(), buffer.size(), pipe) != nullptr)
+            {
+                result += buffer.data();
+            }
+
+            int return_code = _pclose(pipe);
+            if (return_code != 0)
+            {
+                std::cerr << "Command failed: " << command << "\nExit code: " << return_code << std::endl;
+                UINotification::AddNotification("Error: " + notification, 10.0f);
+            }
+            else
+            {
+                UINotification::AddNotification(notification, 10.0f);
+            }
+
+            std::cout << "Output of [" << command << "]:\n"
+                      << result << std::endl;
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Exception during command execution: " << e.what() << std::endl;
+        }
+    }
+
     static void copy_file(const std::string &sourceFile, const std::string &destinationFile)
     {
         std::ifstream source(sourceFile, std::ios::binary);
@@ -245,88 +282,104 @@ public:
 
     static void compile_windows()
     {
+        // try
+        // {
+        //     std::string data_path = FileManager::get_project_path() + "/wlibsgpp";
+
+        //     // copy_scene_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/scenes/");
+        //     // copy_shaders_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
+        //     // copy_models_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
+        //     // copy_audio_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
+        //     // copy_textures_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
+        //     // copy_and_rename_file(FileManager::get_execute_path() + "projects/test/EngineSettings.data", FileManager::get_execute_path() + "projects/test/build/", FileManager::get_execute_path() + "projects/test/build/GameSettings.data");
+        //     copy_all_data();
+
+        //     std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/Compiler-Lib/GarinEditorEngine/";
+
+        //     // Formar los comandos
+        //     std::string cmake_command = "cd /d " + cmake_path + " && cmake -G \"Visual Studio 17 2022\" .";
+        //     std::string msbuild_command = "cd /d " + cmake_path + " && msbuild GarinEngine.sln /p:Configuration=Debug";
+
+        //     // Ejecutar el comando CMake
+        //     int result = system(cmake_command.c_str());
+
+        //     if (result == 0)
+        //     {
+        //         UINotification::AddNotification("CMake Reloaded...", 10.0f);
+        //         UINotification::AddNotification("Starting compilation of the libraries (Wait)...", 10.0f);
+
+        //         // Ejecutar el comando MSBuild
+        //         int result_build = system(msbuild_command.c_str());
+
+        //         if (result_build == 0)
+        //         {
+        //             UINotification::AddNotification("Successfully compiled libraries...", 10.0f);
+
+        //             std::string cmake_path_game = FileManager::get_project_path() + "wlibsgpp/build/";
+        //             copy_file(cmake_path + "Debug/GarinGameCore.dll", cmake_path_game + "Debug/GarinGameCore.dll");
+
+        //             // Formar los comandos
+        //             std::string cmake_command_game = "cd /d " + cmake_path_game + " && cmake -G \"Visual Studio 17 2022\" .";
+        //             std::string msbuild_command_game = "cd /d " + cmake_path_game + " && msbuild GarinGame.sln /p:Configuration=Debug";
+
+        //             // Ejecutar el comando CMake
+        //             int result = system(cmake_command_game.c_str());
+
+        //             if (result == 0)
+        //             {
+        //                 UINotification::AddNotification("CMake Reloaded...", 10.0f);
+        //                 UINotification::AddNotification("Starting compilation of the libraries (Wait)...", 10.0f);
+
+        //                 // Ejecutar el comando MSBuild
+        //                 int result_build_game = system(msbuild_command_game.c_str());
+
+        //                 if (result_build_game == 0)
+        //                 {
+        //                     UINotification::AddNotification("Successfully game compiled...", 10.0f);
+        //                 }
+        //                 else
+        //                 {
+        //                     UINotification::AddNotification("Error during the compilation of the libraries...", 10.0f);
+        //                     std::cerr << "Error during msbuild execution, result code: " << result_build << std::endl;
+        //                 }
+        //             }
+        //             else
+        //             {
+        //                 UINotification::AddNotification("Error during CMake execution...", 10.0f);
+        //                 std::cerr << "Error during compile game - result code: " << result << std::endl;
+        //             }
+        //         }
+        //         else
+        //         {
+        //             UINotification::AddNotification("Error during the compilation of the libraries...", 10.0f);
+        //             std::cerr << "Error during msbuild execution, result code: " << result_build << std::endl;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         UINotification::AddNotification("Error during CMake execution...", 10.0f);
+        //         std::cerr << "Error during cmake execution, result code: " << result << std::endl;
+        //     }
+        // }
+        // catch (const std::exception &e)
+        // {
+        //     std::cerr << e.what() << '\n';
+        // }
+
         try
         {
-            std::string data_path = FileManager::get_project_path() + "/wlibsgpp";
-
-            // copy_scene_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/scenes/");
-            // copy_shaders_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
-            // copy_models_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
-            // copy_audio_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
-            // copy_textures_files(FileManager::get_execute_path() + "projects/test/assets", FileManager::get_execute_path() + "projects/test/build/data/");
-            // copy_and_rename_file(FileManager::get_execute_path() + "projects/test/EngineSettings.data", FileManager::get_execute_path() + "projects/test/build/", FileManager::get_execute_path() + "projects/test/build/GameSettings.data");
-            copy_all_data();
-
             std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/Compiler-Lib/GarinEditorEngine/";
-
-            // Formar los comandos
             std::string cmake_command = "cd /d " + cmake_path + " && cmake -G \"Visual Studio 17 2022\" .";
             std::string msbuild_command = "cd /d " + cmake_path + " && msbuild GarinEngine.sln /p:Configuration=Debug";
 
-            // Ejecutar el comando CMake
-            int result = system(cmake_command.c_str());
+            run_command(cmake_command, "CMake Reloaded...");
+            run_command(msbuild_command, "Compilation of the libraries completed...");
 
-            if (result == 0)
-            {
-                UINotification::AddNotification("CMake Reloaded...", 10.0f);
-                UINotification::AddNotification("Starting compilation of the libraries (Wait)...", 10.0f);
-
-                // Ejecutar el comando MSBuild
-                int result_build = system(msbuild_command.c_str());
-
-                if (result_build == 0)
-                {
-                    UINotification::AddNotification("Successfully compiled libraries...", 10.0f);
-
-                    std::string cmake_path_game = FileManager::get_project_path() + "wlibsgpp/build/";
-                    copy_file(cmake_path + "Debug/GarinGameCore.dll", cmake_path_game + "Debug/GarinGameCore.dll");
-
-                    // Formar los comandos
-                    std::string cmake_command_game = "cd /d " + cmake_path_game + " && cmake -G \"Visual Studio 17 2022\" .";
-                    std::string msbuild_command_game = "cd /d " + cmake_path_game + " && msbuild GarinGame.sln /p:Configuration=Debug";
-
-                    // Ejecutar el comando CMake
-                    int result = system(cmake_command_game.c_str());
-
-                    if (result == 0)
-                    {
-                        UINotification::AddNotification("CMake Reloaded...", 10.0f);
-                        UINotification::AddNotification("Starting compilation of the libraries (Wait)...", 10.0f);
-
-                        // Ejecutar el comando MSBuild
-                        int result_build_game = system(msbuild_command_game.c_str());
-
-                        if (result_build_game == 0)
-                        {
-                            UINotification::AddNotification("Successfully game compiled...", 10.0f);
-                        }
-                        else
-                        {
-                            UINotification::AddNotification("Error during the compilation of the libraries...", 10.0f);
-                            std::cerr << "Error during msbuild execution, result code: " << result_build << std::endl;
-                        }
-                    }
-                    else
-                    {
-                        UINotification::AddNotification("Error during CMake execution...", 10.0f);
-                        std::cerr << "Error during compile game - result code: " << result << std::endl;
-                    }
-                }
-                else
-                {
-                    UINotification::AddNotification("Error during the compilation of the libraries...", 10.0f);
-                    std::cerr << "Error during msbuild execution, result code: " << result_build << std::endl;
-                }
-            }
-            else
-            {
-                UINotification::AddNotification("Error during CMake execution...", 10.0f);
-                std::cerr << "Error during cmake execution, result code: " << result << std::endl;
-            }
+            // Agrega más comandos de la misma manera si es necesario.
         }
         catch (const std::exception &e)
         {
-            std::cerr << e.what() << '\n';
+            std::cerr << "Exception in compile_windows: " << e.what() << std::endl;
         }
     }
 };

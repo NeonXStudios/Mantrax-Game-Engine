@@ -3,6 +3,8 @@
 #include <EngineUI.h>
 #include <UIStyle.h>
 #include <SceneData.h>
+#include <CompilerView.h>
+#include <Ensambler.h>
 
 void MainBar::on_draw()
 {
@@ -15,7 +17,7 @@ void MainBar::on_draw()
         ImGui::Image((void *)(intptr_t)IconsManager::ENGINE_LOGO(), ImVec2(32, 28));
         ImGui::SameLine();
 
-        if (ImGui::BeginMenu("File"))
+        if (ImGui::BeginMenu("File", ImGuiWindowFlags_NoDecoration))
         {
             if (ImGui::MenuItem("New Scene"))
             {
@@ -32,6 +34,15 @@ void MainBar::on_draw()
                     SceneData::save_scene();
                 }
             }
+
+            ImGui::Separator();
+
+            if (ImGui::MenuItem("Build"))
+            {
+                UIMasterDrawer::get_instance().get_component<CompilerView>()->is_open = true;
+            }
+
+            ImGui::Separator();
 
             if (ImGui::MenuItem("Close Proyect"))
             {
@@ -57,43 +68,48 @@ void MainBar::on_draw()
         if (ImGui::BeginMenu("Windows"))
         {
 
-            if (ImGui::MenuItem("Scene"))
+            if (ImGui::MenuItem("Hierarchy"))
             {
-                // OPENED UIS
+                UIMasterDrawer::get_instance().get_component<Hierarchy>()->is_open = true;
             }
 
-            ImGui::EndMenu();
-        }
-
-        if (ImGui::BeginMenu("Build"))
-        {
-            if (ImGui::MenuItem("Windows"))
+            if (ImGui::MenuItem("FileBar"))
             {
-                std::string build_path = FileManager::get_execute_path() + "/projects/test/build/";
-                std::string data_path = FileManager::get_execute_path() + "/projects/test/wlibsgpp/";
+                UIMasterDrawer::get_instance().get_component<FileBar>()->is_open = true;
+            }
 
-                auto create_directory_if_not_exists = [](const std::string &path)
-                {
-                    if (!std::filesystem::exists(path))
-                    {
-                        if (std::filesystem::create_directory(path))
-                        {
-                            std::cout << "Folder correctly created: " << path << std::endl;
-                        }
-                        else
-                        {
-                            std::cerr << "Failed to create folder: " << path << std::endl;
-                        }
-                    }
-                    else
-                    {
-                        std::cout << "Folder already exists: " << path << std::endl;
-                    }
-                };
+            if (ImGui::MenuItem("AssetsFiles"))
+            {
+                UIMasterDrawer::get_instance().get_component<AssetsFiles>()->is_open = true;
+            }
 
-                std::thread compile_thread(WindowsCompiler::compile_windows);
+            if (ImGui::MenuItem("Inspector"))
+            {
+                UIMasterDrawer::get_instance().get_component<Inspector>()->is_open = true;
+            }
 
-                compile_thread.join();
+            if (ImGui::MenuItem("SceneView"))
+            {
+                UIMasterDrawer::get_instance().get_component<SceneView>()->is_open = true;
+            }
+
+            if (ImGui::MenuItem("EngineSettings"))
+            {
+                UIMasterDrawer::get_instance().get_component<EngineSettings>()->is_open = true;
+            }
+            if (ImGui::MenuItem("AnimatorView"))
+            {
+                UIMasterDrawer::get_instance().get_component<AnimatorView>()->is_open = true;
+            }
+
+            if (ImGui::MenuItem("UIEditor"))
+            {
+                UIMasterDrawer::get_instance().get_component<UIEditor>()->is_open = true;
+            }
+
+            if (ImGui::MenuItem("CompilerView"))
+            {
+                UIMasterDrawer::get_instance().get_component<CompilerView>()->is_open = true;
             }
             ImGui::EndMenu();
         }
@@ -102,64 +118,8 @@ void MainBar::on_draw()
         {
             if (ImGui::MenuItem("Recompile Scripts"))
             {
-                std::string directoryPath = FileManager::get_project_path() + "clscpp/";
-                std::string outputFilePath = FileManager::get_project_path() + "wlibsgpp/GameLibsLoader.h";
-
-                std::ofstream clearFile(outputFilePath, std::ofstream::out | std::ofstream::trunc);
-                clearFile.close();
-
-                process_header_files(directoryPath, outputFilePath);
-
-                std::string register_core = FileManager::get_project_path() + "wlibsgpp/GarinGameCore.cpp";
-                for (const auto &entry : fs::directory_iterator(directoryPath))
-                {
-                    if (entry.path().extension() == ".h")
-                    {
-                        std::cout << "MAKING H CLASS GETTER: " << entry.path().filename().stem().string() << std::endl;
-                        insert_register(register_core, entry.path().filename().stem().string());
-                    }
-                }
-
-                UINotification::AddNotification("Recompiling libraries...", 10.0f);
-
-                // GameBehaviourFactory::instance().reload_components();
-
-                UINotification::AddNotification("Compiling libraries (wait for it)...", 10.0f);
-
-                std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/";
-
-                std::string cmake_command =
-                    "cd /d " + cmake_path +
-                    " && if not exist bin mkdir bin && cd bin && cmake ..";
-
-                std::string msbuild_command = "cd /d " + cmake_path + " && cd bin && msbuild MantraxRuntimeCore.sln /p:Configuration=Debug";
-
-                int result = system(cmake_command.c_str());
-
-                if (result == 0)
-                {
-                    UINotification::AddNotification("CMake Reloaded...", 10.0f);
-                    UINotification::AddNotification("Starting compilation of the libraries (Wait)...", 10.0f);
-
-                    int result_build = system(msbuild_command.c_str());
-
-                    if (result_build == 0)
-                    {
-                        UINotification::AddNotification("Successfully compiled libraries...", 10.0f);
-                    }
-                    else
-                    {
-                        UINotification::AddNotification("Error during the compilation of the libraries...", 10.0f);
-                        std::cerr << "Error during msbuild execution, result code: " << result_build << std::endl;
-                    }
-                }
-                else
-                {
-                    UINotification::AddNotification("Error during CMake execution...", 10.0f);
-                    std::cerr << "Error during cmake execution, result code: " << result << std::endl;
-                }
-
-                // DynamicLibLoader::instance->load_components();
+                std::thread compile_thread(Ensambler::start_scripts_reload);
+                compile_thread.detach();
             }
             ImGui::EndMenu();
         }
@@ -226,28 +186,6 @@ void MainBar::on_draw()
 
         int result_execution = system(fullCommand.c_str());
 
-        // AppSettings::is_playing = !AppSettings::is_playing;
-
-        if (AppSettings::is_playing)
-        {
-            // Entity *selectobj = owner;
-
-            // if (selectobj != nullptr)
-            // {
-            //     selectobj = owner;
-            // }
-
-            // SceneData::save_scene();
-            // SceneData::load_scene(SceneManager::GetOpenScene()->scene_name);
-
-            // if (selectobj != nullptr)
-            //     game->set_object_select(selectobj);
-        }
-        // else
-        // {
-        //     SceneData::load_scene(SceneManager::GetOpenScene()->scene_name);
-        // }
-
         std::cout << "Entering play mode" << std::endl;
     }
 
@@ -257,21 +195,6 @@ void MainBar::on_draw()
     ImGui::Begin("Scene Settings");
     EngineUI::getInstance().configs->camera_speed_sens = EditorGUI::Float("Camera sensitivity", EngineUI::getInstance().configs->camera_speed_sens);
     ImGui::End();
-}
-
-void MainBar::process_header_files(const std::string &directoryPath, const std::string &outputFilePath)
-{
-    std::ofstream outputFile(outputFilePath);
-
-    for (const auto &entry : fs::directory_iterator(directoryPath))
-    {
-        if (entry.path().extension() == ".h")
-        {
-            outputFile << "#include <" << entry.path().filename().string() << ">" << std::endl;
-        }
-    }
-
-    outputFile.close();
 }
 
 void MainBar::ShowNewScenePopup()
@@ -302,51 +225,20 @@ void MainBar::ShowNewScenePopup()
 
         ImGui::EndPopup();
     }
-}
 
-void MainBar::insert_register(const std::string &filePath, const std::string &lineToInsert)
-{
-    std::ifstream inFile(filePath);
-    std::stringstream buffer;
+    ImVec2 main_window_size = ImGui::GetIO().DisplaySize;
 
-    if (!inFile.is_open())
-    {
-        std::cerr << "Error: No se pudo abrir el archivo de entrada." << std::endl;
-        return;
-    }
+    float bar_height = 25.0f;
 
-    // Leer el contenido del archivo y buscar las líneas de inserción
-    std::string line;
-    bool foundFinalRegisterData = false;
+    ImGui::SetNextWindowPos(ImVec2(0, main_window_size.y - bar_height));
+    ImGui::SetNextWindowSize(ImVec2(main_window_size.x, bar_height));
 
-    while (std::getline(inFile, line))
-    {
-        if (line.find("/////////_FINALREGISTERDATA_/////////") != std::string::npos)
-        {
-            buffer << "GCLASSDLL(" << lineToInsert << ");" << std::endl; // Insertar las líneas nuevas antes de la marca final
-            foundFinalRegisterData = true;
-        }
-        buffer << line << std::endl;
-    }
+    ImGui::Begin("Bottom Bar", nullptr,
+                 ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize);
 
-    inFile.close();
+    ImGui::Text("Información: Todo está funcionando correctamente.");
+    ImGui::SameLine();
+    ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
 
-    if (!foundFinalRegisterData)
-    {
-        std::cerr << "Error: No se encontró la marca final en el archivo." << std::endl;
-        return;
-    }
-
-    // Escribir el contenido modificado de vuelta al archivo
-    std::ofstream outFile(filePath);
-    if (!outFile.is_open())
-    {
-        std::cerr << "Error: No se pudo abrir el archivo de salida para escritura." << std::endl;
-        return;
-    }
-
-    outFile << buffer.str();
-    outFile.close();
-
-    std::cout << "Se agregó la línea correctamente antes de FINALREGISTERDATA." << std::endl;
+    ImGui::End();
 }
