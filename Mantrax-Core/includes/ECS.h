@@ -388,6 +388,7 @@ public:
 
 	Entity()
 	{
+		entity = this;
 		transform_component->entity = this;
 	}
 

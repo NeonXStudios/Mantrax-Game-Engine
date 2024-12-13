@@ -17,7 +17,7 @@ void UIMasterDrawer::register_uis()
     get_component<Hierarchy>()->is_open = true;
     get_component<FileBar>()->is_open = true;
     get_component<AssetsFiles>()->is_open = true;
-    get_component<Inspector>()->is_open = false;
+    get_component<Inspector>()->is_open = true;
     get_component<SceneView>()->is_open = true;
     get_component<EngineSettings>()->is_open = false;
     get_component<AnimatorView>()->is_open = false;

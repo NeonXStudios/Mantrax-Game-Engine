@@ -35,9 +35,12 @@ void SceneView::on_draw()
 
         if (ImGui::IsMouseClicked(0))
         {
-            WorldPoint = EventSystem::ScreenToViewPort(glm::vec2(p.x, p.y), glm::vec2(Gfx::render_width, Gfx::render_height));
+            WorldPoint = EventSystem::screen_to_viewport(glm::vec2(p.x, p.y), glm::vec2(Gfx::render_width, Gfx::render_height));
 
-            if (EventSystem::MouseCast(WorldPoint, data, Gfx::render_width, Gfx::render_height))
+            std::cout << "X: " << WorldPoint.x << std::endl;
+            std::cout << "Y: " << WorldPoint.y << std::endl;
+
+            if (EventSystem::MouseCast2D(WorldPoint, data))
             {
                 if (EngineUI::getInstance().select_obj != data->object)
                 {
@@ -53,28 +56,28 @@ void SceneView::on_draw()
             }
         }
 
-        CastDataUI *data_ui = new CastDataUI();
+        // CastDataUI *data_ui = new CastDataUI();
 
-        ScreenPoint = EventSystem::MouseToScreenPos(glm::vec2(p.x, p.y), glm::vec2(Gfx::render_width, Gfx::render_height));
+        // ScreenPoint = EventSystem::mouse_to_screen_pos(glm::vec2(p.x, p.y), glm::vec2(Gfx::render_width, Gfx::render_height));
 
-        if (ImGui::IsMouseClicked(0))
-        {
-            if (EventSystem::MouseCastUI(ScreenPoint, data_ui))
-            {
-                if (data_ui->object != nullptr)
-                {
-                    EngineUI::getInstance().ui_behaviour = data_ui->object;
-                }
-                else
-                {
-                    EngineUI::getInstance().ui_behaviour = nullptr;
-                }
-            }
-            else
-            {
-                EngineUI::getInstance().ui_behaviour = nullptr;
-            }
-        }
+        // if (ImGui::IsMouseClicked(0))
+        // {
+        //     if (EventSystem::MouseCastUI(ScreenPoint, data_ui))
+        //     {
+        //         if (data_ui->object != nullptr)
+        //         {
+        //             EngineUI::getInstance().ui_behaviour = data_ui->object;
+        //         }
+        //         else
+        //         {
+        //             EngineUI::getInstance().ui_behaviour = nullptr;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         EngineUI::getInstance().ui_behaviour = nullptr;
+        //     }
+        // }
 
         if (ImGui::IsMouseDragging(0) && EngineUI::getInstance().ui_behaviour != nullptr)
         {
