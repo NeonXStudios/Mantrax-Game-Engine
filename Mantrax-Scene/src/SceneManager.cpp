@@ -74,11 +74,6 @@ SceneManager *SceneManager::get_scene_manager()
     return instance;
 }
 
-Scene *SceneManager::get_open_scene()
-{
-    return SceneManager::get_current_scene();
-}
-
 string *SceneManager::get_open_scene_name()
 {
     return &SceneManager::get_current_scene()->scene_name;
@@ -109,10 +104,16 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
         {
             scn->on_destroy();
         }
+
+        SceneManager::get_scene_manager()->opened_scenes.clear();
+
+        std::cout << "Current Scene Cleaned" << std::endl;
     }
 
-    Scene *new_scene = new Scene();
+    Scene *new_scene = SceneManager::make_new_empty_scene(scene_name_new);
     new_scene->unload_scene = true;
+
+    std::cout << "Loading new maked scene" << std::endl;
 
     std::string file_path = "";
     std::string assets_path = FileManager::get_project_path() + "assets/";
@@ -126,10 +127,10 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
         }
     }
 
+    std::cout << "Scene Path " << assets_path << std::endl;
+
     try
     {
-        new_scene->objects_worlds.clear();
-
         std::ifstream file(file_path);
 
         if (!file.is_open())
@@ -138,9 +139,6 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
             {
                 std::cerr << "File does not exist: " << file_path << std::endl;
             }
-
-            new_scene->scene_name = "New Scene";
-            SceneManager::get_scene_manager()->opened_scenes.push_back(new_scene);
             std::cerr << "Error opening file creating new file for scene: " << file_path << std::endl;
         }
 
@@ -153,11 +151,9 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
             if (!data_loaded.is_array())
             {
                 std::cerr << "Error: data_loaded is not an array" << std::endl;
-                return;
             }
         }
 
-        // Primera pasada: Crear entidades y cargar transformaciones como locales
         for (size_t i = 0; i < data_loaded.size(); i++)
         {
             Entity *new_object = new_scene->make_entity();
@@ -165,7 +161,6 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
 
             auto transform = new_object->get_transform();
 
-            // Guardar transformaciones como locales
             glm::vec3 localPosition;
             VarVerify::set_value_if_exists(data_loaded[i], "px", localPosition.x);
             VarVerify::set_value_if_exists(data_loaded[i], "py", localPosition.y);
@@ -293,14 +288,6 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
             std::cerr << e.what() << '\n';
         }
 
-        SceneManager::get_scene_manager()->opened_scenes.clear();
-
-        if (new_scene != nullptr)
-        {
-            SceneManager::get_scene_manager()->opened_scenes.push_back(new_scene);
-            new_scene->scene_name = scene_name_new;
-        }
-
         new_scene->unload_scene = false;
         std::cout << "----------------> Already Loaded Scene" << std::endl;
     }
@@ -308,6 +295,35 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
     {
         std::cerr << e.what() << '\n';
     }
+}
+
+Scene *SceneManager::make_new_empty_scene(std::string scene_name)
+{
+    Scene *scene_raw = new Scene();
+    scene_raw->scene_name = scene_name;
+
+    SceneManager::get_scene_manager()->opened_scenes.push_back(scene_raw);
+
+    try
+    {
+        std::cout << "Making new Scene" << std::endl;
+
+        if (scene_raw->main_camera == nullptr)
+        {
+            scene_raw->main_camera = new Camera();
+            scene_raw->main_camera->target_render = Gfx::main_render;
+        }
+        else
+        {
+            std::cout << "Camera is not null in new scene" << std::endl;
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+
+    return scene_raw;
 }
 
 Scene *SceneManager::get_current_scene()

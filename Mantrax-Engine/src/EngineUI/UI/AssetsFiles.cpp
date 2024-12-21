@@ -42,16 +42,19 @@ void AssetsFiles::on_draw()
             }
         }
 
+        // Botón para abrir el workspace de Visual Studio Code
         if (ImGui::Button("Open Visual Code Work Space", ImVec2(-1, 30)))
         {
             std::filesystem::current_path(FileManager::get_game_path() + "/");
             std::string open_command = "code . " + FileManager::get_project_path() + "/clscpp";
             int result = system(open_command.c_str());
+            // Opcional: Manejar el resultado si es necesario
         }
     }
 
     ImGui::End();
 
+    // Mostrar información del activo seleccionado
     if (asset_selected)
     {
         ImGui::Begin("Asset Info");
@@ -64,6 +67,7 @@ void AssetsFiles::on_draw()
         ImGui::Text(asset_type.c_str());
         ImGui::Text(asset_complete_path.c_str());
 
+        // Mostrar preview de imágenes si el activo es una imagen
         if (asset_selected_struct->asset_type == ".png" || asset_selected_struct->asset_type == ".jpg")
         {
             static std::unique_ptr<TextureManager> texture_manager = nullptr;
@@ -127,17 +131,124 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
     {
         if (entry.is_directory())
         {
+            // Dibujar el icono de carpeta
             EditorGUI::DrawIcon(IconsManager::FOLDER());
 
-            if (ImGui::TreeNode(entry.path().filename().string().c_str()))
+            // Crear un nodo de árbol para la carpeta
+            bool node_open = ImGui::TreeNodeEx(entry.path().filename().string().c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
+
+            // Configurar el Drag Source para la carpeta
+            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
             {
-                if (ImGui::IsItemClicked(0))
+                std::string path_str = entry.path().string();
+                ImGui::SetDragDropPayload("DND_FOLDER", path_str.c_str(), path_str.size() + 1);
+                ImGui::Text("Mover carpeta: %s", entry.path().filename().string().c_str());
+                ImGui::EndDragDropSource();
+            }
+
+            // Configurar el Drop Target para la carpeta
+            if (ImGui::BeginDragDropTarget())
+            {
+                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("DND_FOLDER"))
                 {
+                    const char *src_path_cstr = static_cast<const char *>(payload->Data);
+                    std::filesystem::path source_path(src_path_cstr);
+                    std::filesystem::path dest_path = entry.path();
+
+                    // Convertir paths a strings para la comparación
+                    std::string source_str = source_path.string();
+                    std::string dest_str = dest_path.string();
+
+                    // Validar que no se mueva una carpeta dentro de sí misma o de sus subcarpetas
+                    if (dest_path != source_path && !starts_with(dest_str, source_str + "/") && !starts_with(dest_str, source_str + "\\"))
+                    {
+                        try
+                        {
+                            std::filesystem::rename(source_path, dest_path / source_path.filename());
+                            // Opcional: Actualizar la UI después de mover
+                        }
+                        catch (const std::filesystem::filesystem_error &e)
+                        {
+                            std::cerr << "Error al mover carpeta: " << e.what() << std::endl;
+                        }
+                    }
+                }
+                else if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("DND_FILE"))
+                {
+                    const char *src_path_cstr = static_cast<const char *>(payload->Data);
+                    std::filesystem::path source_path(src_path_cstr);
+                    std::filesystem::path dest_path = entry.path();
+
+                    try
+                    {
+                        std::filesystem::rename(source_path, dest_path / source_path.filename());
+                        // Opcional: Actualizar la UI después de mover
+                    }
+                    catch (const std::filesystem::filesystem_error &e)
+                    {
+                        std::cerr << "Error al mover archivo: " << e.what() << std::endl;
+                    }
+                }
+                ImGui::EndDragDropTarget();
+            }
+
+            // Manejar la selección y doble clic para la carpeta
+            if (node_open)
+            {
+                // Recursivamente mostrar el contenido de la carpeta
+                ShowDirectoryTree(entry.path());
+                ImGui::TreePop();
+            }
+
+            // Manejar el doble clic para seleccionar la carpeta
+            if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
+            {
+                double current_time = ImGui::GetTime();
+                if (current_time - last_click_time <= double_click_time)
+                {
+                    selected_item = entry.path().string();
+                    std::filesystem::path selected_path(selected_item);
+                    std::string extension = selected_path.extension().string();
+                    std::string base_name = selected_path.stem().string();
+
+                    drawer_files(extension, base_name, entry.path().string());
+                }
+                else
+                {
+                    last_click_time = current_time;
+                }
+            }
+        }
+        else
+        {
+            // Determinar el icono según la extensión
+            std::string extension = entry.path().extension().string();
+            if (extension == ".lua")
+                EditorGUI::DrawIcon(IconsManager::LUA());
+            else if (extension == ".scene")
+                EditorGUI::DrawIcon(IconsManager::SCENE());
+            else if (extension == ".fbx")
+                EditorGUI::DrawIcon(IconsManager::MODEL());
+            else if (extension == ".png" || extension == ".jpg")
+                EditorGUI::DrawIcon(IconsManager::UNKNOWN());
+            else if (extension == ".h" || extension == ".cpp" || extension == ".json" || extension == ".txt")
+                EditorGUI::DrawIcon(IconsManager::CPP());
+            else if (extension == ".wav" || extension == ".mp3")
+                EditorGUI::DrawIcon(IconsManager::SOUND());
+            else if (extension != ".garin")
+                EditorGUI::DrawIcon(IconsManager::UNKNOWN());
+
+            bool is_selected = (selected_item == entry.path().string());
+            if (entry.path().extension() != ".garin")
+            {
+                if (ImGui::Selectable(entry.path().filename().string().c_str(), is_selected))
+                {
+                    selected_item = entry.path().string();
+                    std::filesystem::path selected_path(selected_item);
+
                     double current_time = ImGui::GetTime();
                     if (current_time - last_click_time <= double_click_time)
                     {
-                        selected_item = entry.path().string();
-                        std::filesystem::path selected_path(selected_item);
                         std::string extension = selected_path.extension().string();
                         std::string base_name = selected_path.stem().string();
 
@@ -147,87 +258,21 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
                     {
                         last_click_time = current_time;
                     }
+
+                    asset_selected = true;
+                    asset_selected_struct->asset_name = selected_path.stem().string();
+                    asset_selected_struct->asset_type = selected_path.extension().string();
+                    asset_selected_struct->asset_complete_path = selected_path.string();
                 }
 
-                ShowDirectoryTree(entry.path());
-                ImGui::TreePop();
-            }
-        }
-        else
-        {
-            std::string extension = "";
-            std::string base_name = "";
-
-            if (entry.path().extension() != ".cpp")
-            {
-                if (entry.path().extension() == ".lua")
+                if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
                 {
-                    EditorGUI::DrawIcon(IconsManager::LUA());
-                }
-                else if (entry.path().extension() == ".scene")
-                {
-                    EditorGUI::DrawIcon(IconsManager::SCENE());
-                }
-                else if (entry.path().extension() == ".fbx")
-                {
-                    EditorGUI::DrawIcon(IconsManager::MODEL());
-                }
-                else if (entry.path().extension() == ".png" || entry.path().extension() == ".jpg")
-                {
-                    EditorGUI::DrawIcon(IconsManager::UNKNOWN());
-                }
-                else if (entry.path().extension() == ".h")
-                {
-                    EditorGUI::DrawIcon(IconsManager::CPP());
-                }
-                else if (entry.path().extension() == ".txt" || entry.path().extension() == ".json")
-                {
-                    EditorGUI::DrawIcon(IconsManager::CPP());
-                }
-                else if (entry.path().extension() == ".wav" || entry.path().extension() == ".mp3")
-                {
-                    EditorGUI::DrawIcon(IconsManager::SOUND());
-                }
-                else
-                {
-                    if (entry.path().extension() != ".garin")
-                        EditorGUI::DrawIcon(IconsManager::UNKNOWN());
-                }
-
-                if (entry.path().extension() != ".garin")
-                {
-                    if (ImGui::Selectable(entry.path().filename().string().c_str(), selected_item == entry.path().string()))
-                    {
-
-                        selected_item = entry.path().string();
-                        std::filesystem::path selected_path(selected_item);
-
-                        double current_time = ImGui::GetTime();
-                        if (current_time - last_click_time <= double_click_time)
-                        {
-                            extension = selected_path.extension().string();
-                            base_name = selected_path.stem().string();
-
-                            drawer_files(extension, base_name, entry.path().string());
-                        }
-                        else
-                        {
-                            last_click_time = current_time;
-                        }
-
-                        asset_selected = true;
-                        asset_selected_struct->asset_name = selected_path.stem().string();
-                        asset_selected_struct->asset_type = selected_path.extension().string();
-                        asset_selected_struct->asset_complete_path = selected_path.string();
-                    }
+                    std::string path_str = entry.path().string();
+                    ImGui::SetDragDropPayload("DND_FILE", path_str.c_str(), path_str.size() + 1);
+                    ImGui::Text("Mover archivo: %s", entry.path().filename().string().c_str());
+                    ImGui::EndDragDropSource();
                 }
             }
-
-            selected_item = entry.path().string();
-            std::filesystem::path selected_path(selected_item);
-            extension = selected_path.extension().string();
-            base_name = selected_path.stem().string();
-            drawer_files_drag(extension, base_name, entry.path().string());
         }
     }
 }

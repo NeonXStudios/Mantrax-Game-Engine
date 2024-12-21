@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mantrax Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v6.7.0/css/pro.min.css">
+
+    <style>
+        * {
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+        body {
+            border-radius: 30px;
+            -webkit-mask-image: linear-gradient(black, black);
+        }
+
+        .drag-region {
+            -webkit-app-region: drag;
+            height: 30px;
+            width: 100%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            user-select: none;
+        }
+
+        .no-drag {
+            -webkit-app-region: no-drag;
+        }
+
+        .gradient-container {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(90deg, #D7B4FF, #A9FFF5, #FFF5B4, #FFB4B4, #D7B4FF);
+            background-size: 300% 300%;
+            animation: gradientAnimation 5s infinite linear;
+            -webkit-mask-image: url('assets/imgs/tinyLogo.svg');
+            mask-image: url('assets/imgs/tinyLogo.svg');
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            mask-position: center;
+        }
+
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .hidden-svg {
+            display: none;
+        }
+    </style>
+</head>
+
+<div class="bg-[#1E1C38] text-white w-screen h-screen">
+
+    <div id="mainLoadView" class="flex items-center justify-center w-full h-full relative">
+        <img src="assets/imgs/bigBanner.svg" class="w-3/5 max-w-full max-h-full">
+
+        <div
+            class="w-1/5 max-w-full max-h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 gradient-mask gradient-container">
+            <img src="assets/imgs/tinyLogo.svg" alt="Logo" class="hidden-svg">
+        </div>
+
+
+        <h2 class="absolute bottom-[15%] text-center text-xl font-semibold w-full">Starting Hub</h2>
+        <h2 class="absolute bottom-8 text-center text-[16px] font-semibold w-full text-[#B2ADE4]" id="versiononload">
+            Version: Nulled
+        </h2>
+    </div>
+
+    <div id="download-panel" class="flex items-center justify-center w-full h-full relative hidden">
+        <img src="assets/imgs/bigBanner.svg" class="absolute w-3/5 max-w-full max-h-full">
+
+        <div
+            class="w-1/5 max-w-full max-h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 gradient-mask gradient-container">
+            <img src="assets/imgs/tinyLogo.svg" alt="Logo" class="hidden-svg">
+        </div>
+
+        <p id="downloading-text"
+            class="absolute bottom-[15%] text-center text-[16px] font-semibold w-full text-[#B2ADE4]"
+            style="visibility: hidden;">
+            Starting Download...
+        </p>
+
+        <div id="progress-container" class="absolute w-[60%] bottom-[10%] h-4 bg-gray-700 rounded-full"
+            style="visibility: hidden;">
+            <div id="progress-bar" class="h-full bg-blue-500 rounded-full" style="width: 0%;"></div>
+        </div>
+
+        <p id="file-info" class="absolute bottom-8 text-center text-[15px] font-semibold w-full text-[#B2ADE4]"
+            style="visibility: hidden;">
+            ----: 0 MB | ----: 0 MB | ----: 0 KB/s
+        </p>
+
+
+        <p class="text-gray-400 text-sm text-center mt-4" id="hubversion">Version ---</p>
+    </div>
+
+
+
+    <div id="mainView" class="hidden w-full h-full flex">
+        <div class="font-ubuntu absolute top-2 right-2 flex gap-1 z-50 drag-region mr-[10px]">
+            <button onclick="minizeApp()" class="no-drag text-gray-200 px-1 py-0.5 text-lg rounded">
+                <i class="fas fa-window-minimize"></i>
+            </button>
+            <!-- <button onclick="maxApp()" class="no-drag text-gray-200 px-1 py-0.5 text-lg rounded">
+                <i class="fas fa-window-maximize"></i>
+            </button> -->
+            <button onclick="closeApp()" class="no-drag text-gray-200 px-1 py-0.5 text-lg rounded">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+
+        <div class="w-full h-full flex">
+
+            <main class="flex-1 bg-[#2C294E] flex flex-col">
+                <header class="flex justify-between items-center p-6">
+                    <h1 class="font-ubuntu text-4xl font-bold">My Projects</h1>
+                    <div class="flex gap-4 items-center">
+
+                        <div class="bg-[#3E3C61] rounded-lg px-4 py-2 flex items-center text-gray-400">
+                            <i class="fas fa-search mr-2"></i>
+                            <input id="search-input" type="text" placeholder="Search..."
+                                class="bg-transparent outline-none text-gray-200 placeholder-gray-400 w-48">
+                        </div>
+
+                        <button onclick="openProjectModal()"
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-plus mr-2"></i> New Proyect
+                        </button>
+                    </div>
+                </header>
+
+                <div class="flex-1 overflow-auto px-6 pb-6">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="text-gray-400 uppercase text-sm border-b border-gray-700">
+                                <th class="py-3 text-left">Name</th>
+                                <th class="py-3 text-left">Modification</th>
+                                <th class="py-3 text-left">Version</th>
+                                <th class="w-12"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="project-table" class="text-gray-300">
+                            <!-- <tr class="hover:bg-[#3E3C61] rounded-lg">
+                                <td class="py-3 font-semibold text-white">Flappy Bird</td>
+                                <td class="py-3">24 minutes ago</td>
+                                <td class="py-3">2.9.1</td>
+                                <td class="py-3 relative">
+                                    <button onclick="toggleMenu(this)"
+                                        class="text-gray-400 hover:text-white flex items-center justify-center">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+    
+                                    <div
+                                        class="absolute right-0 mt-2 w-36 bg-[#3E3C61] rounded-lg shadow-lg hidden z-50 text-sm">
+                                        <button onclick="openFolder()"
+                                            class="block w-full text-left px-4 py-2 hover:bg-[#4A466D]">Open folder</button>
+                                        <button onclick="deleteProject(this)"
+                                            class="block w-full text-left px-4 py-2 text-red-400 hover:bg-[#4A466D]">Delete</button>
+                                    </div>
+                                </td>
+    
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+
+            <aside class="w-1/4 bg-[#1E1C38] flex flex-col justify-between p-6">
+                <div>
+                    <h2 class="text-2xl font-bold mb-6 flex items-center">
+                        Mantrax
+                        <div class="fas fa-mountain ml-5 text-blue-700 w-16 h-16 gradient-container">
+                            <img src="assets/imgs/tinyLogo.svg" alt="Logo" class="hidden-svg">
+                        </div>
+                    </h2>
+                    <div class="flex items-center bg-[#3E3C61] p-3 rounded-lg mb-8">
+                        <div class="bg-gray-500 h-10 w-10 rounded-full"></div>
+                        <div class="ml-3">
+                            <p class="font-semibold text-white">My Profile</p>
+                            <p class="text-sm text-gray-400">Profile</p>
+                            <p class="text-sm text-gray-400">(Coming soon)</p>
+                        </div>
+                        <i class="fas fa-ellipsis-v ml-auto text-gray-400 cursor-pointer"></i>
+                    </div>
+
+                    <nav class="space-y-6">
+                        <div class="flex items-center gap-3 hover:text-white cursor-pointer">
+                            <i class="fas fa-folder w-5 text-center"></i>
+                            <span>Projects</span>
+                        </div>
+
+                        <div class="flex items-center gap-3 hover:text-white cursor-pointer"
+                            onclick="openDocumentationModal()">
+                            <i class="fas fa-book w-5 text-center"></i>
+                            <span>Documentation</span>
+                        </div>
+
+                        <div class="flex items-center gap-3 hover:text-white cursor-pointer">
+                            <i class="fas fa-users w-5 text-center"></i>
+                            <span>Community</span>
+                        </div>
+
+                        <div class="flex items-center gap-3 hover:text-white cursor-pointer" id="download-button">
+                            <i class=" fas fa-download w-5 text-center"></i>
+                            <span id="download-text">Download Engine</span>
+                        </div>
+
+                        <div class="flex items-center gap-3 hover:text-white cursor-pointer"
+                            onclick="openModalByID('settings-modal')">
+                            <i class="fa-solid fa-gear w-5 text-center"></i>
+                            <span>Settings</span>
+                        </div>
+                    </nav>
+                </div>
+            </aside>
+        </div>
+
+        <div id="project-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-[#2C294E] p-6 rounded-lg w-1/3">
+                <h2 class="text-2xl font-bold mb-4">New Proyect</h2>
+                <input id="new-project-name" type="text" placeholder="Proyect Name"
+                    class="w-full px-4 py-2 rounded-lg bg-[#3E3C61] text-white outline-none mb-4">
+                <div class="flex items-center mb-4">
+                    <label for="assets-toggle" class="text-sm mr-2">Include initial assets?</label>
+                    <input type="checkbox" id="assets-toggle" checked="true"
+                        class="form-checkbox h-5 w-5 text-blue-600">
+                </div>
+                <div class="flex justify-end gap-4">
+                    <button onclick="closeModal()" class="bg-gray-500 px-4 py-2 rounded-lg">Cancel</button>
+                    <button onclick="createProject()"
+                        class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg">Create</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center ">
+            <div class="bg-[#2C294E] p-6 rounded-lg w-1/3 w-[60%]">
+                <h2 class="text-2xl font-bold mb-4">Hub Settings</h2>
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Theme</label>
+                        <select id="theme-select"
+                            class="w-full px-4 py-2 rounded-lg bg-[#3E3C61] text-white outline-none">
+                            <option value="dark">Dark</option>
+                            <option value="light">Light</option>
+                        </select>
+                    </div>
+
+                    <!-- Configuración del Idioma -->
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Language</label>
+                        <select id="language-select"
+                            class="w-full px-4 py-2 rounded-lg bg-[#3E3C61] text-white outline-none">
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Projects Folder Path</label>
+                        <input id="project-path" type="text" placeholder="Click to select folder"
+                            class="w-full px-4 py-2 rounded-lg bg-[#3E3C61] text-white outline-none cursor-pointer"
+                            readonly>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Engine Path</label>
+                        <input id="engine-path" type="text" placeholder="Click to select engine"
+                            class="w-full px-4 py-2 rounded-lg bg-[#3E3C61] text-white outline-none cursor-pointer"
+                            readonly>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Advanced Settings</label>
+                        <textarea id="advanced-settings" rows="3"
+                            class="w-full px-4 py-2 rounded-lg bg-[#3E3C61] text-white outline-none"
+                            placeholder="Enter JSON or key-value pairs for custom configuration"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-4 mt-6">
+                    <button onclick="closeModalByID('settings-modal')"
+                        class="bg-gray-500 px-4 py-2 rounded-lg">Cancel</button>
+                    <button onclick="saveSettings()"
+                        class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="documentation-modal"
+            class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-[#2C294E] text-gray-300 w-[90%] h-[80%] rounded-lg shadow-lg flex overflow-hidden">
+                <!-- Barra de Navegación -->
+                <div class="w-1/4 bg-[#1E1C38] border-r border-gray-600 p-6">
+                    <h2 class="text-xl font-semibold mb-6 text-white">Documentation</h2>
+                    <!-- Tabla de contenido -->
+                    <nav class="space-y-4">
+                        <a href="#" onclick="loadSection('documentation/getting-started.html')"
+                            class="flex items-center gap-2 text-gray-400 hover:text-white">
+                            <i class="fas fa-book"></i>
+                            <span>Getting Started</span>
+                        </a>
+                        <a href="#" onclick="loadSection('documentation/components.html')"
+                            class="flex items-center gap-2 text-gray-400 hover:text-white">
+                            <i class="fas fa-code"></i>
+                            <span>Components Info</span>
+                        </a>
+                        <a href="#" onclick="loadSection('examples.html')"
+                            class="flex items-center gap-2 text-gray-400 hover:text-white">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Examples</span>
+                        </a>
+                        <a href="#" onclick="loadSection('faqs.html')"
+                            class="flex items-center gap-2 text-gray-400 hover:text-white">
+                            <i class="fas fa-question-circle"></i>
+                            <span>FAQs</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Contenido de la Documentación -->
+                <div class="w-3/4 flex flex-col">
+                    <!-- Cabecera -->
+                    <div class="flex justify-between items-center p-4 bg-[#1E1C38] border-b border-gray-600">
+                        <h2 class="text-lg font-semibold text-white">Documentation</h2>
+                        <button onclick="closeDocumentationModal()" class="text-gray-400 hover:text-white text-xl">
+                            &times;
+                        </button>
+                    </div>
+
+                    <!-- Contenido Principal -->
+                    <div id="documentation-content" class="p-6 overflow-auto h-full bg-[#2C294E] text-gray-300">
+                        <!-- Aquí se cargará el contenido dinámico -->
+                        <p class="text-gray-400">
+                            Welcome to the documentation! Click on a section to view its details.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="assets/scripts/scripts.js"></script>
+</div>
+
+</html>

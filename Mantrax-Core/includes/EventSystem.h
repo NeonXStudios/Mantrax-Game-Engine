@@ -125,7 +125,6 @@ public:
                 {
                     closestZ = obj.z;
                     closestObject = objD;
-                    std::cout << "Object Found" << std::endl;
                 }
             }
         }

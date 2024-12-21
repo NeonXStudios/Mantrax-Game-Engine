@@ -131,7 +131,7 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
 
 GScriptLua *EntityBinder::find_script(const std::string &script_name)
 {
-    for (Entity *script_get : SceneManager::get_open_scene()->objects_worlds)
+    for (Entity *script_get : SceneManager::get_current_scene()->objects_worlds)
     {
         for (GScriptLua *get_script : script_get->getComponents<GScriptLua>())
         {

@@ -202,7 +202,8 @@ public:
         ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
         if (ImGui::ImageButton((void *)(intptr_t)IconsManager::TRASH(), (ImVec2(16, 16))))
         {
-            owner->removeComponent<T>();
+            owner->removeComponentByID(ID);
+            ImGui::TreePop();
         }
 
         if (treeNodeOpen)

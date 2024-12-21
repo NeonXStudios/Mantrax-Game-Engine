@@ -212,7 +212,7 @@ void MainBar::ShowNewScenePopup()
         if (ImGui::Button("OK", ImVec2(120, 0)))
         {
             // Load the new scene
-            SceneData::load_scene(new_scene_name);
+            SceneManager::load_scene(new_scene_name);
             show_new_scene_popup = false;
             ImGui::CloseCurrentPopup();
         }
@@ -232,13 +232,4 @@ void MainBar::ShowNewScenePopup()
 
     ImGui::SetNextWindowPos(ImVec2(0, main_window_size.y - bar_height));
     ImGui::SetNextWindowSize(ImVec2(main_window_size.x, bar_height));
-
-    ImGui::Begin("Bottom Bar", nullptr,
-                 ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize);
-
-    ImGui::Text("Información: Todo está funcionando correctamente.");
-    ImGui::SameLine();
-    ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
-
-    ImGui::End();
 }

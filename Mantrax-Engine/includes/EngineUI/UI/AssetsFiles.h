@@ -22,4 +22,11 @@ public:
     void drawer_files(std::string extension, std::string filename, std::string file_path_complete);
     void drawer_files_drag(std::string extension, std::string file_name, std::string complete_path = "");
     void on_draw() override;
+
+    bool starts_with(const std::string &str, const std::string &prefix)
+    {
+        if (str.size() < prefix.size())
+            return false;
+        return std::equal(prefix.begin(), prefix.end(), str.begin());
+    }
 };

@@ -42,7 +42,7 @@ public:
   float speed = 0.1f;
   float sensitivity = 100.0f;
 
-  TextureTarget *target_render;
+  TextureTarget *target_render = new TextureTarget();
 
   void update();
 

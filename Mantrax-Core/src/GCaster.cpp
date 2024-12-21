@@ -43,11 +43,11 @@ bool GCaster::LineCast(glm::vec3 RayOrigin, glm::vec3 RayDirection, float Length
 
         const char *shapeName = hit.block.shape->getName();
 
-        if (SceneManager::get_open_scene()->get_entity_by_id_string(shapeName) != nullptr)
+        if (SceneManager::get_current_scene()->get_entity_by_id_string(shapeName) != nullptr)
         {
             hitinfo->point = glm::vec3(hitPosition.x, hitPosition.y, hitPosition.z);
             hitinfo->normal = glm::vec3(hitNormal.x, hitNormal.y, hitNormal.z);
-            hitinfo->entity = SceneManager::get_open_scene()->get_entity_by_id_string(shapeName);
+            hitinfo->entity = SceneManager::get_current_scene()->get_entity_by_id_string(shapeName);
         }
         else
         {

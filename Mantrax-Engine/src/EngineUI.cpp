@@ -43,7 +43,7 @@ void EngineUI::on_edition_mode(float delta_time)
 
     if (ImGui::IsMouseDown(ImGuiMouseButton_Right) && configs->project_select)
     {
-        auto &camera = SceneManager::get_open_scene()->main_camera;
+        auto &camera = SceneManager::get_current_scene()->main_camera;
 
         if (camera != nullptr)
         {
@@ -124,7 +124,7 @@ void EngineUI::on_edition_mode(float delta_time)
         }
     }
 
-    std::string window_name = "Mantrax Editor - " + SceneManager::get_open_scene()->scene_name;
+    std::string window_name = "Mantrax Editor - " + SceneManager::get_current_scene()->scene_name;
 
     Gfx::change_name(window_name);
 
@@ -252,7 +252,7 @@ void EngineUI::draw_ui()
             {
                 if (select_obj != nullptr)
                 {
-                    Entity *new_entity = SceneManager::get_open_scene()->make_entity();
+                    Entity *new_entity = SceneManager::get_current_scene()->make_entity();
 
                     new_entity->get_transform()->Position = select_obj->get_transform()->Position;
                     new_entity->get_transform()->rotation = select_obj->get_transform()->rotation;

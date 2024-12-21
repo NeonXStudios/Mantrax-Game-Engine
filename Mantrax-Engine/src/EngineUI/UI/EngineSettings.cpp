@@ -49,10 +49,10 @@ void EngineSettings::on_draw()
         ImGui::BeginGroup();
         ImGui::Indent(10.0f);
 
-        bool useProjection = SceneManager::get_open_scene()->main_camera->use_projection;
+        bool useProjection = SceneManager::get_current_scene()->main_camera->use_projection;
         if (ImGui::Checkbox("Use Projection", &useProjection))
         {
-            SceneManager::get_open_scene()->main_camera->use_projection = useProjection;
+            SceneManager::get_current_scene()->main_camera->use_projection = useProjection;
         }
         if (ImGui::IsItemHovered())
         {

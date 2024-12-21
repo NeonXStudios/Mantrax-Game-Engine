@@ -1,4 +1,10 @@
 #include <UIMasterDrawer.h>
+#include <imgui.h>
+#include <imgui_internal.h>
+
+#include <vector>
+#include <string>
+#include <optional>
 
 void UIMasterDrawer::register_uis()
 {

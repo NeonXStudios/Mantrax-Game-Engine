@@ -23,11 +23,11 @@ public:
 
     static SceneManager *get_scene_manager();
     static string *get_open_scene_name();
-    static Scene *get_open_scene();
     static Scene *get_current_scene();
     static void start_physic_world();
     static void load_scene(std::string scene_name_new, bool is_additive = false);
     static void link_scene(Scene *scene_to_link);
+    static Scene *make_new_empty_scene(std::string scene_name);
 
     static void on_awake();
     static void on_start();

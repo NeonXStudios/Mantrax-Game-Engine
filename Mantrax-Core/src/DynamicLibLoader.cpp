@@ -121,7 +121,7 @@ void DynamicLibLoader::load_components(std::string _path)
             return;
         }
 
-        Scene *scene = SceneManager::get_open_scene();
+        Scene *scene = SceneManager::get_current_scene();
         func_graphics(SceneManager::get_scene_manager(), Gfx::get_game_window(), &Timer::delta_time);
     }
     catch (const std::exception &e)

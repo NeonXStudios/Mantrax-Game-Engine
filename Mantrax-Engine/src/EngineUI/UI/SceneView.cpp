@@ -37,9 +37,6 @@ void SceneView::on_draw()
         {
             WorldPoint = EventSystem::screen_to_viewport(glm::vec2(p.x, p.y), glm::vec2(Gfx::render_width, Gfx::render_height));
 
-            std::cout << "X: " << WorldPoint.x << std::endl;
-            std::cout << "Y: " << WorldPoint.y << std::endl;
-
             if (EventSystem::MouseCast2D(WorldPoint, data))
             {
                 if (EngineUI::getInstance().select_obj != data->object)
@@ -156,8 +153,8 @@ void SceneView::on_draw()
             parentMatrix = transform->parent->get_matrix();
         }
 
-        float *projection = (float *)glm::value_ptr(SceneManager::get_open_scene()->main_camera->GetProjectionMatrix());
-        float *view = (float *)glm::value_ptr(SceneManager::get_open_scene()->main_camera->GetView());
+        float *projection = (float *)glm::value_ptr(SceneManager::get_current_scene()->main_camera->GetProjectionMatrix());
+        float *view = (float *)glm::value_ptr(SceneManager::get_current_scene()->main_camera->GetView());
 
         ImGuizmo::SetRect(p.x, p.y, Gfx::render_width, Gfx::render_height);
 
@@ -269,13 +266,13 @@ void SceneView::on_draw()
 
     if (ImGui::IsKeyDown(ImGuiKey_Delete))
     {
-        SceneManager::get_open_scene()->destroy(EngineUI::getInstance().select_obj);
+        SceneManager::get_current_scene()->destroy(EngineUI::getInstance().select_obj);
         EngineUI::getInstance().select_obj = nullptr;
     }
 
     if (ImGui::IsWindowHovered() && ImGui::IsKeyDown(ImGuiKey_F) && EngineUI::getInstance().select_obj != nullptr)
     {
-        SceneManager::get_open_scene()->main_camera->cameraPosition = EngineUI::getInstance().select_obj->get_transform()->Position;
+        SceneManager::get_current_scene()->main_camera->cameraPosition = EngineUI::getInstance().select_obj->get_transform()->Position;
     }
 
     ImGui::End();
@@ -289,7 +286,7 @@ void SceneView::on_draw()
     Camera *camera_with_max_depth = nullptr;
     float max_depth = -1.0f;
 
-    for (Entity *ent : SceneManager::get_open_scene()->objects_worlds)
+    for (Entity *ent : SceneManager::get_current_scene()->objects_worlds)
     {
         if (ent->hasComponent<GCamera>())
         {

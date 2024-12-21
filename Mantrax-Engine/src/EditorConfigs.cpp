@@ -12,8 +12,8 @@ void EditorConfigs::save_config()
 {
     json settings;
 
-    settings["current_scene"] = SceneManager::get_open_scene()->scene_name;
-    settings["camera_state"] = SceneManager::get_open_scene()->main_camera->use_projection;
+    settings["current_scene"] = SceneManager::get_current_scene()->scene_name;
+    settings["camera_state"] = SceneManager::get_current_scene()->main_camera->use_projection;
     settings["settings_render"] = RenderPipeline::layers_to_render;
 
     settings["start_scene"] = start_scene;
@@ -61,7 +61,7 @@ void EditorConfigs::load_config()
         UIStyle::SetStyleUI(Dark);
     }
 
-    if (SceneManager::get_open_scene()->main_camera == nullptr)
+    if (SceneManager::get_current_scene()->main_camera == nullptr)
     {
         std::cout << "Main camera its null" << std::endl;
         return;
@@ -78,5 +78,5 @@ void EditorConfigs::load_config()
         RenderPipeline::layers_to_render.insert(item.get<int>());
     }
 
-    VarVerify::set_value_if_exists(settings, "camera_state", SceneManager::get_open_scene()->main_camera->use_projection);
+    VarVerify::set_value_if_exists(settings, "camera_state", SceneManager::get_current_scene()->main_camera->use_projection);
 }
