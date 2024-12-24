@@ -42,19 +42,16 @@ void AssetsFiles::on_draw()
             }
         }
 
-        // Botón para abrir el workspace de Visual Studio Code
         if (ImGui::Button("Open Visual Code Work Space", ImVec2(-1, 30)))
         {
             std::filesystem::current_path(FileManager::get_game_path() + "/");
             std::string open_command = "code . " + FileManager::get_project_path() + "/clscpp";
             int result = system(open_command.c_str());
-            // Opcional: Manejar el resultado si es necesario
         }
     }
 
     ImGui::End();
 
-    // Mostrar información del activo seleccionado
     if (asset_selected)
     {
         ImGui::Begin("Asset Info");
@@ -134,10 +131,8 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
             // Dibujar el icono de carpeta
             EditorGUI::DrawIcon(IconsManager::FOLDER());
 
-            // Crear un nodo de árbol para la carpeta
             bool node_open = ImGui::TreeNodeEx(entry.path().filename().string().c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
 
-            // Configurar el Drag Source para la carpeta
             if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
             {
                 std::string path_str = entry.path().string();
@@ -146,7 +141,6 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
                 ImGui::EndDragDropSource();
             }
 
-            // Configurar el Drop Target para la carpeta
             if (ImGui::BeginDragDropTarget())
             {
                 if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("DND_FOLDER"))
@@ -155,17 +149,14 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
                     std::filesystem::path source_path(src_path_cstr);
                     std::filesystem::path dest_path = entry.path();
 
-                    // Convertir paths a strings para la comparación
                     std::string source_str = source_path.string();
                     std::string dest_str = dest_path.string();
 
-                    // Validar que no se mueva una carpeta dentro de sí misma o de sus subcarpetas
                     if (dest_path != source_path && !starts_with(dest_str, source_str + "/") && !starts_with(dest_str, source_str + "\\"))
                     {
                         try
                         {
                             std::filesystem::rename(source_path, dest_path / source_path.filename());
-                            // Opcional: Actualizar la UI después de mover
                         }
                         catch (const std::filesystem::filesystem_error &e)
                         {
@@ -182,7 +173,6 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
                     try
                     {
                         std::filesystem::rename(source_path, dest_path / source_path.filename());
-                        // Opcional: Actualizar la UI después de mover
                     }
                     catch (const std::filesystem::filesystem_error &e)
                     {
@@ -192,15 +182,12 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
                 ImGui::EndDragDropTarget();
             }
 
-            // Manejar la selección y doble clic para la carpeta
             if (node_open)
             {
-                // Recursivamente mostrar el contenido de la carpeta
                 ShowDirectoryTree(entry.path());
                 ImGui::TreePop();
             }
 
-            // Manejar el doble clic para seleccionar la carpeta
             if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
             {
                 double current_time = ImGui::GetTime();
@@ -221,7 +208,6 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
         }
         else
         {
-            // Determinar el icono según la extensión
             std::string extension = entry.path().extension().string();
             if (extension == ".lua")
                 EditorGUI::DrawIcon(IconsManager::LUA());
@@ -239,6 +225,7 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
                 EditorGUI::DrawIcon(IconsManager::UNKNOWN());
 
             bool is_selected = (selected_item == entry.path().string());
+
             if (entry.path().extension() != ".garin")
             {
                 if (ImGui::Selectable(entry.path().filename().string().c_str(), is_selected))
@@ -273,6 +260,8 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
                     ImGui::EndDragDropSource();
                 }
             }
+
+            drawer_files_drag(entry.path().extension().string(), entry.path().stem().string(), entry.path().string());
         }
     }
 }

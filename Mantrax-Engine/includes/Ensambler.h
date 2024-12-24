@@ -13,11 +13,9 @@ public:
             std::string directoryPath = FileManager::get_project_path() + "clscpp/";
             std::string outputFilePath = FileManager::get_project_path() + "wlibsgpp/GameLibsLoader.h";
 
-            // Limpia el archivo de salida
             std::ofstream clearFile(outputFilePath, std::ofstream::out | std::ofstream::trunc);
             clearFile.close();
 
-            // Procesa archivos de encabezado
             process_header_files(directoryPath, outputFilePath);
 
             std::string register_core = FileManager::get_project_path() + "wlibsgpp/GarinGameCore.cpp";
@@ -31,6 +29,9 @@ public:
             }
 
             UINotification::AddNotification("Recompiling libraries...", 10.0f);
+
+            std::string cmake_engine = FileManager::get_execute_path() + "data/compilers/CMake/bin/cmake";
+            std::string msbuild_engine = FileManager::get_execute_path() + "data/compilers/MSBuild/Current/Bin/MSBuild";
 
             std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/";
             std::string cmake_command = "cd /d " + cmake_path + " && if not exist bin mkdir bin && cd bin && cmake ..";

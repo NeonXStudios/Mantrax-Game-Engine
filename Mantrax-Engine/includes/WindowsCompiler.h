@@ -368,6 +368,9 @@ public:
 
         try
         {
+            std::string cmake_engine = FileManager::get_execute_path() + "data/compilers/CMake/bin/cmake";
+            std::string msbuild_engine = FileManager::get_execute_path() + "data/compilers/MSBuild/Current/Bin/MSBuild";
+
             std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/Compiler-Lib/GarinEditorEngine/";
             std::string cmake_command = "cd /d " + cmake_path + " && cmake -G \"Visual Studio 17 2022\" .";
             std::string msbuild_command = "cd /d " + cmake_path + " && msbuild GarinEngine.sln /p:Configuration=Debug";

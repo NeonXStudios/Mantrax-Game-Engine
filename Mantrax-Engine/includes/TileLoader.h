@@ -36,22 +36,20 @@ public:
     int mapWidth = 16;
     int mapHeight = 16;
 
-    int tilemap[16][16]; // Matriz de tiles
+    int tilemap[16][16];
 
     TileLoader()
     {
-        // Inicializar el mapa con un valor de ejemplo
         resetTilemap();
     }
 
     void resetTilemap()
     {
-        // Inicializar el tilemap con algunos valores por defecto
         for (int y = 0; y < mapHeight; ++y)
         {
             for (int x = 0; x < mapWidth; ++x)
             {
-                tilemap[y][x] = (x + y) % 4; // Ejemplo simple para ilustrar
+                tilemap[y][x] = (x + y) % 4;
             }
         }
     }

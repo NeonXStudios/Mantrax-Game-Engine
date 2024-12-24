@@ -4,9 +4,39 @@ const https = require('https');
 const path = require('path');
 const unzipper = require('unzipper');
 const { exec } = require('child_process');
+const os = require('os');
 
 let mainWindow;
 const configPath = path.join(app.getPath('userData'), 'config.json');
+const cachePath = path.join(app.getPath('userData'), 'MantraxData/');
+const programFiles = process.env['PROGRAMFILES'] || 'C:\\Program Files';
+const homeDir = os.homedir();
+
+const documentosDir = path.join(homeDir, 'Documents/MantraxProyects');
+
+const defaultConfig = {
+    theme: 'dark',
+    language: 'en',
+    projectPath: documentosDir,
+    advancedSettings: {},
+    enginePath: ''
+};
+
+
+function ensureDirectoryExists(dirPath) {
+    try {
+        if (!fs.existsSync(dirPath)) {
+            fs.mkdirSync(dirPath, { recursive: true });
+            console.log(`Directorio creado: ${dirPath}`);
+        } else {
+            console.log(`El directorio ya existe: ${dirPath}`);
+        }
+    } catch (error) {
+        console.error(`Error al verificar/crear el directorio: ${error}`);
+    }
+}
+
+ensureDirectoryExists(documentosDir);
 
 
 function loadConfig() {
@@ -19,7 +49,8 @@ function loadConfig() {
     } catch (error) {
         console.error('Error reading config file:', error);
     }
-    return {};
+
+    return defaultConfig;
 }
 
 ipcMain.handle('load-config', () => {
@@ -36,7 +67,7 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 1500,
         height: 800,
-        resizable: true,
+        resizable: false,
         maximizable: false,
         minimizable: false,
         roundedCorners: true,
@@ -59,7 +90,7 @@ function createWindow() {
         mainWindow.webContents.send('load-config', config);
     });
 
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 }
 
 app.on('closed', () => {
@@ -120,9 +151,11 @@ ipcMain.on('open-engine', async (event, programPath, parameter) => {
                     const stackTrace = new Error().stack;
                     fs.appendFileSync(logFilePath, `[${new Date().toISOString()}] Error al ejecutar: ${error.message}\nStacktrace:\n${stackTrace}\n`);
                 }
+
                 if (stderr) {
                     console.error(`Salida de error: ${stderr}`);
                 }
+
                 if (stdout) {
                     console.log(`Salida estándar: ${stdout}`);
                 }
@@ -131,20 +164,17 @@ ipcMain.on('open-engine', async (event, programPath, parameter) => {
 
         const logFilePath = path.join(programDirectory, 'engine-crash.log');
 
-        // Captura de datos de stderr
         childProcess.stderr.on('data', (data) => {
             console.error(`Error: ${data}`);
             const stackTrace = new Error().stack;
             fs.appendFileSync(logFilePath, `[${new Date().toISOString()}] STDERR: ${data}\nStacktrace:\n${stackTrace}\n`);
         });
 
-        // Captura de datos de stdout
         childProcess.stdout.on('data', (data) => {
             console.log(`Salida estándar: ${data}`);
             fs.appendFileSync(logFilePath, `[${new Date().toISOString()}] STDOUT: ${data}\n`);
         });
 
-        // Manejo de cierre del proceso
         childProcess.on('close', (code) => {
             console.log(`Proceso finalizado con código: ${code}`);
             if (code !== 0) {
@@ -219,16 +249,19 @@ function extractZip(zipFilePath, outputDir, progressCallback) {
 }
 
 ipcMain.on('download-engine', (event, downloadUrl) => {
-    const downloadsPath = app.getPath('downloads');
+    const downloadsPath = app.getPath('temp');
     const filePath = path.join(downloadsPath, 'engine.zip');
-    const extractPath = path.join(downloadsPath, 'editor');
+
+
+    const homeDir = os.homedir();
+    const drive = path.parse(homeDir).root;
+    const extractPath = path.join(drive, 'MantraxEngine');
 
     const file = fs.createWriteStream(filePath);
     let receivedBytes = 0;
     let totalBytes = 0;
     let startTime = Date.now();
 
-    // Descargar el archivo ZIP
     https.get(downloadUrl, (response) => {
         if (response.statusCode !== 200) {
             event.reply('download-error', `Error en la descarga: ${response.statusCode}`);
@@ -260,7 +293,8 @@ ipcMain.on('download-engine', (event, downloadUrl) => {
                     event.reply('extract-progress', progress);
                 });
 
-                event.reply('download-complete', extractPath);
+                const normalizedPath = extractPath.replace(/\\/g, '/');
+                event.reply('download-complete', `${normalizedPath}/Mantrax_Engine.exe`);
             } catch (err) {
                 event.reply('download-error', `Error al extraer: ${err.message}`);
             }
@@ -356,7 +390,7 @@ ipcMain.on('create-project', async (event, data) => {
                 event.reply('extract-progress', progress);
             });
 
-            event.reply('download-complete', pathToCreate);
+            event.reply('extract-complete', pathToCreate);
         }
 
         event.sender.send('create-project-success', { message: 'Proyecto creado exitosamente' });
