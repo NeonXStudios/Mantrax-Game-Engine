@@ -42,20 +42,14 @@ int start_engine(int argc, char *arvg[])
         return -2;
     }
 
-    AppSettings::is_playing = true;
-
     audioManager->create();
     audioManager->StartSystem();
-
-    lib_loader->create();
 
     sceneManager->create();
 
     EngineUI *scene_game = &EngineUI::getInstance();
 
     scene_game->configs = new EditorConfigs();
-
-    // SceneManager::get_scene_manager()->OpenScene = scene_game;
 
     settings_window window_config = settings_window();
     window_config.window_name = "Mantrax Engine";
@@ -64,6 +58,8 @@ int start_engine(int argc, char *arvg[])
     window_config.maximized = true;
 
     Gfx::create_windows(window_config);
+    SceneManager::on_awake();
+    scene_game->awake();
 
     scene_game->configs->project_select = true;
     fs::path project_path = fs::path(arvg[1]);
@@ -71,19 +67,18 @@ int start_engine(int argc, char *arvg[])
     scene_game->configs->current_proyect = project_path.string() + "/";
     FileManager::game_path = scene_game->configs->current_proyect;
 
+    SceneManager::load_scene(scene_game->configs->start_scene);
+
     RenderPipeline::init();
-    SceneManager::get_current_scene()->awake();
+    SceneManager::on_awake();
+    std::cout << "************************" << std::endl;
 
     scene_game->configs->load_config();
 
-    DynamicLibLoader::instance->load_components(project_path.string() + "/");
+    scene_game->on_start();
+    SceneManager::on_start();
 
-    while (DynamicLibLoader::instance->dll_in_recompile == false)
-    {
-        std::cout << "DLL NOT LOADED WAIT..." << std::endl;
-    }
-
-    SceneManager::get_current_scene()->init();
+    AppSettings::is_playing = false;
 
     while (!Gfx::try_window_close())
     {
@@ -91,14 +86,13 @@ int start_engine(int argc, char *arvg[])
         Gfx::timer_control();
         Gfx::process_window_size();
 
-        SceneManager::get_current_scene()->update(Timer::delta_time);
-
         RenderPipeline::render();
+        SceneManager::on_update();
 
         Gfx::swap_buffer();
     }
 
-    SceneManager::get_current_scene()->on_destroy();
+    SceneManager::on_clean_scenes();
     Gfx::clear_graphics();
     sceneManager->release();
     audioManager->release();

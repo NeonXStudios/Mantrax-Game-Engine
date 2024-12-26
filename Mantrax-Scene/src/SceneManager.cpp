@@ -23,7 +23,7 @@ void SceneManager::on_start()
 {
     for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
     {
-        scn->on_start();
+        scn->init();
     }
 }
 
@@ -33,7 +33,7 @@ void SceneManager::on_update()
 
     for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
     {
-        scn->on_update(Timer::delta_time);
+        scn->update(Timer::delta_time);
     }
 }
 

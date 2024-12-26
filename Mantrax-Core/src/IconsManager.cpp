@@ -25,6 +25,7 @@ void IconsManager::init()
     IconsManager::icons->cpp_script_icon = new TextureManager(FileManager::get_execute_path() + "icons/CPP.png");
     IconsManager::icons->trash_icon = new TextureManager(FileManager::get_execute_path() + "icons/trash.png");
     IconsManager::icons->engine_logo = new TextureManager(FileManager::get_execute_path() + "icons/engine.png");
+    IconsManager::icons->shader_logo = new TextureManager(FileManager::get_execute_path() + "icons/Shader.png");
 
     std::cout << "ICONS MANAGER SETUP CORRECTLY" << std::endl;
 }
@@ -32,6 +33,11 @@ void IconsManager::init()
 unsigned int IconsManager::ENGINE_LOGO()
 {
     return IconsManager::icons->engine_logo->get_texture();
+}
+
+unsigned int IconsManager::SHADER()
+{
+    return IconsManager::icons->shader_logo->get_texture();
 }
 
 unsigned int IconsManager::TRASH()

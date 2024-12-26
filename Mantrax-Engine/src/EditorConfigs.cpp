@@ -60,6 +60,18 @@ void EditorConfigs::load_config()
     {
         UIStyle::SetStyleUI(Dark);
     }
+    else if (current_theme == "Grey")
+    {
+        UIStyle::SetStyleUI(Grey);
+    }
+    else if (current_theme == "WhiteY")
+    {
+        UIStyle::SetStyleUI(WhiteY);
+    }
+    else if (current_theme == "DarkGrey")
+    {
+        UIStyle::SetStyleUI(DarkGrey);
+    }
 
     if (SceneManager::get_current_scene()->main_camera == nullptr)
     {

@@ -161,6 +161,21 @@ void MainBar::on_draw()
                 UIStyle::SetStyleUI(Dark);
                 EngineUI::getInstance().configs->current_theme = "Dark";
             }
+            if (ImGui::MenuItem("Grey"))
+            {
+                UIStyle::SetStyleUI(Grey);
+                EngineUI::getInstance().configs->current_theme = "Grey";
+            }
+            if (ImGui::MenuItem("WhiteY"))
+            {
+                UIStyle::SetStyleUI(WhiteY);
+                EngineUI::getInstance().configs->current_theme = "WhiteY";
+            }
+            if (ImGui::MenuItem("DarkGrey"))
+            {
+                UIStyle::SetStyleUI(DarkGrey);
+                EngineUI::getInstance().configs->current_theme = "DarkGrey";
+            }
             ImGui::EndMenu();
         }
     }

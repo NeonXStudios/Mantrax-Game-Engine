@@ -62,7 +62,7 @@ void Hierarchy::draw_entity_node(Entity *entity)
 
     bool has_children = !entity->get_transform()->childrens.empty();
 
-    EditorGUI::DrawIcon(IconsManager::ENTITY());
+    EditorGUI::DrawIcon(IconsManager::ENTITY(), ImVec2(16, 16));
 
     if (has_children)
     {

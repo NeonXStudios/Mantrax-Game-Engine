@@ -26,8 +26,10 @@ public:
     TextureManager *cpp_script_icon;
     TextureManager *trash_icon;
     TextureManager *engine_logo;
+    TextureManager *shader_logo;
 
     static unsigned int ENGINE_LOGO();
+    static unsigned int SHADER();
     static unsigned int FLOAT();
     static unsigned int TRASH();
     static unsigned int INT();

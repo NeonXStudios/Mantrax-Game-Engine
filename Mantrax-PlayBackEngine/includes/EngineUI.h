@@ -12,7 +12,6 @@
 #include <Core.h>
 #include <mutex>
 #include <sstream>
-#include <CSCompiler.h>
 #include <EditorConfigs.h>
 
 class Drawer;
@@ -36,7 +35,6 @@ public:
 
     Entity *select_obj;
     EditorConfigs *configs;
-    CSCompiler *cs = new CSCompiler();
 
     bool first_frame_loaded_on_bucle;
 

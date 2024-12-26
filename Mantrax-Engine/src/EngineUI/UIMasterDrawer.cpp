@@ -20,8 +20,8 @@ void UIMasterDrawer::register_uis()
     ADD_UI_BEHAVIOUR(CompilerView);
 
     get_component<CompilerView>()->is_open = false;
+    get_component<FileBar>()->is_open = false;
     get_component<Hierarchy>()->is_open = true;
-    get_component<FileBar>()->is_open = true;
     get_component<AssetsFiles>()->is_open = true;
     get_component<Inspector>()->is_open = true;
     get_component<SceneView>()->is_open = true;

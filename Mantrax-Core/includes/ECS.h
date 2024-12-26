@@ -467,7 +467,6 @@ public:
 		c->entity = this;
 		c->transform = transform_component;
 		c->component_id = IDGenerator::generate_id_component();
-		// c->component_id = getComponentTypeID<T>();
 		components.emplace_back(c);
 
 		componentArray[c->component_id] = c;
@@ -476,7 +475,6 @@ public:
 		if (c->enabled)
 		{
 			c->defines();
-			// c->init();
 		}
 		return *c;
 	}
@@ -556,9 +554,8 @@ public:
 		return false;
 	}
 
-	bool removeComponentByID(int id)
+	bool remove_component_by_id(int id)
 	{
-		// Validación inicial
 		if (id < 0 || id >= componentBitset.size())
 		{
 			std::cerr << "Error: ID fuera de rango en removeComponentByID: " << id << std::endl;

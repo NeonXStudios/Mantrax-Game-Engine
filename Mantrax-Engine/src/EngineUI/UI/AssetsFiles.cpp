@@ -1,14 +1,66 @@
 #include <AssetsFiles.h>
 #include <EditorGUI.h>
 #include <SceneData.h>
+#include <IconsManager.h>
+#include <FileManager.h>
+#include <AppSettings.h>
+#include <TextureManager.h>
+#include <GarinIO.h>
+
+#include <imgui.h>
+#include <filesystem>
+#include <iostream>
+#include <memory>
+
+static std::unordered_map<std::string, std::unique_ptr<TextureManager>> s_ThumbnailCache;
+
+// Función auxiliar para obtener el texture ID (miniatura)
+static GLuint GetThumbnailTextureID(const std::string &path)
+{
+    auto it = s_ThumbnailCache.find(path);
+    if (it == s_ThumbnailCache.end())
+    {
+        // No está en la caché, cargarlo
+        try
+        {
+            auto texMgr = std::make_unique<TextureManager>(path);
+            GLuint texId = texMgr->get_texture();
+            if (!texId)
+                return 0; // Error al cargar
+
+            s_ThumbnailCache[path] = std::move(texMgr);
+            return texId;
+        }
+        catch (...)
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        // Ya estaba cacheado
+        return it->second->get_texture();
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////
+// on_draw: Dibuja la ventana de "Assets" con dos TreeNodes principales:
+//          1) assets
+//          2) clscpp
+//
+// Además, muestra un panel "Asset Info" si hay un asset seleccionado.
+//////////////////////////////////////////////////////////////////////////
 
 void AssetsFiles::on_draw()
 {
+    // Ventana principal de "Assets"
     ImGui::Begin("Assets", &is_open);
     {
+        // 1) Muestra el árbol (tipo carpeta) de la ruta /assets
         ShowDirectoryTree(FileManager::get_project_path() + "/assets");
 
-        if (ImGui::IsWindowHovered())
+        // Menú contextual al hacer clic derecho en el área vacía (ventana hovered)
+        if (ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows))
         {
             if (ImGui::BeginPopupContextWindow("AssetsPopup", ImGuiMouseButton_Right))
             {
@@ -16,7 +68,6 @@ void AssetsFiles::on_draw()
                 {
                     show_script_popup = true;
                 }
-
                 if (ImGui::MenuItem("Create Scene"))
                 {
                     std::cout << "Crear Escena seleccionado" << std::endl;
@@ -30,7 +81,7 @@ void AssetsFiles::on_draw()
     {
         ShowDirectoryTree(FileManager::get_project_path() + "/clscpp");
 
-        if (ImGui::IsWindowHovered())
+        if (ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows))
         {
             if (ImGui::BeginPopupContextWindow("AssetsPopup", ImGuiMouseButton_Right))
             {
@@ -47,6 +98,7 @@ void AssetsFiles::on_draw()
             std::filesystem::current_path(FileManager::get_game_path() + "/");
             std::string open_command = "code . " + FileManager::get_project_path() + "/clscpp";
             int result = system(open_command.c_str());
+            (void)result;
         }
     }
 
@@ -60,28 +112,29 @@ void AssetsFiles::on_draw()
         std::string asset_type = "Asset Type: " + asset_selected_struct->asset_type;
         std::string asset_complete_path = "Asset Complete Path: " + asset_selected_struct->asset_complete_path;
 
-        ImGui::Text(asset_name.c_str());
-        ImGui::Text(asset_type.c_str());
-        ImGui::Text(asset_complete_path.c_str());
+        ImGui::TextUnformatted(asset_name.c_str());
+        ImGui::TextUnformatted(asset_type.c_str());
+        ImGui::TextUnformatted(asset_complete_path.c_str());
 
-        // Mostrar preview de imágenes si el activo es una imagen
+        // Si el asset es una imagen (png o jpg), mostrar un preview
         if (asset_selected_struct->asset_type == ".png" || asset_selected_struct->asset_type == ".jpg")
         {
             static std::unique_ptr<TextureManager> texture_manager = nullptr;
             static std::string last_loaded_path;
 
+            // Cargar la textura si no está cargada o cambió la ruta
             if (!texture_manager || last_loaded_path != asset_selected_struct->asset_complete_path)
             {
+                // Liberar la anterior
                 if (texture_manager)
                 {
                     GLuint old_texture = texture_manager->get_texture();
                     if (old_texture)
-                    {
                         glDeleteTextures(1, &old_texture);
-                    }
                     texture_manager.reset();
                 }
 
+                // Cargar nueva
                 try
                 {
                     texture_manager = std::make_unique<TextureManager>(asset_selected_struct->asset_complete_path);
@@ -90,7 +143,7 @@ void AssetsFiles::on_draw()
                     GLuint new_texture = texture_manager->get_texture();
                     if (!new_texture)
                     {
-                        ImGui::Text("Error: No se pudo crear la textura.");
+                        ImGui::TextUnformatted("Error: No se pudo crear la textura.");
                     }
                 }
                 catch (const std::exception &e)
@@ -99,18 +152,18 @@ void AssetsFiles::on_draw()
                 }
             }
 
+            // Mostrar la textura si la tenemos
             if (texture_manager)
             {
                 GLuint texture_id = texture_manager->get_texture();
                 if (texture_id)
                 {
-                    ImGui::Text("Preview:");
-                    ImVec2 texture_size = ImVec2(200, 200);
-                    ImGui::Image((void *)(intptr_t)texture_id, texture_size);
+                    ImGui::TextUnformatted("Preview:");
+                    ImGui::Image((void *)(intptr_t)texture_id, ImVec2(200, 200));
                 }
                 else
                 {
-                    ImGui::Text("Error: Textura no válida.");
+                    ImGui::TextUnformatted("Error: Textura no válida.");
                 }
             }
         }
@@ -118,6 +171,11 @@ void AssetsFiles::on_draw()
         ImGui::End();
     }
 }
+
+//////////////////////////////////////////////////////////////////////////
+// ShowDirectoryTree: Recorre un directorio y muestra su contenido en
+// TreeNodes. Soporta drag & drop de carpetas y archivos, doble clic, etc.
+//////////////////////////////////////////////////////////////////////////
 
 void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
 {
@@ -128,11 +186,14 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
     {
         if (entry.is_directory())
         {
-            // Dibujar el icono de carpeta
+            // Ícono de carpeta
             EditorGUI::DrawIcon(IconsManager::FOLDER());
 
-            bool node_open = ImGui::TreeNodeEx(entry.path().filename().string().c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
+            bool node_open = ImGui::TreeNodeEx(
+                entry.path().filename().string().c_str(),
+                ImGuiTreeNodeFlags_OpenOnArrow);
 
+            // --- Drag & Drop para carpetas ---
             if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
             {
                 std::string path_str = entry.path().string();
@@ -140,7 +201,6 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
                 ImGui::Text("Mover carpeta: %s", entry.path().filename().string().c_str());
                 ImGui::EndDragDropSource();
             }
-
             if (ImGui::BeginDragDropTarget())
             {
                 if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("DND_FOLDER"))
@@ -149,19 +209,14 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
                     std::filesystem::path source_path(src_path_cstr);
                     std::filesystem::path dest_path = entry.path();
 
-                    std::string source_str = source_path.string();
-                    std::string dest_str = dest_path.string();
-
-                    if (dest_path != source_path && !starts_with(dest_str, source_str + "/") && !starts_with(dest_str, source_str + "\\"))
+                    try
                     {
-                        try
-                        {
+                        if (dest_path != source_path)
                             std::filesystem::rename(source_path, dest_path / source_path.filename());
-                        }
-                        catch (const std::filesystem::filesystem_error &e)
-                        {
-                            std::cerr << "Error al mover carpeta: " << e.what() << std::endl;
-                        }
+                    }
+                    catch (const std::filesystem::filesystem_error &e)
+                    {
+                        std::cerr << "Error al mover carpeta: " << e.what() << std::endl;
                     }
                 }
                 else if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("DND_FILE"))
@@ -182,22 +237,17 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
                 ImGui::EndDragDropTarget();
             }
 
-            if (node_open)
-            {
-                ShowDirectoryTree(entry.path());
-                ImGui::TreePop();
-            }
-
+            // --- Clic (simple/doble) ---
             if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
             {
                 double current_time = ImGui::GetTime();
                 if (current_time - last_click_time <= double_click_time)
                 {
+                    // Doble clic
                     selected_item = entry.path().string();
                     std::filesystem::path selected_path(selected_item);
                     std::string extension = selected_path.extension().string();
                     std::string base_name = selected_path.stem().string();
-
                     drawer_files(extension, base_name, entry.path().string());
                 }
                 else
@@ -205,40 +255,62 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
                     last_click_time = current_time;
                 }
             }
+
+            if (node_open)
+            {
+                ShowDirectoryTree(entry.path());
+                ImGui::TreePop();
+            }
         }
         else
         {
+            // Determinar la extensión
             std::string extension = entry.path().extension().string();
-            if (extension == ".lua")
+
+            if (extension == ".png" || extension == ".jpg")
+            {
+                GLuint thumbID = GetThumbnailTextureID(entry.path().string());
+                if (thumbID)
+                {
+                    ImGui::Image(reinterpret_cast<void *>(static_cast<intptr_t>(thumbID)), ImVec2(24, 24));
+                    ImGui::SameLine();
+                }
+                else
+                {
+                    EditorGUI::DrawIcon(IconsManager::UNKNOWN());
+                }
+            }
+            else if (extension == ".lua")
                 EditorGUI::DrawIcon(IconsManager::LUA());
             else if (extension == ".scene")
                 EditorGUI::DrawIcon(IconsManager::SCENE());
             else if (extension == ".fbx")
                 EditorGUI::DrawIcon(IconsManager::MODEL());
-            else if (extension == ".png" || extension == ".jpg")
-                EditorGUI::DrawIcon(IconsManager::UNKNOWN());
             else if (extension == ".h" || extension == ".cpp" || extension == ".json" || extension == ".txt")
                 EditorGUI::DrawIcon(IconsManager::CPP());
             else if (extension == ".wav" || extension == ".mp3")
                 EditorGUI::DrawIcon(IconsManager::SOUND());
+            else if (extension == ".glsl" || extension == ".vert" || extension == ".frag" || extension == ".shader" || extension == ".slab")
+                EditorGUI::DrawIcon(IconsManager::SHADER());
             else if (extension != ".garin")
                 EditorGUI::DrawIcon(IconsManager::UNKNOWN());
 
+            // Comprobar si este archivo está seleccionado
             bool is_selected = (selected_item == entry.path().string());
 
+            // Evitamos mostrar .garin
             if (entry.path().extension() != ".garin")
             {
+                // Dibujar un Selectable con el nombre
                 if (ImGui::Selectable(entry.path().filename().string().c_str(), is_selected))
                 {
                     selected_item = entry.path().string();
-                    std::filesystem::path selected_path(selected_item);
 
+                    // Manejo del doble clic
                     double current_time = ImGui::GetTime();
                     if (current_time - last_click_time <= double_click_time)
                     {
-                        std::string extension = selected_path.extension().string();
-                        std::string base_name = selected_path.stem().string();
-
+                        std::string base_name = entry.path().stem().string();
                         drawer_files(extension, base_name, entry.path().string());
                     }
                     else
@@ -246,12 +318,14 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
                         last_click_time = current_time;
                     }
 
+                    // Actualizar info del asset
                     asset_selected = true;
-                    asset_selected_struct->asset_name = selected_path.stem().string();
-                    asset_selected_struct->asset_type = selected_path.extension().string();
-                    asset_selected_struct->asset_complete_path = selected_path.string();
+                    asset_selected_struct->asset_name = entry.path().stem().string();
+                    asset_selected_struct->asset_type = extension;
+                    asset_selected_struct->asset_complete_path = entry.path().string();
                 }
 
+                // Drag & drop (mover archivo)
                 if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
                 {
                     std::string path_str = entry.path().string();
@@ -261,10 +335,16 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
                 }
             }
 
-            drawer_files_drag(entry.path().extension().string(), entry.path().stem().string(), entry.path().string());
+            // Lógica extra para arrastrar a otras partes
+            drawer_files_drag(extension,
+                              entry.path().stem().string(),
+                              entry.path().string());
         }
     }
 }
+//////////////////////////////////////////////////////////////////////////
+// drawer_files: Lógica para abrir/ejecutar archivos (escenas, scripts, etc.)
+//////////////////////////////////////////////////////////////////////////
 
 void AssetsFiles::drawer_files(std::string extension, std::string file_name, std::string file_path_complete)
 {
@@ -278,20 +358,27 @@ void AssetsFiles::drawer_files(std::string extension, std::string file_name, std
     else if (extension == ".slab" || extension == ".lua" || extension == ".glsl")
     {
         std::filesystem::current_path(FileManager::get_game_path() + "/assets/");
-
         std::string open_command = "code . " + file_path_complete;
-
         int result = system(open_command.c_str());
+        (void)result;
     }
     else if (extension == ".h")
     {
         std::filesystem::current_path(FileManager::get_game_path() + "/");
         std::string open_command = "code . " + file_path_complete;
         int result = system(open_command.c_str());
+        (void)result;
     }
+    // etc. (puedes expandir la lógica para otras extensiones)
 }
 
-void AssetsFiles::drawer_files_drag(std::string extension, std::string file_name, std::string complete_path)
+//////////////////////////////////////////////////////////////////////////
+// drawer_files_drag: Lógica de arrastre para distintos tipos de archivos
+//////////////////////////////////////////////////////////////////////////
+
+void AssetsFiles::drawer_files_drag(std::string extension,
+                                    std::string file_name,
+                                    std::string complete_path)
 {
     if (extension == ".fbx" || extension == ".obj" || extension == ".dae")
     {
@@ -304,10 +391,6 @@ void AssetsFiles::drawer_files_drag(std::string extension, std::string file_name
     else if (extension == ".png" || extension == ".jpg")
     {
         EditorGUI::Drag("IMAGECLASS", GarinIO::GetWithAfterAssetDir(complete_path));
-    }
-    else if (extension == ".material" || extension == ".mtl")
-    {
-        EditorGUI::Drag("MATERIALCLASS", GarinIO::GetWithAfterAssetDir(complete_path));
     }
     else if (extension == ".material" || extension == ".mtl")
     {

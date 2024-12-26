@@ -87,11 +87,11 @@ public:
         return "";
     }
 
-    static void DrawIcon(unsigned int texture_id)
+    static void DrawIcon(unsigned int texture_id, ImVec2 size_icon = ImVec2(24, 24))
     {
         ImGui::BeginGroup();
 
-        ImGui::Image((void *)(intptr_t)texture_id, ImVec2(16, 16));
+        ImGui::Image((void *)(intptr_t)texture_id, size_icon);
         ImGui::SameLine();
 
         ImGui::EndGroup();
@@ -182,46 +182,83 @@ public:
     }
 
     template <typename T>
-    static void Draw_Component(Entity *owner, T *cpm, string componentName, int ID, Component *component, std::function<void(void)> func)
+    static void Draw_Component(
+        Entity *owner,
+        T *cpm,
+        const std::string &componentName,
+        int ID,
+        Component *component,
+        std::function<void(void)> func)
     {
         ImGui::PushID(ID);
 
+        // --- Checkbox para habilitar o deshabilitar el componente ---
         bool enabledCTMP = component->enabled;
         ImGui::Checkbox("", &enabledCTMP);
         component->enabled = enabledCTMP;
 
         ImGui::SameLine();
 
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2.0f, 2.0f));
-        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2.0f, 2.0f));
+        // --- Ajustes de estilo para el TreeNode ---
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(6.0f, 4.0f));
 
-        bool treeNodeOpen = ImGui::TreeNodeEx(componentName.c_str());
+        // --- El árbol principal que muestra el nombre del componente ---
+        bool treeNodeOpen = ImGui::TreeNodeEx(componentName.c_str(),
+                                              ImGuiTreeNodeFlags_DefaultOpen | // Por si deseas que esté abierto por defecto
+                                                  ImGuiTreeNodeFlags_AllowItemOverlap);
 
         ImGui::PopStyleVar(2);
 
-        ImGui::SameLine(ImGui::GetContentRegionMax().x - 20);
-        if (ImGui::ImageButton((void *)(intptr_t)IconsManager::TRASH(), (ImVec2(16, 16))))
+        // --- Botón de 3 puntos (menú contextual) alineado a la derecha ---
+        //     Ajusta la posición (GetContentRegionMax().x - XX) según tu preferencia.
+        float iconOffset = 28.0f; // Un margen para que no se pise con el triángulo del TreeNode
+        ImGui::SameLine(ImGui::GetContentRegionMax().x - iconOffset);
+
+        // Un pequeño 'PushStyleVar' opcional para encoger el botón
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(3.0f, 2.0f));
+        if (ImGui::Button("..."))
         {
-            owner->removeComponentByID(ID);
-            ImGui::TreePop();
+            ImGui::OpenPopup("ComponentOptionsPopup");
+        }
+        ImGui::PopStyleVar();
+
+        // --- Aquí definimos el menú contextual cuando se hace clic en los 3 puntitos ---
+        if (ImGui::BeginPopup("ComponentOptionsPopup"))
+        {
+            // Opción: Eliminar el componente
+            if (ImGui::MenuItem("Remove Component"))
+            {
+                owner->remove_component_by_id(ID);
+                // Es buena idea hacer un "TreePop()" y un "ImGui::EndPopup()"
+                // antes de retornar, para limpiar la pila de ImGui.
+                ImGui::TreePop();
+                ImGui::EndPopup();
+                ImGui::PopID();
+                return; // Salimos de la función para evitar acceso a un componente borrado
+            }
+
+            // Otras opciones que desees agregar
+            // if (ImGui::MenuItem("Otra opción")) { ... }
+
+            ImGui::EndPopup();
         }
 
+        // --- Si se abre el TreeNode, mostramos los controles del componente ---
         if (treeNodeOpen)
         {
             ImGui::Spacing();
-            // ImGui::Text(componentName.c_str());
-            float inputTextWidth = ImGui::GetContentRegionAvail().x - 60.0f;
-
             ImGui::BeginGroup();
 
-            ImGui::SameLine();
-
+            // Aquí puedes llamar a tu función de “func()”
             func();
 
             ImGui::Spacing();
-
             draw_object_field(cpm);
 
+            // --------------------------------------------------
+            // EJEMPLO: Lógica específica para GCamera
+            // --------------------------------------------------
             if (typeid(component) == typeid(GCamera))
             {
                 ImVec2 windowSize = ImVec2(ImGui::GetContentRegionAvail().x, 150);
@@ -232,36 +269,30 @@ public:
                 }
                 else
                 {
-
+                    // Mostramos el render de la cámara (si existe)
                     GCamera *cameraComponent = &owner->getComponent<GCamera>();
-
-                    if (cameraComponent != nullptr)
+                    if (cameraComponent && cameraComponent->a_camera->target_render != nullptr)
                     {
-                        if (cameraComponent->a_camera->target_render != nullptr)
-                        {
-
-                            GLuint textureID = cameraComponent->a_camera->target_render->get_render();
-
-                            ImVec2 p = ImGui::GetCursorScreenPos();
-
-                            ImGui::Image((void *)(intptr_t)textureID, windowSize, ImVec2(0, 1), ImVec2(1, 0));
-                            cameraComponent->update();
-                        }
+                        GLuint textureID = cameraComponent->a_camera->target_render->get_render();
+                        // Ajustamos la imagen invertida en Y (0,1)-(1,0) si así lo necesitas
+                        ImGui::Image((void *)(intptr_t)textureID, windowSize, ImVec2(0, 1), ImVec2(1, 0));
+                        cameraComponent->update();
                     }
                 }
             }
 
+            // --------------------------------------------------
+            // EJEMPLO: Lógica específica para GNoise
+            // --------------------------------------------------
             if (typeid(component) == typeid(GNoise))
             {
                 ImVec2 windowSize = ImVec2(ImGui::GetContentRegionAvail().x, 150);
-
                 GNoise *noiseComponent = &owner->getComponent<GNoise>();
 
-                if (noiseComponent != nullptr)
+                if (noiseComponent && noiseComponent->perlin)
                 {
-                    ImVec2 p = ImGui::GetCursorScreenPos();
-                    ImGui::Image((void *)(intptr_t)noiseComponent->perlin->get_texture(), windowSize, ImVec2(0, 0), ImVec2(1, 1));
-                    std::cout << "Drawing perlin" << std::endl;
+                    ImGui::Image((void *)(intptr_t)noiseComponent->perlin->get_texture(), windowSize);
+                    // std::cout << "Drawing perlin" << std::endl;  // Depuración
                 }
             }
 
