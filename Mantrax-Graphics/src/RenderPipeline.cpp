@@ -1,10 +1,13 @@
 #include "../includes/RenderPipeline.h"
 #include <Timer.h>
+#include <IDGenerator.h>
 
 std::unordered_set<int> RenderPipeline::layers_to_render;
 std::vector<ModelComponent *> RenderPipeline::renderables = std::vector<ModelComponent *>();
 std::vector<TextureTarget *> RenderPipeline::render_targets = std::vector<TextureTarget *>();
 std::vector<Camera *> RenderPipeline::camera_targets = std::vector<Camera *>();
+std::vector<TextureManager *> RenderPipeline::m_textures = std::vector<TextureManager *>();
+std::unordered_map<int, GMaterial *> RenderPipeline::m_textures = std::unordered_map<int, GMaterial *>();
 
 CanvasManager *RenderPipeline::canvas = nullptr;
 
@@ -83,7 +86,7 @@ void RenderPipeline::render_all_data(glm::mat4 camera_matrix)
                     material.p_shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));  // Color de la luz (blanco)
                     material.p_shader->setFloat("lightIntensity", 1.0f);                    // Intensidad de la luz
 
-                    material.p_shader->setBool("showBothSides", false);
+                    // material.p_shader->setBool("showBothSides", false);
 
                     // INFO CAMERA TO SHADER
                     material.p_shader->setMat4("Projection", SceneManager::get_scene_manager()->get_current_scene()->main_camera->GetProjectionMatrix());
@@ -120,6 +123,33 @@ void RenderPipeline::addLayer(int layer)
 void RenderPipeline::removeLayer(int layer)
 {
     layers_to_render.erase(layer);
+}
+
+void RenderPipeline::register_new_material(GMaterial *texture)
+{
+    int id_generated = IDGenerator::generate_id();
+    m_textures.emplace(id_generated, texture);
+}
+
+void RenderPipeline::unregister_material(GMaterial *texture)
+{
+    auto it = std::find_if(
+        m_textures.begin(),
+        m_textures.end(),
+        [texture](const std::pair<int, TextureManager *> &entry)
+        {
+            return entry.second == texture;
+        });
+
+    if (it != m_textures.end())
+    {
+        delete it->second;
+        m_textures.erase(it);
+    }
+    else
+    {
+        std::cerr << "Error: La textura no se encontró en el mapa." << std::endl;
+    }
 }
 
 TextureTarget *RenderPipeline::add_render_texture()

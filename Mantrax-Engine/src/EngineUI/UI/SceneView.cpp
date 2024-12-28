@@ -82,62 +82,6 @@ void SceneView::on_draw()
         }
     }
 
-    //     if (EngineUI::getInstance().ui_behaviour != nullptr)
-    //     {
-    //         ImGui::Begin("UI Behaviour Configuration");
-
-    //         if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
-    //         {
-    //             if (ImGui::TreeNode("Position"))
-    //             {
-    //                 glm::vec3 &position = EngineUI::getInstance().ui_behaviour->behaviour->Position;
-    //                 ImGui::Text("Position (X, Y, Z):");
-    //                 ImGui::DragFloat3("##Position", &position.x, 0.1f);
-    //                 ImGui::TreePop();
-    //             }
-
-    //             ImGui::Separator();
-
-    //             if (ImGui::TreeNode("Scale"))
-    //             {
-    //                 glm::vec3 &scale = EngineUI::getInstance().ui_behaviour->behaviour->Scale;
-    //                 ImGui::Text("Scale (X, Y, Z):");
-    //                 ImGui::DragFloat3("##Scale", &scale.x, 0.1f);
-    //                 ImGui::TreePop();
-    //             }
-
-    //             if (ImGui::TreeNode("Canvas Size"))
-    //             {
-    //                 glm::vec2 &scale = glm::vec2(RenderPipeline::canvas->width, RenderPipeline::canvas->height);
-
-    //                 EditorGUI::Vector2("Canvas Screen Size: ", scale);
-
-    //                 RenderPipeline::canvas->width = scale.x;
-    //                 RenderPipeline::canvas->height = scale.y;
-
-    //                 ImGui::TreePop();
-    //             }
-
-    //             ImGui::Separator();
-    //         }
-
-    //         ImGui::Separator();
-
-    //         if (ImGui::Button("Reset Transform", ImVec2(-1, 0)))
-    //         {
-    //             EngineUI::getInstance().ui_behaviour->behaviour->Position = glm::vec3(0.0f);
-    //             EngineUI::getInstance().ui_behaviour->behaviour->Scale = glm::vec3(1.0f);
-    //             EngineUI::getInstance().ui_behaviour->behaviour->rotation = glm::quat(glm::vec3(0.0f));
-    //         }
-
-    //         ImGui::End();
-    //     }
-    // }
-    // catch (const std::exception &e)
-    // {
-    //     std::cerr << e.what() << '\n';
-    // }
-
     if (EngineUI::getInstance().select_obj != nullptr)
     {
         static ImGuizmo::MODE gizmoMode(ImGuizmo::LOCAL);
@@ -194,14 +138,12 @@ void SceneView::on_draw()
                         eulerRotation[i] += 360.0f;
                 }
 
-                // Aplicar transformaciones locales
                 transform->Position = translation;
                 transform->Scale = scale;
                 transform->set_rotation(eulerRotation);
             }
             else
             {
-                // Para objetos sin padre, mantener el comportamiento original
                 glm::vec3 translation = glm::vec3(matrix[3]);
 
                 glm::vec3 scale(

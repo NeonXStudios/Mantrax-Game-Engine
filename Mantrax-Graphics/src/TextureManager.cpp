@@ -1,15 +1,16 @@
 #include "../includes/TextureManager.h"
+#include <RenderPipeline.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-TextureManager::TextureManager(string texture_path)
+TextureManager::TextureManager(const std::string &texture_path)
 {
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_2D, textureID);
+    glGenTextures(1, &texture_maked);
+    glBindTexture(GL_TEXTURE_2D, texture_maked);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -19,47 +20,80 @@ TextureManager::TextureManager(string texture_path)
     if (data)
     {
         GLenum format;
-        if (nrChannels == 1)
+        switch (nrChannels)
+        {
+        case 1:
             format = GL_RED;
-        else if (nrChannels == 3)
+            break;
+        case 3:
             format = GL_RGB;
-        else if (nrChannels == 4)
+            break;
+        case 4:
             format = GL_RGBA;
+            break;
+        default:
+            format = GL_RGB;
+            break; // Valor por defecto para mayor robustez
+        }
 
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
+
+        RenderPipeline::register_new_texture(this);
+    }
+    else
+    {
+        std::cerr << "Error loading texture: " << texture_path << std::endl;
+        glDeleteTextures(1, &texture_maked);
+        texture_maked = 0;
     }
 
     stbi_image_free(data);
-
-    texture_maked = textureID;
 }
 
-void TextureManager::use_texture(GLuint ID)
+void TextureManager::use_texture(GLuint shaderID) const
 {
+    if (texture_maked == 0)
+    {
+        std::cerr << "Attempt to use an uninitialized texture!" << std::endl;
+        return;
+    }
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_maked);
-    glUniform1i(glGetUniformLocation(ID, "_MainTexture"), 0);
+    glUniform1i(glGetUniformLocation(shaderID, "_MainTexture"), 0);
 }
 
-void TextureManager::active(int texture_index)
+void TextureManager::active(int texture_index) const
 {
+    if (texture_maked == 0)
+    {
+        std::cerr << "Attempt to activate an uninitialized texture!" << std::endl;
+        return;
+    }
     glActiveTexture(texture_index);
-    glBindTexture(GL_TEXTURE_2D, get_texture());
+    glBindTexture(GL_TEXTURE_2D, texture_maked);
 }
 
-GLuint TextureManager::get_texture()
+GLuint TextureManager::get_texture() const
 {
     return texture_maked;
 }
 
 void TextureManager::set_texture(GLuint ID)
 {
+    if (texture_maked != 0)
+    {
+        glDeleteTextures(1, &texture_maked);
+    }
     texture_maked = ID;
 }
 
 TextureManager::~TextureManager()
 {
-    glDeleteTextures(1, &texture_maked);
-    std::cout << "===> Cleaning textures" << std::endl;
+    if (texture_maked != 0)
+    {
+        RenderPipeline::unregister_texture(this);
+        glDeleteTextures(1, &texture_maked);
+        std::cout << "===> Cleaning texture ID: " << texture_maked << std::endl;
+    }
 }

@@ -11,15 +11,6 @@ void UIAdministrator::draw_ui(Entity *owner)
     {
         draw_ui_in_order(owner, ComponentsDrawer::demangle(typeid(*comp).name()));
     }
-
-    if (owner->hasComponent<GAnimator>())
-    {
-        if (ImGui::Button("Open Animator Editor"))
-        {
-            UIMasterDrawer::get_instance().get_component<AnimatorView>()->is_open = true;
-            UIMasterDrawer::get_instance().get_component<AnimatorView>()->animator = &owner->getComponent<GAnimator>();
-        }
-    }
 }
 
 void UIAdministrator::draw_ui_in_order(Entity *owner, std::string component_name)

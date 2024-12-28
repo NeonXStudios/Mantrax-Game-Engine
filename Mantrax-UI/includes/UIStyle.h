@@ -10,7 +10,9 @@ static enum STYLES {
 	DefaultClassic,
 	Grey,
 	WhiteY,
-	DarkGrey
+	DarkGrey,
+	Black,
+	DarkRounded
 };
 
 class UIStyle
@@ -612,6 +614,143 @@ public:
 			colors[ImGuiCol_NavHighlight] = ImVec4(0.80f, 0.15f, 0.15f, 0.50f);
 			colors[ImGuiCol_NavWindowingHighlight] = ImVec4(0.70f, 0.70f, 0.70f, 0.70f);
 			colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.20f, 0.20f, 0.20f, 0.20f);
+			break;
+		}
+
+		case Black:
+		{
+			ImGuiStyle &style = ImGui::GetStyle();
+
+			ImVec4 background = ImVec4(0.025f, 0.025f, 0.025f, 1.0f);
+			ImVec4 menuBarBg = ImVec4(0.05f, 0.05f, 0.05f, 1.0f);
+			ImVec4 frameBg = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
+			ImVec4 frameBgHovered = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+			ImVec4 frameBgActive = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);
+			ImVec4 buttonHovered = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);
+			ImVec4 buttonActive = ImVec4(0.4f, 0.4f, 0.4f, 1.0f);
+			ImVec4 textColor = ImVec4(0.85f, 0.85f, 0.85f, 1.0f);
+			ImVec4 textDisabled = ImVec4(0.40f, 0.40f, 0.40f, 1.0f);
+			ImVec4 highlight = ImVec4(0.0f, 0.48f, 0.85f, 1.0f);
+
+			style.Colors[ImGuiCol_WindowBg] = background;
+			style.Colors[ImGuiCol_MenuBarBg] = menuBarBg;
+			style.Colors[ImGuiCol_FrameBg] = frameBg;
+			style.Colors[ImGuiCol_FrameBgHovered] = frameBgHovered;
+			style.Colors[ImGuiCol_FrameBgActive] = frameBgActive;
+			style.Colors[ImGuiCol_ButtonHovered] = buttonHovered;
+			style.Colors[ImGuiCol_ButtonActive] = buttonActive;
+			style.Colors[ImGuiCol_Text] = textColor;
+			style.Colors[ImGuiCol_TextDisabled] = textDisabled;
+			style.Colors[ImGuiCol_Header] = frameBgHovered;
+			style.Colors[ImGuiCol_HeaderHovered] = highlight;
+			style.Colors[ImGuiCol_HeaderActive] = frameBgActive;
+
+			style.WindowPadding = ImVec2(8, 8);
+			style.FramePadding = ImVec2(8, 4);
+			style.ItemSpacing = ImVec2(8, 4);
+			style.ItemInnerSpacing = ImVec2(4, 4);
+
+			style.WindowRounding = 0.0f;
+			style.FrameRounding = 2.0f;
+			style.ChildRounding = 2.0f;
+			style.PopupRounding = 2.0f;
+			style.GrabRounding = 2.0f;
+			style.ScrollbarRounding = 2.0f;
+
+			style.WindowBorderSize = 1.0f;
+			style.FrameBorderSize = 1.0f;
+			style.PopupBorderSize = 1.0f;
+			break;
+		}
+
+		case DarkRounded:
+		{
+			ImGuiStyle &style = ImGui::GetStyle();
+
+			// Variables de estilo
+			style.WindowPadding = ImVec2(20, 20);
+			style.ItemSpacing = ImVec2(12, 8);
+			style.FramePadding = ImVec2(8, 6);
+			style.WindowRounding = 10.0f;
+			style.FrameRounding = 6.0f;
+			style.PopupRounding = 6.0f;
+			style.ScrollbarRounding = 6.0f;
+			style.GrabRounding = 6.0f;
+			style.TabRounding = 6.0f;
+
+			// Espaciado y alineación
+			style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
+			style.ButtonTextAlign = ImVec2(0.5f, 0.5f);
+			style.DisplayWindowPadding = ImVec2(19, 19);
+			style.DisplaySafeAreaPadding = ImVec2(3, 3);
+			style.FrameBorderSize = 1.0f;
+			style.WindowBorderSize = 1.0f;
+
+			// Configuración de colores
+			ImVec4 *colors = style.Colors;
+
+			// Elementos principales
+			colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);		// Fondo de ventana
+			colors[ImGuiCol_ChildBg] = ImVec4(0.08f, 0.08f, 0.08f, 1.00f);		// Fondo de ventanas hijas
+			colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);		// Fondo de popups
+			colors[ImGuiCol_Border] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);		// Bordes
+			colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f); // Sombra de bordes
+
+			// Headers
+			colors[ImGuiCol_Header] = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);		 // Header normal
+			colors[ImGuiCol_HeaderHovered] = ImVec4(0.19f, 0.19f, 0.19f, 1.00f); // Header hover
+			colors[ImGuiCol_HeaderActive] = ImVec4(0.23f, 0.23f, 0.23f, 1.00f);	 // Header activo
+
+			// Botones
+			colors[ImGuiCol_Button] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);		 // Botón normal
+			colors[ImGuiCol_ButtonHovered] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f); // Botón hover
+			colors[ImGuiCol_ButtonActive] = ImVec4(0.30f, 0.30f, 0.30f, 1.00f);	 // Botón activo
+
+			// Campos de frame
+			colors[ImGuiCol_FrameBg] = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);		  // Fondo de frame
+			colors[ImGuiCol_FrameBgHovered] = ImVec4(0.19f, 0.19f, 0.19f, 1.00f); // Frame hover
+			colors[ImGuiCol_FrameBgActive] = ImVec4(0.23f, 0.23f, 0.23f, 1.00f);  // Frame activo
+
+			// Pestañas
+			colors[ImGuiCol_Tab] = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);				  // Pestaña normal
+			colors[ImGuiCol_TabHovered] = ImVec4(0.38f, 0.38f, 0.38f, 1.00f);		  // Pestaña hover
+			colors[ImGuiCol_TabActive] = ImVec4(0.28f, 0.28f, 0.28f, 1.00f);		  // Pestaña activa
+			colors[ImGuiCol_TabUnfocused] = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);		  // Pestaña sin foco
+			colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f); // Pestaña activa sin foco
+
+			// Título
+			colors[ImGuiCol_TitleBg] = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);			// Título de ventana
+			colors[ImGuiCol_TitleBgActive] = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);	// Título activo
+			colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.15f, 0.15f, 0.15f, 0.75f); // Título colapsado
+
+			// Scrollbar
+			colors[ImGuiCol_ScrollbarBg] = ImVec4(0.13f, 0.13f, 0.13f, 1.00f);			// Fondo de scrollbar
+			colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);		// Grab de scrollbar
+			colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.30f, 0.30f, 0.30f, 1.00f); // Grab hover
+			colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);	// Grab activo
+
+			// Elementos de control
+			colors[ImGuiCol_CheckMark] = ImVec4(0.90f, 0.90f, 0.90f, 1.00f);		// Marca de verificación
+			colors[ImGuiCol_SliderGrab] = ImVec4(0.48f, 0.48f, 0.48f, 1.00f);		// Slider grab
+			colors[ImGuiCol_SliderGrabActive] = ImVec4(0.56f, 0.56f, 0.56f, 1.00f); // Slider grab activo
+
+			// Textos
+			colors[ImGuiCol_Text] = ImVec4(0.90f, 0.90f, 0.90f, 1.00f);			// Texto normal
+			colors[ImGuiCol_TextDisabled] = ImVec4(0.60f, 0.60f, 0.60f, 1.00f); // Texto deshabilitado
+
+			// Elementos de lista
+			colors[ImGuiCol_TableHeaderBg] = ImVec4(0.19f, 0.19f, 0.19f, 1.00f);	 // Header de tabla
+			colors[ImGuiCol_TableBorderStrong] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f); // Borde fuerte de tabla
+			colors[ImGuiCol_TableBorderLight] = ImVec4(0.23f, 0.23f, 0.23f, 1.00f);	 // Borde suave de tabla
+			colors[ImGuiCol_TableRowBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);		 // Fondo de fila
+			colors[ImGuiCol_TableRowBgAlt] = ImVec4(1.00f, 1.00f, 1.00f, 0.07f);	 // Fondo de fila alternativa
+
+			// Misceláneos
+			colors[ImGuiCol_ResizeGrip] = ImVec4(0.26f, 0.26f, 0.26f, 1.00f);		 // Grip de resize
+			colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f); // Grip hover
+			colors[ImGuiCol_ResizeGripActive] = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);	 // Grip activo
+			colors[ImGuiCol_DockingPreview] = ImVec4(0.26f, 0.26f, 0.26f, 0.70f);	 // Preview de docking
+			colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);	 // Fondo vacío de docking
 			break;
 		}
 

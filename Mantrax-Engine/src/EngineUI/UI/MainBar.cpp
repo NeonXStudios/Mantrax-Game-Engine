@@ -6,18 +6,24 @@
 #include <CompilerView.h>
 #include <Ensambler.h>
 
+#include <imgui_internal.h>
+#include <UIMasterDrawer.h>
+#include <SceneManager.h>
+#include <FileManager.h>
+#include <EditorGUI.h>
+
 void MainBar::on_draw()
 {
+
     ShowNewScenePopup();
 
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(ImGui::GetStyle().FramePadding.x, 32 / 2));
-
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8.0f, 8.0f));
     if (ImGui::BeginMainMenuBar())
     {
         ImGui::Image((void *)(intptr_t)IconsManager::ENGINE_LOGO(), ImVec2(32, 28));
         ImGui::SameLine();
 
-        if (ImGui::BeginMenu("File", ImGuiWindowFlags_NoDecoration))
+        if (ImGui::BeginMenu("File"))
         {
             if (ImGui::MenuItem("New Scene"))
             {
@@ -30,7 +36,6 @@ void MainBar::on_draw()
                 {
                     std::string bg_pick_path = EngineUI::getInstance().configs->current_proyect + "/gb.jpg";
                     GarinIO::screenshot(Gfx::main_render->get_render(), 1920, 1080, bg_pick_path.c_str());
-
                     SceneData::save_scene();
                 }
             }
@@ -57,9 +62,9 @@ void MainBar::on_draw()
 
         if (ImGui::BeginMenu("Game"))
         {
-
             if (ImGui::MenuItem("Input"))
             {
+                // ...
             }
 
             ImGui::EndMenu();
@@ -67,32 +72,26 @@ void MainBar::on_draw()
 
         if (ImGui::BeginMenu("Windows"))
         {
-
             if (ImGui::MenuItem("Hierarchy"))
             {
                 UIMasterDrawer::get_instance().get_component<Hierarchy>()->is_open = true;
             }
-
             if (ImGui::MenuItem("FileBar"))
             {
                 UIMasterDrawer::get_instance().get_component<FileBar>()->is_open = true;
             }
-
             if (ImGui::MenuItem("AssetsFiles"))
             {
                 UIMasterDrawer::get_instance().get_component<AssetsFiles>()->is_open = true;
             }
-
             if (ImGui::MenuItem("Inspector"))
             {
                 UIMasterDrawer::get_instance().get_component<Inspector>()->is_open = true;
             }
-
             if (ImGui::MenuItem("SceneView"))
             {
                 UIMasterDrawer::get_instance().get_component<SceneView>()->is_open = true;
             }
-
             if (ImGui::MenuItem("EngineSettings"))
             {
                 UIMasterDrawer::get_instance().get_component<EngineSettings>()->is_open = true;
@@ -101,12 +100,10 @@ void MainBar::on_draw()
             {
                 UIMasterDrawer::get_instance().get_component<AnimatorView>()->is_open = true;
             }
-
             if (ImGui::MenuItem("UIEditor"))
             {
                 UIMasterDrawer::get_instance().get_component<UIEditor>()->is_open = true;
             }
-
             if (ImGui::MenuItem("CompilerView"))
             {
                 UIMasterDrawer::get_instance().get_component<CompilerView>()->is_open = true;
@@ -176,39 +173,46 @@ void MainBar::on_draw()
                 UIStyle::SetStyleUI(DarkGrey);
                 EngineUI::getInstance().configs->current_theme = "DarkGrey";
             }
+            if (ImGui::MenuItem("Black"))
+            {
+                UIStyle::SetStyleUI(Black);
+                EngineUI::getInstance().configs->current_theme = "Black";
+            }
+            if (ImGui::MenuItem("DarkRounded"))
+            {
+                UIStyle::SetStyleUI(DarkRounded);
+                EngineUI::getInstance().configs->current_theme = "DarkRounded";
+            }
             ImGui::EndMenu();
         }
-    }
 
-    ImGui::SameLine((ImGui::GetWindowWidth() / 2) - 16);
+        float rightOffset = ImGui::GetContentRegionMax().x - 32.0f;
+        ImGui::SameLine(rightOffset);
 
-    unsigned int current_icon = AppSettings::is_playing ? IconsManager::PAUSE() : IconsManager::PLAY();
-
-    if (ImGui::ImageButton((void *)(intptr_t)current_icon, ImVec2(16, 16)))
-    {
-        std::string command = ".\\data\\PlayBackEngine\\Mantrax_PlayBackEngine.exe";
-        std::string parameter = EngineUI::getInstance().configs->current_proyect;
-
-        std::string fullCommand = command + " " + parameter;
-
-        std::string newWorkDir = FileManager::get_execute_path();
-        std::wstring wideWorkingDir(newWorkDir.begin(), newWorkDir.end());
-
-        if (!SetCurrentDirectoryW(wideWorkingDir.c_str()))
+        unsigned int current_icon = AppSettings::is_playing ? IconsManager::PAUSE() : IconsManager::PLAY();
+        if (ImGui::ImageButton((void *)(intptr_t)current_icon, ImVec2(16, 16)))
         {
-            std::cerr << "Error on try create Play Back Engine" << std::endl;
+            std::string command = ".\\data\\PlayBackEngine\\Mantrax_PlayBackEngine.exe";
+            std::string parameter = EngineUI::getInstance().configs->current_proyect;
+            std::string fullCommand = command + " " + parameter;
+
+            std::string newWorkDir = FileManager::get_execute_path();
+            std::wstring wideWorkingDir(newWorkDir.begin(), newWorkDir.end());
+            if (!SetCurrentDirectoryW(wideWorkingDir.c_str()))
+            {
+                std::cerr << "Error al cambiar directorio para lanzar PlayBackEngine." << std::endl;
+            }
+            int result_execution = system(fullCommand.c_str());
+            std::cout << "Entering play mode" << std::endl;
         }
 
-        int result_execution = system(fullCommand.c_str());
-
-        std::cout << "Entering play mode" << std::endl;
+        ImGui::EndMainMenuBar();
     }
-
-    ImGui::EndMainMenuBar();
     ImGui::PopStyleVar();
 
     ImGui::Begin("Scene Settings");
-    EngineUI::getInstance().configs->camera_speed_sens = EditorGUI::Float("Camera sensitivity", EngineUI::getInstance().configs->camera_speed_sens);
+    EngineUI::getInstance().configs->camera_speed_sens =
+        EditorGUI::Float("Camera sensitivity", EngineUI::getInstance().configs->camera_speed_sens);
     ImGui::End();
 }
 
@@ -226,7 +230,6 @@ void MainBar::ShowNewScenePopup()
 
         if (ImGui::Button("OK", ImVec2(120, 0)))
         {
-            // Load the new scene
             SceneManager::load_scene(new_scene_name);
             show_new_scene_popup = false;
             ImGui::CloseCurrentPopup();
@@ -242,9 +245,7 @@ void MainBar::ShowNewScenePopup()
     }
 
     ImVec2 main_window_size = ImGui::GetIO().DisplaySize;
-
     float bar_height = 25.0f;
-
     ImGui::SetNextWindowPos(ImVec2(0, main_window_size.y - bar_height));
     ImGui::SetNextWindowSize(ImVec2(main_window_size.x, bar_height));
 }

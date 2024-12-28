@@ -49,15 +49,11 @@ public:
     static TextureTarget *main_render;
 
     // window functions
-    static int create_windows(settings_window windows_setting);
+    static GLFWwindow *get_game_window();
     static void set_window_icon(GLFWwindow *window, const char *iconPath);
     static void clear_graphics();
     static void set_vsync(bool vsync_active);
     static void set_screen(int screen_index);
-    static int get_current_screen();
-    static int get_width();
-    static int get_height();
-    static GLFWwindow *get_game_window();
     static void render_to_texture();
     static bool try_window_close();
     static void poll_events();
@@ -68,4 +64,8 @@ public:
     static void change_name(std::string name);
 
     static void setup_render_texture(int width, int height);
+    static int create_windows(settings_window windows_setting);
+    static int get_current_screen();
+    static int get_width();
+    static int get_height();
 };

@@ -10,6 +10,7 @@
 #include <camera.h>
 #include <functional>
 #include <CanvasManager.h>
+#include <TextureManager.h>
 
 class GARINLIBS_API RenderPipeline
 {
@@ -21,12 +22,17 @@ public:
     static std::vector<TextureTarget *> render_targets;
     static std::vector<Camera *> camera_targets;
     static std::unordered_map<std::string, TextureTarget *> view_renders;
+    static std::unordered_map<int, GMaterial *> m_textures;
 
     static void init();
     static void render();
 
     static void render_all_data(glm::mat4 camera_matrix);
     static void delete_from_render(ModelComponent *renderable);
+
+    static void register_new_texture(TextureManager *texture);
+    static void unregister_texture(TextureManager *texture);
+
     static void addLayer(int layer);
     static void removeLayer(int layer);
     static Camera *add_camera();

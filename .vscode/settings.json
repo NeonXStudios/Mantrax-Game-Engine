@@ -92,5 +92,6 @@
         "queue": "cpp",
         "typeindex": "cpp"
     },
-    "dotnet.preferCSharpExtension": true
+    "dotnet.preferCSharpExtension": true,
+    "dotnet.defaultSolution": "disable"
 }

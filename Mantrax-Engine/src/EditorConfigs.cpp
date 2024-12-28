@@ -72,6 +72,14 @@ void EditorConfigs::load_config()
     {
         UIStyle::SetStyleUI(DarkGrey);
     }
+    else if (current_theme == "Black")
+    {
+        UIStyle::SetStyleUI(Black);
+    }
+    else if (current_theme == "DarkRounded")
+    {
+        UIStyle::SetStyleUI(DarkRounded);
+    }
 
     if (SceneManager::get_current_scene()->main_camera == nullptr)
     {

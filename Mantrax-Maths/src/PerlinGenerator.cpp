@@ -37,14 +37,22 @@ void PerlinGenerator::create_texture(int width, int height)
     for (int i = 0; i < width * height; ++i)
     {
         float noise = noiseData[i];
-        textureData[i * 4 + 0] = static_cast<unsigned char>(noise * 255.0f);
-        textureData[i * 4 + 1] = static_cast<unsigned char>(noise * 255.0f);
-        textureData[i * 4 + 2] = static_cast<unsigned char>(noise * 255.0f);
+
+        float mapped = (noise * 0.5f) + 0.5f;
+        if (mapped < 0.0f)
+            mapped = 0.0f;
+        if (mapped > 1.0f)
+            mapped = 1.0f;
+
+        unsigned char value = static_cast<unsigned char>(mapped * 255.0f);
+
+        textureData[i * 4 + 0] = value;
+        textureData[i * 4 + 1] = value;
+        textureData[i * 4 + 2] = value;
         textureData[i * 4 + 3] = 255;
     }
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData.data());
-
     glGenerateMipmap(GL_TEXTURE_2D);
 
     glBindTexture(GL_TEXTURE_2D, 0);

@@ -75,41 +75,29 @@ void TextureTarget::draw(std::function<void()> func)
 
 void TextureTarget::draw(glm::mat4 camera_matrix)
 {
-    if (SceneManager::get_current_scene() == nullptr)
+    if (!SceneManager::get_current_scene() ||
+        !SceneManager::get_current_scene()->main_camera)
     {
         return;
     }
 
-    if (SceneManager::get_current_scene()->main_camera != nullptr)
-    {
-        int width, height;
-        glfwGetFramebufferSize(Gfx::get_game_window(), &width, &height);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glViewport(0, 0, Gfx::render_width, Gfx::render_height);
+    Gfx::clear_render();
 
-        glViewport(0, 0, Gfx::render_width, Gfx::render_height);
+    RenderPipeline::render_all_data(camera_matrix);
+    SceneManager::get_current_scene()->on_draw();
 
-        Gfx::clear_render();
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+    glBindTexture(GL_TEXTURE_2D, texture);
 
-        RenderPipeline::render_all_data(camera_matrix);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, Gfx::render_width, Gfx::render_height, 0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
-        SceneManager::get_current_scene()->on_draw();
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    Gfx::clear_render();
 
-        SceneManager::get_current_scene()->draw_ui();
-        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-        Gfx::clear_render();
-
-        RenderPipeline::render_all_data(camera_matrix);
-
-        SceneManager::get_current_scene()->on_draw();
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, Gfx::render_width, Gfx::render_height, 0);
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-
-        SceneManager::get_current_scene()->draw_ui();
-    }
+    SceneManager::get_current_scene()->draw_ui();
 }
 
 unsigned int TextureTarget::get_render()

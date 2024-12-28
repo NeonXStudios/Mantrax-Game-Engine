@@ -4,19 +4,15 @@
 #include <iostream>
 #include <Core.h>
 
-using namespace std;
-
 class GARINLIBS_API TextureManager
 {
-private:
-    GLuint texture_maked;
-
 public:
-    TextureManager(string texture_path);
+    GLuint texture_maked = 0;
+    TextureManager(const std::string &texture_path);
     ~TextureManager();
 
-    void active(int texture_index);
-    void use_texture(GLuint ID);
+    void active(int texture_index) const;
+    void use_texture(GLuint shaderID) const;
     void set_texture(GLuint ID);
-    GLuint get_texture();
+    GLuint get_texture() const;
 };
