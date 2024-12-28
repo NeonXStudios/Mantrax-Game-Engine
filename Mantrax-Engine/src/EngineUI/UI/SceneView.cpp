@@ -214,7 +214,42 @@ void SceneView::on_draw()
 
     if (ImGui::IsWindowHovered() && ImGui::IsKeyDown(ImGuiKey_F) && EngineUI::getInstance().select_obj != nullptr)
     {
-        SceneManager::get_current_scene()->main_camera->cameraPosition = EngineUI::getInstance().select_obj->get_transform()->Position;
+        auto selectedObj = EngineUI::getInstance().select_obj->get_transform();
+        auto camera = SceneManager::get_current_scene()->main_camera;
+
+        // Posición del objeto objetivo
+        glm::vec3 targetPosition = selectedObj->Position;
+
+        // Calcular la dirección desde la cámara hacia el objeto
+        glm::vec3 directionToTarget = glm::normalize(targetPosition - camera->cameraPosition);
+
+        // Calcular los ángulos yaw y pitch basados en la dirección al objetivo
+        float yaw = atan2(directionToTarget.x, directionToTarget.z);
+        float pitch = -asin(directionToTarget.y);
+
+        // Crear los quaternions de rotación
+        glm::quat rotationX = glm::angleAxis(pitch, glm::vec3(1.0f, 0.0f, 0.0f));
+        glm::quat rotationY = glm::angleAxis(yaw, glm::vec3(0.0f, 1.0f, 0.0f));
+
+        // Combinar las rotaciones
+        glm::quat targetRotation = glm::normalize(rotationY * rotationX);
+
+        // Distancia deseada
+        float distanceToObject = 5.0f;
+
+        // Aplicar posición y rotación instantáneamente
+        camera->cameraPosition = targetPosition - (directionToTarget * distanceToObject);
+
+        if (camera->use_projection)
+        {
+            camera->cameraRotation = targetRotation;
+        }
+        else
+        {
+            camera->cameraRotation = glm::quat(0.0f, 0.0f, 0.0f, 0.0f);
+        }
+
+        camera->update();
     }
 
     ImGui::End();

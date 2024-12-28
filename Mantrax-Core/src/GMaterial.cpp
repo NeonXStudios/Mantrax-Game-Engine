@@ -1,5 +1,6 @@
 #include "../includes/GMaterial.h"
 #include <ResourcesManager.h>
+#include <RenderPipeline.h>
 
 void GMaterial::defines()
 {
@@ -16,8 +17,22 @@ void GMaterial::init()
 
 void GMaterial::update()
 {
+    for (const auto &[name, texture] : textures)
+    {
+        texture->use_texture(p_shader->ID);
+    }
 }
 
 void GMaterial::clean()
 {
+}
+
+GMaterial::GMaterial()
+{
+    RenderPipeline::register_new_material(this);
+}
+
+GMaterial::~GMaterial()
+{
+    RenderPipeline::unregister_material(this);
 }

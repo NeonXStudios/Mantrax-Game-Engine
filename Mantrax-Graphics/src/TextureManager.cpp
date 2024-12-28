@@ -38,8 +38,6 @@ TextureManager::TextureManager(const std::string &texture_path)
 
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
-
-        RenderPipeline::register_new_texture(this);
     }
     else
     {
@@ -92,7 +90,6 @@ TextureManager::~TextureManager()
 {
     if (texture_maked != 0)
     {
-        RenderPipeline::unregister_texture(this);
         glDeleteTextures(1, &texture_maked);
         std::cout << "===> Cleaning texture ID: " << texture_maked << std::endl;
     }

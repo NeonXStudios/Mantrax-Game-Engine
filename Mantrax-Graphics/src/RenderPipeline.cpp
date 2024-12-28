@@ -6,8 +6,7 @@ std::unordered_set<int> RenderPipeline::layers_to_render;
 std::vector<ModelComponent *> RenderPipeline::renderables = std::vector<ModelComponent *>();
 std::vector<TextureTarget *> RenderPipeline::render_targets = std::vector<TextureTarget *>();
 std::vector<Camera *> RenderPipeline::camera_targets = std::vector<Camera *>();
-std::vector<TextureManager *> RenderPipeline::m_textures = std::vector<TextureManager *>();
-std::unordered_map<int, GMaterial *> RenderPipeline::m_textures = std::unordered_map<int, GMaterial *>();
+std::unordered_map<int, GMaterial *> RenderPipeline::m_materials = std::unordered_map<int, GMaterial *>();
 
 CanvasManager *RenderPipeline::canvas = nullptr;
 
@@ -24,7 +23,7 @@ void RenderPipeline::init()
     std::cout << "Render Target asigned" << std::endl;
 }
 
-void RenderPipeline::render()
+void RenderPipeline::render(std::function<void(void)> additional_Render)
 {
     if (SceneManager::get_scene_manager() == nullptr || SceneManager::get_current_scene() == nullptr)
     {
@@ -32,7 +31,7 @@ void RenderPipeline::render()
     }
 
     SceneManager::get_current_scene()->main_camera->update();
-    SceneManager::get_current_scene()->main_camera->target_render->draw(SceneManager::get_current_scene()->main_camera->GetCameraMatrix());
+    SceneManager::get_current_scene()->main_camera->target_render->draw(SceneManager::get_current_scene()->main_camera->GetCameraMatrix(), additional_Render);
 
     for (int i = 0; i < RenderPipeline::camera_targets.size(); i++)
     {
@@ -48,7 +47,7 @@ void RenderPipeline::render()
 
         if (camera->target_render != nullptr)
         {
-            camera->target_render->draw(camera->GetCameraMatrix());
+            camera->target_render->draw(camera->GetCameraMatrix(), additional_Render);
         }
         else
         {
@@ -81,7 +80,6 @@ void RenderPipeline::render_all_data(glm::mat4 camera_matrix)
                     material.p_shader->setVec3("ambientColor", glm::vec3(1.0f, 1.0f, 1.0f));
                     material.p_shader->setFloat("ambientStrength", 0.1f);
 
-                    // Luz direccional (sol)
                     material.p_shader->setVec3("lightDir", glm::vec3(-0.2f, -1.0f, -0.3f)); // Dirección de la luz
                     material.p_shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));  // Color de la luz (blanco)
                     material.p_shader->setFloat("lightIntensity", 1.0f);                    // Intensidad de la luz
@@ -125,31 +123,41 @@ void RenderPipeline::removeLayer(int layer)
     layers_to_render.erase(layer);
 }
 
-void RenderPipeline::register_new_material(GMaterial *texture)
+void RenderPipeline::register_new_material(GMaterial *mat)
 {
     int id_generated = IDGenerator::generate_id();
-    m_textures.emplace(id_generated, texture);
+    m_materials.emplace(id_generated, mat);
 }
 
-void RenderPipeline::unregister_material(GMaterial *texture)
+void RenderPipeline::unregister_material(GMaterial *mat)
 {
     auto it = std::find_if(
-        m_textures.begin(),
-        m_textures.end(),
-        [texture](const std::pair<int, TextureManager *> &entry)
+        m_materials.begin(),
+        m_materials.end(),
+        [mat](const std::pair<int, GMaterial *> &entry)
         {
-            return entry.second == texture;
+            return entry.second == mat;
         });
 
-    if (it != m_textures.end())
+    if (it != m_materials.end())
     {
         delete it->second;
-        m_textures.erase(it);
+        m_materials.erase(it);
     }
     else
     {
         std::cerr << "Error: La textura no se encontró en el mapa." << std::endl;
     }
+}
+
+GMaterial *RenderPipeline::get_material(int id)
+{
+    auto it = m_materials.find(id);
+    if (it != m_materials.end())
+    {
+        return it->second;
+    }
+    return nullptr;
 }
 
 TextureTarget *RenderPipeline::add_render_texture()

@@ -34,46 +34,7 @@ void TextureTarget::setup()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void TextureTarget::draw(std::function<void()> func)
-{
-    if (SceneManager::get_current_scene() == nullptr)
-    {
-        return;
-    }
-
-    if (SceneManager::get_current_scene()->main_camera != nullptr)
-    {
-        int width, height;
-        glfwGetFramebufferSize(Gfx::get_game_window(), &width, &height);
-
-        glViewport(0, 0, Gfx::render_width, Gfx::render_height);
-
-        Gfx::clear_render();
-
-        func();
-
-        SceneManager::get_current_scene()->on_draw();
-
-        SceneManager::get_current_scene()->draw_ui();
-        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-        Gfx::clear_render();
-
-        func();
-
-        SceneManager::get_current_scene()->on_draw();
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, Gfx::render_width, Gfx::render_height, 0);
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-
-        SceneManager::get_current_scene()->draw_ui();
-    }
-}
-
-void TextureTarget::draw(glm::mat4 camera_matrix)
+void TextureTarget::draw(glm::mat4 camera_matrix, std::function<void(void)> additional_Render)
 {
     if (!SceneManager::get_current_scene() ||
         !SceneManager::get_current_scene()->main_camera)
@@ -86,6 +47,7 @@ void TextureTarget::draw(glm::mat4 camera_matrix)
     Gfx::clear_render();
 
     RenderPipeline::render_all_data(camera_matrix);
+    additional_Render();
     SceneManager::get_current_scene()->on_draw();
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);

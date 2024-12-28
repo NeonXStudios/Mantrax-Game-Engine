@@ -6,7 +6,7 @@ void GAudio::defines()
 {
     GVAR(AudioMin, 5.0f, float);
     GVAR(AudioMax, 10.0f, float);
-    GVAR(AudioPath, "assets/audio/zetuv.wav", std::string);
+    GVAR(AudioPath, "", std::string);
 }
 
 void GAudio::init()

@@ -452,3 +452,239 @@ private:
         return shader;
     }
 };
+
+class GizmoCapsule
+{
+public:
+    GizmoCapsule(float radius = 1.0f, float height = 2.0f, unsigned int stacks = 18, unsigned int slices = 36)
+    {
+        setupCapsule(radius, height, stacks, slices);
+    }
+
+    ~GizmoCapsule()
+    {
+        glDeleteVertexArrays(1, &VAO);
+        glDeleteBuffers(1, &VBO);
+        glDeleteBuffers(1, &EBO);
+    }
+
+    void render(const glm::mat4 &view, const glm::mat4 &projection, const glm::vec3 &position, const glm::vec3 &scale, const glm::vec3 &rotation)
+    {
+        glUseProgram(shaderProgram);
+
+        // Transformaciones
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, position);
+        model = glm::scale(model, scale);
+        model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+        // Pasar matrices al shader
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+        // Dibujar la cápsula
+        glBindVertexArray(VAO);
+        glDrawElements(GL_LINES, indicesCount, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+    }
+
+private:
+    unsigned int VAO, VBO, EBO;
+    unsigned int shaderProgram;
+    unsigned int indicesCount;
+
+    void setupCapsule(float radius, float height, unsigned int stacks, unsigned int slices)
+    {
+        std::vector<float> vertices;
+        std::vector<unsigned int> indices;
+
+        float halfHeight = height / 2.0f;
+
+        // Generar vértices para la esfera superior
+        for (unsigned int i = 0; i <= stacks; ++i)
+        {
+            float stackAngle = glm::pi<float>() * 0.5f * (float)i / stacks; // De 0 a PI/2
+            float xy = radius * cos(stackAngle);
+            float z = radius * sin(stackAngle);
+
+            for (unsigned int j = 0; j <= slices; ++j)
+            {
+                float sliceAngle = 2.0f * glm::pi<float>() * (float)j / slices;
+                float x = xy * cos(sliceAngle);
+                float y = xy * sin(sliceAngle);
+
+                vertices.push_back(x);
+                vertices.push_back(y);
+                vertices.push_back(z + halfHeight);
+            }
+        }
+
+        // Generar vértices para el cilindro
+        for (unsigned int i = 0; i <= 1; ++i)
+        {
+            float z = (i == 0) ? halfHeight : -halfHeight;
+
+            for (unsigned int j = 0; j <= slices; ++j)
+            {
+                float angle = 2.0f * glm::pi<float>() * (float)j / slices;
+                float x = radius * cos(angle);
+                float y = radius * sin(angle);
+
+                vertices.push_back(x);
+                vertices.push_back(y);
+                vertices.push_back(z);
+            }
+        }
+
+        // Generar vértices para la esfera inferior
+        for (unsigned int i = 0; i <= stacks; ++i)
+        {
+            float stackAngle = glm::pi<float>() * 0.5f * (float)i / stacks; // De 0 a PI/2
+            float xy = radius * cos(stackAngle);
+            float z = radius * sin(stackAngle);
+
+            for (unsigned int j = 0; j <= slices; ++j)
+            {
+                float sliceAngle = 2.0f * glm::pi<float>() * (float)j / slices;
+                float x = xy * cos(sliceAngle);
+                float y = xy * sin(sliceAngle);
+
+                vertices.push_back(x);
+                vertices.push_back(y);
+                vertices.push_back(-z - halfHeight);
+            }
+        }
+
+        // Generar índices para conectar vértices de la esfera superior
+        for (unsigned int i = 0; i < stacks; ++i)
+        {
+            for (unsigned int j = 0; j < slices; ++j)
+            {
+                unsigned int first = i * (slices + 1) + j;
+                unsigned int second = first + slices + 1;
+
+                indices.push_back(first);
+                indices.push_back(second);
+                indices.push_back(first + 1);
+
+                indices.push_back(second);
+                indices.push_back(second + 1);
+                indices.push_back(first + 1);
+            }
+        }
+
+        // Generar índices para conectar vértices del cilindro
+        unsigned int cylinderOffset = (stacks + 1) * (slices + 1);
+        for (unsigned int i = 0; i < 1; ++i)
+        {
+            for (unsigned int j = 0; j < slices; ++j)
+            {
+                unsigned int first = cylinderOffset + i * (slices + 1) + j;
+                unsigned int second = first + slices + 1;
+
+                indices.push_back(first);
+                indices.push_back(second);
+                indices.push_back(first + 1);
+
+                indices.push_back(second);
+                indices.push_back(second + 1);
+                indices.push_back(first + 1);
+            }
+        }
+
+        // Generar índices para conectar vértices de la esfera inferior
+        unsigned int sphereOffset = cylinderOffset + 2 * (slices + 1);
+        for (unsigned int i = 0; i < stacks; ++i)
+        {
+            for (unsigned int j = 0; j < slices; ++j)
+            {
+                unsigned int first = sphereOffset + i * (slices + 1) + j;
+                unsigned int second = first + slices + 1;
+
+                indices.push_back(first);
+                indices.push_back(second);
+                indices.push_back(first + 1);
+
+                indices.push_back(second);
+                indices.push_back(second + 1);
+                indices.push_back(first + 1);
+            }
+        }
+
+        indicesCount = indices.size();
+
+        // Configuración de buffers
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &VBO);
+        glGenBuffers(1, &EBO);
+
+        glBindVertexArray(VAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+        glEnableVertexAttribArray(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
+        // Shaders
+        const char *vertexShaderSource = R"(
+        #version 330 core
+        layout(location = 0) in vec3 aPos;
+
+        uniform mat4 model;
+        uniform mat4 view;
+        uniform mat4 projection;
+
+        void main() {
+            gl_Position = projection * view * model * vec4(aPos, 1.0);
+        }
+        )";
+
+        const char *fragmentShaderSource = R"(
+        #version 330 core
+        out vec4 FragColor;
+
+        void main() {
+            FragColor = vec4(0.0, 0.0, 1.0, 1.0); // Color azul
+        }
+        )";
+
+        unsigned int vertexShader = compileShader(GL_VERTEX_SHADER, vertexShaderSource);
+        unsigned int fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
+
+        shaderProgram = glCreateProgram();
+        glAttachShader(shaderProgram, vertexShader);
+        glAttachShader(shaderProgram, fragmentShader);
+        glLinkProgram(shaderProgram);
+
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+    }
+
+    unsigned int compileShader(GLenum type, const char *source)
+    {
+        unsigned int shader = glCreateShader(type);
+        glShaderSource(shader, 1, &source, NULL);
+        glCompileShader(shader);
+
+        int success;
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+        if (!success)
+        {
+            char infoLog[512];
+            glGetShaderInfoLog(shader, 512, NULL, infoLog);
+            std::cerr << "ERROR::SHADER_COMPILATION_FAILED\n"
+                      << infoLog << std::endl;
+        }
+        return shader;
+    }
+};

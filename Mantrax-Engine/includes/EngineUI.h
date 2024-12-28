@@ -41,6 +41,8 @@ public:
     GizmoCube *cube_gizmo;
     GizmoCircle *circle_gizmo;
     GizmoSphere *sphere_gizmo;
+    GizmoCapsule *capsule_gizmo;
+
     UIBehaviour *ui_behaviour;
 
     std::stringstream buffer_stdout;

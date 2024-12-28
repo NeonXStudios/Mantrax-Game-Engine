@@ -82,7 +82,8 @@ int main(int argc, char *arvg[])
         Gfx::timer_control();
         Gfx::process_window_size();
 
-        RenderPipeline::render();
+        RenderPipeline::render([scene_game]()
+                               { scene_game->on_draw(); });
         scene_game->on_edition_mode(Timer::delta_time);
         SceneManager::on_edition_mode();
         scene_game->draw_ui();

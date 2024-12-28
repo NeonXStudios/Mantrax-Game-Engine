@@ -33,10 +33,13 @@ void EngineUI::on_start()
     cube_gizmo = new GizmoCube();
     circle_gizmo = new GizmoCircle();
     sphere_gizmo = new GizmoSphere();
+    capsule_gizmo = new GizmoCapsule();
 }
 
 void EngineUI::on_edition_mode(float delta_time)
 {
+    SceneManager::get_current_scene()->main_camera->update();
+
     std::string directory_path = FileManager::get_game_path() + "/clscpp";
 
     watcher->start_file_watcher(directory_path, []() {});
@@ -62,8 +65,8 @@ void EngineUI::on_edition_mode(float delta_time)
                     camera->cameraPosition.y += 10.0f * delta_time;
                 }
 
-                float forwardSpeed = InputSystem::get_axis(GLFW_KEY_W, GLFW_KEY_S) * 10.0f * delta_time;
-                float leftSpeed = InputSystem::get_axis(GLFW_KEY_A, GLFW_KEY_D) * 10.0f * delta_time;
+                float forwardSpeed = (InputSystem::get_axis(GLFW_KEY_W, GLFW_KEY_S) * 10.0f) * delta_time;
+                float leftSpeed = (InputSystem::get_axis(GLFW_KEY_A, GLFW_KEY_D) * 10.0f) * delta_time;
 
                 camera->move_forward(delta_time, forwardSpeed);
                 camera->move_left(delta_time, leftSpeed);
@@ -142,25 +145,34 @@ void EngineUI::on_update(float delta_time)
 
 void EngineUI::on_draw()
 {
-    // if (select_obj != nullptr && select_obj->hasComponent<GCollision>())
-    // {
-    //     cube_gizmo->render(SceneManager::GetOpenScene()->main_camera->GetView(),
-    //                        SceneManager::GetOpenScene()->main_camera->GetProjectionMatrix(),
-    //                        select_obj->get_transform()->Position, select_obj->get_transform()->Scale * std::any_cast<glm::vec3>(select_obj->getComponent<GCollision>().variableMap["boxSize"]));
-    // }
-    // if (select_obj != nullptr && select_obj->hasComponent<GAudio>())
-    // {
-    //     glm::vec3 t_min = glm::vec3(std::any_cast<float>(select_obj->getComponent<GAudio>().variableMap["AudioMin"]));
-    //     glm::vec3 t_max = glm::vec3(std::any_cast<float>(select_obj->getComponent<GAudio>().variableMap["AudioMax"]));
+    if (RenderPipeline::camera_targets.size() <= 0)
+        return;
 
-    //     sphere_gizmo->render(SceneManager::GetOpenScene()->main_camera->GetView(),
-    //                          SceneManager::GetOpenScene()->main_camera->GetProjectionMatrix(),
-    //                          select_obj->get_transform()->Position, t_max, glm::vec3(0.0f));
+    if (select_obj != nullptr && select_obj->hasComponent<GCollision>())
+    {
+        cube_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(),
+                           SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
+                           select_obj->get_transform()->Position, select_obj->get_transform()->Scale * std::any_cast<glm::vec3>(select_obj->getComponent<GCollision>().variableMap["boxSize"]));
+    }
 
-    //     sphere_gizmo->render(SceneManager::GetOpenScene()->main_camera->GetView(),
-    //                          SceneManager::GetOpenScene()->main_camera->GetProjectionMatrix(),
-    //                          select_obj->get_transform()->Position, t_min, glm::vec3(0.0f));
-    // }
+    if (select_obj != nullptr && select_obj->hasComponent<GAudio>())
+    {
+        glm::vec3 t_min = glm::vec3(std::any_cast<float>(select_obj->getComponent<GAudio>().variableMap["AudioMin"]));
+        glm::vec3 t_max = glm::vec3(std::any_cast<float>(select_obj->getComponent<GAudio>().variableMap["AudioMax"]));
+
+        sphere_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(),
+                             SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
+                             select_obj->get_transform()->Position, t_max, glm::vec3(0.0f));
+
+        sphere_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(),
+                             SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
+                             select_obj->get_transform()->Position, t_min, glm::vec3(0.0f));
+    }
+
+    if (select_obj != nullptr && select_obj->hasComponent<GCharacter>())
+    {
+        capsule_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(), SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(), select_obj->get_transform()->Position, select_obj->get_transform()->Scale, select_obj->get_transform()->get_euler_angles());
+    }
 }
 
 void EngineUI::draw_ui()

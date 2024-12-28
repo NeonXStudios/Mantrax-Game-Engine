@@ -19,8 +19,8 @@ public:
     int p_height = 1080;
 
     void setup();
-    void draw(glm::mat4 camera_matrix);
-    void draw(std::function<void()> func);
+    void draw(glm::mat4 camera_matrix, std::function<void(void)> additional_Render);
+    // void draw(std::function<void()> func);
     unsigned int get_render();
 
     ~TextureTarget();

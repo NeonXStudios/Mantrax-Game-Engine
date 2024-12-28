@@ -22,16 +22,17 @@ public:
     static std::vector<TextureTarget *> render_targets;
     static std::vector<Camera *> camera_targets;
     static std::unordered_map<std::string, TextureTarget *> view_renders;
-    static std::unordered_map<int, GMaterial *> m_textures;
+    static std::unordered_map<int, GMaterial *> m_materials;
 
     static void init();
-    static void render();
+    static void render(std::function<void(void)> additional_Render);
 
     static void render_all_data(glm::mat4 camera_matrix);
     static void delete_from_render(ModelComponent *renderable);
 
-    static void register_new_texture(TextureManager *texture);
-    static void unregister_texture(TextureManager *texture);
+    static void register_new_material(GMaterial *texture);
+    static void unregister_material(GMaterial *texture);
+    GMaterial *get_material(int id);
 
     static void addLayer(int layer);
     static void removeLayer(int layer);
