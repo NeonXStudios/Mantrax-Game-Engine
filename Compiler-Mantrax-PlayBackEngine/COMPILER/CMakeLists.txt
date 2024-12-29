@@ -19,7 +19,7 @@ set(MYLIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../LIB/bin/Debug/")
 link_directories(${MYLIB_DIR})
 
 # Archivo ejecutable
-add_executable(${project_name} WIN32 ${SOURCES})
+add_executable(${project_name} ${SOURCES})
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Mantrax-Core/includes

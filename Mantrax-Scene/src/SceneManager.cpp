@@ -306,7 +306,7 @@ Scene *SceneManager::make_new_empty_scene(std::string scene_name)
 
     try
     {
-        std::cout << "Making new Scene" << std::endl;
+        std::cout << "------Making new Scene" << std::endl;
 
         if (scene_raw->main_camera == nullptr)
         {

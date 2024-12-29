@@ -19,23 +19,23 @@ RenderPipeline *piprender = new RenderPipeline();
 
 bool first_frame_loaded;
 
-int start_engine(int argc, char *argv[]);
+// int start_engine(int argc, char *argv[]);
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-{
-    HWND hWnd = GetConsoleWindow();
-    if (hWnd)
-    {
-        ShowWindow(hWnd, SW_HIDE);
-    }
+// int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+// {
+//     HWND hWnd = GetConsoleWindow();
+//     if (hWnd)
+//     {
+//         ShowWindow(hWnd, SW_HIDE);
+//     }
 
-    const char *args[] = {"MantraxEngine", lpCmdLine};
-    int argc = sizeof(args) / sizeof(args[0]);
+//     const char *args[] = {"MantraxEngine", lpCmdLine};
+//     int argc = sizeof(args) / sizeof(args[0]);
 
-    return start_engine(argc, const_cast<char **>(args));
-}
+//     return start_engine(argc, const_cast<char **>(args));
+// }
 
-int start_engine(int argc, char *arvg[])
+int main(int argc, char *arvg[])
 {
     if (argc == 0)
     {
@@ -67,10 +67,9 @@ int start_engine(int argc, char *arvg[])
     scene_game->configs->current_proyect = project_path.string() + "/";
     FileManager::game_path = scene_game->configs->current_proyect;
 
-    SceneManager::load_scene(scene_game->configs->start_scene);
-
     RenderPipeline::init();
     SceneManager::on_awake();
+    SceneManager::load_scene(scene_game->configs->start_scene);
     std::cout << "************************" << std::endl;
 
     scene_game->configs->load_config();
@@ -78,7 +77,7 @@ int start_engine(int argc, char *arvg[])
     scene_game->on_start();
     SceneManager::on_start();
 
-    AppSettings::is_playing = false;
+    AppSettings::is_playing = true;
 
     while (!Gfx::try_window_close())
     {
@@ -86,8 +85,9 @@ int start_engine(int argc, char *arvg[])
         Gfx::timer_control();
         Gfx::process_window_size();
 
-        RenderPipeline::render();
+        RenderPipeline::render([]() {});
         SceneManager::on_update();
+        scene_game->draw_ui();
 
         Gfx::swap_buffer();
     }

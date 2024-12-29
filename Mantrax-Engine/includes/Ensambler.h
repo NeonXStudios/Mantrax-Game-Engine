@@ -30,9 +30,6 @@ public:
 
             UINotification::AddNotification("Recompiling libraries...", 10.0f);
 
-            std::string cmake_engine = FileManager::get_execute_path() + "data/compilers/CMake/bin/cmake";
-            std::string msbuild_engine = FileManager::get_execute_path() + "data/compilers/MSBuild/Current/Bin/MSBuild";
-
             std::string cmake_path = FileManager::get_project_path() + "wlibsgpp/";
             std::string cmake_command = "cd /d " + cmake_path + " && if not exist bin mkdir bin && cd bin && cmake ..";
             std::string msbuild_command = "cd /d " + cmake_path + " && cd bin && msbuild MantraxRuntimeCore.sln /p:Configuration=Debug";

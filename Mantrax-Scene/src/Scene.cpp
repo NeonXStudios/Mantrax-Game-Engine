@@ -28,6 +28,18 @@ void Scene::update(float delta_time)
                 {
                     std::cerr << e.what() << '\n';
                 }
+
+                if (ent->hasComponent<GCamera>() && AppSettings::is_playing)
+                {
+                    static int current_depth = -1;
+
+                    if (std::any_cast<int>(ent->getComponent<GCamera>().variableMap["Depth"]) > current_depth)
+                    {
+                        main_camera = ent->getComponent<GCamera>().a_camera;
+                        current_depth = std::any_cast<int>(ent->getComponent<GCamera>().variableMap["Depth"]);
+                        std::cout << "Camera changed" << std::endl;
+                    }
+                }
             }
 
             on_update(delta_time);
