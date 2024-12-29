@@ -578,49 +578,41 @@ public:
 		return false;
 	}
 
-	bool remove_component_by_id(int id)
+	bool removeComponentByPointer(Component *targetComponent)
 	{
-		if (id < 0 || id >= componentBitset.size())
+		if (targetComponent == nullptr)
 		{
-			std::cerr << "Error: ID fuera de rango en removeComponentByID: " << id << std::endl;
 			return false;
 		}
 
-		if (!componentBitset[id])
+		for (auto &component : components)
 		{
-			std::cerr << "No hay componente con ese ID en el bitset." << std::endl;
-			return false;
+			if (component == targetComponent)
+			{
+				component->clean();
+				break;
+			}
 		}
 
-		Component *componentToRemove = componentArray[id];
-		if (componentToRemove == nullptr)
-		{
-			std::cerr << "Error: componentArray[" << id << "] es nullptr." << std::endl;
-			return false;
-		}
-
-		auto it = std::find_if(components.begin(), components.end(),
-							   [componentToRemove](const Component *c)
-							   {
-								   return c == componentToRemove;
-							   });
+		auto it = std::remove(components.begin(), components.end(), targetComponent);
 
 		if (it != components.end())
 		{
-			(*it)->clean();
+			components.erase(it, components.end());
 
-			delete *it;
+			for (std::size_t i = 0; i < componentArray.size(); ++i)
+			{
+				if (componentArray[i] == targetComponent)
+				{
+					componentArray[i] = nullptr;
+					componentBitset[i] = false;
+					break;
+				}
+			}
 
-			components.erase(it);
-
-			componentArray[id] = nullptr;
-			componentBitset[id] = false;
-
-			std::cerr << "Componente con ID " << id << " eliminado correctamente." << std::endl;
 			return true;
 		}
 
-		std::cerr << "Error: Componente no encontrado en el vector components." << std::endl;
 		return false;
 	}
 
@@ -628,24 +620,23 @@ public:
 	{
 		for (auto &component : components)
 		{
-			component->clean();
-			delete component;
+			if (component)
+			{
+				try
+				{
+					component->clean();
+				}
+				catch (const std::exception &e)
+				{
+					std::cerr << "Error during clean(): " << e.what() << std::endl;
+				}
+			}
 		}
 
 		components.clear();
+
 		std::fill(componentArray.begin(), componentArray.end(), nullptr);
 		componentBitset.reset();
-	}
-
-	void setParent(Entity *newParent)
-	{
-		parent = newParent;
-		parent->addChild(this);
-
-		// for (Entity *child : parent->childrens)
-		// {
-		// 	std::cout << "Child Object Name: " << child->ObjectName << std::endl;
-		// }
 	}
 };
 

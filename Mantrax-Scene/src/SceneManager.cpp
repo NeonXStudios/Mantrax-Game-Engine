@@ -339,6 +339,7 @@ Scene *SceneManager::get_current_scene()
 
 void SceneManager::start_physic_world()
 {
+    std::cout << "******* Starting Physic World" << std::endl;
 
     if (SceneManager::get_scene_manager()->physic_world == nullptr)
     {

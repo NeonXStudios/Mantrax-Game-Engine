@@ -190,7 +190,7 @@ public:
         Component *component,
         std::function<void(void)> func)
     {
-        ImGui::PushID(ID);
+        ImGui::PushID(component->component_id);
 
         // --- Checkbox para habilitar o deshabilitar el componente ---
         bool enabledCTMP = component->enabled;
@@ -215,7 +215,6 @@ public:
         float iconOffset = 28.0f; // Un margen para que no se pise con el triángulo del TreeNode
         ImGui::SameLine(ImGui::GetContentRegionMax().x - iconOffset);
 
-        // Un pequeño 'PushStyleVar' opcional para encoger el botón
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(3.0f, 2.0f));
         if (ImGui::Button("..."))
         {
@@ -223,19 +222,23 @@ public:
         }
         ImGui::PopStyleVar();
 
-        // --- Aquí definimos el menú contextual cuando se hace clic en los 3 puntitos ---
         if (ImGui::BeginPopup("ComponentOptionsPopup"))
         {
-            // Opción: Eliminar el componente
             if (ImGui::MenuItem("Remove Component"))
             {
-                owner->remove_component_by_id(ID);
-                // <-- PROBLEMA: Llamada extra o fuera de lugar
+                owner->removeComponentByPointer(component);
+
+                ImGui::CloseCurrentPopup();
                 ImGui::EndPopup();
+
+                if (treeNodeOpen)
+                {
+                    ImGui::TreePop();
+                }
+
                 ImGui::PopID();
                 return;
             }
-
             ImGui::EndPopup();
         }
 

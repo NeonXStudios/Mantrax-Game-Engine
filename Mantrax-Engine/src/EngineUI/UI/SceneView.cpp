@@ -235,10 +235,12 @@ void SceneView::on_draw()
         }
     }
 
-    if (ImGui::IsKeyDown(ImGuiKey_Delete))
+    if (ImGui::IsKeyDown(ImGuiKey_Delete) && EngineUI::getInstance().select_obj != nullptr)
     {
-        SceneManager::get_current_scene()->destroy(EngineUI::getInstance().select_obj);
+        Entity *safe_to_delete = EngineUI::getInstance().select_obj;
         EngineUI::getInstance().select_obj = nullptr;
+
+        SceneManager::get_current_scene()->destroy(safe_to_delete);
     }
 
     if (ImGui::IsWindowHovered() && ImGui::IsKeyDown(ImGuiKey_F) && EngineUI::getInstance().select_obj != nullptr)

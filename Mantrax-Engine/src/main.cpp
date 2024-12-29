@@ -65,10 +65,9 @@ int main(int argc, char *arvg[])
     scene_game->configs->current_proyect = project_path.string() + "/";
     FileManager::game_path = scene_game->configs->current_proyect;
 
-    SceneManager::load_scene(scene_game->configs->start_scene);
-
     RenderPipeline::init();
     SceneManager::on_awake();
+    SceneManager::load_scene(scene_game->configs->start_scene);
     std::cout << "************************" << std::endl;
 
     scene_game->configs->load_config();

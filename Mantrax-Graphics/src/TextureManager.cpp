@@ -53,7 +53,7 @@ void TextureManager::use_texture(GLuint shaderID) const
 {
     if (texture_maked == 0)
     {
-        std::cerr << "Attempt to use an uninitialized texture!" << std::endl;
+        // std::cerr << "Attempt to use an uninitialized texture!" << std::endl;
         return;
     }
     glActiveTexture(GL_TEXTURE0);

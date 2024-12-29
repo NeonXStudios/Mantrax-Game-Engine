@@ -53,6 +53,11 @@ static GLuint GetThumbnailTextureID(const std::string &path)
 
 void AssetsFiles::on_draw()
 {
+    if (!asset_selected_struct)
+    {
+        asset_selected_struct = std::make_unique<SelectedAssetInfo>();
+    }
+
     // Ventana principal de "Assets"
     ImGui::Begin("Assets", &is_open);
     {
@@ -108,24 +113,42 @@ void AssetsFiles::on_draw()
     {
         ImGui::Begin("Asset Info");
 
-        std::string asset_name = "Asset Name: " + asset_selected_struct->asset_name;
-        std::string asset_type = "Asset Type: " + asset_selected_struct->asset_type;
-        std::string asset_complete_path = "Asset Complete Path: " + asset_selected_struct->asset_complete_path;
+        // Título para la sección de información del Asset
+        ImGui::Text("Asset Information");
+        ImGui::Separator();
 
-        ImGui::TextUnformatted(asset_name.c_str());
-        ImGui::TextUnformatted(asset_type.c_str());
-        ImGui::TextUnformatted(asset_complete_path.c_str());
+        // Mostrar nombre, tipo y ruta completa con truncado
+        ImGui::Text("Details:");
+        ImGui::BulletText("Name: %s", asset_selected_struct->asset_name.c_str());
+        ImGui::BulletText("Type: %s", asset_selected_struct->asset_type.c_str());
+        ImGui::BulletText("Path: %s", TruncatePath(asset_selected_struct->asset_complete_path, 50).c_str());
 
-        // Si el asset es una imagen (png o jpg), mostrar un preview
+        ImGui::Separator();
+
+        // Acciones rápidas
+        ImGui::Text("Actions:");
+        if (ImGui::Button("Open in External Editor", ImVec2(-1, 0)))
+        {
+            std::string open_command = "code " + asset_selected_struct->asset_complete_path;
+            system(open_command.c_str());
+        }
+
+        if (ImGui::Button("Delete Asset", ImVec2(-1, 0)))
+        {
+            std::cout << "Eliminar asset: " << asset_selected_struct->asset_complete_path << std::endl;
+        }
+
+        // Mostrar vista previa si el Asset es una imagen
         if (asset_selected_struct->asset_type == ".png" || asset_selected_struct->asset_type == ".jpg")
         {
+            ImGui::Separator();
+            ImGui::Text("Preview:");
+
             static std::unique_ptr<TextureManager> texture_manager = nullptr;
             static std::string last_loaded_path;
 
-            // Cargar la textura si no está cargada o cambió la ruta
             if (!texture_manager || last_loaded_path != asset_selected_struct->asset_complete_path)
             {
-                // Liberar la anterior
                 if (texture_manager)
                 {
                     GLuint old_texture = texture_manager->get_texture();
@@ -134,7 +157,6 @@ void AssetsFiles::on_draw()
                     texture_manager.reset();
                 }
 
-                // Cargar nueva
                 try
                 {
                     texture_manager = std::make_unique<TextureManager>(asset_selected_struct->asset_complete_path);
@@ -143,29 +165,32 @@ void AssetsFiles::on_draw()
                     GLuint new_texture = texture_manager->get_texture();
                     if (!new_texture)
                     {
-                        ImGui::TextUnformatted("Error: No se pudo crear la textura.");
+                        ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Error: Unable to create texture.");
                     }
                 }
                 catch (const std::exception &e)
                 {
-                    ImGui::Text("Excepción al cargar la textura: %s", e.what());
+                    ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Exception while loading texture: %s", e.what());
                 }
             }
 
-            // Mostrar la textura si la tenemos
             if (texture_manager)
             {
                 GLuint texture_id = texture_manager->get_texture();
                 if (texture_id)
                 {
-                    ImGui::TextUnformatted("Preview:");
                     ImGui::Image((void *)(intptr_t)texture_id, ImVec2(200, 200));
                 }
                 else
                 {
-                    ImGui::TextUnformatted("Error: Textura no válida.");
+                    ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Error: Invalid texture.");
                 }
             }
+        }
+        else
+        {
+            ImGui::Separator();
+            ImGui::Text("No preview available for this type of asset.");
         }
 
         ImGui::End();

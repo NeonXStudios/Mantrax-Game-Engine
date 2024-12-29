@@ -32,4 +32,12 @@ public:
             return false;
         return std::equal(prefix.begin(), prefix.end(), str.begin());
     }
+
+    std::string TruncatePath(const std::string &path, size_t max_length)
+    {
+        if (path.length() <= max_length)
+            return path;
+        size_t visible_part = max_length - 3; // Restamos 3 para los "..."
+        return path.substr(0, visible_part) + "...";
+    }
 };

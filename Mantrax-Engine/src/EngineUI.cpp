@@ -150,9 +150,11 @@ void EngineUI::on_draw()
 
     if (select_obj != nullptr && select_obj->hasComponent<GCollision>())
     {
+        glm::vec3 convert_gl_to_physx = (select_obj->get_transform()->Scale * std::any_cast<glm::vec3>(select_obj->getComponent<GCollision>().variableMap["boxSize"])) * 2.0f;
+
         cube_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(),
                            SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
-                           select_obj->get_transform()->Position, select_obj->get_transform()->Scale * std::any_cast<glm::vec3>(select_obj->getComponent<GCollision>().variableMap["boxSize"]));
+                           select_obj->get_transform()->Position, convert_gl_to_physx);
     }
 
     if (select_obj != nullptr && select_obj->hasComponent<GAudio>())
