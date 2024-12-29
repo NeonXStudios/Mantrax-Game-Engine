@@ -472,7 +472,6 @@ public:
     {
         glUseProgram(shaderProgram);
 
-        // Transformaciones
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, position);
         model = glm::scale(model, scale);
@@ -480,12 +479,10 @@ public:
         model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
-        // Pasar matrices al shader
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-        // Dibujar la cápsula
         glBindVertexArray(VAO);
         glDrawElements(GL_LINES, indicesCount, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);

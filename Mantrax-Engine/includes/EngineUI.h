@@ -31,6 +31,9 @@ public:
         return instance;
     }
 
+    static float yaw;
+    static float pitch;
+
     EngineUI(const EngineUI &) = delete;
     void operator=(const EngineUI &) = delete;
 

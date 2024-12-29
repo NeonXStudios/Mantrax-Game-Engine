@@ -8,6 +8,9 @@
 #include <GarinIO.h>
 #include <PerlinGenerator.h>
 
+float EngineUI::yaw = 0.0f;
+float EngineUI::pitch = 0.0f;
+
 void EngineUI::on_awake()
 {
     // old_stdout = std::cout.rdbuf(buffer_stdout.rdbuf());
@@ -20,11 +23,11 @@ void EngineUI::on_start()
 {
 
     UIMasterDrawer::get_instance().register_uis();
-    std::cout << "CARPETA DE EJECUCION: " << FileManager::get_execute_path() << std::endl;
+    std::cout << "Work Path: " << FileManager::get_execute_path() << std::endl;
 
     IconsManager::init();
 
-    string info = "OPEN FILE: " + configs->current_scene;
+    string info = "Scene Loaded: " + configs->current_scene;
 
     UINotification::AddNotification(info, 3.0f);
 
@@ -79,9 +82,6 @@ void EngineUI::on_edition_mode(float delta_time)
                     camera->move_left(delta_time, deltaX);
                 }
             }
-
-            static float yaw = 0.0f;
-            static float pitch = 0.0f;
 
             yaw += deltaX;
             pitch += deltaY;
@@ -171,7 +171,11 @@ void EngineUI::on_draw()
 
     if (select_obj != nullptr && select_obj->hasComponent<GCharacter>())
     {
-        capsule_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(), SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(), select_obj->get_transform()->Position, select_obj->get_transform()->Scale, select_obj->get_transform()->get_euler_angles());
+        capsule_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(),
+                              SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
+                              select_obj->get_transform()->Position,
+                              select_obj->get_transform()->Scale,
+                              select_obj->get_transform()->get_euler_angles());
     }
 }
 

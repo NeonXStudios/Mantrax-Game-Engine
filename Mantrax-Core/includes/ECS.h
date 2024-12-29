@@ -51,8 +51,7 @@ using ComponentArray = std::array<Component *, maxComponents>;
 class GARINLIBS_API Component
 {
 public:
-	using Variable = std::any;
-	std::map<std::string, Variable> variableMap;
+	std::map<std::string, std::any> variableMap;
 
 	int component_id;
 	std::string _name;
@@ -68,6 +67,11 @@ public:
 
 	void clear_vars()
 	{
+		for (auto &pair : variableMap)
+		{
+			delete &pair.second;
+		}
+
 		variableMap.clear();
 	}
 
@@ -290,7 +294,28 @@ public:
 
 	glm::vec3 get_euler_angles() const
 	{
-		return glm::eulerAngles(rotation);
+		glm::vec3 euler;
+
+		float sqx = rotation.x * rotation.x;
+		float sqy = rotation.y * rotation.y;
+		float sqz = rotation.z * rotation.z;
+		float sqw = rotation.w * rotation.w;
+
+		float siny_cosp = 2.0f * (rotation.w * rotation.x + rotation.y * rotation.z);
+		float cosy_cosp = sqw - sqx - sqy + sqz;
+		euler.x = std::atan2(siny_cosp, cosy_cosp);
+
+		float sinp = 2.0f * (rotation.w * rotation.y - rotation.z * rotation.x);
+		if (std::abs(sinp) >= 1)
+			euler.y = std::copysign(glm::pi<float>() / 2, sinp);
+		else
+			euler.y = std::asin(sinp);
+
+		float sinr_cosp = 2.0f * (rotation.w * rotation.z + rotation.x * rotation.y);
+		float cosr_cosp = sqw + sqx - sqy - sqz;
+		euler.z = std::atan2(sinr_cosp, cosr_cosp);
+
+		return euler;
 	}
 
 	void setPosition(const glm::vec3 &pos)
@@ -368,7 +393,6 @@ public:
 		return Scale;
 	}
 
-	// Obtener valores en espacio local
 	glm::vec3 getPositionLocal() const { return Position; }
 	glm::quat getRotationLocal() const { return rotation; }
 	glm::vec3 getScaleLocal() const { return Scale; }

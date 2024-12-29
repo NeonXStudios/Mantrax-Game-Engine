@@ -10,8 +10,8 @@
 
 using namespace ImGuizmo;
 
-ImGuizmo::MODE gizmoMode(ImGuizmo::LOCAL);
-ImGuizmo::OPERATION gizmoOperation(ImGuizmo::TRANSLATE);
+static ImGuizmo::MODE gizmoMode(ImGuizmo::LOCAL);
+static ImGuizmo::OPERATION gizmoOperation(ImGuizmo::TRANSLATE);
 
 void SceneView::on_draw()
 {
@@ -24,8 +24,39 @@ void SceneView::on_draw()
     ImVec2 windowSize = ImGui::GetContentRegionAvail();
 
     ImVec2 p = ImGui::GetCursorScreenPos();
-    ImGui::Image((void *)(intptr_t)Gfx::main_render->get_render(), ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(ImVec2(0, 1)), ImVec2(ImVec2(1, 0)));
+    ImGui::Image((void *)(intptr_t)Gfx::main_render->get_render(), ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(0, 1), ImVec2(1, 0));
     imagePosition = ImGui::GetWindowPos();
+
+    ImVec2 buttonPosition = ImVec2(p.x + 10, p.y + 10);
+    ImGui::SetCursorScreenPos(buttonPosition);
+
+    if (ImGui::ImageButton((void *)(intptr_t)IconsManager::MOVE(), ImVec2(24, 24)))
+    {
+        gizmoOperation = ImGuizmo::TRANSLATE;
+    }
+
+    ImGui::SetCursorScreenPos(ImVec2(buttonPosition.x + 50, buttonPosition.y));
+    if (ImGui::ImageButton((void *)(intptr_t)IconsManager::ROTATE(), ImVec2(24, 24)))
+    {
+        gizmoOperation = ImGuizmo::ROTATE;
+    }
+
+    ImGui::SetCursorScreenPos(ImVec2(buttonPosition.x + 100, buttonPosition.y));
+    if (ImGui::ImageButton((void *)(intptr_t)IconsManager::SCALE(), ImVec2(24, 24)))
+    {
+        gizmoOperation = ImGuizmo::SCALE;
+    }
+
+    float imageRightX = p.x + Gfx::render_width;
+    ImVec2 rightButtonPosition = ImVec2(imageRightX - 50, p.y + 10);
+    ImGui::SetCursorScreenPos(rightButtonPosition);
+
+    auto current_camera_type_icon = SceneManager::get_current_scene()->main_camera->use_projection ? IconsManager::PERSPECTIVE() : IconsManager::ORTHO();
+    if (ImGui::ImageButton((void *)(intptr_t)current_camera_type_icon, ImVec2(24, 24)))
+    {
+        SceneManager::get_current_scene()->main_camera->use_projection = !SceneManager::get_current_scene()->main_camera->use_projection;
+    }
+
     Gfx::render_width = windowSize.x;
     Gfx::render_height = windowSize.y;
 
@@ -84,8 +115,6 @@ void SceneView::on_draw()
 
     if (EngineUI::getInstance().select_obj != nullptr)
     {
-        static ImGuizmo::MODE gizmoMode(ImGuizmo::LOCAL);
-        static ImGuizmo::OPERATION gizmoOperation(ImGuizmo::TRANSLATE);
 
         TransformComponent *transform = EngineUI::getInstance().select_obj->get_transform();
 
@@ -217,27 +246,20 @@ void SceneView::on_draw()
         auto selectedObj = EngineUI::getInstance().select_obj->get_transform();
         auto camera = SceneManager::get_current_scene()->main_camera;
 
-        // Posición del objeto objetivo
         glm::vec3 targetPosition = selectedObj->Position;
 
-        // Calcular la dirección desde la cámara hacia el objeto
         glm::vec3 directionToTarget = glm::normalize(targetPosition - camera->cameraPosition);
 
-        // Calcular los ángulos yaw y pitch basados en la dirección al objetivo
-        float yaw = atan2(directionToTarget.x, directionToTarget.z);
-        float pitch = -asin(directionToTarget.y);
+        EngineUI::yaw = atan2(directionToTarget.x, directionToTarget.z);
+        EngineUI::pitch = -asin(directionToTarget.y);
 
-        // Crear los quaternions de rotación
-        glm::quat rotationX = glm::angleAxis(pitch, glm::vec3(1.0f, 0.0f, 0.0f));
-        glm::quat rotationY = glm::angleAxis(yaw, glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::quat rotationX = glm::angleAxis(EngineUI::pitch, glm::vec3(1.0f, 0.0f, 0.0f));
+        glm::quat rotationY = glm::angleAxis(EngineUI::yaw, glm::vec3(0.0f, 1.0f, 0.0f));
 
-        // Combinar las rotaciones
         glm::quat targetRotation = glm::normalize(rotationY * rotationX);
 
-        // Distancia deseada
         float distanceToObject = 5.0f;
 
-        // Aplicar posición y rotación instantáneamente
         camera->cameraPosition = targetPosition - (directionToTarget * distanceToObject);
 
         if (camera->use_projection)
@@ -248,8 +270,6 @@ void SceneView::on_draw()
         {
             camera->cameraRotation = glm::quat(0.0f, 0.0f, 0.0f, 0.0f);
         }
-
-        camera->update();
     }
 
     ImGui::End();

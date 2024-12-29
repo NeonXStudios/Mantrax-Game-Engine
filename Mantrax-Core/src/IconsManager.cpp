@@ -26,8 +26,38 @@ void IconsManager::init()
     IconsManager::icons->trash_icon = new TextureManager(FileManager::get_execute_path() + "icons/trash.png");
     IconsManager::icons->engine_logo = new TextureManager(FileManager::get_execute_path() + "icons/engine.png");
     IconsManager::icons->shader_logo = new TextureManager(FileManager::get_execute_path() + "icons/Shader.png");
+    IconsManager::icons->move = new TextureManager(FileManager::get_execute_path() + "icons/Move.png");
+    IconsManager::icons->rotate = new TextureManager(FileManager::get_execute_path() + "icons/Rotate.png");
+    IconsManager::icons->scale = new TextureManager(FileManager::get_execute_path() + "icons/Scale.png");
+    IconsManager::icons->ortho = new TextureManager(FileManager::get_execute_path() + "icons/ORTHO.png");
+    IconsManager::icons->perspective = new TextureManager(FileManager::get_execute_path() + "icons/Perspective.png");
 
     std::cout << "ICONS MANAGER SETUP CORRECTLY" << std::endl;
+}
+
+unsigned int IconsManager::ORTHO()
+{
+    return IconsManager::icons->ortho->get_texture();
+}
+
+unsigned int IconsManager::PERSPECTIVE()
+{
+    return IconsManager::icons->perspective->get_texture();
+}
+
+unsigned int IconsManager::MOVE()
+{
+    return IconsManager::icons->move->get_texture();
+}
+
+unsigned int IconsManager::ROTATE()
+{
+    return IconsManager::icons->rotate->get_texture();
+}
+
+unsigned int IconsManager::SCALE()
+{
+    return IconsManager::icons->scale->get_texture();
 }
 
 unsigned int IconsManager::ENGINE_LOGO()

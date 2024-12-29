@@ -27,9 +27,19 @@ public:
     TextureManager *trash_icon;
     TextureManager *engine_logo;
     TextureManager *shader_logo;
+    TextureManager *move;
+    TextureManager *rotate;
+    TextureManager *scale;
+    TextureManager *ortho;
+    TextureManager *perspective;
 
     static unsigned int ENGINE_LOGO();
     static unsigned int SHADER();
+    static unsigned int ORTHO();
+    static unsigned int PERSPECTIVE();
+    static unsigned int MOVE();
+    static unsigned int ROTATE();
+    static unsigned int SCALE();
     static unsigned int FLOAT();
     static unsigned int TRASH();
     static unsigned int INT();
