@@ -1,4 +1,6 @@
 GarinEngine is being created with the purpose of being easy to use.
+-NEW UI 2025-
+![Mantrax_Engine_95hyWWQceo](https://github.com/user-attachments/assets/76a6b02c-2e94-4283-82b6-f1a98d576c3b)
 
 ![Garin_Engine_JuHnPlPVFS](https://github.com/user-attachments/assets/4040384e-eaf6-47a5-8b03-ff9acdaa5c16)
 ![image](https://github.com/user-attachments/assets/cd32d730-e22c-4a3f-a810-d1499ac14821)
