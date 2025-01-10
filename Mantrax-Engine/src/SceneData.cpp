@@ -2,7 +2,7 @@
 
 void SceneData::load_scene(std::string scene_name_new, bool is_additive)
 {
-    SceneManager::load_scene(scene_name_new, is_additive);
+    SceneManager::get_scene_manager()->load_scene(scene_name_new, is_additive);
 }
 
 void SceneData::save_scene()
@@ -15,7 +15,7 @@ void SceneData::save_scene()
             Entity *ent = SceneManager::get_current_scene()->objects_worlds[i];
 
             json dataOBJ;
-            dataOBJ["name"] = ent->ObjectName;
+            dataOBJ["name"] = ent->name_object;
             dataOBJ["px"] = ent->get_transform()->Position.x;
             dataOBJ["py"] = ent->get_transform()->Position.y;
             dataOBJ["pz"] = ent->get_transform()->Position.z;
@@ -29,12 +29,12 @@ void SceneData::save_scene()
             dataOBJ["sy"] = ent->get_transform()->Scale.y;
             dataOBJ["sz"] = ent->get_transform()->Scale.z;
 
-            dataOBJ["object_id"] = ent->objectID;
-            dataOBJ["tag"] = ent->ObjectTag;
+            dataOBJ["object_id"] = ent->object_int_id;
+            dataOBJ["tag"] = ent->object_tag;
             dataOBJ["layer"] = ent->Layer;
 
             if (ent->get_transform()->parent != nullptr)
-                dataOBJ["parent_id"] = ent->get_transform()->parent->entity->objectID;
+                dataOBJ["parent_id"] = ent->get_transform()->parent->entity->object_int_id;
 
             json components = json::array();
 

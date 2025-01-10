@@ -13,8 +13,10 @@ public:
 
     physx::PxShape *shape = NULL;
     PxU32 layerMask0 = LAYER_1;
+    bool lock_update;
 
     void defines() override;
     void init() override;
     void update() override;
+    void clean() override;
 };

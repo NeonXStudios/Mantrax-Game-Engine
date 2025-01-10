@@ -8538,23 +8538,23 @@ struct safe_VkPipelineRasterizationStateRasterizationOrderAMD {
         return reinterpret_cast<VkPipelineRasterizationStateRasterizationOrderAMD const*>(this);
     }
 };
-struct safe_VkDebugMarkerObjectNameInfoEXT {
+struct safe_VkDebugMarkername_objectInfoEXT {
     VkStructureType sType;
     const void* pNext{};
     VkDebugReportObjectTypeEXT objectType;
     uint64_t object;
-    const char* pObjectName{};
+    const char* pname_object{};
 
-    safe_VkDebugMarkerObjectNameInfoEXT(const VkDebugMarkerObjectNameInfoEXT* in_struct, PNextCopyState* copy_state = {},
+    safe_VkDebugMarkername_objectInfoEXT(const VkDebugMarkername_objectInfoEXT* in_struct, PNextCopyState* copy_state = {},
                                         bool copy_pnext = true);
-    safe_VkDebugMarkerObjectNameInfoEXT(const safe_VkDebugMarkerObjectNameInfoEXT& copy_src);
-    safe_VkDebugMarkerObjectNameInfoEXT& operator=(const safe_VkDebugMarkerObjectNameInfoEXT& copy_src);
-    safe_VkDebugMarkerObjectNameInfoEXT();
-    ~safe_VkDebugMarkerObjectNameInfoEXT();
-    void initialize(const VkDebugMarkerObjectNameInfoEXT* in_struct, PNextCopyState* copy_state = {});
-    void initialize(const safe_VkDebugMarkerObjectNameInfoEXT* copy_src, PNextCopyState* copy_state = {});
-    VkDebugMarkerObjectNameInfoEXT* ptr() { return reinterpret_cast<VkDebugMarkerObjectNameInfoEXT*>(this); }
-    VkDebugMarkerObjectNameInfoEXT const* ptr() const { return reinterpret_cast<VkDebugMarkerObjectNameInfoEXT const*>(this); }
+    safe_VkDebugMarkername_objectInfoEXT(const safe_VkDebugMarkername_objectInfoEXT& copy_src);
+    safe_VkDebugMarkername_objectInfoEXT& operator=(const safe_VkDebugMarkername_objectInfoEXT& copy_src);
+    safe_VkDebugMarkername_objectInfoEXT();
+    ~safe_VkDebugMarkername_objectInfoEXT();
+    void initialize(const VkDebugMarkername_objectInfoEXT* in_struct, PNextCopyState* copy_state = {});
+    void initialize(const safe_VkDebugMarkername_objectInfoEXT* copy_src, PNextCopyState* copy_state = {});
+    VkDebugMarkername_objectInfoEXT* ptr() { return reinterpret_cast<VkDebugMarkername_objectInfoEXT*>(this); }
+    VkDebugMarkername_objectInfoEXT const* ptr() const { return reinterpret_cast<VkDebugMarkername_objectInfoEXT const*>(this); }
 };
 struct safe_VkDebugMarkerObjectTagInfoEXT {
     VkStructureType sType;
@@ -9541,23 +9541,23 @@ struct safe_VkDebugUtilsLabelEXT {
     VkDebugUtilsLabelEXT* ptr() { return reinterpret_cast<VkDebugUtilsLabelEXT*>(this); }
     VkDebugUtilsLabelEXT const* ptr() const { return reinterpret_cast<VkDebugUtilsLabelEXT const*>(this); }
 };
-struct safe_VkDebugUtilsObjectNameInfoEXT {
+struct safe_VkDebugUtilsname_objectInfoEXT {
     VkStructureType sType;
     const void* pNext{};
     VkObjectType objectType;
     uint64_t objectHandle;
-    const char* pObjectName{};
+    const char* pname_object{};
 
-    safe_VkDebugUtilsObjectNameInfoEXT(const VkDebugUtilsObjectNameInfoEXT* in_struct, PNextCopyState* copy_state = {},
+    safe_VkDebugUtilsname_objectInfoEXT(const VkDebugUtilsname_objectInfoEXT* in_struct, PNextCopyState* copy_state = {},
                                        bool copy_pnext = true);
-    safe_VkDebugUtilsObjectNameInfoEXT(const safe_VkDebugUtilsObjectNameInfoEXT& copy_src);
-    safe_VkDebugUtilsObjectNameInfoEXT& operator=(const safe_VkDebugUtilsObjectNameInfoEXT& copy_src);
-    safe_VkDebugUtilsObjectNameInfoEXT();
-    ~safe_VkDebugUtilsObjectNameInfoEXT();
-    void initialize(const VkDebugUtilsObjectNameInfoEXT* in_struct, PNextCopyState* copy_state = {});
-    void initialize(const safe_VkDebugUtilsObjectNameInfoEXT* copy_src, PNextCopyState* copy_state = {});
-    VkDebugUtilsObjectNameInfoEXT* ptr() { return reinterpret_cast<VkDebugUtilsObjectNameInfoEXT*>(this); }
-    VkDebugUtilsObjectNameInfoEXT const* ptr() const { return reinterpret_cast<VkDebugUtilsObjectNameInfoEXT const*>(this); }
+    safe_VkDebugUtilsname_objectInfoEXT(const safe_VkDebugUtilsname_objectInfoEXT& copy_src);
+    safe_VkDebugUtilsname_objectInfoEXT& operator=(const safe_VkDebugUtilsname_objectInfoEXT& copy_src);
+    safe_VkDebugUtilsname_objectInfoEXT();
+    ~safe_VkDebugUtilsname_objectInfoEXT();
+    void initialize(const VkDebugUtilsname_objectInfoEXT* in_struct, PNextCopyState* copy_state = {});
+    void initialize(const safe_VkDebugUtilsname_objectInfoEXT* copy_src, PNextCopyState* copy_state = {});
+    VkDebugUtilsname_objectInfoEXT* ptr() { return reinterpret_cast<VkDebugUtilsname_objectInfoEXT*>(this); }
+    VkDebugUtilsname_objectInfoEXT const* ptr() const { return reinterpret_cast<VkDebugUtilsname_objectInfoEXT const*>(this); }
 };
 struct safe_VkDebugUtilsMessengerCallbackDataEXT {
     VkStructureType sType;
@@ -9571,7 +9571,7 @@ struct safe_VkDebugUtilsMessengerCallbackDataEXT {
     uint32_t cmdBufLabelCount;
     safe_VkDebugUtilsLabelEXT* pCmdBufLabels{};
     uint32_t objectCount;
-    safe_VkDebugUtilsObjectNameInfoEXT* pObjects{};
+    safe_VkDebugUtilsname_objectInfoEXT* pObjects{};
 
     safe_VkDebugUtilsMessengerCallbackDataEXT(const VkDebugUtilsMessengerCallbackDataEXT* in_struct,
                                               PNextCopyState* copy_state = {}, bool copy_pnext = true);
@@ -12786,7 +12786,7 @@ struct safe_VkDeviceMemoryReportCallbackDataEXT {
     void* pNext{};
     VkDeviceMemoryReportFlagsEXT flags;
     VkDeviceMemoryReportEventTypeEXT type;
-    uint64_t memoryObjectId;
+    uint64_t memoryobject_int_id;
     VkDeviceSize size;
     VkObjectType objectType;
     uint64_t objectHandle;

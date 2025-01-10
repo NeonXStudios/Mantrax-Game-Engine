@@ -61,7 +61,6 @@ public:
 
 	virtual ~Component()
 	{
-		clean();
 		clear_vars();
 	}
 
@@ -131,10 +130,10 @@ class GARINLIBS_API TransformComponent
 public:
 	glm::mat4 Matrix = glm::mat4(1.0f);
 	glm::mat4 MatrixLocal = glm::mat4(1.0f);
-	glm::mat4 parentMatrix;
+	glm::mat4 parent_matrix;
 
 	glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
-	glm::vec3 EulerRotation;
+	glm::vec3 euler_rotation;
 	glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 Scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec4 Anchors;
@@ -143,17 +142,17 @@ public:
 	TransformComponent *parent = nullptr;
 	vector<TransformComponent *> childrens;
 
-	bool adaptPosition = true;
-	bool adaptRotation = true;
-	bool adaptScale = false;
+	bool adapt_position = true;
+	bool adapt_rotation = true;
+	bool adapt_scale = false;
 
-	void attach_to(TransformComponent *newParent, bool keepWorldPosition = false)
+	void attach_to(TransformComponent *new_parent, bool keep_world_position = false)
 	{
-		if (newParent != parent)
+		if (new_parent != parent)
 		{
-			if (newParent)
+			if (new_parent)
 			{
-				if (keepWorldPosition)
+				if (keep_world_position)
 				{
 					// Guardar la posición mundial actual
 					glm::mat4 currentWorldMatrix = get_matrix();
@@ -164,7 +163,7 @@ public:
 						glm::length(glm::vec3(currentWorldMatrix[1])),
 						glm::length(glm::vec3(currentWorldMatrix[2])));
 
-					parent = newParent;
+					parent = new_parent;
 
 					// Calcular las transformaciones locales
 					glm::mat4 inverseParentMatrix = glm::inverse(parent->get_matrix());
@@ -179,12 +178,12 @@ public:
 				}
 				else
 				{
-					parent = newParent;
+					parent = new_parent;
 				}
 			}
 			else
 			{
-				if (keepWorldPosition)
+				if (keep_world_position)
 				{
 					// Convertir a posición mundial si se está desconectando
 					glm::mat4 currentWorldMatrix = get_matrix();
@@ -221,19 +220,19 @@ public:
 		{
 			glm::mat4 parentMatrix = parent->get_matrix();
 
-			if (!adaptPosition)
+			if (!adapt_position)
 			{
 				parentMatrix[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 			}
 
-			if (!adaptRotation)
+			if (!adapt_rotation)
 			{
 				glm::vec3 parentPos(parentMatrix[3]);
 				parentMatrix = glm::mat4(1.0f);
 				parentMatrix[3] = glm::vec4(parentPos, 1.0f);
 			}
 
-			if (!adaptScale)
+			if (!adapt_scale)
 			{
 				glm::vec3 parentScale = parent->getScale();
 				parentMatrix = glm::scale(parentMatrix,
@@ -248,9 +247,9 @@ public:
 		}
 	}
 
-	void setAdaptPosition(bool adapt) { adaptPosition = adapt; }
-	void setAdaptRotation(bool adapt) { adaptRotation = adapt; }
-	void setAdaptScale(bool adapt) { adaptScale = adapt; }
+	void setAdaptPosition(bool adapt) { adapt_position = adapt; }
+	void setAdaptRotation(bool adapt) { adapt_rotation = adapt; }
+	void setAdaptScale(bool adapt) { adapt_scale = adapt; }
 
 	void detach_from_parent()
 	{
@@ -281,7 +280,7 @@ public:
 
 	void set_rotation(const glm::vec3 &eulerAngles)
 	{
-		EulerRotation = eulerAngles;
+		euler_rotation = eulerAngles;
 
 		glm::vec3 radians = glm::radians(eulerAngles);
 
@@ -393,9 +392,9 @@ public:
 		return Scale;
 	}
 
-	glm::vec3 getPositionLocal() const { return Position; }
-	glm::quat getRotationLocal() const { return rotation; }
-	glm::vec3 getScaleLocal() const { return Scale; }
+	glm::vec3 get_position_local() const { return Position; }
+	glm::quat get_rotation_local() const { return rotation; }
+	glm::vec3 get_scale_local() const { return Scale; }
 };
 
 class GARINLIBS_API Entity
@@ -403,17 +402,17 @@ class GARINLIBS_API Entity
 private:
 	bool active = true;
 
-	ComponentArray componentArray;
-	ComponentBitSet componentBitset;
-	GroupBitset groupBitset;
+	ComponentArray components_array;
+	ComponentBitSet components_bitset;
+	GroupBitset group_bitset;
 
 public:
 	std::vector<Component *> components;
 	int Layer = LAYER_1;
-	std::string ObjectName = "New Entity";
-	std::string ObjectTag = "None";
-	std::string ObjectSTRID = "0";
-	int objectID = 1;
+	std::string name_object = "New Entity";
+	std::string object_tag = "None";
+	std::string object_string_id = "0";
+	int object_int_id = 1;
 	TransformComponent *transform_component = new TransformComponent();
 
 	Entity *entity = nullptr;
@@ -475,13 +474,13 @@ public:
 
 	bool hasGroup(Group mGroup)
 	{
-		return groupBitset[mGroup];
+		return group_bitset[mGroup];
 	}
 
 	void addGroup(Group mGroup);
 	void delGroup(Group mGroup)
 	{
-		groupBitset[mGroup] = false;
+		group_bitset[mGroup] = false;
 	}
 
 	template <typename T, typename... TArgs>
@@ -493,8 +492,8 @@ public:
 		c->component_id = IDGenerator::generate_id_component();
 		components.emplace_back(c);
 
-		componentArray[c->component_id] = c;
-		componentBitset[c->component_id] = true;
+		components_array[c->component_id] = c;
+		components_bitset[c->component_id] = true;
 
 		if (c->enabled)
 		{
@@ -518,6 +517,9 @@ public:
 				return *derived;
 			}
 		}
+
+		std::cout << "Object Name" << name_object << std::endl;
+		std::cout << "Object Components" << components.size() << std::endl;
 
 		throw std::runtime_error(std::string("Component not found: ") + typeid(T).name());
 	}
@@ -545,6 +547,7 @@ public:
 	template <typename T>
 	bool hasComponent() const
 	{
+		static_assert(std::is_base_of<Component, T>::value, "T debe heredar de Component");
 		return std::any_of(components.begin(), components.end(), [](Component *c)
 						   { return dynamic_cast<T *>(c) != nullptr; });
 	}
@@ -570,8 +573,8 @@ public:
 
 			components.erase(it, components.end());
 
-			componentArray[getComponentTypeID<T>()] = nullptr;
-			componentBitset[getComponentTypeID<T>()] = false;
+			components_array[getComponentTypeID<T>()] = nullptr;
+			components_bitset[getComponentTypeID<T>()] = false;
 
 			return true;
 		}
@@ -600,12 +603,12 @@ public:
 		{
 			components.erase(it, components.end());
 
-			for (std::size_t i = 0; i < componentArray.size(); ++i)
+			for (std::size_t i = 0; i < components_array.size(); ++i)
 			{
-				if (componentArray[i] == targetComponent)
+				if (components_array[i] == targetComponent)
 				{
-					componentArray[i] = nullptr;
-					componentBitset[i] = false;
+					components_array[i] = nullptr;
+					components_bitset[i] = false;
 					break;
 				}
 			}
@@ -624,6 +627,7 @@ public:
 			{
 				try
 				{
+					component->enabled = false;
 					component->clean();
 				}
 				catch (const std::exception &e)
@@ -635,8 +639,8 @@ public:
 
 		components.clear();
 
-		std::fill(componentArray.begin(), componentArray.end(), nullptr);
-		componentBitset.reset();
+		std::fill(components_array.begin(), components_array.end(), nullptr);
+		components_bitset.reset();
 	}
 };
 

@@ -2047,13 +2047,13 @@ static const XrDebugUtilsMessageTypeFlagsEXT XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDAT
 static const XrDebugUtilsMessageTypeFlagsEXT XR_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT = 0x00000004;
 static const XrDebugUtilsMessageTypeFlagsEXT XR_DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT = 0x00000008;
 
-typedef struct XrDebugUtilsObjectNameInfoEXT {
+typedef struct XrDebugUtilsname_objectInfoEXT {
     XrStructureType             type;
     const void* XR_MAY_ALIAS    next;
     XrObjectType                objectType;
     uint64_t                    objectHandle;
     const char*                 objectName;
-} XrDebugUtilsObjectNameInfoEXT;
+} XrDebugUtilsname_objectInfoEXT;
 
 typedef struct XrDebugUtilsLabelEXT {
     XrStructureType             type;
@@ -2068,7 +2068,7 @@ typedef struct XrDebugUtilsMessengerCallbackDataEXT {
     const char*                       functionName;
     const char*                       message;
     uint32_t                          objectCount;
-    XrDebugUtilsObjectNameInfoEXT*    objects;
+    XrDebugUtilsname_objectInfoEXT*    objects;
     uint32_t                          sessionLabelCount;
     XrDebugUtilsLabelEXT*             sessionLabels;
 } XrDebugUtilsMessengerCallbackDataEXT;
@@ -2090,7 +2090,7 @@ typedef struct XrDebugUtilsMessengerCreateInfoEXT {
     void* XR_MAY_ALIAS                      userData;
 } XrDebugUtilsMessengerCreateInfoEXT;
 
-typedef XrResult (XRAPI_PTR *PFN_xrSetDebugUtilsObjectNameEXT)(XrInstance instance, const XrDebugUtilsObjectNameInfoEXT* nameInfo);
+typedef XrResult (XRAPI_PTR *PFN_xrSetDebugUtilsname_objectEXT)(XrInstance instance, const XrDebugUtilsname_objectInfoEXT* nameInfo);
 typedef XrResult (XRAPI_PTR *PFN_xrCreateDebugUtilsMessengerEXT)(XrInstance instance, const XrDebugUtilsMessengerCreateInfoEXT* createInfo, XrDebugUtilsMessengerEXT* messenger);
 typedef XrResult (XRAPI_PTR *PFN_xrDestroyDebugUtilsMessengerEXT)(XrDebugUtilsMessengerEXT messenger);
 typedef XrResult                                    (XRAPI_PTR *PFN_xrSubmitDebugUtilsMessageEXT)(XrInstance                                  instance, XrDebugUtilsMessageSeverityFlagsEXT         messageSeverity, XrDebugUtilsMessageTypeFlagsEXT             messageTypes, const XrDebugUtilsMessengerCallbackDataEXT* callbackData);
@@ -2100,9 +2100,9 @@ typedef XrResult (XRAPI_PTR *PFN_xrSessionInsertDebugUtilsLabelEXT)(XrSession se
 
 #ifndef XR_NO_PROTOTYPES
 #ifdef XR_EXTENSION_PROTOTYPES
-XRAPI_ATTR XrResult XRAPI_CALL xrSetDebugUtilsObjectNameEXT(
+XRAPI_ATTR XrResult XRAPI_CALL xrSetDebugUtilsname_objectEXT(
     XrInstance                                  instance,
-    const XrDebugUtilsObjectNameInfoEXT*        nameInfo);
+    const XrDebugUtilsname_objectInfoEXT*        nameInfo);
 
 XRAPI_ATTR XrResult XRAPI_CALL xrCreateDebugUtilsMessengerEXT(
     XrInstance                                  instance,

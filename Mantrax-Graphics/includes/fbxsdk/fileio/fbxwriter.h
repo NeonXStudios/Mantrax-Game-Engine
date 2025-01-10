@@ -205,9 +205,9 @@ protected:
     /**
      * Function called by FBX before writing out any FBX object.
      * \param pFbx              File object.
-     * \param pWriteObjectId    Flag to write out object id.
+     * \param pWriteobject_int_id    Flag to write out object id.
      */
-    void							PluginsWrite(FbxIO& pFbx, bool pWriteObjectId);
+    void							PluginsWrite(FbxIO& pFbx, bool pWriteobject_int_id);
     //! Function called by FBX after writing out the scene (FbxScene).
     void							PluginsWriteEnd(FbxScene& pScene);
 #endif /* !FBXSDK_ENV_WINSTORE */

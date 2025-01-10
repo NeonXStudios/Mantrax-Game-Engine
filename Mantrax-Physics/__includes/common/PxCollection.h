@@ -43,7 +43,7 @@ class PxBase;
 \brief Collection class for serialization.
 
 A collection is a set of PxBase objects. PxBase objects can be added to the collection
-regardless of other objects they depend on. Objects may be named using PxSerialObjectId values in order 
+regardless of other objects they depend on. Objects may be named using PxSerialobject_int_id values in order 
 to resolve dependencies between objects of different collections.
 
 Serialization and deserialization only work through collections.
@@ -104,17 +104,17 @@ public:
 	/**
 	\brief Adds a PxBase object to the collection.
 
-	Adds a PxBase object to the collection. Optionally a PxSerialObjectId can be provided
-	in order to resolve dependencies between collections. A PxSerialObjectId value of PX_SERIAL_OBJECT_ID_INVALID 
+	Adds a PxBase object to the collection. Optionally a PxSerialobject_int_id can be provided
+	in order to resolve dependencies between collections. A PxSerialobject_int_id value of PX_SERIAL_OBJECT_ID_INVALID 
 	means the object remains without id. Objects can be added regardless of other objects they require. If the object
 	is already in the collection, the ID will be set if it was PX_SERIAL_OBJECT_ID_INVALID previously, otherwise the
 	operation fails.
 
 
 	\param[in] object Object to be added to the collection
-	\param[in] id Optional PxSerialObjectId id
+	\param[in] id Optional PxSerialobject_int_id id
 	*/
-	virtual void						add(PxBase& object, PxSerialObjectId id = PX_SERIAL_OBJECT_ID_INVALID) = 0;
+	virtual void						add(PxBase& object, PxSerialobject_int_id id = PX_SERIAL_OBJECT_ID_INVALID) = 0;
 
 	/**
 	\brief Removes a PxBase member object from the collection.
@@ -141,18 +141,18 @@ public:
 	within the collection.
 	
 	\param[in] object Member PxBase object
-	\param[in] id PxSerialObjectId id to be given to the object
+	\param[in] id PxSerialobject_int_id id to be given to the object
 	*/
-	virtual void						addId(PxBase& object, PxSerialObjectId id) = 0;
+	virtual void						addId(PxBase& object, PxSerialobject_int_id id) = 0;
 
 	/**
 	\brief Removes id from a contained PxBase object.
 
 	May only be called for ids that are associated with an object in the collection.
 	
-	\param[in] id PxSerialObjectId value
+	\param[in] id PxSerialobject_int_id value
 	*/
-	virtual void						removeId(PxSerialObjectId id) = 0;
+	virtual void						removeId(PxSerialobject_int_id id) = 0;
 	
 	/**
 	\brief Adds all PxBase objects and their ids of collection to this collection.
@@ -200,41 +200,41 @@ public:
 	virtual	PxU32						getObjects(PxBase** userBuffer, PxU32 bufferSize, PxU32 startIndex=0) const = 0;
 
 	/**
-	\brief Looks for a PxBase object given a PxSerialObjectId value.
+	\brief Looks for a PxBase object given a PxSerialobject_int_id value.
 
 	If there is no PxBase object in the collection with the given id, NULL is returned.
 
-	\param[in] id PxSerialObjectId value to look for
+	\param[in] id PxSerialobject_int_id value to look for
 	\return PxBase object with the given id value or NULL
 	*/
-	virtual PxBase*						find(PxSerialObjectId id) const = 0;
+	virtual PxBase*						find(PxSerialobject_int_id id) const = 0;
 	
 	/**
-	\brief Gets number of PxSerialObjectId names in this collection.
+	\brief Gets number of PxSerialobject_int_id names in this collection.
 	
-	\return Number of PxSerialObjectId names in this collection
+	\return Number of PxSerialobject_int_id names in this collection
 	*/
 	virtual PxU32						getNbIds() const = 0;
 
 	/**
-	\brief Copies member PxSerialObjectId values to a user specified buffer.
+	\brief Copies member PxSerialobject_int_id values to a user specified buffer.
 
-	\param[out] userBuffer Array of PxSerialObjectId values
+	\param[out] userBuffer Array of PxSerialobject_int_id values
 	\param[in] bufferSize Capacity of userBuffer
-	\param[in] startIndex Offset into list of member PxSerialObjectId values
-	\return number of members PxSerialObjectId values that have been written to the userBuffer 
+	\param[in] startIndex Offset into list of member PxSerialobject_int_id values
+	\return number of members PxSerialobject_int_id values that have been written to the userBuffer 
 	*/
-	virtual	PxU32						getIds(PxSerialObjectId* userBuffer, PxU32 bufferSize, PxU32 startIndex=0) const = 0;
+	virtual	PxU32						getIds(PxSerialobject_int_id* userBuffer, PxU32 bufferSize, PxU32 startIndex=0) const = 0;
 
 	/**
-	\brief Gets the PxSerialObjectId name of a PxBase object within the collection.
+	\brief Gets the PxSerialobject_int_id name of a PxBase object within the collection.
 
 	The PxBase object needs to be a member of the collection.
 
 	\param[in] object PxBase object to get id for
-	\return PxSerialObjectId name of the object or PX_SERIAL_OBJECT_ID_INVALID if the object is unnamed
+	\return PxSerialobject_int_id name of the object or PX_SERIAL_OBJECT_ID_INVALID if the object is unnamed
 	*/
-	virtual PxSerialObjectId			getId(const PxBase& object) const = 0;	
+	virtual PxSerialobject_int_id			getId(const PxBase& object) const = 0;	
 
 	/**
 	\brief Deletes a collection object.

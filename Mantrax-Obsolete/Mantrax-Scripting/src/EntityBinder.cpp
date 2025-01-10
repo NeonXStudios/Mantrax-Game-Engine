@@ -13,9 +13,9 @@ void EntityBinder::BinderFunction(GScriptLua *luaParent)
     luaParent->lua["self"] = sol::make_object(luaParent->lua.lua_state(), luaParent->entity);
 
     luaParent->lua.new_usertype<Entity>("Object",
-                                        "Name", &Entity::ObjectName,
+                                        "Name", &Entity::name_object,
                                         "Tag", &Entity::ObjectTag,
-                                        "ID", &Entity::objectID,
+                                        "ID", &Entity::object_int_id,
                                         "Layer", &Entity::Layer,
                                         "Transform", &Entity::transform_component,
                                         "GetTransform", &Entity::get_transform,

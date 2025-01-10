@@ -80,7 +80,7 @@ private:
 	
 	bool ReadDefinitionSection(FbxScene& pScene, FbxArray<Fbx5ObjectTypeInfo*>& pObjectContent);
 	bool ReadObjectSection(FbxScene& pScene, FbxArray<Fbx5ObjectTypeInfo*>& pObjectContent);
-	bool ReadObject(FbxScene& pScene, FbxString& pObjectType, FbxString& pObjectSubType, FbxString& pObjectName, FbxString& pObjectUniqueId);
+	bool ReadObject(FbxScene& pScene, FbxString& pObjectType, FbxString& pObjectSubType, FbxString& pname_object, FbxString& pObjectUniqueId);
 	bool ReadNode();
 	//bool ReadGenericNode(FbxScene& pScene);
 	bool ReadAnimation(FbxScene& pScene);

@@ -1479,13 +1479,13 @@ NVAPI_INTERFACE NvAPI_GetDisplayDriverVersion(NvDisplayHandle hNvDisplay, NV_DIS
 //!   \param   messageId     Unique ID for the current message
 //!   \param   detailLevel   Contains the bit from the NVAPI_OGLEXPERT_DETAIL
 //!                          mask that corresponds to the current message
-//!   \param   objectId      Unique ID of the object that corresponds to the
+//!   \param   object_int_id      Unique ID of the object that corresponds to the
 //!                          current message
 //!   \param   messageStr    Text string from the current message
 //!
 //!   \ingroup oglapi
 ///////////////////////////////////////////////////////////////////////////////
-typedef void (* NVAPI_OGLEXPERT_CALLBACK) (unsigned int categoryId, unsigned int messageId, unsigned int detailLevel, int objectId, const char *messageStr);
+typedef void (* NVAPI_OGLEXPERT_CALLBACK) (unsigned int categoryId, unsigned int messageId, unsigned int detailLevel, int object_int_id, const char *messageStr);
 
 
 

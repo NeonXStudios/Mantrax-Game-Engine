@@ -67,7 +67,7 @@ int main(int argc, char *arvg[])
 
     RenderPipeline::init();
     SceneManager::on_awake();
-    SceneManager::load_scene(scene_game->configs->start_scene);
+    SceneManager::get_scene_manager()->load_scene(scene_game->configs->start_scene);
     std::cout << "************************" << std::endl;
 
     scene_game->configs->load_config();

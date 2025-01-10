@@ -15,7 +15,6 @@ class GARINLIBS_API GAudio : public Component
     bool IsSpatial3D = true;
     FMOD_RESULT result;
     float pan = 0;
-    float Volumen = 1;
 
 public:
     void defines() override;
@@ -25,7 +24,8 @@ public:
     void SetPan(float panSide);
     float GetPan();
     void SetVolumen(float newVolumen);
-    float *GetVolumen();
+    void play_one_shot();
+    float GetVolumen();
     bool *IsPlaying();
     void SetPauseState(bool pauseState);
     void update() override;

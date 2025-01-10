@@ -230,7 +230,7 @@ void MainBar::ShowNewScenePopup()
 
         if (ImGui::Button("OK", ImVec2(120, 0)))
         {
-            SceneManager::load_scene(new_scene_name);
+            SceneManager::get_scene_manager()->load_scene(new_scene_name);
             show_new_scene_popup = false;
             ImGui::CloseCurrentPopup();
         }

@@ -138,7 +138,7 @@
         <member name="M:System.Runtime.CompilerServices.AsyncIteratorMethodBuilder.Complete">
             <summary>Marks iteration as being completed, whether successfully or otherwise.</summary>
         </member>
-        <member name="P:System.Runtime.CompilerServices.AsyncIteratorMethodBuilder.ObjectIdForDebugger">
+        <member name="P:System.Runtime.CompilerServices.AsyncIteratorMethodBuilder.object_int_idForDebugger">
             <summary>Gets an object that may be used to uniquely identify this builder to the debugger.</summary>
         </member>
         <member name="T:System.Runtime.CompilerServices.AsyncIteratorStateMachineAttribute">

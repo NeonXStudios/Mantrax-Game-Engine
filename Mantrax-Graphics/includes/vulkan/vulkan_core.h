@@ -433,7 +433,7 @@ typedef enum VkStructureType {
     VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT = 1000011000,
     VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD = 1000018000,
     VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT = 1000022000,
-    VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT = 1000022001,
+    VK_STRUCTURE_TYPE_DEBUG_MARKER_object_tag_INFO_EXT = 1000022001,
     VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT = 1000022002,
     VK_STRUCTURE_TYPE_VIDEO_PROFILE_INFO_KHR = 1000023000,
     VK_STRUCTURE_TYPE_VIDEO_CAPABILITIES_KHR = 1000023001,
@@ -579,7 +579,7 @@ typedef enum VkStructureType {
     VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK = 1000122000,
     VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK = 1000123000,
     VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT = 1000128000,
-    VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT = 1000128001,
+    VK_STRUCTURE_TYPE_DEBUG_UTILS_object_tag_INFO_EXT = 1000128001,
     VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT = 1000128002,
     VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT = 1000128003,
     VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT = 1000128004,
@@ -11863,13 +11863,13 @@ typedef struct VkPipelineRasterizationStateRasterizationOrderAMD {
 #define VK_EXT_debug_marker 1
 #define VK_EXT_DEBUG_MARKER_SPEC_VERSION  4
 #define VK_EXT_DEBUG_MARKER_EXTENSION_NAME "VK_EXT_debug_marker"
-typedef struct VkDebugMarkerObjectNameInfoEXT {
+typedef struct VkDebugMarkername_objectInfoEXT {
     VkStructureType               sType;
     const void*                   pNext;
     VkDebugReportObjectTypeEXT    objectType;
     uint64_t                      object;
-    const char*                   pObjectName;
-} VkDebugMarkerObjectNameInfoEXT;
+    const char*                   pname_object;
+} VkDebugMarkername_objectInfoEXT;
 
 typedef struct VkDebugMarkerObjectTagInfoEXT {
     VkStructureType               sType;
@@ -11889,7 +11889,7 @@ typedef struct VkDebugMarkerMarkerInfoEXT {
 } VkDebugMarkerMarkerInfoEXT;
 
 typedef VkResult (VKAPI_PTR *PFN_vkDebugMarkerSetObjectTagEXT)(VkDevice device, const VkDebugMarkerObjectTagInfoEXT* pTagInfo);
-typedef VkResult (VKAPI_PTR *PFN_vkDebugMarkerSetObjectNameEXT)(VkDevice device, const VkDebugMarkerObjectNameInfoEXT* pNameInfo);
+typedef VkResult (VKAPI_PTR *PFN_vkDebugMarkerSetname_objectEXT)(VkDevice device, const VkDebugMarkername_objectInfoEXT* pNameInfo);
 typedef void (VKAPI_PTR *PFN_vkCmdDebugMarkerBeginEXT)(VkCommandBuffer commandBuffer, const VkDebugMarkerMarkerInfoEXT* pMarkerInfo);
 typedef void (VKAPI_PTR *PFN_vkCmdDebugMarkerEndEXT)(VkCommandBuffer commandBuffer);
 typedef void (VKAPI_PTR *PFN_vkCmdDebugMarkerInsertEXT)(VkCommandBuffer commandBuffer, const VkDebugMarkerMarkerInfoEXT* pMarkerInfo);
@@ -11899,9 +11899,9 @@ VKAPI_ATTR VkResult VKAPI_CALL vkDebugMarkerSetObjectTagEXT(
     VkDevice                                    device,
     const VkDebugMarkerObjectTagInfoEXT*        pTagInfo);
 
-VKAPI_ATTR VkResult VKAPI_CALL vkDebugMarkerSetObjectNameEXT(
+VKAPI_ATTR VkResult VKAPI_CALL vkDebugMarkerSetname_objectEXT(
     VkDevice                                    device,
-    const VkDebugMarkerObjectNameInfoEXT*       pNameInfo);
+    const VkDebugMarkername_objectInfoEXT*       pNameInfo);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdDebugMarkerBeginEXT(
     VkCommandBuffer                             commandBuffer,
@@ -12938,13 +12938,13 @@ typedef struct VkDebugUtilsLabelEXT {
     float              color[4];
 } VkDebugUtilsLabelEXT;
 
-typedef struct VkDebugUtilsObjectNameInfoEXT {
+typedef struct VkDebugUtilsname_objectInfoEXT {
     VkStructureType    sType;
     const void*        pNext;
     VkObjectType       objectType;
     uint64_t           objectHandle;
-    const char*        pObjectName;
-} VkDebugUtilsObjectNameInfoEXT;
+    const char*        pname_object;
+} VkDebugUtilsname_objectInfoEXT;
 
 typedef struct VkDebugUtilsMessengerCallbackDataEXT {
     VkStructureType                              sType;
@@ -12958,7 +12958,7 @@ typedef struct VkDebugUtilsMessengerCallbackDataEXT {
     uint32_t                                     cmdBufLabelCount;
     const VkDebugUtilsLabelEXT*                  pCmdBufLabels;
     uint32_t                                     objectCount;
-    const VkDebugUtilsObjectNameInfoEXT*         pObjects;
+    const VkDebugUtilsname_objectInfoEXT*         pObjects;
 } VkDebugUtilsMessengerCallbackDataEXT;
 
 typedef VkBool32 (VKAPI_PTR *PFN_vkDebugUtilsMessengerCallbackEXT)(
@@ -12987,7 +12987,7 @@ typedef struct VkDebugUtilsObjectTagInfoEXT {
     const void*        pTag;
 } VkDebugUtilsObjectTagInfoEXT;
 
-typedef VkResult (VKAPI_PTR *PFN_vkSetDebugUtilsObjectNameEXT)(VkDevice device, const VkDebugUtilsObjectNameInfoEXT* pNameInfo);
+typedef VkResult (VKAPI_PTR *PFN_vkSetDebugUtilsname_objectEXT)(VkDevice device, const VkDebugUtilsname_objectInfoEXT* pNameInfo);
 typedef VkResult (VKAPI_PTR *PFN_vkSetDebugUtilsObjectTagEXT)(VkDevice device, const VkDebugUtilsObjectTagInfoEXT* pTagInfo);
 typedef void (VKAPI_PTR *PFN_vkQueueBeginDebugUtilsLabelEXT)(VkQueue queue, const VkDebugUtilsLabelEXT* pLabelInfo);
 typedef void (VKAPI_PTR *PFN_vkQueueEndDebugUtilsLabelEXT)(VkQueue queue);
@@ -13000,9 +13000,9 @@ typedef void (VKAPI_PTR *PFN_vkDestroyDebugUtilsMessengerEXT)(VkInstance instanc
 typedef void (VKAPI_PTR *PFN_vkSubmitDebugUtilsMessageEXT)(VkInstance instance, VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageTypes, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData);
 
 #ifndef VK_NO_PROTOTYPES
-VKAPI_ATTR VkResult VKAPI_CALL vkSetDebugUtilsObjectNameEXT(
+VKAPI_ATTR VkResult VKAPI_CALL vkSetDebugUtilsname_objectEXT(
     VkDevice                                    device,
-    const VkDebugUtilsObjectNameInfoEXT*        pNameInfo);
+    const VkDebugUtilsname_objectInfoEXT*        pNameInfo);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkSetDebugUtilsObjectTagEXT(
     VkDevice                                    device,
@@ -15675,7 +15675,7 @@ typedef struct VkDeviceMemoryReportCallbackDataEXT {
     void*                               pNext;
     VkDeviceMemoryReportFlagsEXT        flags;
     VkDeviceMemoryReportEventTypeEXT    type;
-    uint64_t                            memoryObjectId;
+    uint64_t                            memoryobject_int_id;
     VkDeviceSize                        size;
     VkObjectType                        objectType;
     uint64_t                            objectHandle;

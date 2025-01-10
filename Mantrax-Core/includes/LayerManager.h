@@ -19,3 +19,7 @@
 #define LAYER_17 (1 << 17)
 #define LAYER_18 (1 << 18)
 #define LAYER_19 (1 << 19)
+#define LAYER_TRIGGER (1 << 20)
+#define LAYER_PLAYER (1 << 21)
+#define LAYER_ENEMY (1 << 22)
+#define LAYER_ENVIRONMENT (1 << 23)

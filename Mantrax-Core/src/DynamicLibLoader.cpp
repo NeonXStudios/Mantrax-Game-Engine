@@ -75,7 +75,8 @@ void DynamicLibLoader::load_components(std::string _path)
         bool (*isKeyPressed)(GLuint),
         float (*getAxis)(GLuint, GLuint),
         float (*getMouseDeltaX)(),
-        float (*getMouseDeltaY)());
+        float (*getMouseDeltaY)(),
+        void (*loadScene)(std::string, bool));
 
     auto init_input_system = (InitializeInputSystemFunc)loader.get()->get_function<InitializeInputSystemFunc>("InitializeInputSystem");
 
@@ -90,14 +91,15 @@ void DynamicLibLoader::load_components(std::string _path)
         InputSystem::on_key_pressed,
         InputSystem::get_axis,
         InputSystem::get_mouse_x,
-        InputSystem::get_mouse_y);
+        InputSystem::get_mouse_y,
+        SceneManager::load_scene_wrapped);
 
     try
     {
         typedef void (*FuncType)(GameBehaviourFactory *engine);
         auto func = (FuncType)loader.get()->get_function<FuncType>("REGISTER_COMPONENTS");
 
-        typedef void (*FuncTypeAPI)(SceneManager *scene_api, GLFWwindow *window_api, float *time_delta);
+        typedef void (*FuncTypeAPI)(SceneManager *scene_api, GLFWwindow *window_api, float *time_delta, AudioManager *manager, std::string files_path);
         auto func_graphics = (FuncTypeAPI)loader.get()->get_function<FuncTypeAPI>("REGISTER_APIS");
 
         if (!func)
@@ -122,7 +124,7 @@ void DynamicLibLoader::load_components(std::string _path)
         }
 
         Scene *scene = SceneManager::get_current_scene();
-        func_graphics(SceneManager::get_scene_manager(), Gfx::get_game_window(), &Timer::delta_time);
+        func_graphics(SceneManager::get_scene_manager(), Gfx::get_game_window(), &Timer::delta_time, AudioManager::instance, FileManager::game_path);
     }
     catch (const std::exception &e)
     {

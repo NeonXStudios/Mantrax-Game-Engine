@@ -1,6 +1,8 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 
@@ -19,21 +21,29 @@ public:
         glDeleteBuffers(1, &EBO);
     }
 
-    void render(const glm::mat4 &view, const glm::mat4 &projection, const glm::vec3 &position, const glm::vec3 &scale)
+    void render(const glm::mat4 &view, const glm::mat4 &projection, const glm::mat4 matrix_model, glm::vec3 multiplier_offset = glm::vec3(1.0f))
     {
         glUseProgram(shaderProgram);
 
-        // Transformaciones
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, position);
-        model = glm::scale(model, scale);
+        glm::vec3 scale;
+        glm::quat rotation;
+        glm::vec3 translation;
+        glm::vec3 skew;
+        glm::vec4 perspective;
 
-        // Pasar matrices al shader
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        bool success = glm::decompose(matrix_model, scale, rotation, translation, skew, perspective);
+
+        scale *= multiplier_offset * 2.0f;
+
+        glm::mat4 new_matrix_model =
+            glm::translate(glm::mat4(1.0f), translation) *
+            glm::mat4_cast(rotation) *
+            glm::scale(glm::mat4(1.0f), scale);
+
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(new_matrix_model));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-        // Dibujar cubo como wireframe
         glBindVertexArray(VAO);
         glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);

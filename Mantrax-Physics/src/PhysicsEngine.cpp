@@ -4,17 +4,15 @@
 void PhysicsEngine::start_world_physics()
 {
 #pragma region CREATE PHYSICS 3D PHYSX 4.1.2
-
-    // Crear Foundation
     mFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, mDefaultAllocatorCallback, mDefaultErrorCallback);
     if (!mFoundation)
     {
         std::cerr << "Error: PxCreateFoundation failed!" << std::endl;
         return;
     }
+
     std::cout << "Foundation created successfully." << std::endl;
 
-    // Crear PVD (PhysX Visual Debugger) y conectar
     mPvd = PxCreatePvd(*mFoundation);
     if (!mPvd)
     {
@@ -30,9 +28,8 @@ void PhysicsEngine::start_world_physics()
     mPvd->connect(*transport, physx::PxPvdInstrumentationFlag::eALL);
     std::cout << "PVD created and connected successfully." << std::endl;
 
-    // Crear el motor de física
-    mToleranceScale.length = 100; // typical length of an object
-    mToleranceScale.speed = 981;  // typical speed of an object, gravity*1s is a reasonable choice
+    mToleranceScale.length = 100;
+    mToleranceScale.speed = 981;
     mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, mToleranceScale, true, mPvd);
     if (!mPhysics)
     {
@@ -41,22 +38,39 @@ void PhysicsEngine::start_world_physics()
     }
     std::cout << "Physics engine created successfully." << std::endl;
 
-    // Configurar la escena de física
-    physx::PxSceneDesc sceneDesc(mPhysics->getTolerancesScale());
-    sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
-
-    // Crear dispatcher (hilo de simulación)
     mDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
     if (!mDispatcher)
     {
         std::cerr << "Error: PxDefaultCpuDispatcherCreate failed!" << std::endl;
         return;
     }
-    sceneDesc.cpuDispatcher = mDispatcher;
-    sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
     std::cout << "CPU dispatcher created successfully." << std::endl;
 
-    // Crear la escena de física
+    physx::PxSceneDesc sceneDesc(mToleranceScale);
+    sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
+    sceneDesc.cpuDispatcher = mDispatcher;
+    sceneDesc.filterShader = PhysicsEngine::CustomFilterShader;
+
+    collision_events = new GarinCollisionEvents();
+
+    sceneDesc.simulationEventCallback = collision_events;
+
+    sceneDesc.flags |= PxSceneFlag::eENABLE_ACTIVE_ACTORS;
+    sceneDesc.flags |= PxSceneFlag::eENABLE_CCD;
+
+    sceneDesc.kineKineFilteringMode = PxPairFilteringMode::eKEEP;
+    sceneDesc.staticKineFilteringMode = PxPairFilteringMode::eKEEP;
+
+    if (!sceneDesc.isValid())
+    {
+        std::cout << "\nScene Descriptor Validation:" << std::endl;
+        std::cout << "CPU Dispatcher: " << (sceneDesc.cpuDispatcher ? "OK" : "Missing") << std::endl;
+        std::cout << "Filter Shader: " << (sceneDesc.filterShader ? "OK" : "Missing") << std::endl;
+        std::cout << "Gravity: " << sceneDesc.gravity.x << ", " << sceneDesc.gravity.y << ", " << sceneDesc.gravity.z << std::endl;
+        std::cerr << "Invalid scene descriptor!" << std::endl;
+        return;
+    }
+
     mScene = mPhysics->createScene(sceneDesc);
     if (!mScene)
     {
@@ -65,7 +79,6 @@ void PhysicsEngine::start_world_physics()
     }
     std::cout << "Physics scene created successfully." << std::endl;
 
-    // Configurar PVD en la escena
     physx::PxPvdSceneClient *pvdClient = mScene->getScenePvdClient();
     if (pvdClient)
     {
@@ -74,12 +87,7 @@ void PhysicsEngine::start_world_physics()
         pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
         std::cout << "PVD flags set for scene successfully." << std::endl;
     }
-    else
-    {
-        std::cerr << "Error: PVD client not available!" << std::endl;
-    }
 
-    // Crear materiales
     mMaterial = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
     if (!mMaterial)
     {
@@ -88,31 +96,19 @@ void PhysicsEngine::start_world_physics()
     }
     std::cout << "Material created successfully." << std::endl;
 
-    // Crear y asignar los eventos de colisión
-    GarinCollisionEvents *collisionCallback = new GarinCollisionEvents();
-    if (collisionCallback)
+    if (!mScene)
     {
-        mScene->setSimulationEventCallback(collisionCallback);
-        std::cout << "Collision event callback set successfully." << std::endl;
-    }
-    else
-    {
-        std::cerr << "Error: Collision event callback creation failed!" << std::endl;
+        std::cerr << "Error: mScene no está inicializado antes de crear el ControllerManager." << std::endl;
         return;
     }
 
-    // Crear el controlador para manejar personajes o entidades
-    if (!mFoundation)
-    {
-        std::cerr << "Error: Foundation is null while creating controller manager!" << std::endl;
-        return;
-    }
     gManager = PxCreateControllerManager(*mScene);
     if (!gManager)
     {
-        std::cerr << "Error: PxCreateControllerManager failed!" << std::endl;
+        std::cerr << "Error: PxCreateControllerManager falló al crear el ControllerManager!" << std::endl;
         return;
     }
+
     std::cout << "Controller manager created successfully." << std::endl;
 
 #pragma endregion
@@ -122,77 +118,66 @@ void PhysicsEngine::update_world_physics()
 {
     if (mScene != nullptr)
     {
-        mScene->simulate(1.0f / 60.0f);
+
+        mScene->simulate(1.0f / Gfx::targetFPS);
         mScene->fetchResults(true);
     }
 }
 
 void PhysicsEngine::delete_phys_world()
 {
-    try
-    {
-        if (gManager)
-        {
-            gManager->purgeControllers();
-            gManager->release();
-        }
+}
 
-        if (mScene)
-        {
-            PxU32 numActors = mScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC);
-            std::vector<PxRigidActor *> actors(numActors);
-            mScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC, reinterpret_cast<PxActor **>(actors.data()), numActors);
+void PhysicsEngine::clear_components_in_world() 
+{ 
+    try 
+    { 
+        if (!mScene) return;
 
-            for (PxRigidActor *actor : actors)
+        const PxU32 actorCount = mScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC); 
+        std::vector<PxActor*> actors(actorCount); 
+        mScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC, actors.data(), actorCount); 
+
+        for (PxActor* actor : actors) 
+        { 
+            if (PxRigidDynamic* dynActor = actor->is<PxRigidDynamic>())
             {
-                PxU32 numShapes = actor->getNbShapes();
-                std::vector<PxShape *> shapes(numShapes);
-                actor->getShapes(shapes.data(), numShapes);
-
-                for (PxShape *shape : shapes)
-                {
-                    shape->release();
-                }
-
-                actor->release();
+                dynActor->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, true);
+                dynActor->setLinearVelocity(PxVec3(0.0f));
+                dynActor->setAngularVelocity(PxVec3(0.0f));
             }
-
-            mScene->release();
-            mScene = nullptr;
         }
 
-        if (mMaterial)
-        {
-            mMaterial->release();
-            mMaterial = nullptr;
-        }
+        mScene->simulate(1.0f/60.0f);
+        mScene->fetchResults(true);
 
-        if (mDispatcher)
-        {
-            mDispatcher->release();
-            mDispatcher = nullptr;
-        }
+        for (PxActor* actor : actors) 
+        { 
+            if (actor) 
+            { 
+                if (PxRigidActor* rigidActor = actor->is<PxRigidActor>()) 
+                { 
+                    const PxU32 shapeCount = rigidActor->getNbShapes(); 
+                    std::vector<PxShape*> shapes(shapeCount); 
+                    rigidActor->getShapes(shapes.data(), shapeCount); 
 
-        if (mPhysics)
-        {
-            mPhysics->release();
-            mPhysics = nullptr;
-        }
+                    for (PxShape* shape : shapes) 
+                    { 
+                        if (shape)
+                        {
+                            rigidActor->detachShape(*shape);
+                            shape->release(); 
+                        }
+                    } 
+                } 
+                actor->release(); 
+            } 
+        } 
 
-        if (mPvd)
-        {
-            mPvd->release();
-            mPvd = nullptr;
-        }
-
-        if (mFoundation)
-        {
-            mFoundation->release();
-            mFoundation = nullptr;
-        }
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << e.what() << '\n';
-    }
+        std::cout << "All actors and shapes successfully released." << std::endl; 
+    } 
+    catch (const std::exception& e) 
+    { 
+        std::cerr << "Error while clearing components: " << e.what() << std::endl; 
+    } 
 }

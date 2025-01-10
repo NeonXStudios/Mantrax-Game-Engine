@@ -141,16 +141,16 @@ public:
 	static	void			complete(PxCollection& collection, PxSerializationRegistry& sr, const PxCollection* exceptFor = NULL, bool followJoints = false);
 	
 	/**
-	\brief Creates PxSerialObjectId values for unnamed objects in a collection.
+	\brief Creates PxSerialobject_int_id values for unnamed objects in a collection.
 
-	Creates PxSerialObjectId names for unnamed objects in a collection starting at a base value and incrementing, 
+	Creates PxSerialobject_int_id names for unnamed objects in a collection starting at a base value and incrementing, 
 	skipping values that are already assigned to objects in the collection.
 
 	\param[in,out] collection Collection for which names are created
-	\param[in] base Start address for PxSerialObjectId names
+	\param[in] base Start address for PxSerialobject_int_id names
 	\see PxCollection
 	*/
-	static	void			createSerialObjectIds(PxCollection& collection, const PxSerialObjectId base);
+	static	void			createSerialobject_int_ids(PxCollection& collection, const PxSerialobject_int_id base);
 			
 	/**
 	\brief Creates a PxCollection from XML data.

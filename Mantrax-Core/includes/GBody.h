@@ -41,12 +41,14 @@ public:
     physx::PxRigidDynamic *body;
     physx::PxMaterial *mMaterial = NULL;
     physx::PxPhysics *mPhysics = NULL;
+    std::vector<physx::PxShape *> attachedShapes;
 
     bool waked;
 
     void defines() override;
     void init() override;
     void update() override;
+    void clean() override;
 
     void set_position(glm::vec3 new_position);
     void add_impulse(glm::vec3 direction, GBodySpace::force_mode mode);

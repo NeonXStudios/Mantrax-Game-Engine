@@ -8,6 +8,7 @@
 
 #include <GLFW/glfw3.h>
 #include <Core.h>
+#include <PhysicsEngine.h>
 
 using namespace std;
 
@@ -35,6 +36,7 @@ public:
     void awake();
     void init();
     void update(float delta_time);
+    void clean_scene();
 
     // FUNCTION ENTITYS
     Entity *make_entity();

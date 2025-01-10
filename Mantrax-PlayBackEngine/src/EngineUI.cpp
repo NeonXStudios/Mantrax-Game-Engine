@@ -15,7 +15,6 @@ void EngineUI::on_awake()
 void EngineUI::on_start()
 {
     IconsManager::init();
-    SceneManager::load_scene(configs->current_scene);
 }
 
 void EngineUI::on_edition_mode(float delta_time)

@@ -108,7 +108,7 @@ namespace physx
 \deprecated Xml serialization is deprecated. An alternative serialization system is provided through USD Physics.
 */
 template<typename TDataType>
-PX_DEPRECATED PX_INLINE physx::PxRepXObject PxCreateRepXObject(const TDataType* inType, const physx::PxSerialObjectId inId)
+PX_DEPRECATED PX_INLINE physx::PxRepXObject PxCreateRepXObject(const TDataType* inType, const physx::PxSerialobject_int_id inId)
 {
 	return physx::PxRepXObject(physx::PxTypeInfo<TDataType>::name(), inType, inId);
 }
@@ -117,20 +117,20 @@ PX_DEPRECATED PX_INLINE physx::PxRepXObject PxCreateRepXObject(const TDataType* 
 \brief Inline helper function to create PxRepXObject from a PxBase instance.
 \deprecated Xml serialization is deprecated. An alternative serialization system is provided through USD Physics.
 */
-PX_DEPRECATED PX_INLINE physx::PxRepXObject PxCreateRepXObject(const physx::PxBase* inType, const physx::PxSerialObjectId inId)
+PX_DEPRECATED PX_INLINE physx::PxRepXObject PxCreateRepXObject(const physx::PxBase* inType, const physx::PxSerialobject_int_id inId)
 {
 	PX_ASSERT(inType);
 	return physx::PxRepXObject(inType->getConcreteTypeName(), inType, inId);
 }
 
 /**
-\brief Inline helper template function to create PxRepXObject form TDataType type using inType pointer as a PxSerialObjectId id.
+\brief Inline helper template function to create PxRepXObject form TDataType type using inType pointer as a PxSerialobject_int_id id.
 \deprecated Xml serialization is deprecated. An alternative serialization system is provided through USD Physics.
 */
 template<typename TDataType>
 PX_DEPRECATED PX_INLINE physx::PxRepXObject PxCreateRepXObject(const TDataType* inType)
 {
-	return PxCreateRepXObject(inType, static_cast<physx::PxSerialObjectId>(size_t(inType)));
+	return PxCreateRepXObject(inType, static_cast<physx::PxSerialobject_int_id>(size_t(inType)));
 }
 
 /**

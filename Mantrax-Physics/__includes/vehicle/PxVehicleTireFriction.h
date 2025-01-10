@@ -176,15 +176,15 @@ public:
 	\param[out] collection is the PxCollection instance that is to be used to serialize the PxMaterial instances referenced by the 
 	PxVehicleDrivableSurfaceToTireFrictionPairs instance.
 	\param[out] stream contains the memory block for the binary serialized friction table.
-	\note If a material has already been added to the collection with a PxSerialObjectId, it will not be added again.
-	\note If all materials have already been added to the collection with a PxSerialObjectId, it is legal to pass a NULL ptr for the materialIds array. 
+	\note If a material has already been added to the collection with a PxSerialobject_int_id, it will not be added again.
+	\note If all materials have already been added to the collection with a PxSerialobject_int_id, it is legal to pass a NULL ptr for the materialIds array. 
 	\note frictionTable references PxMaterial instances, which are serialized using PxCollection. 
 	The PxCollection instance may be used to serialize an entire scene that also references some or none of those material instances 
 	or particular objects in a scene or nothing at all.  The complementary deserialize() function requires the same collection instance 
 	or more typically a deserialized copy of the collection to be passed as a function argument. 
 	\see deserializeFromBinary
 	*/
-	static void serializeToBinary(const PxVehicleDrivableSurfaceToTireFrictionPairs& frictionTable, const PxSerialObjectId* materialIds, const PxU32 nbMaterialIds, PxCollection* collection, PxOutputStream& stream);
+	static void serializeToBinary(const PxVehicleDrivableSurfaceToTireFrictionPairs& frictionTable, const PxSerialobject_int_id* materialIds, const PxU32 nbMaterialIds, PxCollection* collection, PxOutputStream& stream);
 
 	/**
 	\brief Deserialize from a memory block to create a PxVehicleDrivableSurfaceToTireFrictionPairs instance.
@@ -230,9 +230,9 @@ private:
 	PxVehicleDrivableSurfaceType* mDrivableSurfaceTypes;
 
 	/**
-	\brief A PxSerialObjectId per surface type used internally for serialization.
+	\brief A PxSerialobject_int_id per surface type used internally for serialization.
 	*/
-	PxSerialObjectId* mMaterialSerialIds;
+	PxSerialobject_int_id* mMaterialSerialIds;
 
 	/**
 	\brief Number of different driving surface types.

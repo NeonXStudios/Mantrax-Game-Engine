@@ -54,11 +54,11 @@ class PxCollection;
 //! Serialized input data must be aligned to this value
 #define PX_SERIAL_FILE_ALIGN 128
 
-//! PxSerialObjectId value for objects that do not have an ID
+//! PxSerialobject_int_id value for objects that do not have an ID
 #define PX_SERIAL_OBJECT_ID_INVALID 0
 
 //! ID type for PxBase objects in a PxCollection
-typedef PxU64 PxSerialObjectId;
+typedef PxU64 PxSerialobject_int_id;
 
 //! Bit to mark pointer type references, \see PxDeserializationContext
 #define PX_SERIAL_REF_KIND_PTR_TYPE_BIT (1u<<31)

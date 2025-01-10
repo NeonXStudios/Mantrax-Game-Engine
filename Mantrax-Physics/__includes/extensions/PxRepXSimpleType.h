@@ -61,8 +61,8 @@ namespace physx
 		/**
 		\brief Id given to this object at some point
 		*/
-		PxSerialObjectId 	id;
-		PxRepXObject( const char* inTypeName = "", const void* inSerializable = NULL, const PxSerialObjectId inId = 0 )
+		PxSerialobject_int_id 	id;
+		PxRepXObject( const char* inTypeName = "", const void* inSerializable = NULL, const PxSerialobject_int_id inId = 0 )
 			: typeName( inTypeName )
 			, serializable( inSerializable )
 			, id( inId )

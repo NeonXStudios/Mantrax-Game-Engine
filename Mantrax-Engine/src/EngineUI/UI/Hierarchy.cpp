@@ -53,12 +53,12 @@ bool Hierarchy::is_in_any_folder(Entity *entity)
 
 void Hierarchy::draw_entity_node(Entity *entity)
 {
-    ImGui::PushID(entity->objectID);
+    ImGui::PushID(entity->object_int_id);
 
     bool node_open = false;
     bool selected = (entity == EngineUI::getInstance().select_obj);
 
-    std::string name_tree = entity->ObjectName;
+    std::string name_tree = entity->name_object;
 
     bool has_children = !entity->get_transform()->childrens.empty();
 
@@ -100,7 +100,7 @@ void Hierarchy::draw_entity_node(Entity *entity)
     if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
     {
         ImGui::SetDragDropPayload("ENTITY_CELL", &entity, sizeof(Entity *));
-        ImGui::Text("Dragging %s", entity->ObjectName.c_str());
+        ImGui::Text("Dragging %s", entity->name_object.c_str());
         ImGui::EndDragDropSource();
     }
 

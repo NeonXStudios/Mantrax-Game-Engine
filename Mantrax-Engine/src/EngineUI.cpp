@@ -7,6 +7,7 @@
 #include <RenderPipeline.h>
 #include <GarinIO.h>
 #include <PerlinGenerator.h>
+#include <ComponentsDrawer.h>
 
 float EngineUI::yaw = 0.0f;
 float EngineUI::pitch = 0.0f;
@@ -152,9 +153,12 @@ void EngineUI::on_draw()
     {
         glm::vec3 convert_gl_to_physx = (select_obj->get_transform()->Scale * std::any_cast<glm::vec3>(select_obj->getComponent<GCollision>().variableMap["boxSize"])) * 2.0f;
 
-        cube_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(),
-                           SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
-                           select_obj->get_transform()->Position, convert_gl_to_physx);
+        for (GCollision *col : select_obj->getComponents<GCollision>())
+        {
+            cube_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(),
+                               SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
+                               select_obj->get_transform()->get_matrix(), std::any_cast<glm::vec3>(col->variableMap["boxSize"]));
+        }
     }
 
     if (select_obj != nullptr && select_obj->hasComponent<GAudio>())
@@ -276,13 +280,13 @@ void EngineUI::draw_ui()
                     new_entity->get_transform()->rotation = select_obj->get_transform()->rotation;
                     new_entity->get_transform()->Scale = select_obj->get_transform()->Scale;
 
-                    // for (const auto &component : select_obj->GetAllComponent())
-                    // {
-                    //     Component *cloned_component = ComponentFactory::add_component(new_entity, AComponent::demangle(typeid(*component).name()));
+                    for (const auto &component : select_obj->GetAllComponent())
+                    {
+                        Component *cloned_component = ComponentFactory::add_component(new_entity, ComponentsDrawer::demangle(typeid(*component).name()));
 
-                    //     cloned_component->variableMap = component->variableMap;
-                    //     cloned_component->init();
-                    // }
+                        cloned_component->variableMap = component->variableMap;
+                        cloned_component->init();
+                    }
 
                     set_object_select(new_entity);
                 }

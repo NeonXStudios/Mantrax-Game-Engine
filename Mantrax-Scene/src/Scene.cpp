@@ -4,6 +4,7 @@ using namespace nlohmann;
 
 void Scene::awake()
 {
+    std::cout << "World loaded" << std::endl;
     on_awake();
 }
 
@@ -14,7 +15,7 @@ void Scene::init()
 
 void Scene::update(float delta_time)
 {
-    if (!unload_scene)
+    if (unload_scene == false)
     {
         try
         {
@@ -54,8 +55,8 @@ void Scene::update(float delta_time)
 Entity *Scene::make_entity()
 {
     Entity *entity_maked = new Entity();
-    entity_maked->objectID = IDGenerator::generate_id();
-    entity_maked->ObjectSTRID = std::to_string(entity_maked->objectID);
+    entity_maked->object_int_id = IDGenerator::generate_id();
+    entity_maked->object_string_id = std::to_string(entity_maked->object_int_id);
 
     objects_worlds.push_back(entity_maked);
 
@@ -78,7 +79,7 @@ Entity *Scene::get_entity_by_id(int id)
 {
     for (Entity *ent : objects_worlds)
     {
-        if (ent->objectID == id)
+        if (ent->object_int_id == id)
         {
             return ent;
         }
@@ -91,7 +92,7 @@ Entity *Scene::get_entity_by_id_string(std::string id)
 {
     for (Entity *ent : objects_worlds)
     {
-        if (ent->ObjectSTRID == id)
+        if (ent->object_string_id == id)
         {
             return ent;
         }
@@ -104,7 +105,7 @@ Entity *Scene::get_entity_by_name(std::string name)
 {
     for (Entity *ent : objects_worlds)
     {
-        if (ent->ObjectName == name)
+        if (ent->name_object == name)
         {
             return ent;
         }
@@ -130,10 +131,20 @@ Entity *Scene::find_entity_by_id(int id)
 {
     for (Entity *entity : objects_worlds)
     {
-        if (entity->objectID == id)
+        if (entity->object_int_id == id)
         {
             return entity;
         }
     }
     return nullptr;
+}
+
+void Scene::clean_scene()
+{
+    for (Entity *ent : objects_worlds)
+    {
+        ent->ClearAllComponentes();
+    }
+
+    objects_worlds.clear();
 }

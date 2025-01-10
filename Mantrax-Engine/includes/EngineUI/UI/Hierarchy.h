@@ -50,8 +50,8 @@ public:
             for (const ObjectMap *obj : folder->objects_map)
             {
                 objects_json.push_back({
-                    {"object_name", obj->object->ObjectName},
-                    {"object_id", obj->object->objectID},
+                    {"object_name", obj->object->name_object},
+                    {"object_id", obj->object->object_int_id},
                 });
             }
 

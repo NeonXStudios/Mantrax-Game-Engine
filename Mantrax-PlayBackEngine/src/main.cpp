@@ -42,6 +42,8 @@ int main(int argc, char *arvg[])
         return -2;
     }
 
+    AppSettings::is_playing = true;
+
     audioManager->create();
     audioManager->StartSystem();
 
@@ -50,6 +52,7 @@ int main(int argc, char *arvg[])
     EngineUI *scene_game = &EngineUI::getInstance();
 
     scene_game->configs = new EditorConfigs();
+    lib_loader->create();
 
     settings_window window_config = settings_window();
     window_config.window_name = "Mantrax Engine";
@@ -67,17 +70,20 @@ int main(int argc, char *arvg[])
     scene_game->configs->current_proyect = project_path.string() + "/";
     FileManager::game_path = scene_game->configs->current_proyect;
 
+    DynamicLibLoader::instance->load_components(project_path.string() + "/");
+    while (DynamicLibLoader::instance->dll_in_recompile == false)
+    {
+        std::cout << "DLL NOT LOADED WAIT..." << std::endl;
+    }
+
     RenderPipeline::init();
     SceneManager::on_awake();
-    SceneManager::load_scene(scene_game->configs->start_scene);
-    std::cout << "************************" << std::endl;
+    SceneManager::get_scene_manager()->load_scene(scene_game->configs->start_scene);
 
     scene_game->configs->load_config();
 
     scene_game->on_start();
     SceneManager::on_start();
-
-    AppSettings::is_playing = true;
 
     while (!Gfx::try_window_close())
     {
@@ -91,6 +97,8 @@ int main(int argc, char *arvg[])
 
         Gfx::swap_buffer();
     }
+
+    std::cout << "Game Finished" << std::endl;
 
     SceneManager::on_clean_scenes();
     Gfx::clear_graphics();

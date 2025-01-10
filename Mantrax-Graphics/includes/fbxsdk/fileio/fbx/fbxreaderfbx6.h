@@ -259,11 +259,11 @@ private:
       *	\param pDocument      FbxDocument to connect with the generic object 
       * \param pObjectType    type of generic object 
       * \param pObjectSubType Subtype of generic object
-      * \param pObjectName    Name of generic object
+      * \param pname_object    Name of generic object
       * \param pFlags         Object flag
       * \return A pointer of the generic object. Return \c NULL if creation fails.
       */
-    FbxObject* CreateGenericObject(FbxDocument *pDocument, char* pObjectType, char* pObjectSubType, char* pObjectName, FbxObject::EObjectFlag pFlags=FbxObject::eSavable);
+    FbxObject* CreateGenericObject(FbxDocument *pDocument, char* pObjectType, char* pObjectSubType, char* pname_object, FbxObject::EObjectFlag pFlags=FbxObject::eSavable);
 
     /** Read description section and assign the document name
       *	\param pDocument        Document to read
@@ -298,13 +298,13 @@ private:
       *	\param pDocument            Document to read
       * \param pObjectType          Object type to assign
       * \param pObjectSubType       Object subtype to assign
-      * \param pObjectName          Object Name
+      * \param pname_object          Object Name
       * \param pObjectUniqueId      Object unique id
       * \param pReferencedObject    Reference object
       * \param pDocReferences       External reference
       *	\return if reading object is successful return \c true, otherwise return \c false.      
       */
-    bool ReadObject(FbxDocument *pDocument, FbxString& pObjectType, FbxString& pObjectSubType, FbxString& pObjectName, FbxString& pObjectUniqueId, FbxObject* pReferencedObject, Fbx6TypeReadReferences& pDocReferences);
+    bool ReadObject(FbxDocument *pDocument, FbxString& pObjectType, FbxString& pObjectSubType, FbxString& pname_object, FbxString& pObjectUniqueId, FbxObject* pReferencedObject, Fbx6TypeReadReferences& pDocReferences);
 
     /** Read the connection section from document
       *	\param pDocument        Document to read
@@ -556,12 +556,12 @@ private:
 
     /** Read node attribute according to object subtype
       * \param pObjectSubType       object subtype
-      * \param pObjectName          object name
+      * \param pname_object          object name
       * \param pObjectUniqueId      unique id of object
       * \param pReferencedObject    pointer of reference object
       * \return A pointer of node attribute. Return \c NULL if the attribute does not exist
       */
-    FbxNodeAttribute* ReadNodeAttribute( FbxString& pObjectSubType, FbxString& pObjectName, FbxString& pObjectUniqueId, FbxObject* pReferencedObject);
+    FbxNodeAttribute* ReadNodeAttribute( FbxString& pObjectSubType, FbxString& pname_object, FbxString& pObjectUniqueId, FbxObject* pReferencedObject);
 
     /** Read node properties , flags and update the 
       * node pivot and limits according to properties
@@ -670,11 +670,11 @@ private:
 
     //** Read FBX subdiv, base mesh, finest mesh, current subdiv level...
     //*	\param pSubdiv                            fbx subdiv
-    //*	\param pObjectName                        Object Name
+    //*	\param pname_object                        Object Name
     //*	\param pReferencedObject                  pointer of reference object
     //* \return if reading subdiv object is successful return \c true, otherwise return \c false. 
     //*/
-    //bool ReadSubdiv( FbxSubDiv& pSubdiv, FbxString& pObjectName, FbxObject* pReferencedObject);
+    //bool ReadSubdiv( FbxSubDiv& pSubdiv, FbxString& pname_object, FbxObject* pReferencedObject);
 
     /** Read FBX subdiv, base mesh, finest mesh, current subdiv level...
     *	\param pSubdiv                            fbx subdiv

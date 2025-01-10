@@ -2543,8 +2543,8 @@ XR_ENUM_STR(XrResult);
     _(fromLevel) \
     _(toLevel) \
 
-/// Calls your macro with the name of each member of XrDebugUtilsObjectNameInfoEXT, in order.
-#define XR_LIST_STRUCT_XrDebugUtilsObjectNameInfoEXT(_) \
+/// Calls your macro with the name of each member of XrDebugUtilsname_objectInfoEXT, in order.
+#define XR_LIST_STRUCT_XrDebugUtilsname_objectInfoEXT(_) \
     _(type) \
     _(next) \
     _(objectType) \
@@ -4825,7 +4825,7 @@ XR_ENUM_STR(XrResult);
     _(XrCompositionLayerEquirect2KHR, XR_TYPE_COMPOSITION_LAYER_EQUIRECT2_KHR) \
     _(XrBindingModificationsKHR, XR_TYPE_BINDING_MODIFICATIONS_KHR) \
     _(XrEventDataPerfSettingsEXT, XR_TYPE_EVENT_DATA_PERF_SETTINGS_EXT) \
-    _(XrDebugUtilsObjectNameInfoEXT, XR_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT) \
+    _(XrDebugUtilsname_objectInfoEXT, XR_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT) \
     _(XrDebugUtilsLabelEXT, XR_TYPE_DEBUG_UTILS_LABEL_EXT) \
     _(XrDebugUtilsMessengerCallbackDataEXT, XR_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT) \
     _(XrDebugUtilsMessengerCreateInfoEXT, XR_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT) \
@@ -5611,7 +5611,7 @@ XR_ENUM_STR(XrResult);
 /// Trims the leading `xr` from the function name and the leading `XR_` from the feature name,
 /// because it is easy to add back but impossible to remove with the preprocessor.
 #define XR_LIST_FUNCTIONS_XR_EXT_debug_utils(_) \
-    _(SetDebugUtilsObjectNameEXT, EXT_debug_utils) \
+    _(SetDebugUtilsname_objectEXT, EXT_debug_utils) \
     _(CreateDebugUtilsMessengerEXT, EXT_debug_utils) \
     _(DestroyDebugUtilsMessengerEXT, EXT_debug_utils) \
     _(SubmitDebugUtilsMessageEXT, EXT_debug_utils) \

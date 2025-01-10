@@ -15,11 +15,11 @@ void Inspector::on_draw()
     // Sección del nombre del objeto
     {
         static char nameBuf[256];
-        strcpy(nameBuf, EngineUI::getInstance().select_obj->ObjectName.c_str());
+        strcpy(nameBuf, EngineUI::getInstance().select_obj->name_object.c_str());
         ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
         if (ImGui::InputText("##Name", nameBuf, sizeof(nameBuf)))
         {
-            EngineUI::getInstance().select_obj->ObjectName = nameBuf;
+            EngineUI::getInstance().select_obj->name_object = nameBuf;
         }
 
         ImGui::Spacing();
@@ -30,11 +30,11 @@ void Inspector::on_draw()
         // Tag
         ImGui::TextDisabled("Tag");
         static char tagBuf[128];
-        strcpy(tagBuf, EngineUI::getInstance().select_obj->ObjectTag.c_str());
+        strcpy(tagBuf, EngineUI::getInstance().select_obj->object_tag.c_str());
         ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x * 0.45f);
         if (ImGui::InputText("##Tag", tagBuf, sizeof(tagBuf)))
         {
-            EngineUI::getInstance().select_obj->ObjectTag = tagBuf;
+            EngineUI::getInstance().select_obj->object_tag = tagBuf;
         }
 
         ImGui::SameLine();
@@ -78,7 +78,7 @@ void Inspector::on_draw()
 
         // Rotation
         ImGui::TextDisabled("Rotation");
-        glm::vec3 eulerAngles = transform->EulerRotation;
+        glm::vec3 eulerAngles = transform->euler_rotation;
         eulerAngles = EditorGUI::Vector3("##Rotation", eulerAngles);
         transform->set_rotation(eulerAngles);
         ImGui::Spacing();

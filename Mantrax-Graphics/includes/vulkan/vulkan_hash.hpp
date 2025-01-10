@@ -2902,16 +2902,16 @@ namespace std
   };
 
   template <>
-  struct hash<VULKAN_HPP_NAMESPACE::DebugMarkerObjectNameInfoEXT>
+  struct hash<VULKAN_HPP_NAMESPACE::DebugMarkername_objectInfoEXT>
   {
-    std::size_t operator()( VULKAN_HPP_NAMESPACE::DebugMarkerObjectNameInfoEXT const & debugMarkerObjectNameInfoEXT ) const VULKAN_HPP_NOEXCEPT
+    std::size_t operator()( VULKAN_HPP_NAMESPACE::DebugMarkername_objectInfoEXT const & debugMarkername_objectInfoEXT ) const VULKAN_HPP_NOEXCEPT
     {
       std::size_t seed = 0;
-      VULKAN_HPP_HASH_COMBINE( seed, debugMarkerObjectNameInfoEXT.sType );
-      VULKAN_HPP_HASH_COMBINE( seed, debugMarkerObjectNameInfoEXT.pNext );
-      VULKAN_HPP_HASH_COMBINE( seed, debugMarkerObjectNameInfoEXT.objectType );
-      VULKAN_HPP_HASH_COMBINE( seed, debugMarkerObjectNameInfoEXT.object );
-      for ( const char * p = debugMarkerObjectNameInfoEXT.pObjectName; *p != '\0'; ++p )
+      VULKAN_HPP_HASH_COMBINE( seed, debugMarkername_objectInfoEXT.sType );
+      VULKAN_HPP_HASH_COMBINE( seed, debugMarkername_objectInfoEXT.pNext );
+      VULKAN_HPP_HASH_COMBINE( seed, debugMarkername_objectInfoEXT.objectType );
+      VULKAN_HPP_HASH_COMBINE( seed, debugMarkername_objectInfoEXT.object );
+      for ( const char * p = debugMarkername_objectInfoEXT.pname_object; *p != '\0'; ++p )
       {
         VULKAN_HPP_HASH_COMBINE( seed, *p );
       }
@@ -2972,16 +2972,16 @@ namespace std
   };
 
   template <>
-  struct hash<VULKAN_HPP_NAMESPACE::DebugUtilsObjectNameInfoEXT>
+  struct hash<VULKAN_HPP_NAMESPACE::DebugUtilsname_objectInfoEXT>
   {
-    std::size_t operator()( VULKAN_HPP_NAMESPACE::DebugUtilsObjectNameInfoEXT const & debugUtilsObjectNameInfoEXT ) const VULKAN_HPP_NOEXCEPT
+    std::size_t operator()( VULKAN_HPP_NAMESPACE::DebugUtilsname_objectInfoEXT const & debugUtilsname_objectInfoEXT ) const VULKAN_HPP_NOEXCEPT
     {
       std::size_t seed = 0;
-      VULKAN_HPP_HASH_COMBINE( seed, debugUtilsObjectNameInfoEXT.sType );
-      VULKAN_HPP_HASH_COMBINE( seed, debugUtilsObjectNameInfoEXT.pNext );
-      VULKAN_HPP_HASH_COMBINE( seed, debugUtilsObjectNameInfoEXT.objectType );
-      VULKAN_HPP_HASH_COMBINE( seed, debugUtilsObjectNameInfoEXT.objectHandle );
-      for ( const char * p = debugUtilsObjectNameInfoEXT.pObjectName; *p != '\0'; ++p )
+      VULKAN_HPP_HASH_COMBINE( seed, debugUtilsname_objectInfoEXT.sType );
+      VULKAN_HPP_HASH_COMBINE( seed, debugUtilsname_objectInfoEXT.pNext );
+      VULKAN_HPP_HASH_COMBINE( seed, debugUtilsname_objectInfoEXT.objectType );
+      VULKAN_HPP_HASH_COMBINE( seed, debugUtilsname_objectInfoEXT.objectHandle );
+      for ( const char * p = debugUtilsname_objectInfoEXT.pname_object; *p != '\0'; ++p )
       {
         VULKAN_HPP_HASH_COMBINE( seed, *p );
       }
@@ -3981,7 +3981,7 @@ namespace std
       VULKAN_HPP_HASH_COMBINE( seed, deviceMemoryReportCallbackDataEXT.pNext );
       VULKAN_HPP_HASH_COMBINE( seed, deviceMemoryReportCallbackDataEXT.flags );
       VULKAN_HPP_HASH_COMBINE( seed, deviceMemoryReportCallbackDataEXT.type );
-      VULKAN_HPP_HASH_COMBINE( seed, deviceMemoryReportCallbackDataEXT.memoryObjectId );
+      VULKAN_HPP_HASH_COMBINE( seed, deviceMemoryReportCallbackDataEXT.memoryobject_int_id );
       VULKAN_HPP_HASH_COMBINE( seed, deviceMemoryReportCallbackDataEXT.size );
       VULKAN_HPP_HASH_COMBINE( seed, deviceMemoryReportCallbackDataEXT.objectType );
       VULKAN_HPP_HASH_COMBINE( seed, deviceMemoryReportCallbackDataEXT.objectHandle );

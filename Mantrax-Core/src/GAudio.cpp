@@ -6,6 +6,7 @@ void GAudio::defines()
 {
     GVAR(AudioMin, 5.0f, float);
     GVAR(AudioMax, 10.0f, float);
+    GVAR(Volumen, 1.0f, float);
     GVAR(AudioPath, "", std::string);
 }
 
@@ -19,7 +20,7 @@ void GAudio::init()
     else
     {
         std::string audio = FileManager::get_project_path() + GETVAR(AudioPath, std::string);
-        // FMOD inicializado correctamente, ahora carga y reproduce el sonido.
+
         FMOD_RESULT loadResult = AudioManager::GetManager()->system->createSound(audio.c_str(), FMOD_3D | FMOD_3D_LINEARROLLOFF, nullptr, &sound);
 
         if (loadResult != FMOD_OK)
@@ -28,7 +29,6 @@ void GAudio::init()
         }
         else
         {
-            // Reproduce el sonido.
             FMOD_RESULT playResult = AudioManager::GetManager()->system->playSound(sound, nullptr, false, &channel);
             channel->setVolume(0);
 
@@ -39,7 +39,8 @@ void GAudio::init()
         }
     }
 
-    // channel->set3DMinMaxDistance(minDistance, maxDistance);
+    if (AppSettings::is_playing)
+        SetVolumen(GETVAR(Volumen, float));
 }
 
 void GAudio::Stop()
@@ -66,15 +67,13 @@ float GAudio::GetPan()
 
 void GAudio::SetVolumen(float newVolumen)
 {
-    Volumen = newVolumen;
-    channel->setVolume(Volumen);
+    variableMap["Volumen"] = newVolumen;
+    channel->setVolume(GETVAR(Volumen, float));
 }
 
-float *GAudio::GetVolumen()
+float GAudio::GetVolumen()
 {
-    float g;
-    channel->getVolume(&g);
-    return &g;
+    return GETVAR(Volumen, float);
 }
 
 bool *GAudio::IsPlaying()
@@ -113,8 +112,6 @@ void GAudio::update()
             // std::cout << "3D AUDIO LOAD" << std::endl;
         }
     }
-
-    SetVolumen(Volumen);
 }
 
 void GAudio::clean()
@@ -138,5 +135,28 @@ void GAudio::clean()
         AudioManager::GetManager()->result = result;
     }
 
-    std::cout << "Limpiando audio" << std::endl;
+    std::cout << ">>>>>>>>>> Limpiando audio" << std::endl;
+}
+
+void GAudio::play_one_shot()
+{
+    if (sound == nullptr)
+    {
+        std::cerr << "Error: Sound not loaded.\n";
+        return;
+    }
+
+    FMOD::System *system = AudioManager::instance->system;
+
+    if (system == nullptr)
+    {
+        std::cerr << "Error: Sistema FMOD no está inicializado.\n";
+        return;
+    }
+
+    FMOD_RESULT result = system->playSound(sound, nullptr, false, nullptr);
+    if (result != FMOD_OK)
+    {
+        std::cerr << "Error al reproducir el sonido: " << FMOD_ErrorString(result) << "\n";
+    }
 }

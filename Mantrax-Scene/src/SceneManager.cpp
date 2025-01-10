@@ -8,10 +8,11 @@
 using namespace std;
 
 SceneManager *SceneManager::instance = nullptr;
+bool SceneManager::loading_new_scene = false;
 
 void SceneManager::on_awake()
 {
-    SceneManager::start_physic_world();
+    start_physic_world();
 
     for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
     {
@@ -29,11 +30,14 @@ void SceneManager::on_start()
 
 void SceneManager::on_update()
 {
-    SceneManager::get_scene_manager()->physic_world->update_world_physics();
-
-    for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
+    if (loading_new_scene == false)
     {
-        scn->update(Timer::delta_time);
+        SceneManager::get_scene_manager()->physic_world->update_world_physics();
+
+        for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
+        {
+            scn->update(Timer::delta_time);
+        }
     }
 }
 
@@ -94,15 +98,21 @@ void SceneManager::link_scene(Scene *scene_to_link)
     SceneManager::get_scene_manager()->opened_scenes.push_back(scene_to_link);
 }
 
+void SceneManager::load_scene_wrapped(std::string scene_name_new, bool is_additive)
+{
+    SceneManager::get_scene_manager()->load_scene(scene_name_new, is_additive);
+}
+
 void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
 {
+    loading_new_scene = true;
+
     if (!is_additive && SceneManager::get_scene_manager()->opened_scenes.size() > 0)
     {
-        SceneManager::get_current_scene()->clean_all_components();
 
         for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
         {
-            scn->on_destroy();
+            scn->clean_scene();
         }
 
         SceneManager::get_scene_manager()->opened_scenes.clear();
@@ -110,13 +120,15 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
         std::cout << "Current Scene Cleaned" << std::endl;
     }
 
+    SceneManager::get_scene_manager()->physic_world->clear_components_in_world();
+
     Scene *new_scene = SceneManager::make_new_empty_scene(scene_name_new);
     new_scene->unload_scene = true;
 
-    std::cout << "Loading new maked scene" << std::endl;
-
     std::string file_path = "";
     std::string assets_path = FileManager::get_project_path() + "assets/";
+
+    std::cout << "Loading Scene From: " << assets_path << std::endl;
 
     for (std::string file_getted : FileManager::get_files_by_extension(assets_path, ".scene"))
     {
@@ -157,7 +169,7 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
         for (size_t i = 0; i < data_loaded.size(); i++)
         {
             Entity *new_object = new_scene->make_entity();
-            VarVerify::set_value_if_exists(data_loaded[i], "name", new_object->ObjectName);
+            VarVerify::set_value_if_exists(data_loaded[i], "name", new_object->name_object);
 
             auto transform = new_object->get_transform();
 
@@ -180,14 +192,14 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
             VarVerify::set_value_if_exists(data_loaded[i], "sz", localScale.z);
             transform->setScaleLocal(localScale);
 
-            VarVerify::set_value_if_exists(data_loaded[i], "tag", new_object->ObjectTag);
+            VarVerify::set_value_if_exists(data_loaded[i], "tag", new_object->object_tag);
 
-            int objectID = -1;
-            VarVerify::set_value_if_exists(data_loaded[i], "object_id", objectID);
+            int object_int_id = -1;
+            VarVerify::set_value_if_exists(data_loaded[i], "object_id", object_int_id);
             VarVerify::set_value_if_exists(data_loaded[i], "layer", new_object->Layer);
 
-            new_object->objectID = objectID;
-            new_object->ObjectSTRID = std::to_string(objectID);
+            new_object->object_int_id = object_int_id;
+            new_object->object_string_id = std::to_string(object_int_id);
 
             if (data_loaded[i].contains("components") && data_loaded[i]["components"].is_array())
             {
@@ -240,15 +252,15 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
 
         for (size_t i = 0; i < data_loaded.size(); i++)
         {
-            int objectID = -1;
+            int object_int_id = -1;
             int parentID = -1;
 
-            VarVerify::set_value_if_exists(data_loaded[i], "object_id", objectID);
+            VarVerify::set_value_if_exists(data_loaded[i], "object_id", object_int_id);
             VarVerify::set_value_if_exists(data_loaded[i], "parent_id", parentID);
 
-            if (objectID != 1 && parentID != -1)
+            if (object_int_id != 1 && parentID != -1)
             {
-                Entity *new_object_child = new_scene->get_entity_by_id(objectID);
+                Entity *new_object_child = new_scene->get_entity_by_id(object_int_id);
                 Entity *new_object_parent = new_scene->get_entity_by_id(parentID);
 
                 if (new_object_child && new_object_parent)
@@ -289,6 +301,7 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
         }
 
         new_scene->unload_scene = false;
+        loading_new_scene = false;
         std::cout << "----------------> Already Loaded Scene" << std::endl;
     }
     catch (const std::exception &e)
@@ -346,9 +359,21 @@ void SceneManager::start_physic_world()
         SceneManager::get_scene_manager()->physic_world = new PhysicsEngine();
     }
 
-    SceneManager::get_scene_manager()->physic_world->delete_phys_world();
-
     SceneManager::get_scene_manager()->physic_world->start_world_physics();
 
     std::cout << "Physic World Started" << std::endl;
+}
+
+Scene* SceneManager::get_parent_scene_from_object(Entity* object)
+{
+    for (Scene* _scene : SceneManager::get_scene_manager()->opened_scenes) {
+        for (Entity* _ent : _scene->objects_worlds)
+        {
+            if (_ent == object) {
+                return _scene;
+            }
+        }
+    }
+
+    return nullptr;
 }

@@ -2121,7 +2121,7 @@ ed::Link* ed::EditorContext::FindLink(LinkId id)
     return FindItemIn(m_Links, id);
 }
 
-ed::Object* ed::EditorContext::FindObject(ObjectId id)
+ed::Object* ed::EditorContext::FindObject(object_int_id id)
 {
     if (id.IsNodeId())
         return FindNode(id.AsNodeId());
@@ -2383,7 +2383,7 @@ ed::Control ed::EditorContext::BuildControl(bool allowOffscreen)
     };
 
     // Emits invisible button and returns true if it is clicked.
-    auto emitInteractiveAreaEx = [&activeId](ObjectId id, const ImRect& rect, ImGuiButtonFlags extraFlags) -> int
+    auto emitInteractiveAreaEx = [&activeId](object_int_id id, const ImRect& rect, ImGuiButtonFlags extraFlags) -> int
     {
         char idString[33] = { 0 }; // itoa can output 33 bytes maximum
         snprintf(idString, 32, "%p", id.AsPointer());
@@ -2403,13 +2403,13 @@ ed::Control ed::EditorContext::BuildControl(bool allowOffscreen)
         return buttonIndex;
     };
 
-    auto emitInteractiveArea = [&emitInteractiveAreaEx, extraFlags](ObjectId id, const ImRect& rect)
+    auto emitInteractiveArea = [&emitInteractiveAreaEx, extraFlags](object_int_id id, const ImRect& rect)
     {
         return emitInteractiveAreaEx(id, rect, extraFlags);
     };
 
     // Check input interactions over area.
-    auto checkInteractionsInArea = [this, &emitInteractiveArea, &hotObject, &activeObject, &clickedObject, &doubleClickedObject](ObjectId id, const ImRect& rect, Object* object)
+    auto checkInteractionsInArea = [this, &emitInteractiveArea, &hotObject, &activeObject, &clickedObject, &doubleClickedObject](object_int_id id, const ImRect& rect, Object* object)
     {
         if (emitInteractiveArea(id, rect) >= 0)
             clickedObject = object;
@@ -2578,7 +2578,7 @@ void ed::EditorContext::ShowMetrics(const Control& control)
 {
     auto& io = ImGui::GetIO();
 
-    auto getObjectName = [](Object* object)
+    auto getname_object = [](Object* object)
     {
         if (!object) return "";
         else if (object->AsNode())  return "Node";
@@ -2587,20 +2587,20 @@ void ed::EditorContext::ShowMetrics(const Control& control)
         else return "";
     };
 
-    auto getHotObjectName = [&control, &getObjectName]()
+    auto getHotname_object = [&control, &getname_object]()
     {
         if (control.HotObject)
-            return getObjectName(control.HotObject);
+            return getname_object(control.HotObject);
         else if (control.BackgroundHot)
             return "Background";
         else
             return "<unknown>";
     };
 
-    auto getActiveObjectName = [&control, &getObjectName]()
+    auto getActivename_object = [&control, &getname_object]()
     {
         if (control.ActiveObject)
-            return getObjectName(control.ActiveObject);
+            return getname_object(control.ActiveObject);
         else if (control.BackgroundActive)
             return "Background";
         else
@@ -2629,13 +2629,13 @@ void ed::EditorContext::ShowMetrics(const Control& control)
     ImGui::Text("Live Nodes: %d", liveNodeCount);
     ImGui::Text("Live Pins: %d", livePinCount);
     ImGui::Text("Live Links: %d", liveLinkCount);
-    ImGui::Text("Hot Object: %s (%p)", getHotObjectName(), control.HotObject ? control.HotObject->ID().AsPointer() : nullptr);
+    ImGui::Text("Hot Object: %s (%p)", getHotname_object(), control.HotObject ? control.HotObject->ID().AsPointer() : nullptr);
     if (auto node = control.HotObject ? control.HotObject->AsNode() : nullptr)
     {
         ImGui::SameLine();
         ImGui::Text("{ x=%g y=%g w=%g h=%g }", node->m_Bounds.Min.x, node->m_Bounds.Min.y, node->m_Bounds.GetWidth(), node->m_Bounds.GetHeight());
     }
-    ImGui::Text("Active Object: %s (%p)", getActiveObjectName(), control.ActiveObject ? control.ActiveObject->ID().AsPointer() : nullptr);
+    ImGui::Text("Active Object: %s (%p)", getActivename_object(), control.ActiveObject ? control.ActiveObject->ID().AsPointer() : nullptr);
     if (auto node = control.ActiveObject ? control.ActiveObject->AsNode() : nullptr)
     {
         ImGui::SameLine();
@@ -2798,7 +2798,7 @@ std::string ed::Settings::Serialize()
 {
     json::value result;
 
-    auto serializeObjectId = [](ObjectId id)
+    auto serializeobject_int_id = [](object_int_id id)
     {
         auto value = std::to_string(reinterpret_cast<uintptr_t>(id.AsPointer()));
         switch (id.Type())
@@ -2815,12 +2815,12 @@ std::string ed::Settings::Serialize()
     for (auto& node : m_Nodes)
     {
         if (node.m_WasUsed)
-            nodes[serializeObjectId(node.m_ID)] = node.Serialize();
+            nodes[serializeobject_int_id(node.m_ID)] = node.Serialize();
     }
 
     auto& selection = result["selection"];
     for (auto& id : m_Selection)
-        selection.push_back(serializeObjectId(id));
+        selection.push_back(serializeobject_int_id(id));
 
     auto& view = result["view"];
     view["scroll"]["x"] = m_ViewScroll.x;
@@ -2864,20 +2864,20 @@ bool ed::Settings::Parse(const std::string& string, Settings& settings)
         return false;
     };
 
-    auto deserializeObjectId = [](const std::string& str)
+    auto deserializeobject_int_id = [](const std::string& str)
     {
         auto separator = str.find_first_of(':');
         auto idStart   = str.c_str() + ((separator != std::string::npos) ? separator + 1 : 0);
         auto id        = reinterpret_cast<void*>(strtoull(idStart, nullptr, 10));
         if (str.compare(0, separator, "node") == 0)
-            return ObjectId(NodeId(id));
+            return object_int_id(NodeId(id));
         else if (str.compare(0, separator, "link") == 0)
-            return ObjectId(LinkId(id));
+            return object_int_id(LinkId(id));
         else if (str.compare(0, separator, "pin") == 0)
-            return ObjectId(PinId(id));
+            return object_int_id(PinId(id));
         else
             // fallback to old format
-            return ObjectId(NodeId(id)); //return ObjectId();
+            return object_int_id(NodeId(id)); //return object_int_id();
     };
 
     //auto& settingsObject = settingsValue.get<json::object>();
@@ -2887,7 +2887,7 @@ bool ed::Settings::Parse(const std::string& string, Settings& settings)
     {
         for (auto& node : nodesValue.get<json::object>())
         {
-            auto id = deserializeObjectId(node.first.c_str()).AsNodeId();
+            auto id = deserializeobject_int_id(node.first.c_str()).AsNodeId();
 
             auto nodeSettings = result.FindNode(id);
             if (!nodeSettings)
@@ -2907,7 +2907,7 @@ bool ed::Settings::Parse(const std::string& string, Settings& settings)
         for (auto& selection : selectionArray)
         {
             if (selection.is_string())
-                result.m_Selection.push_back(deserializeObjectId(selection.get<json::string>()));
+                result.m_Selection.push_back(deserializeobject_int_id(selection.get<json::string>()));
         }
     }
 
@@ -3824,7 +3824,7 @@ void ed::SizeAction::ShowMetrics()
 {
     EditorAction::ShowMetrics();
 
-    auto getObjectName = [](Object* object)
+    auto getname_object = [](Object* object)
     {
         if (!object) return "";
         else if (object->AsNode())  return "Node";
@@ -3835,7 +3835,7 @@ void ed::SizeAction::ShowMetrics()
 
     ImGui::Text("%s:", GetName());
     ImGui::Text("    Active: %s", m_IsActive ? "yes" : "no");
-    ImGui::Text("    Node: %s (%p)", getObjectName(m_SizedNode), m_SizedNode ? m_SizedNode->m_ID.AsPointer() : nullptr);
+    ImGui::Text("    Node: %s (%p)", getname_object(m_SizedNode), m_SizedNode ? m_SizedNode->m_ID.AsPointer() : nullptr);
     if (m_SizedNode && m_IsActive)
     {
         ImGui::Text("    Bounds: { x=%g y=%g w=%g h=%g }", m_SizedNode->m_Bounds.Min.x, m_SizedNode->m_Bounds.Min.y, m_SizedNode->m_Bounds.GetWidth(), m_SizedNode->m_Bounds.GetHeight());
@@ -4030,7 +4030,7 @@ void ed::DragAction::ShowMetrics()
 {
     EditorAction::ShowMetrics();
 
-    auto getObjectName = [](Object* object)
+    auto getname_object = [](Object* object)
     {
         if (!object) return "";
         else if (object->AsNode())  return "Node";
@@ -4041,7 +4041,7 @@ void ed::DragAction::ShowMetrics()
 
     ImGui::Text("%s:", GetName());
     ImGui::Text("    Active: %s", m_IsActive ? "yes" : "no");
-    ImGui::Text("    Node: %s (%p)", getObjectName(m_DraggedObject), m_DraggedObject ? m_DraggedObject->ID().AsPointer() : nullptr);
+    ImGui::Text("    Node: %s (%p)", getname_object(m_DraggedObject), m_DraggedObject ? m_DraggedObject->ID().AsPointer() : nullptr);
 }
 
 
@@ -4247,7 +4247,7 @@ ed::EditorAction::AcceptResult ed::ContextMenuAction::Accept(const Control& cont
     if (isPressed || isReleased || isDragging)
     {
         Menu candidateMenu = ContextMenuAction::None;
-        ObjectId contextId;
+        object_int_id contextId;
 
         if (auto hotObejct = control.HotObject)
         {
@@ -4280,7 +4280,7 @@ ed::EditorAction::AcceptResult ed::ContextMenuAction::Accept(const Control& cont
         {
             m_CandidateMenu = None;
             m_CurrentMenu   = None;
-            m_ContextId     = ObjectId();
+            m_ContextId     = object_int_id();
             return False;
         }
     }
@@ -4294,7 +4294,7 @@ bool ed::ContextMenuAction::Process(const Control& control)
 
     m_CandidateMenu = None;
     m_CurrentMenu   = None;
-    m_ContextId     = ObjectId();
+    m_ContextId     = object_int_id();
     return false;
 }
 
@@ -4302,7 +4302,7 @@ void ed::ContextMenuAction::Reject()
 {
     m_CandidateMenu = None;
     m_CurrentMenu   = None;
-    m_ContextId     = ObjectId();
+    m_ContextId     = object_int_id();
 }
 
 void ed::ContextMenuAction::ShowMetrics()
@@ -4997,7 +4997,7 @@ void ed::DeleteItemsAction::ShowMetrics()
 {
     EditorAction::ShowMetrics();
 
-    //auto getObjectName = [](Object* object)
+    //auto getname_object = [](Object* object)
     //{
     //    if (!object) return "";
     //    else if (object->AsNode()) return "Node";
@@ -5008,7 +5008,7 @@ void ed::DeleteItemsAction::ShowMetrics()
 
     ImGui::Text("%s:", GetName());
     ImGui::Text("    Active: %s", m_IsActive ? "yes" : "no");
-    //ImGui::Text("    Node: %s (%d)", getObjectName(DeleteItemsgedNode), DeleteItemsgedNode ? DeleteItemsgedNode->ID : 0);
+    //ImGui::Text("    Node: %s (%d)", getname_object(DeleteItemsgedNode), DeleteItemsgedNode ? DeleteItemsgedNode->ID : 0);
 }
 
 bool ed::DeleteItemsAction::Add(Object* object)
@@ -5046,11 +5046,11 @@ void ed::DeleteItemsAction::End()
 
 bool ed::DeleteItemsAction::QueryLink(LinkId* linkId, PinId* startId, PinId* endId)
 {
-    ObjectId objectId;
-    if (!QueryItem(&objectId, Link))
+    object_int_id object_int_id;
+    if (!QueryItem(&object_int_id, Link))
         return false;
 
-    if (auto id = objectId.AsLinkId())
+    if (auto id = object_int_id.AsLinkId())
         *linkId = id;
     else
         return false;
@@ -5069,11 +5069,11 @@ bool ed::DeleteItemsAction::QueryLink(LinkId* linkId, PinId* startId, PinId* end
 
 bool ed::DeleteItemsAction::QueryNode(NodeId* nodeId)
 {
-    ObjectId objectId;
-    if (!QueryItem(&objectId, Node))
+    object_int_id object_int_id;
+    if (!QueryItem(&object_int_id, Node))
         return false;
 
-    if (auto id = objectId.AsNodeId())
+    if (auto id = object_int_id.AsNodeId())
         *nodeId = id;
     else
         return false;
@@ -5081,7 +5081,7 @@ bool ed::DeleteItemsAction::QueryNode(NodeId* nodeId)
     return true;
 }
 
-bool ed::DeleteItemsAction::QueryItem(ObjectId* itemId, IteratorType itemType)
+bool ed::DeleteItemsAction::QueryItem(object_int_id* itemId, IteratorType itemType)
 {
     if (!m_InInteraction)
         return false;

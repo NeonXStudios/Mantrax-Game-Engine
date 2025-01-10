@@ -149,15 +149,15 @@ using ax::NodeEditor::NodeId;
 using ax::NodeEditor::PinId;
 using ax::NodeEditor::LinkId;
 
-struct ObjectId final: Details::SafePointerType<ObjectId>
+struct object_int_id final: Details::SafePointerType<object_int_id>
 {
-    using Super = Details::SafePointerType<ObjectId>;
+    using Super = Details::SafePointerType<object_int_id>;
     using Super::Super;
 
-    ObjectId():                  Super(Invalid),              m_Type(ObjectType::None)   {}
-    ObjectId(PinId  pinId):      Super(pinId.AsPointer()),    m_Type(ObjectType::Pin)    {}
-    ObjectId(NodeId nodeId):     Super(nodeId.AsPointer()),   m_Type(ObjectType::Node)   {}
-    ObjectId(LinkId linkId):     Super(linkId.AsPointer()),   m_Type(ObjectType::Link)   {}
+    object_int_id():                  Super(Invalid),              m_Type(ObjectType::None)   {}
+    object_int_id(PinId  pinId):      Super(pinId.AsPointer()),    m_Type(ObjectType::Pin)    {}
+    object_int_id(NodeId nodeId):     Super(nodeId.AsPointer()),   m_Type(ObjectType::Node)   {}
+    object_int_id(LinkId linkId):     Super(linkId.AsPointer()),   m_Type(ObjectType::Link)   {}
 
     explicit operator PinId()    const { return AsPinId();    }
     explicit operator NodeId()   const { return AsNodeId();   }
@@ -232,7 +232,7 @@ struct Object
 
     virtual ~Object() = default;
 
-    virtual ObjectId ID() = 0;
+    virtual object_int_id ID() = 0;
 
     bool IsVisible() const
     {
@@ -332,7 +332,7 @@ struct Pin final: Object
     {
     }
 
-    virtual ObjectId ID() override { return m_ID; }
+    virtual object_int_id ID() override { return m_ID; }
 
     virtual void Reset() override final
     {
@@ -425,7 +425,7 @@ struct Node final: Object
     {
     }
 
-    virtual ObjectId ID() override { return m_ID; }
+    virtual object_int_id ID() override { return m_ID; }
 
     bool AcceptDrag() override;
     void UpdateDrag(const ImVec2& offset) override;
@@ -472,7 +472,7 @@ struct Link final: Object
     {
     }
 
-    virtual ObjectId ID() override { return m_ID; }
+    virtual object_int_id ID() override { return m_ID; }
 
     virtual bool IsSelectable() override { return true; }
 
@@ -530,7 +530,7 @@ struct Settings
     SaveReasonFlags      m_DirtyReason;
 
     vector<NodeSettings> m_Nodes;
-    vector<ObjectId>     m_Selection;
+    vector<object_int_id>     m_Selection;
     ImVec2               m_ViewScroll;
     float                m_ViewZoom;
     ImRect               m_VisibleRect;
@@ -990,7 +990,7 @@ struct ContextMenuAction final: EditorAction
 
     Menu m_CandidateMenu;
     Menu m_CurrentMenu;
-    ObjectId m_ContextId;
+    object_int_id m_ContextId;
 
     ContextMenuAction(EditorContext* editor);
 
@@ -1158,7 +1158,7 @@ private:
     void DeleteDeadLinks(NodeId nodeId);
     void DeleteDeadPins(NodeId nodeId);
 
-    bool QueryItem(ObjectId* itemId, IteratorType itemType);
+    bool QueryItem(object_int_id* itemId, IteratorType itemType);
     void RemoveItem(bool deleteDependencies);
     Object* DropCurrentItem();
 
@@ -1385,7 +1385,7 @@ struct EditorContext
     Node*   FindNode(NodeId id);
     Pin*    FindPin(PinId id);
     Link*   FindLink(LinkId id);
-    Object* FindObject(ObjectId id);
+    Object* FindObject(object_int_id id);
 
     Node*  GetNode(NodeId id);
     Pin*   GetPin(PinId id, PinKind kind);

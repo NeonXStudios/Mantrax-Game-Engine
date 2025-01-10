@@ -884,7 +884,7 @@ namespace VULKAN_HPP_NAMESPACE
 
         //=== VK_EXT_debug_marker ===
         vkDebugMarkerSetObjectTagEXT  = PFN_vkDebugMarkerSetObjectTagEXT( vkGetDeviceProcAddr( device, "vkDebugMarkerSetObjectTagEXT" ) );
-        vkDebugMarkerSetObjectNameEXT = PFN_vkDebugMarkerSetObjectNameEXT( vkGetDeviceProcAddr( device, "vkDebugMarkerSetObjectNameEXT" ) );
+        vkDebugMarkerSetname_objectEXT = PFN_vkDebugMarkerSetname_objectEXT( vkGetDeviceProcAddr( device, "vkDebugMarkerSetname_objectEXT" ) );
         vkCmdDebugMarkerBeginEXT      = PFN_vkCmdDebugMarkerBeginEXT( vkGetDeviceProcAddr( device, "vkCmdDebugMarkerBeginEXT" ) );
         vkCmdDebugMarkerEndEXT        = PFN_vkCmdDebugMarkerEndEXT( vkGetDeviceProcAddr( device, "vkCmdDebugMarkerEndEXT" ) );
         vkCmdDebugMarkerInsertEXT     = PFN_vkCmdDebugMarkerInsertEXT( vkGetDeviceProcAddr( device, "vkCmdDebugMarkerInsertEXT" ) );
@@ -1061,7 +1061,7 @@ namespace VULKAN_HPP_NAMESPACE
         vkReleaseProfilingLockKHR = PFN_vkReleaseProfilingLockKHR( vkGetDeviceProcAddr( device, "vkReleaseProfilingLockKHR" ) );
 
         //=== VK_EXT_debug_utils ===
-        vkSetDebugUtilsObjectNameEXT    = PFN_vkSetDebugUtilsObjectNameEXT( vkGetDeviceProcAddr( device, "vkSetDebugUtilsObjectNameEXT" ) );
+        vkSetDebugUtilsname_objectEXT    = PFN_vkSetDebugUtilsname_objectEXT( vkGetDeviceProcAddr( device, "vkSetDebugUtilsname_objectEXT" ) );
         vkSetDebugUtilsObjectTagEXT     = PFN_vkSetDebugUtilsObjectTagEXT( vkGetDeviceProcAddr( device, "vkSetDebugUtilsObjectTagEXT" ) );
         vkQueueBeginDebugUtilsLabelEXT  = PFN_vkQueueBeginDebugUtilsLabelEXT( vkGetDeviceProcAddr( device, "vkQueueBeginDebugUtilsLabelEXT" ) );
         vkQueueEndDebugUtilsLabelEXT    = PFN_vkQueueEndDebugUtilsLabelEXT( vkGetDeviceProcAddr( device, "vkQueueEndDebugUtilsLabelEXT" ) );
@@ -1934,7 +1934,7 @@ namespace VULKAN_HPP_NAMESPACE
 
       //=== VK_EXT_debug_marker ===
       PFN_vkDebugMarkerSetObjectTagEXT  vkDebugMarkerSetObjectTagEXT  = 0;
-      PFN_vkDebugMarkerSetObjectNameEXT vkDebugMarkerSetObjectNameEXT = 0;
+      PFN_vkDebugMarkerSetname_objectEXT vkDebugMarkerSetname_objectEXT = 0;
       PFN_vkCmdDebugMarkerBeginEXT      vkCmdDebugMarkerBeginEXT      = 0;
       PFN_vkCmdDebugMarkerEndEXT        vkCmdDebugMarkerEndEXT        = 0;
       PFN_vkCmdDebugMarkerInsertEXT     vkCmdDebugMarkerInsertEXT     = 0;
@@ -2086,7 +2086,7 @@ namespace VULKAN_HPP_NAMESPACE
       PFN_vkReleaseProfilingLockKHR vkReleaseProfilingLockKHR = 0;
 
       //=== VK_EXT_debug_utils ===
-      PFN_vkSetDebugUtilsObjectNameEXT    vkSetDebugUtilsObjectNameEXT    = 0;
+      PFN_vkSetDebugUtilsname_objectEXT    vkSetDebugUtilsname_objectEXT    = 0;
       PFN_vkSetDebugUtilsObjectTagEXT     vkSetDebugUtilsObjectTagEXT     = 0;
       PFN_vkQueueBeginDebugUtilsLabelEXT  vkQueueBeginDebugUtilsLabelEXT  = 0;
       PFN_vkQueueEndDebugUtilsLabelEXT    vkQueueEndDebugUtilsLabelEXT    = 0;
@@ -3910,7 +3910,7 @@ namespace VULKAN_HPP_NAMESPACE
 
       void debugMarkerSetObjectTagEXT( const VULKAN_HPP_NAMESPACE::DebugMarkerObjectTagInfoEXT & tagInfo ) const;
 
-      void debugMarkerSetObjectNameEXT( const VULKAN_HPP_NAMESPACE::DebugMarkerObjectNameInfoEXT & nameInfo ) const;
+      void debugMarkerSetname_objectEXT( const VULKAN_HPP_NAMESPACE::DebugMarkername_objectInfoEXT & nameInfo ) const;
 
       //=== VK_KHR_video_queue ===
 
@@ -4039,7 +4039,7 @@ namespace VULKAN_HPP_NAMESPACE
 
       //=== VK_EXT_debug_utils ===
 
-      void setDebugUtilsObjectNameEXT( const VULKAN_HPP_NAMESPACE::DebugUtilsObjectNameInfoEXT & nameInfo ) const;
+      void setDebugUtilsname_objectEXT( const VULKAN_HPP_NAMESPACE::DebugUtilsname_objectInfoEXT & nameInfo ) const;
 
       void setDebugUtilsObjectTagEXT( const VULKAN_HPP_NAMESPACE::DebugUtilsObjectTagInfoEXT & tagInfo ) const;
 
@@ -15720,13 +15720,13 @@ namespace VULKAN_HPP_NAMESPACE
       VULKAN_HPP_NAMESPACE::detail::resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::debugMarkerSetObjectTagEXT" );
     }
 
-    VULKAN_HPP_INLINE void Device::debugMarkerSetObjectNameEXT( const VULKAN_HPP_NAMESPACE::DebugMarkerObjectNameInfoEXT & nameInfo ) const
+    VULKAN_HPP_INLINE void Device::debugMarkerSetname_objectEXT( const VULKAN_HPP_NAMESPACE::DebugMarkername_objectInfoEXT & nameInfo ) const
     {
-      VULKAN_HPP_ASSERT( getDispatcher()->vkDebugMarkerSetObjectNameEXT && "Function <vkDebugMarkerSetObjectNameEXT> requires <VK_EXT_debug_marker>" );
+      VULKAN_HPP_ASSERT( getDispatcher()->vkDebugMarkerSetname_objectEXT && "Function <vkDebugMarkerSetname_objectEXT> requires <VK_EXT_debug_marker>" );
 
-      VULKAN_HPP_NAMESPACE::Result result = static_cast<VULKAN_HPP_NAMESPACE::Result>( getDispatcher()->vkDebugMarkerSetObjectNameEXT(
-        static_cast<VkDevice>( m_device ), reinterpret_cast<const VkDebugMarkerObjectNameInfoEXT *>( &nameInfo ) ) );
-      VULKAN_HPP_NAMESPACE::detail::resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::debugMarkerSetObjectNameEXT" );
+      VULKAN_HPP_NAMESPACE::Result result = static_cast<VULKAN_HPP_NAMESPACE::Result>( getDispatcher()->vkDebugMarkerSetname_objectEXT(
+        static_cast<VkDevice>( m_device ), reinterpret_cast<const VkDebugMarkername_objectInfoEXT *>( &nameInfo ) ) );
+      VULKAN_HPP_NAMESPACE::detail::resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::debugMarkerSetname_objectEXT" );
     }
 
     VULKAN_HPP_INLINE void CommandBuffer::debugMarkerBeginEXT( const VULKAN_HPP_NAMESPACE::DebugMarkerMarkerInfoEXT & markerInfo ) const VULKAN_HPP_NOEXCEPT
@@ -17635,13 +17635,13 @@ namespace VULKAN_HPP_NAMESPACE
 
     //=== VK_EXT_debug_utils ===
 
-    VULKAN_HPP_INLINE void Device::setDebugUtilsObjectNameEXT( const VULKAN_HPP_NAMESPACE::DebugUtilsObjectNameInfoEXT & nameInfo ) const
+    VULKAN_HPP_INLINE void Device::setDebugUtilsname_objectEXT( const VULKAN_HPP_NAMESPACE::DebugUtilsname_objectInfoEXT & nameInfo ) const
     {
-      VULKAN_HPP_ASSERT( getDispatcher()->vkSetDebugUtilsObjectNameEXT && "Function <vkSetDebugUtilsObjectNameEXT> requires <VK_EXT_debug_utils>" );
+      VULKAN_HPP_ASSERT( getDispatcher()->vkSetDebugUtilsname_objectEXT && "Function <vkSetDebugUtilsname_objectEXT> requires <VK_EXT_debug_utils>" );
 
-      VULKAN_HPP_NAMESPACE::Result result = static_cast<VULKAN_HPP_NAMESPACE::Result>( getDispatcher()->vkSetDebugUtilsObjectNameEXT(
-        static_cast<VkDevice>( m_device ), reinterpret_cast<const VkDebugUtilsObjectNameInfoEXT *>( &nameInfo ) ) );
-      VULKAN_HPP_NAMESPACE::detail::resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::setDebugUtilsObjectNameEXT" );
+      VULKAN_HPP_NAMESPACE::Result result = static_cast<VULKAN_HPP_NAMESPACE::Result>( getDispatcher()->vkSetDebugUtilsname_objectEXT(
+        static_cast<VkDevice>( m_device ), reinterpret_cast<const VkDebugUtilsname_objectInfoEXT *>( &nameInfo ) ) );
+      VULKAN_HPP_NAMESPACE::detail::resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::setDebugUtilsname_objectEXT" );
     }
 
     VULKAN_HPP_INLINE void Device::setDebugUtilsObjectTagEXT( const VULKAN_HPP_NAMESPACE::DebugUtilsObjectTagInfoEXT & tagInfo ) const

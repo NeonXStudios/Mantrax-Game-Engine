@@ -529,7 +529,7 @@ namespace VULKAN_HPP_NAMESPACE
   struct PipelineRasterizationStateRasterizationOrderAMD;
 
   //=== VK_EXT_debug_marker ===
-  struct DebugMarkerObjectNameInfoEXT;
+  struct DebugMarkername_objectInfoEXT;
   struct DebugMarkerObjectTagInfoEXT;
   struct DebugMarkerMarkerInfoEXT;
 
@@ -815,7 +815,7 @@ namespace VULKAN_HPP_NAMESPACE
   struct DebugUtilsLabelEXT;
   struct DebugUtilsMessengerCallbackDataEXT;
   struct DebugUtilsMessengerCreateInfoEXT;
-  struct DebugUtilsObjectNameInfoEXT;
+  struct DebugUtilsname_objectInfoEXT;
   struct DebugUtilsObjectTagInfoEXT;
 
 #if defined( VK_USE_PLATFORM_ANDROID_KHR )
@@ -11213,12 +11213,12 @@ namespace VULKAN_HPP_NAMESPACE
 #endif /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
 
     template <typename Dispatch = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE>
-    VULKAN_HPP_NODISCARD Result debugMarkerSetObjectNameEXT( const VULKAN_HPP_NAMESPACE::DebugMarkerObjectNameInfoEXT * pNameInfo,
+    VULKAN_HPP_NODISCARD Result debugMarkerSetname_objectEXT( const VULKAN_HPP_NAMESPACE::DebugMarkername_objectInfoEXT * pNameInfo,
                                                              Dispatch const & d VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const VULKAN_HPP_NOEXCEPT;
 #ifndef VULKAN_HPP_DISABLE_ENHANCED_MODE
     template <typename Dispatch = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE>
     VULKAN_HPP_NODISCARD_WHEN_NO_EXCEPTIONS typename ResultValueType<void>::type
-      debugMarkerSetObjectNameEXT( const VULKAN_HPP_NAMESPACE::DebugMarkerObjectNameInfoEXT & nameInfo,
+      debugMarkerSetname_objectEXT( const VULKAN_HPP_NAMESPACE::DebugMarkername_objectInfoEXT & nameInfo,
                                    Dispatch const & d                                         VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const;
 #endif /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
 
@@ -11888,12 +11888,12 @@ namespace VULKAN_HPP_NAMESPACE
     //=== VK_EXT_debug_utils ===
 
     template <typename Dispatch = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE>
-    VULKAN_HPP_NODISCARD Result setDebugUtilsObjectNameEXT( const VULKAN_HPP_NAMESPACE::DebugUtilsObjectNameInfoEXT * pNameInfo,
+    VULKAN_HPP_NODISCARD Result setDebugUtilsname_objectEXT( const VULKAN_HPP_NAMESPACE::DebugUtilsname_objectInfoEXT * pNameInfo,
                                                             Dispatch const & d VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const VULKAN_HPP_NOEXCEPT;
 #ifndef VULKAN_HPP_DISABLE_ENHANCED_MODE
     template <typename Dispatch = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE>
     VULKAN_HPP_NODISCARD_WHEN_NO_EXCEPTIONS typename ResultValueType<void>::type
-      setDebugUtilsObjectNameEXT( const VULKAN_HPP_NAMESPACE::DebugUtilsObjectNameInfoEXT & nameInfo,
+      setDebugUtilsname_objectEXT( const VULKAN_HPP_NAMESPACE::DebugUtilsname_objectInfoEXT & nameInfo,
                                   Dispatch const & d                                        VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const;
 #endif /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
 

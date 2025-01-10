@@ -3053,7 +3053,7 @@ export namespace VULKAN_HPP_NAMESPACE
 
   //=== VK_EXT_debug_marker ===
   using VULKAN_HPP_NAMESPACE::DebugMarkerMarkerInfoEXT;
-  using VULKAN_HPP_NAMESPACE::DebugMarkerObjectNameInfoEXT;
+  using VULKAN_HPP_NAMESPACE::DebugMarkername_objectInfoEXT;
   using VULKAN_HPP_NAMESPACE::DebugMarkerObjectTagInfoEXT;
 
   //=== VK_KHR_video_queue ===
@@ -3338,7 +3338,7 @@ export namespace VULKAN_HPP_NAMESPACE
   using VULKAN_HPP_NAMESPACE::DebugUtilsLabelEXT;
   using VULKAN_HPP_NAMESPACE::DebugUtilsMessengerCallbackDataEXT;
   using VULKAN_HPP_NAMESPACE::DebugUtilsMessengerCreateInfoEXT;
-  using VULKAN_HPP_NAMESPACE::DebugUtilsObjectNameInfoEXT;
+  using VULKAN_HPP_NAMESPACE::DebugUtilsname_objectInfoEXT;
   using VULKAN_HPP_NAMESPACE::DebugUtilsObjectTagInfoEXT;
 
 #if defined( VK_USE_PLATFORM_ANDROID_KHR )

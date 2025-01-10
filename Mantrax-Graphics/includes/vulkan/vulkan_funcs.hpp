@@ -10256,26 +10256,26 @@ namespace VULKAN_HPP_NAMESPACE
 #endif /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
 
   template <typename Dispatch>
-  VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE Result Device::debugMarkerSetObjectNameEXT( const VULKAN_HPP_NAMESPACE::DebugMarkerObjectNameInfoEXT * pNameInfo,
+  VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE Result Device::debugMarkerSetname_objectEXT( const VULKAN_HPP_NAMESPACE::DebugMarkername_objectInfoEXT * pNameInfo,
                                                                                      Dispatch const & d ) const VULKAN_HPP_NOEXCEPT
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
-    return static_cast<Result>( d.vkDebugMarkerSetObjectNameEXT( m_device, reinterpret_cast<const VkDebugMarkerObjectNameInfoEXT *>( pNameInfo ) ) );
+    return static_cast<Result>( d.vkDebugMarkerSetname_objectEXT( m_device, reinterpret_cast<const VkDebugMarkername_objectInfoEXT *>( pNameInfo ) ) );
   }
 
 #ifndef VULKAN_HPP_DISABLE_ENHANCED_MODE
   template <typename Dispatch>
   VULKAN_HPP_NODISCARD_WHEN_NO_EXCEPTIONS VULKAN_HPP_INLINE typename ResultValueType<void>::type
-    Device::debugMarkerSetObjectNameEXT( const VULKAN_HPP_NAMESPACE::DebugMarkerObjectNameInfoEXT & nameInfo, Dispatch const & d ) const
+    Device::debugMarkerSetname_objectEXT( const VULKAN_HPP_NAMESPACE::DebugMarkername_objectInfoEXT & nameInfo, Dispatch const & d ) const
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
 #  if ( VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1 )
-    VULKAN_HPP_ASSERT( d.vkDebugMarkerSetObjectNameEXT && "Function <vkDebugMarkerSetObjectNameEXT> requires <VK_EXT_debug_marker>" );
+    VULKAN_HPP_ASSERT( d.vkDebugMarkerSetname_objectEXT && "Function <vkDebugMarkerSetname_objectEXT> requires <VK_EXT_debug_marker>" );
 #  endif
 
     VULKAN_HPP_NAMESPACE::Result result = static_cast<VULKAN_HPP_NAMESPACE::Result>(
-      d.vkDebugMarkerSetObjectNameEXT( m_device, reinterpret_cast<const VkDebugMarkerObjectNameInfoEXT *>( &nameInfo ) ) );
-    VULKAN_HPP_NAMESPACE::detail::resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::debugMarkerSetObjectNameEXT" );
+      d.vkDebugMarkerSetname_objectEXT( m_device, reinterpret_cast<const VkDebugMarkername_objectInfoEXT *>( &nameInfo ) ) );
+    VULKAN_HPP_NAMESPACE::detail::resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::debugMarkerSetname_objectEXT" );
 
     return VULKAN_HPP_NAMESPACE::detail::createResultValueType( result );
   }
@@ -14741,26 +14741,26 @@ namespace VULKAN_HPP_NAMESPACE
   //=== VK_EXT_debug_utils ===
 
   template <typename Dispatch>
-  VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE Result Device::setDebugUtilsObjectNameEXT( const VULKAN_HPP_NAMESPACE::DebugUtilsObjectNameInfoEXT * pNameInfo,
+  VULKAN_HPP_NODISCARD VULKAN_HPP_INLINE Result Device::setDebugUtilsname_objectEXT( const VULKAN_HPP_NAMESPACE::DebugUtilsname_objectInfoEXT * pNameInfo,
                                                                                     Dispatch const & d ) const VULKAN_HPP_NOEXCEPT
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
-    return static_cast<Result>( d.vkSetDebugUtilsObjectNameEXT( m_device, reinterpret_cast<const VkDebugUtilsObjectNameInfoEXT *>( pNameInfo ) ) );
+    return static_cast<Result>( d.vkSetDebugUtilsname_objectEXT( m_device, reinterpret_cast<const VkDebugUtilsname_objectInfoEXT *>( pNameInfo ) ) );
   }
 
 #ifndef VULKAN_HPP_DISABLE_ENHANCED_MODE
   template <typename Dispatch>
   VULKAN_HPP_NODISCARD_WHEN_NO_EXCEPTIONS VULKAN_HPP_INLINE typename ResultValueType<void>::type
-    Device::setDebugUtilsObjectNameEXT( const VULKAN_HPP_NAMESPACE::DebugUtilsObjectNameInfoEXT & nameInfo, Dispatch const & d ) const
+    Device::setDebugUtilsname_objectEXT( const VULKAN_HPP_NAMESPACE::DebugUtilsname_objectInfoEXT & nameInfo, Dispatch const & d ) const
   {
     VULKAN_HPP_ASSERT( d.getVkHeaderVersion() == VK_HEADER_VERSION );
 #  if ( VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1 )
-    VULKAN_HPP_ASSERT( d.vkSetDebugUtilsObjectNameEXT && "Function <vkSetDebugUtilsObjectNameEXT> requires <VK_EXT_debug_utils>" );
+    VULKAN_HPP_ASSERT( d.vkSetDebugUtilsname_objectEXT && "Function <vkSetDebugUtilsname_objectEXT> requires <VK_EXT_debug_utils>" );
 #  endif
 
     VULKAN_HPP_NAMESPACE::Result result = static_cast<VULKAN_HPP_NAMESPACE::Result>(
-      d.vkSetDebugUtilsObjectNameEXT( m_device, reinterpret_cast<const VkDebugUtilsObjectNameInfoEXT *>( &nameInfo ) ) );
-    VULKAN_HPP_NAMESPACE::detail::resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::setDebugUtilsObjectNameEXT" );
+      d.vkSetDebugUtilsname_objectEXT( m_device, reinterpret_cast<const VkDebugUtilsname_objectInfoEXT *>( &nameInfo ) ) );
+    VULKAN_HPP_NAMESPACE::detail::resultCheck( result, VULKAN_HPP_NAMESPACE_STRING "::Device::setDebugUtilsname_objectEXT" );
 
     return VULKAN_HPP_NAMESPACE::detail::createResultValueType( result );
   }

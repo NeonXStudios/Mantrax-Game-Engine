@@ -53,7 +53,7 @@ void EntityWrapper::SetEntityName(MonoObject *entityObj, MonoString *name)
     }
 
     Entity *entity = reinterpret_cast<Entity *>(nativePtr);
-    entity->ObjectName = std::string(nameStr);
+    entity->name_object = std::string(nameStr);
 
     mono_free(nameStr);
 
@@ -92,7 +92,7 @@ MonoString *EntityWrapper::GetEntityName(MonoObject *entityObj)
         return nullptr;
     }
 
-    return mono_string_new(mono_domain_get(), entity->ObjectName.c_str());
+    return mono_string_new(mono_domain_get(), entity->name_object.c_str());
 }
 
 void EntityWrapper::SetEntityTag(MonoObject *entityObj, MonoString *name)
