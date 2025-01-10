@@ -57,7 +57,7 @@ void SceneView::on_draw()
         SceneManager::get_current_scene()->main_camera->use_projection = !SceneManager::get_current_scene()->main_camera->use_projection;
     }
 
-    Gfx::render_width = windowSize.x;
+    Gfx::render_width = windowSize.x; 
     Gfx::render_height = windowSize.y;
 
     if (ImGui::IsWindowHovered())
@@ -282,15 +282,15 @@ void SceneView::on_draw()
 
     ImGuizmo::SetDrawlist();
 
-    Camera *camera_with_max_depth = nullptr;
+    Camera* camera_with_max_depth = nullptr;
     float max_depth = -1.0f;
 
-    for (Entity *ent : SceneManager::get_current_scene()->objects_worlds)
+    for (Entity* ent : SceneManager::get_current_scene()->objects_worlds)
     {
         if (ent->hasComponent<GCamera>())
         {
-            GCamera &camera_component = ent->getComponent<GCamera>();
-            Camera *camera = camera_component.a_camera;
+            GCamera& camera_component = ent->getComponent<GCamera>();
+            Camera* camera = camera_component.a_camera;
 
             int current_depth = std::any_cast<int>(camera_component.variableMap["Depth"]);
 
@@ -306,10 +306,28 @@ void SceneView::on_draw()
     {
         ImVec2 windowSize = ImGui::GetContentRegionAvail();
 
-        TextureTarget *max_depth_render_target = camera_with_max_depth->target_render;
-        ImGui::Image((void *)(intptr_t)max_depth_render_target->get_render(), ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(0, 1), ImVec2(1, 0));
+        TextureTarget* max_depth_render_target = camera_with_max_depth->target_render;
+        ImGui::Image((void*)(intptr_t)max_depth_render_target->get_render(), ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(0, 1), ImVec2(1, 0));
+    }
+    else
+    {
+        ImVec2 windowSize = ImGui::GetContentRegionAvail();
+        ImVec2 textSize = ImGui::CalcTextSize("No valid camera found in the scene.");
+        ImVec2 textPos = ImVec2((windowSize.x - textSize.x) * 0.5f, (windowSize.y - textSize.y) * 0.5f);
+        ImGui::SetCursorPos(textPos);
+
+        ImFont* boldFont = ImGui::GetIO().Fonts->Fonts[0]; 
+        ImGui::PushFont(boldFont); 
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10, 10)); 
+        ImGui::SetWindowFontScale(2.0f); 
+
+        ImGui::Text("No valid camera found in the scene.");
+
+        ImGui::PopFont();
+        ImGui::PopStyleVar();
     }
 
     ImGui::End();
+
     ImGui::PopID();
 }
