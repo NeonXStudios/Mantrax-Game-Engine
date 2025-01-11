@@ -11,12 +11,12 @@ void GCamera::defines()
 void GCamera::init()
 {
     a_camera = RenderPipeline::add_camera();
-    a_camera->target_render = RenderPipeline::add_render_texture();
+    a_camera->render_id = RenderPipeline::add_render_texture()->get_render();
 }
 
 void GCamera::update()
 {
-    if (a_camera != nullptr && a_camera->target_render != nullptr)
+    if (a_camera != nullptr)
     {
         a_camera->cameraPosition = entity->get_transform()->Position;
         glm::vec3 eulerAngles = entity->get_transform()->get_euler_angles();

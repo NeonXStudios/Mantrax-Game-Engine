@@ -9,6 +9,7 @@
 #include "Timer.h"
 #include <TextureTarget.h>
 
+class TextureTarget;
 enum GARINLIBS_API graphic_api
 {
     OpenGL,

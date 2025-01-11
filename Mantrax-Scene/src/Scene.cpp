@@ -148,3 +148,14 @@ void Scene::clean_scene()
 
     objects_worlds.clear();
 }
+
+bool Scene::verify_if_entity_is_from_this_scene(Entity* entity)
+{
+    for (Entity* get_entity : objects_worlds) {
+        if (get_entity == entity) {
+            return true;
+        }
+    }
+
+    return false;
+}

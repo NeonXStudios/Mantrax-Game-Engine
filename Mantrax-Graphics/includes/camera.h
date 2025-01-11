@@ -1,10 +1,8 @@
 #pragma once
-
 #include <GarinMaths.h>
 #include <vector>
 #include <Core.h>
 #include <Gfx.h>
-#include <TextureTarget.h>
 
 class GARINLIBS_API Camera
 {
@@ -42,7 +40,7 @@ public:
   float speed = 0.1f;
   float sensitivity = 100.0f;
 
-  TextureTarget *target_render = new TextureTarget();
+  GLuint render_id;
 
   void update();
 

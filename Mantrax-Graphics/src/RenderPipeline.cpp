@@ -19,8 +19,6 @@ void RenderPipeline::init()
     {
         std::cout << "First render target its null" << std::endl;
     }
-
-    std::cout << "Render Target asigned" << std::endl;
 }
 
 void RenderPipeline::render(std::function<void(void)> additional_Render)
@@ -30,37 +28,56 @@ void RenderPipeline::render(std::function<void(void)> additional_Render)
         return;
     }
 
-    SceneManager::get_current_scene()->main_camera->update();
-    SceneManager::get_current_scene()->main_camera->target_render->draw(SceneManager::get_current_scene()->main_camera->GetCameraMatrix(), additional_Render);
+    for (Scene* get_data_from_scene : SceneManager::get_scene_manager()->opened_scenes) {
+        get_data_from_scene->main_camera->update();
 
-    for (int i = 0; i < RenderPipeline::camera_targets.size(); i++)
-    {
-        Camera *camera = RenderPipeline::camera_targets[i];
+        GLuint render_id = get_data_from_scene->main_camera->render_id;
+        TextureTarget* target_global = find_target_by_id(render_id);
 
-        if (camera == nullptr)
+        target_global->draw(
+            get_data_from_scene->main_camera->GetCameraMatrix(), 
+            get_data_from_scene->main_camera->GetProjectionMatrix(), 
+            get_data_from_scene->main_camera->GetView(), 
+            get_data_from_scene->main_camera->cameraPosition, 
+            get_data_from_scene, 
+            additional_Render);
+
+        for (int i = 0; i < RenderPipeline::camera_targets.size(); i++)
         {
-            std::cerr << "Error: camera es nullptr" << std::endl;
-            continue;
-        }
+            Camera* camera = RenderPipeline::camera_targets[i];
+            GLuint render_id_local = camera->render_id;
+            TextureTarget* target = find_target_by_id(render_id_local);
 
-        camera->update();
+            if (camera == nullptr)
+            {
+                std::cerr << "Error: camera es nullptr" << std::endl;
+                continue;
+            }
 
-        if (camera->target_render != nullptr)
-        {
-            camera->target_render->draw(camera->GetCameraMatrix(), additional_Render);
+            camera->update();
+
+            if (target != nullptr) {
+                target->draw(
+                    camera->GetCameraMatrix(),
+                    camera->GetProjectionMatrix(),
+                    camera->GetView(),
+                    camera->cameraPosition,
+                    get_data_from_scene,
+                    additional_Render
+                );
+            }
+            else {
+                std::cerr << "Error: No se encontró un TextureTarget con render_id " << render_id_local << std::endl;
+            }
         }
-        else
-        {
-            std::cerr << "Error: target_render es nullptr para la cámara" << std::endl;
-        }
-    }
+    } 
 }
 
-void RenderPipeline::render_all_data(glm::mat4 camera_matrix)
+void RenderPipeline::render_all_data(Scene* scene, glm::mat4 camera_matrix, glm::mat4 projection_matrix, glm::mat4 view_matrix, glm::vec3 camera_position)
 {
     try
     {
-        RenderPipeline::canvas->render_ui();
+        //RenderPipeline::canvas->render_ui();
 
         for (ModelComponent *cmp : renderables)
         {
@@ -68,35 +85,39 @@ void RenderPipeline::render_all_data(glm::mat4 camera_matrix)
             {
                 GMaterial &material = cmp->entity->getComponent<GMaterial>();
 
-                if (layers_to_render.find(cmp->entity->Layer) != layers_to_render.end() && material.enabled)
+                if (scene->verify_if_entity_is_from_this_scene(material.entity))
                 {
-                    material.p_shader->use();
 
-                    cmp->texture_sampler->use_texture(material.p_shader->ID);
+                    if (layers_to_render.find(cmp->entity->Layer) != layers_to_render.end() && material.enabled)
+                    {
+                        material.p_shader->use();
 
-                    material.p_shader->setMat4("model", cmp->get_transform()->get_matrix());
-                    material.p_shader->setVec3("viewPos", SceneManager::get_current_scene()->main_camera->cameraPosition);
+                        cmp->texture_sampler->use_texture(material.p_shader->ID);
 
-                    material.p_shader->setVec3("ambientColor", glm::vec3(1.0f, 1.0f, 1.0f));
-                    material.p_shader->setFloat("ambientStrength", 0.1f);
+                        material.p_shader->setMat4("model", cmp->get_transform()->get_matrix());
+                        material.p_shader->setVec3("viewPos", camera_position);
 
-                    material.p_shader->setVec3("lightDir", glm::vec3(-0.2f, -1.0f, -0.3f)); // Dirección de la luz
-                    material.p_shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));  // Color de la luz (blanco)
-                    material.p_shader->setFloat("lightIntensity", 1.0f);                    // Intensidad de la luz
+                        material.p_shader->setVec3("ambientColor", glm::vec3(1.0f, 1.0f, 1.0f));
+                        material.p_shader->setFloat("ambientStrength", 0.1f);
 
-                    // material.p_shader->setBool("showBothSides", false);
+                        material.p_shader->setVec3("lightDir", glm::vec3(-0.2f, -1.0f, -0.3f));
+                        material.p_shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+                        material.p_shader->setFloat("lightIntensity", 1.0f);
 
-                    // INFO CAMERA TO SHADER
-                    material.p_shader->setMat4("Projection", SceneManager::get_scene_manager()->get_current_scene()->main_camera->GetProjectionMatrix());
-                    material.p_shader->setMat4("View", SceneManager::get_scene_manager()->get_current_scene()->main_camera->GetView());
-                    material.p_shader->setMat4("CameraMatrix", camera_matrix);
+                        // material.p_shader->setBool("showBothSides", false);
 
-                    // TIME INFO TO SHADER
-                    material.p_shader->setFloat("DeltaTime", Timer::delta_time);
-                    material.p_shader->setFloat("SinTime", glm::sin(Timer::delta_time));
-                    material.p_shader->setFloat("CosTime", glm::acos(Timer::delta_time));
+                        // INFO CAMERA TO SHADER
+                        material.p_shader->setMat4("Projection", projection_matrix);
+                        material.p_shader->setMat4("View", view_matrix);
+                        material.p_shader->setMat4("CameraMatrix", camera_matrix);
 
-                    cmp->model->Draw();
+                        // TIME INFO TO SHADER
+                        material.p_shader->setFloat("DeltaTime", Timer::delta_time);
+                        material.p_shader->setFloat("SinTime", glm::sin(Timer::delta_time));
+                        material.p_shader->setFloat("CosTime", glm::acos(Timer::delta_time));
+
+                        cmp->model->Draw();
+                    }
                 }
             }
         }
@@ -187,4 +208,13 @@ Camera *RenderPipeline::add_camera()
     {
         std::cerr << e.what() << '\n';
     }
+}
+
+TextureTarget* RenderPipeline::find_target_by_id(GLuint render_id_local) {
+    for (TextureTarget* target : RenderPipeline::render_targets) {
+        if (target != nullptr && target->texture == render_id_local) {
+            return target; 
+        }
+    }
+    return nullptr; 
 }

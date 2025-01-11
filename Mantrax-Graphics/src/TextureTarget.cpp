@@ -4,62 +4,90 @@
 
 void TextureTarget::setup()
 {
+    // Generar y bindear el framebuffer
     glGenFramebuffers(1, &framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
+    // Configurar la textura de color
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, p_width, p_height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, p_width, p_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
 
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    {
-        std::cout << "Framebuffer is not complete!" << std::endl;
-    }
-
-    glGenTextures(1, &colorAndDepthTexture);
-    glBindTexture(GL_TEXTURE_2D, colorAndDepthTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, p_width, p_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+    // Configurar el depth buffer
     glGenRenderbuffers(1, &depthRenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, p_width, p_height);
-
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, p_width, p_height);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderbuffer);
 
+    // Verificar que el framebuffer está completo
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE)
+    {
+        std::cerr << "Error: Framebuffer incompleto: " << status << std::endl;
+        // Limpiar recursos en caso de error
+        cleanup();
+        return;
+    }
+
+    // Volver al framebuffer default
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void TextureTarget::draw(glm::mat4 camera_matrix, std::function<void(void)> additional_Render)
+void TextureTarget::draw (
+    glm::mat4 camera_matrix, 
+    glm::mat4 projection_matrix, 
+    glm::mat4 view_matrix, 
+    glm::vec3 camera_position, 
+    Scene* scene_data,
+    std::function<void(void)> additional_Render)
 {
-    if (!SceneManager::get_current_scene() ||
-        !SceneManager::get_current_scene()->main_camera)
+    if (!scene_data->main_camera)
     {
         return;
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
     glViewport(0, 0, Gfx::render_width, Gfx::render_height);
+
     Gfx::clear_render();
 
-    RenderPipeline::render_all_data(camera_matrix);
+    RenderPipeline::render_all_data(scene_data, camera_matrix, projection_matrix, view_matrix, camera_position);
+
     additional_Render();
-    SceneManager::get_current_scene()->on_draw();
+
+    scene_data->on_draw();
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
     glBindTexture(GL_TEXTURE_2D, texture);
-
     glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, Gfx::render_width, Gfx::render_height, 0);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
     Gfx::clear_render();
 
-    SceneManager::get_current_scene()->draw_ui();
+    scene_data->draw_ui();
+}
+
+void TextureTarget::cleanup()
+{
+    if (depthRenderbuffer != 0) {
+        glDeleteRenderbuffers(1, &depthRenderbuffer);
+        depthRenderbuffer = 0;
+    }
+    if (texture != 0) {
+        glDeleteTextures(1, &texture);
+        texture = 0;
+    }
+    if (framebuffer != 0) {
+        glDeleteFramebuffers(1, &framebuffer);
+        framebuffer = 0;
+    }
 }
 
 unsigned int TextureTarget::get_render()
@@ -69,6 +97,7 @@ unsigned int TextureTarget::get_render()
 
 TextureTarget::~TextureTarget()
 {
-    auto &targets = RenderPipeline::render_targets;
+    cleanup();
+    auto& targets = RenderPipeline::render_targets;
     targets.erase(std::remove(targets.begin(), targets.end(), this), targets.end());
 }

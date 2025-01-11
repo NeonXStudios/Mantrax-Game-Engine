@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <VarVerify.h>
+#include <RenderPipeline.h>
 
 using namespace std;
 
@@ -314,9 +315,7 @@ Scene *SceneManager::make_new_empty_scene(std::string scene_name)
 {
     Scene *scene_raw = new Scene();
     scene_raw->scene_name = scene_name;
-
-    SceneManager::get_scene_manager()->opened_scenes.push_back(scene_raw);
-
+    
     try
     {
         std::cout << "------Making new Scene" << std::endl;
@@ -324,7 +323,10 @@ Scene *SceneManager::make_new_empty_scene(std::string scene_name)
         if (scene_raw->main_camera == nullptr)
         {
             scene_raw->main_camera = new Camera();
-            scene_raw->main_camera->target_render = Gfx::main_render;
+            scene_raw->main_camera->render_id = RenderPipeline::add_render_texture()->get_render();
+            scene_raw->main_camera->use_projection = false;
+            scene_raw->main_camera->update();
+            //scene_raw->main_camera->target_render = Gfx::main_render;
         }
         else
         {
@@ -336,6 +338,7 @@ Scene *SceneManager::make_new_empty_scene(std::string scene_name)
         std::cerr << e.what() << '\n';
     }
 
+    SceneManager::get_scene_manager()->opened_scenes.push_back(scene_raw);
     return scene_raw;
 }
 

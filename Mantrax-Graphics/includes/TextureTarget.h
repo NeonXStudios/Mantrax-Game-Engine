@@ -5,7 +5,9 @@
 #include <Core.h>
 #include <GarinMaths.h>
 #include <GarinNatives.h>
+#include "../../../Mantrax-Scene/includes/Scene.h"
 
+class Scene;
 class GARINLIBS_API TextureTarget
 {
 public:
@@ -19,7 +21,8 @@ public:
     int p_height = 1080;
 
     void setup();
-    void draw(glm::mat4 camera_matrix, std::function<void(void)> additional_Render);
+    void draw(glm::mat4 camera_matrix, glm::mat4 projection_matrix, glm::mat4 view_matrix, glm::vec3 camera_position, Scene* scene_data, std::function<void(void)> additional_Render);
+    void cleanup();
     // void draw(std::function<void()> func);
     unsigned int get_render();
 

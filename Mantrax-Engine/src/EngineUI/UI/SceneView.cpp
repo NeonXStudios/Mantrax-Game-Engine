@@ -1,12 +1,5 @@
 #include <SceneView.h>
-#include <GarinGraphics.h>
-#include <GarinEvents.h>
-#include <GarinMaths.h>
-#include <EventSystem.h>
-#include <RenderPipeline.h>
-#include <EngineUI.h>
 
-#include <ImGuizmo.h>
 
 using namespace ImGuizmo;
 
@@ -24,7 +17,7 @@ void SceneView::on_draw()
     ImVec2 windowSize = ImGui::GetContentRegionAvail();
 
     ImVec2 p = ImGui::GetCursorScreenPos();
-    ImGui::Image((void *)(intptr_t)Gfx::main_render->get_render(), ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::Image((void *)(intptr_t)SceneManager::get_current_scene()->main_camera->render_id, ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(0, 1), ImVec2(1, 0));
     imagePosition = ImGui::GetWindowPos();
 
     ImVec2 buttonPosition = ImVec2(p.x + 10, p.y + 10);
@@ -45,6 +38,16 @@ void SceneView::on_draw()
     if (ImGui::ImageButton((void *)(intptr_t)IconsManager::SCALE(), ImVec2(24, 24)))
     {
         gizmoOperation = ImGuizmo::SCALE;
+    }
+
+    ImGui::SetCursorScreenPos(ImVec2(buttonPosition.x + 200, buttonPosition.y));
+    if (ImGui::Button("Make New Window Scene"))
+    {
+        SceneDataView* new_data_scene_View = new SceneDataView();
+        new_data_scene_View->work_scene = SceneManager::make_new_empty_scene("Test Data");
+        Entity* ent = new_data_scene_View->work_scene->make_entity();
+
+        windows_data.push_back(new_data_scene_View);
     }
 
     float imageRightX = p.x + Gfx::render_width;
@@ -302,12 +305,10 @@ void SceneView::on_draw()
         }
     }
 
-    if (camera_with_max_depth != nullptr && camera_with_max_depth->target_render != nullptr)
+    if (camera_with_max_depth != nullptr)
     {
         ImVec2 windowSize = ImGui::GetContentRegionAvail();
-
-        TextureTarget* max_depth_render_target = camera_with_max_depth->target_render;
-        ImGui::Image((void*)(intptr_t)max_depth_render_target->get_render(), ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::Image((void*)(intptr_t)SceneManager::get_current_scene()->main_camera->render_id, ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(0, 1), ImVec2(1, 0));
     }
     else
     {
@@ -328,6 +329,34 @@ void SceneView::on_draw()
     }
 
     ImGui::End();
+    ImGui::PopID();
 
+    for (SceneDataView* scene_data_to_render : windows_data)
+    {
+        scene_data_to_render->draw();
+    }
+}
+
+SceneDataView::SceneDataView()
+{
+    window_id = IDGenerator::generate_id();
+}
+
+void SceneDataView::draw() {
+    ImGui::PushID(window_id);
+
+    std::string unique_window_name = "Scene Window##" + std::to_string(window_id);
+    ImGui::Begin(unique_window_name.c_str(), &is_open);
+
+    ImVec2 windowSize = ImGui::GetContentRegionAvail();
+
+    int renderWidth = static_cast<int>(windowSize.x);
+    int renderHeight = static_cast<int>(windowSize.y);
+
+    ImGui::Image((void*)(intptr_t)work_scene->main_camera->render_id,
+        ImVec2(renderWidth, renderHeight),
+        ImVec2(0, 1), ImVec2(1, 0));
+
+    ImGui::End();
     ImGui::PopID();
 }

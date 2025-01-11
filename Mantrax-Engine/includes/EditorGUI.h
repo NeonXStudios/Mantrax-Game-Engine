@@ -263,9 +263,9 @@ public:
                 else
                 {
                     GCamera *cameraComponent = &owner->getComponent<GCamera>();
-                    if (cameraComponent && cameraComponent->a_camera->target_render != nullptr)
+                    if (cameraComponent && cameraComponent->a_camera->render_id != -1)
                     {
-                        GLuint textureID = cameraComponent->a_camera->target_render->get_render();
+                        GLuint textureID = cameraComponent->a_camera->render_id;
                         ImGui::Image((void *)(intptr_t)textureID, windowSize, ImVec2(0, 1), ImVec2(1, 0));
                         cameraComponent->update();
                     }

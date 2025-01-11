@@ -27,7 +27,7 @@ public:
     static void init();
     static void render(std::function<void(void)> additional_Render);
 
-    static void render_all_data(glm::mat4 camera_matrix);
+    static void render_all_data(Scene* scene, glm::mat4 camera_matrix, glm::mat4 projection_matrix, glm::mat4 view_matrix, glm::vec3 camera_position);
     static void delete_from_render(ModelComponent *renderable);
 
     static void register_new_material(GMaterial *texture);
@@ -38,5 +38,6 @@ public:
     static void removeLayer(int layer);
     static Camera *add_camera();
     static TextureTarget *add_render_texture();
+    static TextureTarget* find_target_by_id(GLuint render_id_local);
     static void renderQuad();
 };
