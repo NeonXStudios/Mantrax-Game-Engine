@@ -20,5 +20,7 @@ Mantrax-Hub-Electron/node_modules
 !Compiler/COMPILER/CMakeLists.txt
 
 !Compiler/CompileEngine_VS_19_2022.bat
+.vs/
+.vscode/
 
 README.md
