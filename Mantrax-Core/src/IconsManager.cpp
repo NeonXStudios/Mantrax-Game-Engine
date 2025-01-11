@@ -20,7 +20,6 @@ void IconsManager::init()
     IconsManager::icons->entity_icon = new TextureManager(FileManager::get_execute_path() + "icons/entity.png");
     IconsManager::icons->sound_icon = new TextureManager(FileManager::get_execute_path() + "icons/sound.png");
     IconsManager::icons->pause_icon = new TextureManager(FileManager::get_execute_path() + "icons/pause.png");
-    IconsManager::icons->texture_error_icon = new TextureManager(FileManager::get_execute_path() + "icons/ErrorTexture.png");
     IconsManager::icons->text_file_icon = new TextureManager(FileManager::get_execute_path() + "icons/textfile.png");
     IconsManager::icons->cpp_script_icon = new TextureManager(FileManager::get_execute_path() + "icons/CPP.png");
     IconsManager::icons->trash_icon = new TextureManager(FileManager::get_execute_path() + "icons/trash.png");
@@ -31,6 +30,7 @@ void IconsManager::init()
     IconsManager::icons->scale = new TextureManager(FileManager::get_execute_path() + "icons/Scale.png");
     IconsManager::icons->ortho = new TextureManager(FileManager::get_execute_path() + "icons/ORTHO.png");
     IconsManager::icons->perspective = new TextureManager(FileManager::get_execute_path() + "icons/Perspective.png");
+    IconsManager::icons->texture_error_icon = new TextureManager(FileManager::get_execute_path() + "icons/grid.png");
 
     std::cout << "ICONS MANAGER SETUP CORRECTLY" << std::endl;
 }

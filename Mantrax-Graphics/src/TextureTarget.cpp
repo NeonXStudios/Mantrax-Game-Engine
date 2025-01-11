@@ -4,11 +4,9 @@
 
 void TextureTarget::setup()
 {
-    // Generar y bindear el framebuffer
     glGenFramebuffers(1, &framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
-    // Configurar la textura de color
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, p_width, p_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
@@ -18,23 +16,19 @@ void TextureTarget::setup()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
 
-    // Configurar el depth buffer
     glGenRenderbuffers(1, &depthRenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, p_width, p_height);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderbuffer);
 
-    // Verificar que el framebuffer está completo
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (status != GL_FRAMEBUFFER_COMPLETE)
     {
         std::cerr << "Error: Framebuffer incompleto: " << status << std::endl;
-        // Limpiar recursos en caso de error
         cleanup();
         return;
     }
 
-    // Volver al framebuffer default
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

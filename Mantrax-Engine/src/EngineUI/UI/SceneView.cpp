@@ -248,8 +248,8 @@ void SceneView::on_draw()
 
     if (ImGui::IsWindowHovered() && ImGui::IsKeyDown(ImGuiKey_F) && EngineUI::getInstance().select_obj != nullptr)
     {
-        auto selectedObj = EngineUI::getInstance().select_obj->get_transform();
-        auto camera = SceneManager::get_current_scene()->main_camera;
+        TransformComponent* selectedObj = EngineUI::getInstance().select_obj->get_transform();
+        Camera* camera = SceneManager::get_current_scene()->main_camera;
 
         glm::vec3 targetPosition = selectedObj->Position;
 

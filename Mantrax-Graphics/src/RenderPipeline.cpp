@@ -13,7 +13,7 @@ CanvasManager *RenderPipeline::canvas = nullptr;
 void RenderPipeline::init()
 {
     RenderPipeline::canvas = new CanvasManager();
-    RenderPipeline::canvas->init_ui();
+    //RenderPipeline::canvas->init_ui();
 
     if (Gfx::main_render == nullptr)
     {
@@ -29,50 +29,54 @@ void RenderPipeline::render(std::function<void(void)> additional_Render)
     }
 
     for (Scene* get_data_from_scene : SceneManager::get_scene_manager()->opened_scenes) {
-        get_data_from_scene->main_camera->update();
+        if (get_data_from_scene->main_camera == nullptr) {
+            std::cerr << "Error: main_camera es nullptr para la escena" << std::endl;
+            continue;
+        }
 
+        get_data_from_scene->main_camera->update();
         GLuint render_id = get_data_from_scene->main_camera->render_id;
         TextureTarget* target_global = find_target_by_id(render_id);
 
+        if (target_global == nullptr) {
+            std::cerr << "Error: No se encontró TextureTarget para main_camera con render_id " << render_id << std::endl;
+            continue;
+        }
+
         target_global->draw(
-            get_data_from_scene->main_camera->GetCameraMatrix(), 
-            get_data_from_scene->main_camera->GetProjectionMatrix(), 
-            get_data_from_scene->main_camera->GetView(), 
-            get_data_from_scene->main_camera->cameraPosition, 
-            get_data_from_scene, 
+            get_data_from_scene->main_camera->GetCameraMatrix(),
+            get_data_from_scene->main_camera->GetProjectionMatrix(),
+            get_data_from_scene->main_camera->GetView(),
+            get_data_from_scene->main_camera->cameraPosition,
+            get_data_from_scene,
             additional_Render);
 
-        for (int i = 0; i < RenderPipeline::camera_targets.size(); i++)
-        {
-            Camera* camera = RenderPipeline::camera_targets[i];
-            GLuint render_id_local = camera->render_id;
-            TextureTarget* target = find_target_by_id(render_id_local);
-
-            if (camera == nullptr)
-            {
-                std::cerr << "Error: camera es nullptr" << std::endl;
+        for (Camera* camera : RenderPipeline::camera_targets) {
+            if (camera == nullptr) {
+                std::cerr << "Error: camera es nullptr en camera_targets" << std::endl;
                 continue;
             }
 
             camera->update();
+            GLuint render_id_local = camera->render_id;
+            TextureTarget* target = find_target_by_id(render_id_local);
 
-            if (target != nullptr) {
-                target->draw(
-                    camera->GetCameraMatrix(),
-                    camera->GetProjectionMatrix(),
-                    camera->GetView(),
-                    camera->cameraPosition,
-                    get_data_from_scene,
-                    additional_Render
-                );
-            }
-            else {
+            if (target == nullptr) {
                 std::cerr << "Error: No se encontró un TextureTarget con render_id " << render_id_local << std::endl;
+                continue;
             }
-        }
-    } 
-}
 
+            target->draw(
+                camera->GetCameraMatrix(),
+                camera->GetProjectionMatrix(),
+                camera->GetView(),
+                camera->cameraPosition,
+                get_data_from_scene,
+                additional_Render
+            );
+        }
+    }
+}
 void RenderPipeline::render_all_data(Scene* scene, glm::mat4 camera_matrix, glm::mat4 projection_matrix, glm::mat4 view_matrix, glm::vec3 camera_position)
 {
     try

@@ -249,22 +249,11 @@ void EngineUI::draw_ui()
         {
             if (ImGui::IsKeyReleased(ImGuiKey_S))
             {
-                if (!AppSettings::is_playing)
-                {
-                    std::string bg_pick_path = configs->current_proyect + "/gb.jpg";
-                    GarinIO::screenshot(Gfx::main_render->get_render(), Gfx::width, Gfx::height, bg_pick_path.c_str());
+                SceneData::save_scene();
+                configs->save_config();
 
-                    SceneData::save_scene();
-                    configs->save_config();
-
-                    std::string info = "Scene Saved + Game Config: " + configs->current_scene;
-                    UINotification::AddNotification(info, 3.0f);
-                }
-                else
-                {
-                    std::string info = "You cannot save scene in playmode";
-                    UINotification::AddNotification(info, 3.0f);
-                }
+                std::string info = "Scene Saved + Game Config: " + configs->current_scene;
+                UINotification::AddNotification(info, 3.0f);
             }
         }
 

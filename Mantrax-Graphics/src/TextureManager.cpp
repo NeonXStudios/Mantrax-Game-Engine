@@ -1,5 +1,6 @@
 #include "../includes/TextureManager.h"
 #include <RenderPipeline.h>
+#include <IconsManager.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -33,7 +34,7 @@ TextureManager::TextureManager(const std::string &texture_path)
             break;
         default:
             format = GL_RGB;
-            break; // Valor por defecto para mayor robustez
+            break;
         }
 
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
@@ -41,9 +42,10 @@ TextureManager::TextureManager(const std::string &texture_path)
     }
     else
     {
-        std::cerr << "Error loading texture: " << texture_path << std::endl;
+        std::cerr << ">>>>>>>> Error loading texture: " << texture_path << std::endl;
         glDeleteTextures(1, &texture_maked);
-        texture_maked = 0;
+
+        texture_maked = IconsManager::TEXTURE_ERROR();
     }
 
     stbi_image_free(data);
