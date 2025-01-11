@@ -52,7 +52,7 @@ void EngineUI::draw_ui()
 
     ImGui::PopStyleVar(4);
 
-    ImGui::Image((void *)(intptr_t)SceneManager::get_current_scene()->main_camera->target_render->get_render(), ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::Image((void *)(intptr_t)SceneManager::get_current_scene()->main_camera->render_id, ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(0, 1), ImVec2(1, 0));
 
     ImGui::End();
 

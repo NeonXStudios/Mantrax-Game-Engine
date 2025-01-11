@@ -17,8 +17,6 @@ DynamicLibLoader *lib_loader = new DynamicLibLoader();
 GameBehaviourFactory *factory_behaviour = new GameBehaviourFactory();
 RenderPipeline *piprender = new RenderPipeline();
 
-bool first_frame_loaded;
-
 // int start_engine(int argc, char *argv[]);
 
 // int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -61,8 +59,7 @@ int main(int argc, char *arvg[])
     window_config.maximized = true;
 
     Gfx::create_windows(window_config);
-    SceneManager::on_awake();
-    scene_game->awake();
+    scene_game->on_awake();
 
     scene_game->configs->project_select = true;
     fs::path project_path = fs::path(arvg[1]);
@@ -70,17 +67,20 @@ int main(int argc, char *arvg[])
     scene_game->configs->current_proyect = project_path.string() + "/";
     FileManager::game_path = scene_game->configs->current_proyect;
 
+
     DynamicLibLoader::instance->load_components(project_path.string() + "/");
     while (DynamicLibLoader::instance->dll_in_recompile == false)
     {
         std::cout << "DLL NOT LOADED WAIT..." << std::endl;
     }
 
+
     RenderPipeline::init();
     SceneManager::on_awake();
-    SceneManager::get_scene_manager()->load_scene(scene_game->configs->start_scene);
-
     scene_game->configs->load_config();
+    SceneManager::get_scene_manager()->load_scene(scene_game->configs->current_scene);
+
+
 
     scene_game->on_start();
     SceneManager::on_start();
@@ -91,8 +91,11 @@ int main(int argc, char *arvg[])
         Gfx::timer_control();
         Gfx::process_window_size();
 
-        RenderPipeline::render([]() {});
         SceneManager::on_update();
+
+        RenderPipeline::render([scene_game]()
+            { scene_game->on_draw(); });
+
         scene_game->draw_ui();
 
         Gfx::swap_buffer();

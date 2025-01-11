@@ -21,17 +21,16 @@ public:
     {
         try
         {
-            std::cout << "Registrando clase: " << class_name << std::endl;
             creators[class_name] = std::move(creator);
-            std::cout << "/////////////*/*/*/*/*/*/*/*/Instancias Totales: " << creators.size() << std::endl;
+            std::cout << "Class Registre: " << class_name << std::endl;
         }
         catch (const std::exception &e)
         {
-            std::cerr << "Excepción atrapada: " << e.what() << std::endl;
+            std::cerr << "Trapped exception: " << e.what() << std::endl;
         }
         catch (...)
         {
-            std::cerr << "Excepción desconocida atrapada" << std::endl;
+            std::cerr << "Unknown exception trapped" << std::endl;
         }
     }
 
@@ -39,22 +38,17 @@ public:
     {
         if (creators.find(class_name) != creators.end())
         {
-            std::cout << "Creando instancia de: " << class_name << std::endl;
+            std::cout << "Creating instance of: " << class_name << std::endl;
             std::unique_ptr<GameBehaviour> instance = creators[class_name]();
         }
         else
         {
-            std::cout << "Error: Clase no encontrada: " << class_name << std::endl;
+            std::cout << "Error: Class not found: " << class_name << std::endl;
         }
     }
 
     std::unique_ptr<GameBehaviour> create_instance_by_name(const std::string &class_name)
     {
-        for (const auto &pair : creators)
-        {
-            std::cout << "CLASS NAME DATA: " << pair.first << std::endl;
-        }
-
         auto it = creators.find(class_name);
         if (it != creators.end())
         {
