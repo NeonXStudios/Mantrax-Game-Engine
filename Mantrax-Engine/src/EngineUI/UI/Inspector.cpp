@@ -9,19 +9,47 @@ void Inspector::on_draw()
     if (EngineUI::getInstance().select_obj == nullptr)
         return;
 
-    // Ventana principal
-    ImGui::Begin("Inspector", &is_open, ImGuiWindowFlags_NoCollapse);
+    if (SceneManager::get_parent_scene_from_object(EngineUI::getInstance().select_obj) != SceneManager::get_current_scene()) 
+        return;
 
-    // Sección del nombre del objeto
+    std::string new_name = "Inspector##" + std::to_string(window_id);
+    ImGui::Begin(new_name.c_str(), &is_open, ImGuiWindowFlags_NoCollapse);
+
+    // Nombre del objeto y botón +
     {
+        ImGui::BeginGroup();
         static char nameBuf[256];
         strcpy(nameBuf, EngineUI::getInstance().select_obj->name_object.c_str());
-        ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+        
+        float availableWidth = ImGui::GetContentRegionAvail().x - 25;
+        ImGui::SetNextItemWidth(availableWidth);
+        
         if (ImGui::InputText("##Name", nameBuf, sizeof(nameBuf)))
         {
             EngineUI::getInstance().select_obj->name_object = nameBuf;
         }
 
+        ImGui::SameLine(availableWidth + 5);
+        
+        // Centramos el texto "+" en el botón
+        float buttonSize = 20;
+        ImVec2 cursorPos = ImGui::GetCursorPos();
+        if (ImGui::Button("##AddComponent", ImVec2(buttonSize, buttonSize)))
+        {
+            ImGui::OpenPopup("AddComponentPopup");
+        }
+        
+        // Calculamos la posición para centrar el "+"
+        ImVec2 textSize = ImGui::CalcTextSize("+");
+        float textPosX = cursorPos.x + (buttonSize - textSize.x) * 0.5f;
+        float textPosY = cursorPos.y + (buttonSize - textSize.y) * 0.5f;
+        ImGui::GetWindowDrawList()->AddText(
+            ImVec2(ImGui::GetWindowPos().x + textPosX, ImGui::GetWindowPos().y + textPosY),
+            ImGui::GetColorU32(ImGui::GetStyle().Colors[ImGuiCol_Text]),
+            "+"
+        );
+        
+        ImGui::EndGroup();
         ImGui::Spacing();
     }
 
@@ -69,7 +97,7 @@ void Inspector::on_draw()
         ImGui::TextDisabled("TRANSFORM");
         ImGui::Spacing();
 
-        TransformComponent *transform = EngineUI::getInstance().select_obj->get_transform();
+        TransformComponent* transform = EngineUI::getInstance().select_obj->get_transform();
 
         // Position
         ImGui::TextDisabled("Position");
@@ -97,88 +125,74 @@ void Inspector::on_draw()
     // Components
     UIAdministrator::draw_ui(EngineUI::getInstance().select_obj);
 
-    // Add Component Button
+     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+    if (ImGui::BeginPopup("AddComponentPopup", ImGuiWindowFlags_NoMove))
     {
+        ImGui::Text("Components");
+        ImGui::Separator();
         ImGui::Spacing();
 
-        // Asegurarse de que el botón tenga un ancho válido
-        float buttonWidth = ImGui::GetContentRegionAvail().x;
-        if (buttonWidth <= 0)
-            buttonWidth = 100; // Valor mínimo por defecto
+        // Lista de componentes con scroll
+        ImGui::BeginChild("ComponentsList", ImVec2(600, 400), true);
 
-        if (ImGui::Button("Add Component", ImVec2(buttonWidth, 30)))
+        if (ImGui::Button("Render Mesh", ImVec2(-1, 0)))
         {
-            ImGui::OpenPopup("AddComponentPopup");
+            EngineUI::getInstance().select_obj->addComponent<ModelComponent>().init();
+            ImGui::CloseCurrentPopup();
+        }
+        if (ImGui::Button("Rigid Body", ImVec2(-1, 0)))
+        {
+            EngineUI::getInstance().select_obj->addComponent<GBody>().init();
+            ImGui::CloseCurrentPopup();
+        }
+        if (ImGui::Button("Box Collider", ImVec2(-1, 0)))
+        {
+            EngineUI::getInstance().select_obj->addComponent<GCollision>().init();
+            ImGui::CloseCurrentPopup();
+        }
+        if (ImGui::Button("Material", ImVec2(-1, 0)))
+        {
+            EngineUI::getInstance().select_obj->addComponent<GMaterial>().init();
+            ImGui::CloseCurrentPopup();
+        }
+        if (ImGui::Button("Game Script", ImVec2(-1, 0)))
+        {
+            EngineUI::getInstance().select_obj->addComponent<GScript>().init();
+            ImGui::CloseCurrentPopup();
+        }
+        if (ImGui::Button("Character Controller", ImVec2(-1, 0)))
+        {
+            EngineUI::getInstance().select_obj->addComponent<GCharacter>().init();
+            ImGui::CloseCurrentPopup();
+        }
+        if (ImGui::Button("Audio Source", ImVec2(-1, 0)))
+        {
+            EngineUI::getInstance().select_obj->addComponent<GAudio>().init();
+            ImGui::CloseCurrentPopup();
+        }
+        if (ImGui::Button("Perlin Component", ImVec2(-1, 0)))
+        {
+            EngineUI::getInstance().select_obj->addComponent<GNoise>().init();
+            ImGui::CloseCurrentPopup();
+        }
+        if (ImGui::Button("Animator", ImVec2(-1, 0)))
+        {
+            EngineUI::getInstance().select_obj->addComponent<GAnimator>().init();
+            ImGui::CloseCurrentPopup();
+        }
+        if (!EngineUI::getInstance().select_obj->hasComponent<GCamera>())
+        {
+            if (ImGui::Button("Camera", ImVec2(-1, 0)))
+            {
+                EngineUI::getInstance().select_obj->addComponent<GCamera>().init();
+                ImGui::CloseCurrentPopup();
+            }
         }
 
-        if (ImGui::BeginPopup("AddComponentPopup"))
-        {
-            ImGui::TextDisabled("ADD COMPONENT");
-            ImGui::Separator();
-            ImGui::Spacing();
-
-            // Asegurar un ancho mínimo para el popup
-            float popupWidth = ImGui::GetContentRegionAvail().x;
-            if (popupWidth < 150)
-                popupWidth = 150;
-
-            // Componentes disponibles
-            if (ImGui::Button("Render Mesh", ImVec2(popupWidth, 0)))
-            {
-                EngineUI::getInstance().select_obj->addComponent<ModelComponent>().init();
-                ImGui::CloseCurrentPopup();
-            }
-            if (ImGui::Button("Rigid Body", ImVec2(popupWidth, 0)))
-            {
-                EngineUI::getInstance().select_obj->addComponent<GBody>().init();
-                ImGui::CloseCurrentPopup();
-            }
-            if (ImGui::Button("Box Collider", ImVec2(popupWidth, 0)))
-            {
-                EngineUI::getInstance().select_obj->addComponent<GCollision>().init();
-                ImGui::CloseCurrentPopup();
-            }
-            if (ImGui::Button("Material", ImVec2(popupWidth, 0)))
-            {
-                EngineUI::getInstance().select_obj->addComponent<GMaterial>().init();
-                ImGui::CloseCurrentPopup();
-            }
-            if (ImGui::Button("Game Script", ImVec2(popupWidth, 0)))
-            {
-                EngineUI::getInstance().select_obj->addComponent<GScript>().init();
-                ImGui::CloseCurrentPopup();
-            }
-            if (ImGui::Button("Character Controller", ImVec2(popupWidth, 0)))
-            {
-                EngineUI::getInstance().select_obj->addComponent<GCharacter>().init();
-                ImGui::CloseCurrentPopup();
-            }
-            if (ImGui::Button("Audio Source", ImVec2(popupWidth, 0)))
-            {
-                EngineUI::getInstance().select_obj->addComponent<GAudio>().init();
-                ImGui::CloseCurrentPopup();
-            }
-            if (ImGui::Button("Perlin Component", ImVec2(popupWidth, 0)))
-            {
-                EngineUI::getInstance().select_obj->addComponent<GNoise>().init();
-                ImGui::CloseCurrentPopup();
-            }
-            if (ImGui::Button("Animator", ImVec2(popupWidth, 0)))
-            {
-                EngineUI::getInstance().select_obj->addComponent<GAnimator>().init();
-                ImGui::CloseCurrentPopup();
-            }
-            if (!EngineUI::getInstance().select_obj->hasComponent<GCamera>())
-            {
-                if (ImGui::Button("Camera", ImVec2(popupWidth, 0)))
-                {
-                    EngineUI::getInstance().select_obj->addComponent<GCamera>().init();
-                    ImGui::CloseCurrentPopup();
-                }
-            }
-
-            ImGui::EndPopup();
-        }
+        ImGui::EndChild();
+        ImGui::EndPopup();
     }
 
     ImGui::End();

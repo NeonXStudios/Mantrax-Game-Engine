@@ -21,7 +21,9 @@ static const char *renderOptions[] = {"OpenGL", "DirectX", "Vulkan", "Metal"};
 
 void CompilerView::on_draw()
 {
-    ImGui::Begin("Compiler", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse);
+    std::string new_name = "Compiler##" + std::to_string(window_id);
+
+    ImGui::Begin(new_name.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse);
 
     // --- Título principal ---
     {

@@ -24,6 +24,7 @@ public:
 
   float fov = 65.0f;
   float zoom = 0.043f;
+  float distance_view = 1000.0f;
 
   glm::quat cameraRotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
   float rotationXAngle = 0.0f;

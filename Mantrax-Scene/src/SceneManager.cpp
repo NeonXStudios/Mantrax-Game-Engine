@@ -104,7 +104,7 @@ void SceneManager::load_scene_wrapped(std::string scene_name_new, bool is_additi
     SceneManager::get_scene_manager()->load_scene(scene_name_new, is_additive);
 }
 
-void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
+Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, std::string extension)
 {
     loading_new_scene = true;
 
@@ -131,7 +131,7 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
 
     std::cout << "Loading Scene From: " << assets_path << std::endl;
 
-    for (std::string file_getted : FileManager::get_files_by_extension(assets_path, ".scene"))
+    for (std::string file_getted : FileManager::get_files_by_extension(assets_path, extension))
     {
         if (FileManager::get_file_info(file_getted).file_stem == scene_name_new)
         {
@@ -140,7 +140,6 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
         }
     }
 
-    std::cout << "Scene Path " << assets_path << std::endl;
 
     try
     {
@@ -309,6 +308,8 @@ void SceneManager::load_scene(std::string scene_name_new, bool is_additive)
     {
         std::cerr << e.what() << '\n';
     }
+
+    return new_scene;
 }
 
 Scene *SceneManager::make_new_empty_scene(std::string scene_name)
@@ -379,4 +380,17 @@ Scene* SceneManager::get_parent_scene_from_object(Entity* object)
     }
 
     return nullptr;
+}
+
+void SceneManager::close_scene(Scene* p_scene)
+{
+    p_scene->clean_scene();
+    p_scene->clean_all_components();
+
+    auto& opened_scenes = SceneManager::get_scene_manager()->opened_scenes;
+
+    auto it = std::find(opened_scenes.begin(), opened_scenes.end(), p_scene);
+    if (it != opened_scenes.end()) {
+        opened_scenes.erase(it);
+    }
 }

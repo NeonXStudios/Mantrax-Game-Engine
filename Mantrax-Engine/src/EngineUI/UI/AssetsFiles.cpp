@@ -11,6 +11,8 @@
 #include <filesystem>
 #include <iostream>
 #include <memory>
+#include <UIMasterDrawer.h>
+#include <SceneView.h>
 
 static std::unordered_map<std::string, std::unique_ptr<TextureManager>> s_ThumbnailCache;
 
@@ -58,8 +60,10 @@ void AssetsFiles::on_draw()
         asset_selected_struct = std::make_unique<SelectedAssetInfo>();
     }
 
+    std::string new_name = "Files##" + std::to_string(window_id);
+
     // Ventana principal de "Assets"
-    ImGui::Begin("Assets", &is_open);
+    ImGui::Begin(new_name.c_str(), &is_open);
     {
         // 1) Muestra el árbol (tipo carpeta) de la ruta /assets
         ShowDirectoryTree(FileManager::get_project_path() + "/assets");
@@ -307,7 +311,7 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
             }
             else if (extension == ".lua")
                 EditorGUI::DrawIcon(IconsManager::LUA());
-            else if (extension == ".scene")
+            else if (extension == ".scene" || extension == ".entitie")
                 EditorGUI::DrawIcon(IconsManager::SCENE());
             else if (extension == ".fbx")
                 EditorGUI::DrawIcon(IconsManager::MODEL());
@@ -379,6 +383,11 @@ void AssetsFiles::drawer_files(std::string extension, std::string file_name, std
         {
             SceneData::load_scene(file_name, false);
         }
+    }else if (extension == ".entitie"){
+        SceneDataView* new_data_scene_View = new SceneDataView();
+        new_data_scene_View->work_scene = SceneManager::get_scene_manager()->load_scene(file_name, true, ".entitie");
+
+        UIMasterDrawer::get_instance().get_component<SceneView>()->windows_data.push_back(new_data_scene_View);
     }
     else if (extension == ".slab" || extension == ".lua" || extension == ".glsl")
     {

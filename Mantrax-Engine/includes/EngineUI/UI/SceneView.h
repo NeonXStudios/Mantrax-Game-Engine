@@ -18,12 +18,15 @@ public:
     glm::vec2 WorldPoint = glm::vec2(0, 0);
     glm::vec2 ScreenPoint = glm::vec2(0, 0);
 
+    Hierarchy* hierarchy = new Hierarchy();
+
     bool ignoreGui = false;
     bool right_click_held = false;
     bool show_script_popup = false;
     bool is_open;
 
     Scene* work_scene;
+    void close_window();
 
     SceneDataView();
     void draw();

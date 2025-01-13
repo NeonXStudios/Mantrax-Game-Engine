@@ -5,7 +5,8 @@
 
 void UIEditor::on_draw()
 {
-    ImGui::Begin("UI Editor", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDecoration);
+    std::string new_name = "UIEditor##" + std::to_string(window_id);
+    ImGui::Begin(new_name.c_str(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDecoration);
 
     ImGuiID dockspace_id = ImGui::GetID("UIEditorDockspace");
     ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);

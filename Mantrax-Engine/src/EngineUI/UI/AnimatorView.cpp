@@ -16,7 +16,9 @@ void AnimatorView::on_draw()
     if (animator == nullptr)
         return;
 
-    if (!ImGui::Begin("Animator Editor", &is_open, ImGuiWindowFlags_MenuBar))
+    std::string new_name = "Animator##" + std::to_string(window_id);
+
+    if (!ImGui::Begin(new_name.c_str(), &is_open, ImGuiWindowFlags_MenuBar))
     {
         ImGui::End();
         return;

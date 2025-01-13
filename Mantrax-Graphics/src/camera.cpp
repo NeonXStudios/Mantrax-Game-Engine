@@ -8,7 +8,7 @@ void Camera::update()
 
     if (use_projection)
     {
-        projection = glm::perspective(glm::radians(fov), (float)Gfx::render_width / (float)Gfx::render_height, 0.1f, 10000.0f);
+        projection = glm::perspective(glm::radians(fov), (float)Gfx::render_width / (float)Gfx::render_height, 0.1f, distance_view);
 
         Orientation = glm::mat3(rotationMatrix) * glm::vec3(0.0f, 0.0f, 1.0f);
 

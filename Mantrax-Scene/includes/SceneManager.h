@@ -30,6 +30,7 @@ public:
     static void load_scene_wrapped(std::string scene_name_new, bool is_additive = false);
     static void link_scene(Scene *scene_to_link);
     static Scene *make_new_empty_scene(std::string scene_name);
+    static void close_scene(Scene* p_scene);
 
     static void on_awake();
     static void on_start();
@@ -37,6 +38,6 @@ public:
     static void on_edition_mode();
     static void on_clean_scenes();
 
-    void load_scene(std::string scene_name_new, bool is_additive = false);
+    Scene* load_scene(std::string scene_name_new, bool is_additive = false, std::string extension = ".scene");
     void clear_open_scene();
 };

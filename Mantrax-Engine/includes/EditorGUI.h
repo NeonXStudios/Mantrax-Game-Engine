@@ -406,73 +406,73 @@ public:
                     // Función lambda para renderizar los controles de ImGui para los uniforms
                     auto renderUniformsImGui = [&](std::vector<Uniform> &uniforms)
                     {
-                        ImGui::Begin("Editar Uniforms");
+                        // ImGui::Begin("Editar Uniforms");
 
-                        // Vincular el programa de shader para poder actualizar los uniforms
-                        glUseProgram(shaderID);
+                        // // Vincular el programa de shader para poder actualizar los uniforms
+                        // glUseProgram(shaderID);
 
-                        for (auto &uniform : uniforms)
-                        {
-                            ImGui::PushID(uniform.name.c_str()); // Para evitar conflictos de ID en ImGui
+                        // for (auto &uniform : uniforms)
+                        // {
+                        //     ImGui::PushID(uniform.name.c_str()); // Para evitar conflictos de ID en ImGui
 
-                            // Obtener el nombre limpio (sin [0] para arrays)
-                            std::string displayName = uniform.name;
-                            size_t arrayStart = displayName.find('[');
-                            if (arrayStart != std::string::npos)
-                            {
-                                displayName = displayName.substr(0, arrayStart);
-                            }
+                        //     // Obtener el nombre limpio (sin [0] para arrays)
+                        //     std::string displayName = uniform.name;
+                        //     size_t arrayStart = displayName.find('[');
+                        //     if (arrayStart != std::string::npos)
+                        //     {
+                        //         displayName = displayName.substr(0, arrayStart);
+                        //     }
 
-                            // Crear controles según el tipo de uniform
-                            bool valorCambiado = false;
-                            switch (uniform.type)
-                            {
-                            case GL_FLOAT:
-                                valorCambiado = ImGui::SliderFloat(displayName.c_str(), &uniform.floatValues[0], -10.0f, 10.0f);
-                                if (valorCambiado)
-                                {
-                                    glUniform1f(uniform.location, uniform.floatValues[0]);
-                                }
-                                break;
-                            case GL_FLOAT_VEC2:
-                                valorCambiado = ImGui::SliderFloat2(displayName.c_str(), uniform.floatValues.data(), -10.0f, 10.0f);
-                                if (valorCambiado)
-                                {
-                                    glUniform2fv(uniform.location, 1, uniform.floatValues.data());
-                                }
-                                break;
-                            case GL_FLOAT_VEC3:
-                                valorCambiado = ImGui::ColorEdit3(displayName.c_str(), uniform.floatValues.data());
-                                if (valorCambiado)
-                                {
-                                    glUniform3fv(uniform.location, 1, uniform.floatValues.data());
-                                }
-                                break;
-                            case GL_FLOAT_VEC4:
-                                valorCambiado = ImGui::ColorEdit4(displayName.c_str(), uniform.floatValues.data());
-                                if (valorCambiado)
-                                {
-                                    glUniform4fv(uniform.location, 1, uniform.floatValues.data());
-                                }
-                                break;
-                            case GL_INT:
-                            case GL_BOOL:
-                                valorCambiado = ImGui::InputInt(displayName.c_str(), &uniform.intValues[0]);
-                                if (valorCambiado)
-                                {
-                                    glUniform1i(uniform.location, uniform.intValues[0]);
-                                }
-                                break;
-                            // Agrega más casos según tus necesidades
-                            default:
-                                ImGui::Text("%s: Tipo no manejado", displayName.c_str());
-                                break;
-                            }
+                        //     // Crear controles según el tipo de uniform
+                        //     bool valorCambiado = false;
+                        //     switch (uniform.type)
+                        //     {
+                        //     case GL_FLOAT:
+                        //         valorCambiado = ImGui::SliderFloat(displayName.c_str(), &uniform.floatValues[0], -10.0f, 10.0f);
+                        //         if (valorCambiado)
+                        //         {
+                        //             glUniform1f(uniform.location, uniform.floatValues[0]);
+                        //         }
+                        //         break;
+                        //     case GL_FLOAT_VEC2:
+                        //         valorCambiado = ImGui::SliderFloat2(displayName.c_str(), uniform.floatValues.data(), -10.0f, 10.0f);
+                        //         if (valorCambiado)
+                        //         {
+                        //             glUniform2fv(uniform.location, 1, uniform.floatValues.data());
+                        //         }
+                        //         break;
+                        //     case GL_FLOAT_VEC3:
+                        //         valorCambiado = ImGui::ColorEdit3(displayName.c_str(), uniform.floatValues.data());
+                        //         if (valorCambiado)
+                        //         {
+                        //             glUniform3fv(uniform.location, 1, uniform.floatValues.data());
+                        //         }
+                        //         break;
+                        //     case GL_FLOAT_VEC4:
+                        //         valorCambiado = ImGui::ColorEdit4(displayName.c_str(), uniform.floatValues.data());
+                        //         if (valorCambiado)
+                        //         {
+                        //             glUniform4fv(uniform.location, 1, uniform.floatValues.data());
+                        //         }
+                        //         break;
+                        //     case GL_INT:
+                        //     case GL_BOOL:
+                        //         valorCambiado = ImGui::InputInt(displayName.c_str(), &uniform.intValues[0]);
+                        //         if (valorCambiado)
+                        //         {
+                        //             glUniform1i(uniform.location, uniform.intValues[0]);
+                        //         }
+                        //         break;
+                        //     // Agrega más casos según tus necesidades
+                        //     default:
+                        //         ImGui::Text("%s: Tipo no manejado", displayName.c_str());
+                        //         break;
+                        //     }
 
-                            ImGui::PopID();
-                        }
+                        //     ImGui::PopID();
+                        // }
 
-                        ImGui::End();
+                        // ImGui::End();
                         glUseProgram(0); // Desvincular el shader después de actualizar
                     };
 

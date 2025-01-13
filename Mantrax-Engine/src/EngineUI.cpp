@@ -249,7 +249,7 @@ void EngineUI::draw_ui()
         {
             if (ImGui::IsKeyReleased(ImGuiKey_S))
             {
-                SceneData::save_scene();
+                SceneData::save_scene(SceneManager::get_current_scene());
                 configs->save_config();
 
                 std::string info = "Scene Saved + Game Config: " + configs->current_scene;

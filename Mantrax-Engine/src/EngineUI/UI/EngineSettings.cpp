@@ -7,7 +7,9 @@ void EngineSettings::on_draw()
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
     window_flags |= ImGuiWindowFlags_MenuBar;
 
-    ImGui::Begin("Game Settings", &is_open, window_flags);
+    std::string new_name = "Game Settings##" + std::to_string(window_id);
+
+    ImGui::Begin(new_name.c_str(), &is_open, window_flags);
 
     if (ImGui::BeginMenuBar())
     {

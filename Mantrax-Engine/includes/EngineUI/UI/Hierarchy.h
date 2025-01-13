@@ -34,6 +34,8 @@ public:
     void draw_entity_node(Entity *entity);
     bool is_in_any_folder(Entity *entity);
     void delete_folder(FolderMap *folder);
+    void render_scene_view(Scene* p_scene);
+    void render_scene_hierarchy(Scene* p_scene);
     void on_draw() override;
 
     void save_to_json(const std::string &file_path)

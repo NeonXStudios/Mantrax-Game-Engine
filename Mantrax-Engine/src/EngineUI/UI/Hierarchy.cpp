@@ -9,6 +9,12 @@
 #include <algorithm>
 #include <unordered_set>
 #include <iostream>
+#include <EngineUIBehaviour.h>
+
+static bool first_frame = false;
+static bool create_folder_modal = false;
+static std::string new_folder_name = "";
+static FolderMap *folder_to_delete = nullptr;
 
 void Hierarchy::remove_entity_from_all_folders(Entity *entity)
 {
@@ -58,7 +64,7 @@ void Hierarchy::draw_entity_node(Entity *entity)
     bool node_open = false;
     bool selected = (entity == EngineUI::getInstance().select_obj);
 
-    std::string name_tree = entity->name_object;
+    std::string name_tree = entity->name_object + "##" + std::to_string(window_id);
 
     bool has_children = !entity->get_transform()->childrens.empty();
 
@@ -148,19 +154,16 @@ void Hierarchy::draw_entity_node(Entity *entity)
 // Función principal para dibujar la jerarquía
 void Hierarchy::on_draw()
 {
-    static bool first_frame = false;
-    static bool create_folder_modal = false;
-    static std::string new_folder_name = "";
-    static FolderMap *folder_to_delete = nullptr;
-
-    if (!first_frame)
+        if (!first_frame)
     {
         std::string org_path = FileManager::get_project_path() + "organizer.json";
         load_from_json(org_path);
         first_frame = true;
     }
 
-    ImGui::Begin("Objects", &is_open, ImGuiWindowFlags_NoTitleBar);
+    std::string new_name = "Entities##" + std::to_string(window_id);
+
+    ImGui::Begin(new_name.c_str(), &is_open, ImGuiWindowFlags_NoTitleBar);
 
     if (ImGui::BeginDragDropTarget())
     {
@@ -250,107 +253,245 @@ void Hierarchy::on_draw()
         ImGui::EndPopup();
     }
 
-    std::unordered_set<Entity *> drawn_entities;
 
-    for (Scene *p_scene : SceneManager::get_scene_manager()->opened_scenes)
+    for (Scene* p_scene : SceneManager::get_scene_manager()->opened_scenes)
     {
-        if (ImGui::TreeNode(p_scene->scene_name.c_str()))
-        {
-            for (auto it = folders.begin(); it != folders.end();)
-            {
-                FolderMap *folder = *it;
-                ImGui::PushID(folder->container_id.c_str());
+        bool render_once = true; 
 
-                EditorGUI::DrawIcon(IconsManager::FOLDER());
-
-                bool is_open = ImGui::TreeNodeEx(folder->container_name.c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
-
-                if (ImGui::BeginDragDropTarget())
-                {
-                    if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY_CELL"))
-                    {
-                        IM_ASSERT(payload->DataSize == sizeof(Entity *));
-                        Entity *droppedEntity = *(Entity **)payload->Data;
-
-                        remove_entity_from_all_folders(droppedEntity);
-
-                        ObjectMap *new_object_map = new ObjectMap();
-                        new_object_map->object = droppedEntity;
-                        new_object_map->container_id = folder->container_id;
-
-                        folder->objects_map.push_back(new_object_map);
-
-                        if (droppedEntity->get_transform()->parent != nullptr)
-                        {
-                            droppedEntity->get_transform()->detach_from_parent();
-                        }
-
-                        std::string org_path = FileManager::get_project_path() + "organizer.json";
-                        save_to_json(org_path);
-                    }
-                    ImGui::EndDragDropTarget();
-                }
-
-                if (ImGui::IsItemClicked(1))
-                {
-                    ImGui::OpenPopup(("FolderContextMenu" + folder->container_id).c_str());
-                }
-
-                if (ImGui::BeginPopup(("FolderContextMenu" + folder->container_id).c_str()))
-                {
-                    if (ImGui::MenuItem("Delete Folder"))
-                    {
-                        folder_to_delete = folder;
-                        ImGui::CloseCurrentPopup();
-                    }
-
-                    ImGui::EndPopup();
-                }
-
-                // Dibujar las entidades dentro de la carpeta si está abierta
-                if (is_open)
-                {
-                    for (ObjectMap *obj : folder->objects_map)
-                    {
-                        if (obj->object->get_transform()->parent == nullptr &&
-                            drawn_entities.find(obj->object) == drawn_entities.end())
-                        {
-                            draw_entity_node(obj->object);
-                            drawn_entities.insert(obj->object);
-                        }
-                    }
-                    ImGui::TreePop();
-                }
-
-                ImGui::PopID();
-                if (it != folders.end())
-                {
-                    ++it;
+        if (UIMasterDrawer::get_instance().get_component<SceneView>()->windows_data.size() > 0) {
+            for (SceneDataView* scene_work : UIMasterDrawer::get_instance().get_component<SceneView>()->windows_data) {
+                if (p_scene == scene_work->work_scene) {
+                    render_once = false; 
+                    break;
                 }
             }
+        }
 
-            for (Entity *ent : p_scene->objects_worlds)
-            {
-                if (ent->get_transform()->parent == nullptr &&
-                    !is_in_any_folder(ent) &&
-                    drawn_entities.find(ent) == drawn_entities.end())
-                {
-                    draw_entity_node(ent);
-                    drawn_entities.insert(ent);
-                }
-            }
-            ImGui::TreePop();
+        if (render_once) {
+            render_scene_view(p_scene);
         }
     }
 
+    ImGui::End();
+}
+
+void Hierarchy::render_scene_hierarchy(Scene* p_scene)
+{
+    if (!first_frame)
+    {
+        std::string org_path = FileManager::get_project_path() + "organizer.json";
+        load_from_json(org_path);
+        first_frame = true;
+    }
+
+    std::string new_name = "Entities##" + std::to_string(window_id);
+
+    ImGui::Begin(new_name.c_str(), &is_open, ImGuiWindowFlags_NoTitleBar);
+
+    if (ImGui::BeginDragDropTarget())
+    {
+        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY_CELL"))
+        {
+            IM_ASSERT(payload->DataSize == sizeof(Entity *));
+            Entity *droppedEntity = *(Entity **)payload->Data;
+
+            remove_entity_from_all_folders(droppedEntity);
+
+            if (droppedEntity->get_transform()->parent != nullptr)
+            {
+                droppedEntity->get_transform()->detach_from_parent();
+            }
+
+            std::string org_path = FileManager::get_project_path() + "organizer.json";
+            save_to_json(org_path);
+        }
+        ImGui::EndDragDropTarget();
+    }
+
+    if (ImGui::IsMouseClicked(1))
+    {
+        right_click_held = true;
+    }
+
+    if (ImGui::IsMouseDown(1) && ImGui::IsWindowHovered() && right_click_held)
+    {
+        ImGui::OpenPopup("MenuHierarchy");
+        right_click_held = false;
+    }
+
+    if (ImGui::BeginPopup("MenuHierarchy"))
+    {
+        if (ImGui::MenuItem("Create New Folder"))
+        {
+            create_folder_modal = true;
+            new_folder_name = "";
+        }
+
+        if (ImGui::MenuItem("Create New Entity"))
+        {
+            p_scene->make_entity();
+        }
+
+        ImGui::EndPopup();
+    }
+
+    if (create_folder_modal)
+    {
+        ImGui::OpenPopup("New Folder Name");
+        create_folder_modal = false;
+    }
+
+    if (ImGui::BeginPopupModal("New Folder Name", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        ImGui::Text("Enter a name for the new folder:");
+        ImGui::Separator();
+
+        static char folder_name_buffer[256] = "";
+        ImGui::InputText("##FolderName", folder_name_buffer, IM_ARRAYSIZE(folder_name_buffer));
+
+        if (ImGui::Button("Create", ImVec2(120, 0)))
+        {
+            std::string input_name = folder_name_buffer;
+            if (!input_name.empty())
+            {
+                FolderMap *folder = new FolderMap();
+                folder->container_id = std::to_string(IDGenerator::generate_id());
+                folder->container_name = input_name;
+
+                folders.push_back(folder);
+
+                memset(folder_name_buffer, 0, sizeof(folder_name_buffer));
+
+                std::string org_path = FileManager::get_project_path() + "organizer.json";
+                save_to_json(org_path);
+            }
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel", ImVec2(120, 0)))
+        {
+            memset(folder_name_buffer, 0, sizeof(folder_name_buffer));
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
+
+
+    render_scene_view(p_scene);
+
+    ImGui::End();
+}
+
+void Hierarchy::render_scene_view(Scene* p_scene)
+{
+    std::unordered_set<Entity*> drawn_entities;
+
+    std::string new_entitie = p_scene->scene_name + "##" + std::to_string(window_id);
+
+    if (ImGui::TreeNode(new_entitie.c_str())) 
+    {
+        for (auto it = folders.begin(); it != folders.end(); )
+        {
+            FolderMap* folder = *it;
+            ImGui::PushID(folder->container_id.c_str()); 
+
+            EditorGUI::DrawIcon(IconsManager::FOLDER());
+
+            bool is_open = ImGui::TreeNodeEx(folder->container_name.c_str(), ImGuiTreeNodeFlags_OpenOnArrow); 
+
+            if (ImGui::BeginDragDropTarget())  
+            {
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ENTITY_CELL"))
+                {
+                    IM_ASSERT(payload->DataSize == sizeof(Entity*));
+                    Entity* droppedEntity = *(Entity**)payload->Data;
+
+                    // Remueve la entidad de todas las carpetas y agrega la nueva
+                    remove_entity_from_all_folders(droppedEntity);
+
+                    ObjectMap* new_object_map = new ObjectMap();
+                    new_object_map->object = droppedEntity;
+                    new_object_map->container_id = folder->container_id;
+
+                    folder->objects_map.push_back(new_object_map);
+
+                    // Si la entidad tiene un padre, se desasocia de él
+                    if (droppedEntity->get_transform()->parent != nullptr)
+                    {
+                        droppedEntity->get_transform()->detach_from_parent();
+                    }
+
+                    // Guarda los cambios en el archivo de proyecto
+                    std::string org_path = FileManager::get_project_path() + "organizer.json";
+                    save_to_json(org_path);
+                }
+                ImGui::EndDragDropTarget();
+            }
+
+            // Manejo del clic derecho en la carpeta
+            if (ImGui::IsItemClicked(1))
+            {
+                ImGui::OpenPopup(("FolderContextMenu" + folder->container_id).c_str());
+            }
+
+            if (ImGui::BeginPopup(("FolderContextMenu" + folder->container_id).c_str()))
+            {
+                if (ImGui::MenuItem("Delete Folder"))
+                {
+                    folder_to_delete = folder;
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::EndPopup();
+            }
+
+            // Dibujar las entidades dentro de la carpeta si está abierta
+            if (is_open)
+            {
+                for (ObjectMap* obj : folder->objects_map)
+                {
+                    if (obj->object->get_transform()->parent == nullptr &&
+                        drawn_entities.find(obj->object) == drawn_entities.end())
+                    {
+                        draw_entity_node(obj->object);
+                        drawn_entities.insert(obj->object);
+                    }
+                }
+                ImGui::TreePop();
+            }
+
+            ImGui::PopID();
+            // Asegúrate de que el iterador se mueva al siguiente elemento
+            if (it != folders.end())
+            {
+                ++it;
+            }
+        }
+
+        // Renderiza las entidades que no están en ninguna carpeta
+        for (Entity* ent : p_scene->objects_worlds)
+        {
+            if (ent->get_transform()->parent == nullptr &&
+                !is_in_any_folder(ent) &&
+                drawn_entities.find(ent) == drawn_entities.end())
+            {
+                draw_entity_node(ent);
+                drawn_entities.insert(ent);
+            }
+        }
+        ImGui::TreePop();
+    }
+
+    // Si se ha solicitado eliminar una carpeta, muestra un cuadro de confirmación
     if (folder_to_delete != nullptr)
     {
         ImGui::OpenPopup("Confirm Elimination");
     }
 
+    // Manejo del cuadro de confirmación para la eliminación de la carpeta
     if (ImGui::BeginPopupModal("Confirm Elimination", NULL, ImGuiWindowFlags_AlwaysAutoResize))
     {
-        ImGui::Text("Are you sure you want to delete the folder  '%s'?", folder_to_delete->container_name.c_str());
+        ImGui::Text("Are you sure you want to delete the folder '%s'?", folder_to_delete->container_name.c_str());
         ImGui::Separator();
 
         if (ImGui::Button("Yes", ImVec2(120, 0)))
@@ -369,8 +510,6 @@ void Hierarchy::on_draw()
 
         ImGui::EndPopup();
     }
-
-    ImGui::End();
 }
 
 void Hierarchy::delete_folder(FolderMap *folder)

@@ -36,7 +36,7 @@ void MainBar::on_draw()
                 {
                     std::string bg_pick_path = EngineUI::getInstance().configs->current_proyect + "/gb.jpg";
                     GarinIO::screenshot(Gfx::main_render->get_render(), 1920, 1080, bg_pick_path.c_str());
-                    SceneData::save_scene();
+                    SceneData::save_scene(SceneManager::get_current_scene());
                 }
             }
 

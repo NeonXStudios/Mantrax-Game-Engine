@@ -7,7 +7,8 @@ class GARINLIBS_API SceneData
 {
 public:
     static void load_scene(std::string scene_name, bool is_additive = false);
-    static void save_scene();
+    static void save_scene(Scene* current_scene, std::string extension = ".scene");
+    static void save_entitie(Scene* current_scene);
 
     static std::string demangle(const char *mangled_name)
     {
