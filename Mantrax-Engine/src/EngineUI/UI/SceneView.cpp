@@ -67,8 +67,8 @@ void SceneView::on_draw()
         SceneManager::get_current_scene()->main_camera->use_projection = !SceneManager::get_current_scene()->main_camera->use_projection;
     }
 
-    // Gfx::render_width = windowSize.x; 
-    // Gfx::render_height = windowSize.y;
+    Gfx::render_width = windowSize.x; 
+    Gfx::render_height = windowSize.y;
 
     if (ImGui::IsWindowHovered())
     {
@@ -76,7 +76,8 @@ void SceneView::on_draw()
 
         if (ImGui::IsMouseClicked(0))
         {
-            WorldPoint = EventSystem::screen_to_viewport(glm::vec2(p.x, p.y), glm::vec2(Gfx::render_width, Gfx::render_height));
+            EventSystem::ViewportRenderPosition = glm::vec2(p.x, p.y);
+            WorldPoint = EventSystem::screen_to_viewport();
 
             if (EventSystem::MouseCast2D(WorldPoint, data))
             {
@@ -387,10 +388,23 @@ void SceneDataView::draw() {
     //         ImVec2(0, 1), ImVec2(1, 0));
     // }
 
-    
-
     ImGui::SetNextWindowSizeConstraints(ImVec2(300, 200), ImVec2(FLT_MAX, FLT_MAX));
     ImGui::Begin(unique_window_name.c_str(), &is_open, ImGuiWindowFlags_MenuBar);
+
+            if (ImGui::BeginMenuBar()) {
+            if (ImGui::BeginMenu("File")) {
+                if (ImGui::MenuItem("Save")) {
+                    SceneData::save_entitie(work_scene);
+                }
+
+                if (ImGui::MenuItem("Close")) {
+                    close_window();
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenuBar(); 
+        }
+    
 
     ImGuiID dockspace_id = ImGui::GetID(unique_window_name.c_str());
     ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
@@ -414,6 +428,7 @@ void SceneDataView::draw() {
     ImGuizmo::SetDrawlist();
 
     ImGui::SetNextWindowDockID(dockspace_id, ImGuiCond_Once);
+
     ImGui::Begin("View Port");
     ImVec2 windowSize = ImGui::GetContentRegionAvail();
 
@@ -422,15 +437,15 @@ void SceneDataView::draw() {
     ImVec2 available_size = ImGui::GetContentRegionAvail();
 
     ImGui::Image(
-        (void *)(intptr_t)work_scene->main_camera->render_id, 
+        (void *)(intptr_t)work_scene->main_camera->render_id,
         available_size,                                      
         ImVec2(0, 1),                                         
-        ImVec2(1, 0)                                       
+        ImVec2(1, 0)      
     );
 
+    imagePosition = ImGui::GetWindowPos();
     ImGui::End();
 
-    imagePosition = ImGui::GetWindowPos();
 
     ImVec2 buttonPosition = ImVec2(p.x + 10, p.y + 10);
     ImGui::SetCursorScreenPos(buttonPosition);
@@ -462,8 +477,8 @@ void SceneDataView::draw() {
         work_scene->main_camera->use_projection = !work_scene->main_camera->use_projection;
     }
 
-    Gfx::render_width = windowSize.x; 
-    Gfx::render_height = windowSize.y;
+    // Gfx::render_width = windowSize.x; 
+    // Gfx::render_height = windowSize.y;
 
     if (ImGui::IsWindowHovered())
     {
@@ -471,7 +486,8 @@ void SceneDataView::draw() {
 
         if (ImGui::IsMouseClicked(0))
         {
-            WorldPoint = EventSystem::screen_to_viewport(glm::vec2(p.x, p.y), glm::vec2(Gfx::render_width, Gfx::render_height));
+            EventSystem::ViewportRenderPosition = glm::vec2(p.x, p.y);
+            WorldPoint = EventSystem::screen_to_viewport();
 
             if (EventSystem::MouseCast2D(WorldPoint, data))
             {

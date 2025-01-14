@@ -21,6 +21,7 @@
 #include <GizmoCube.h>
 #include <UIMasterDrawer.h>
 #include <EditorConfigs.h>
+#include <GridDrawer.h>
 
 class GARINLIBS_API EngineUI
 {
@@ -45,6 +46,7 @@ public:
     GizmoCircle *circle_gizmo;
     GizmoSphere *sphere_gizmo;
     GizmoCapsule *capsule_gizmo;
+    GridDrawer *grid;
 
     UIBehaviour *ui_behaviour;
 

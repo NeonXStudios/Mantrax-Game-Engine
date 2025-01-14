@@ -8,6 +8,7 @@
 #include <GarinIO.h>
 #include <PerlinGenerator.h>
 #include <ComponentsDrawer.h>
+#include <GarinMaths.h>
 
 float EngineUI::yaw = 0.0f;
 float EngineUI::pitch = 0.0f;
@@ -38,6 +39,8 @@ void EngineUI::on_start()
     circle_gizmo = new GizmoCircle();
     sphere_gizmo = new GizmoSphere();
     capsule_gizmo = new GizmoCapsule();
+    grid = new GridDrawer(20.0f, 10.0f);
+    grid->initialize();
 }
 
 void EngineUI::on_edition_mode(float delta_time)
@@ -146,9 +149,6 @@ void EngineUI::on_update(float delta_time)
 
 void EngineUI::on_draw()
 {
-    if (RenderPipeline::camera_targets.size() <= 0)
-        return;
-
     if (select_obj != nullptr && select_obj->hasComponent<GCollision>())
     {
         glm::vec3 convert_gl_to_physx = (select_obj->get_transform()->Scale * std::any_cast<glm::vec3>(select_obj->getComponent<GCollision>().variableMap["boxSize"])) * 2.0f;
@@ -183,6 +183,13 @@ void EngineUI::on_draw()
                               select_obj->get_transform()->Scale,
                               select_obj->get_transform()->get_euler_angles());
     }
+
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    grid->draw(SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
+            SceneManager::get_current_scene()->main_camera->GetView(),
+            model,
+            glm::vec3(0.5f, 0.5f, 0.5f));
 }
 
 void EngineUI::draw_ui()

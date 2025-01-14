@@ -32,9 +32,17 @@ void UIMasterDrawer::register_uis()
 
 void UIMasterDrawer::on_draw()
 {
+    std::string id = "Main##1234";
+    ImGui::Begin(id.c_str());
+    ImGuiID dockspace_id = ImGui::GetID(id.c_str());
+    ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+
     for (EngineUIBehaviour *ui_g : ui_s)
     {
         if (ui_g->is_open)
+        {
             ui_g->on_draw();
+        }
     }
+    ImGui::End();
 }

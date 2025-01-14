@@ -53,8 +53,8 @@ void TextureTarget::draw (
 
     RenderPipeline::render_all_data(scene_data, camera_matrix, projection_matrix, view_matrix, camera_position);
 
-    additional_Render();
 
+    additional_Render();
     scene_data->on_draw();
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
