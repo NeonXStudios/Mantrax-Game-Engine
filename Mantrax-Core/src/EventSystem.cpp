@@ -1,7 +1,8 @@
 #include <EventSystem.h>
+#include <limits>
+#include <glm/glm.hpp>
 
 glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
-
 
     glm::vec2 EventSystem::screen_to_viewport()
     {
@@ -121,6 +122,49 @@ glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
 
         return false;
     }
+
+    bool EventSystem::MouseCast3D(const glm::vec2& screenCoords, CastData* data)
+    {
+        Camera* camera = SceneManager::get_current_scene()->main_camera;
+
+        glm::vec3 rayOrigin = camera->cameraPosition;  
+        glm::vec3 rayDirection = camera->ScreenToWorldRay(screenCoords).direction; 
+
+        float closestZ = std::numeric_limits<float>::lowest();
+        Entity* closestObject = nullptr;
+
+        // Recorrer todos los objetos en la escena para encontrar la intersección
+        for (int i = 0; i < SceneManager::get_current_scene()->objects_worlds.size(); i++)
+        {
+            Entity* objD = SceneManager::get_current_scene()->objects_worlds[i];
+
+            glm::vec3& objPosition = objD->get_transform()->getPosition();
+            glm::vec3 objScale = objD->get_transform()->Scale;
+
+            glm::vec3 min = objPosition - objScale / 2.0f;
+            glm::vec3 max = objPosition + objScale / 2.0f;
+            
+            float tmin;
+
+            if (RayIntersectsAABB(rayOrigin, rayDirection, min, max, &tmin))
+            {
+                if (objPosition.z > closestZ)
+                {
+                    closestZ = objPosition.z;
+                    closestObject = objD;
+                }
+            }
+        }
+
+        if (closestObject != nullptr)
+        {
+            data->object = closestObject;
+            return true;
+        }
+
+        return false;
+    }
+
 
     bool EventSystem::MouseCastUI(glm::vec2 coords, CastDataUI *data)
     {

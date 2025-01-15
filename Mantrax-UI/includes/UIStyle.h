@@ -645,8 +645,8 @@ public:
 			style.Colors[ImGuiCol_HeaderHovered] = highlight;
 			style.Colors[ImGuiCol_HeaderActive] = frameBgActive;
 
-			style.WindowPadding = ImVec2(8, 8);
-			style.FramePadding = ImVec2(8, 4);
+			style.WindowPadding = ImVec2(0, 0);
+			style.FramePadding = ImVec2(0, 4);
 			style.ItemSpacing = ImVec2(8, 4);
 			style.ItemInnerSpacing = ImVec2(4, 4);
 

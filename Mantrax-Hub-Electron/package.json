@@ -10,7 +10,6 @@
     "appId": "com.neonxstudios.mantraxhub",
     "win": {
       "icon": "assets/imgs/Logo.ico",
-      "target": "nsis",
       "target": "portable"
     }
   },

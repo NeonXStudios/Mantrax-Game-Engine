@@ -79,7 +79,7 @@ void SceneView::on_draw()
             EventSystem::ViewportRenderPosition = glm::vec2(p.x, p.y);
             WorldPoint = EventSystem::screen_to_viewport();
 
-            if (EventSystem::MouseCast2D(WorldPoint, data))
+            if (EventSystem::MouseCast3D(WorldPoint, data))
             {
                 if (EngineUI::getInstance().select_obj != data->object)
                 {
@@ -354,61 +354,13 @@ void SceneDataView::draw() {
     ImGui::PushID(window_id);
 
     std::string unique_window_name = "Scene Window##" + std::to_string(window_id);
+    std::string unique_view_name = "View Port##" + std::to_string(window_id);
+    std::string unique_entitie_name = "Entitie Details##" + std::to_string(window_id);
+    std::string unique_hierarchy_name = "Entities##" + std::to_string(window_id);
 
-    // ImGui::SetNextWindowSizeConstraints(ImVec2(300, 300), ImVec2(FLT_MAX, FLT_MAX));
-    // if (ImGui::Begin(unique_window_name.c_str(), &is_open, ImGuiWindowFlags_MenuBar)) {
-    //     if (!is_open) {
-    //         close_window();
-    //     }
-    //     std::string files_name = "Files##" + std::to_string(window_id);
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar;
 
-    //     if (ImGui::BeginMenuBar()) {
-    //         if (ImGui::BeginMenu("File")) {
-    //             if (ImGui::MenuItem("Save")) {
-    //                 // Lógica para el "Save"
-    //             }
-
-    //             if (ImGui::MenuItem("Close")) {
-    //                 close_window();
-    //             }
-    //             ImGui::EndMenu();
-    //         }
-    //         ImGui::EndMenuBar(); 
-    //     }
-
-    //     ImVec2 windowSize = ImGui::GetContentRegionAvail();
-    //     int renderWidth = static_cast<int>(windowSize.x);
-    //     int renderHeight = static_cast<int>(windowSize.y);
-
-    //     hierarchy->window_id = window_id;
-    //     hierarchy->render_scene_hierarchy(work_scene);
-
-    //     ImGui::Image((void*)(intptr_t)work_scene->main_camera->render_id,
-    //         ImVec2(renderWidth, renderHeight),
-    //         ImVec2(0, 1), ImVec2(1, 0));
-    // }
-
-    ImGui::SetNextWindowSizeConstraints(ImVec2(300, 200), ImVec2(FLT_MAX, FLT_MAX));
-    ImGui::Begin(unique_window_name.c_str(), &is_open, ImGuiWindowFlags_MenuBar);
-
-            if (ImGui::BeginMenuBar()) {
-            if (ImGui::BeginMenu("File")) {
-                if (ImGui::MenuItem("Save")) {
-                    SceneData::save_entitie(work_scene);
-                }
-
-                if (ImGui::MenuItem("Close")) {
-                    close_window();
-                }
-                ImGui::EndMenu();
-            }
-            ImGui::EndMenuBar(); 
-        }
-    
-
-    ImGuiID dockspace_id = ImGui::GetID(unique_window_name.c_str());
-    ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
-
+    ImGui::Begin(unique_window_name.c_str(), nullptr);
         if (ImGui::BeginMenuBar()) {
             if (ImGui::BeginMenu("File")) {
 
@@ -425,11 +377,36 @@ void SceneDataView::draw() {
             ImGui::EndMenuBar(); 
         }
 
+        ImGuiID dockspace_id = ImGui::GetID(unique_window_name.c_str());
+        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+
+        static bool initialized = false;
+        if (!initialized)
+        {
+            initialized = true;
+
+            ImGui::DockBuilderRemoveNode(dockspace_id);
+            ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
+
+            ImGuiID dock_left = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.25f, nullptr, &dockspace_id);
+            ImGuiID dock_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id);
+            ImGuiID dock_center = dockspace_id; 
+
+            ImGui::DockBuilderDockWindow(unique_entitie_name.c_str(), dock_right);
+            ImGui::DockBuilderDockWindow(unique_hierarchy_name.c_str(), dock_left);
+            ImGui::DockBuilderDockWindow(unique_view_name.c_str(), dock_center);
+
+            ImGui::DockBuilderFinish(dockspace_id);
+        }
+
+    ImGui::End();
+
+    ImGui::SetNextWindowSizeConstraints(ImVec2(300, 200), ImVec2(FLT_MAX, FLT_MAX));
+
+
     ImGuizmo::SetDrawlist();
 
-    ImGui::SetNextWindowDockID(dockspace_id, ImGuiCond_Once);
-
-    ImGui::Begin("View Port");
+    ImGui::Begin(unique_view_name.c_str());
     ImVec2 windowSize = ImGui::GetContentRegionAvail();
 
     ImVec2 p = ImGui::GetCursorScreenPos();
@@ -504,29 +481,6 @@ void SceneDataView::draw() {
                 }
             }
         }
-
-        // CastDataUI *data_ui = new CastDataUI();
-
-        // ScreenPoint = EventSystem::mouse_to_screen_pos(glm::vec2(p.x, p.y), glm::vec2(Gfx::render_width, Gfx::render_height));
-
-        // if (ImGui::IsMouseClicked(0))
-        // {
-        //     if (EventSystem::MouseCastUI(ScreenPoint, data_ui))
-        //     {
-        //         if (data_ui->object != nullptr)
-        //         {
-        //             EngineUI::getInstance().ui_behaviour = data_ui->object;
-        //         }
-        //         else
-        //         {
-        //             EngineUI::getInstance().ui_behaviour = nullptr;
-        //         }
-        //     }
-        //     else
-        //     {
-        //         EngineUI::getInstance().ui_behaviour = nullptr;
-        //     }
-        // }
 
         if (ImGui::IsMouseDragging(0) && EngineUI::getInstance().ui_behaviour != nullptr)
         {
@@ -697,8 +651,8 @@ void SceneDataView::draw() {
     hierarchy->window_id = window_id;
     hierarchy->render_scene_hierarchy(work_scene);
 
-
-    ImGui::Begin("Entitie Data");
+    ImGui::SetNextWindowSizeConstraints(ImVec2(300, 200), ImVec2(FLT_MAX, FLT_MAX));
+    ImGui::Begin(unique_entitie_name.c_str());
         const std::array<const char *, 20> layerNames = {
         "Background",
         "Parallax 1",
@@ -903,8 +857,6 @@ void SceneDataView::draw() {
         ImGui::EndPopup();
     }
     }
-    ImGui::End();
-
     ImGui::End();
     ImGui::PopID();
 }

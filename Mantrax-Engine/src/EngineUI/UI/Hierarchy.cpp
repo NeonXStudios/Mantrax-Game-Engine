@@ -286,6 +286,7 @@ void Hierarchy::render_scene_hierarchy(Scene* p_scene)
 
     std::string new_name = "Entities##" + std::to_string(window_id);
 
+    ImGui::SetNextWindowSizeConstraints(ImVec2(300, 200), ImVec2(FLT_MAX, FLT_MAX));
     ImGui::Begin(new_name.c_str(), &is_open, ImGuiWindowFlags_NoTitleBar);
 
     if (ImGui::BeginDragDropTarget())

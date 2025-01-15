@@ -25,6 +25,7 @@ public:
     bool show_script_popup = false;
     bool is_open;
 
+
     Scene* work_scene;
     void close_window();
 

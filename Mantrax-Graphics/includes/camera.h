@@ -2,8 +2,17 @@
 #include <GarinMaths.h>
 #include <vector>
 #include <Core.h>
-#include <Gfx.h>
+#include <GarinGraphics.h>
 
+struct GARINLIBS_API Ray {
+    glm::vec3 origin;   
+    glm::vec3 direction;
+
+    Ray(const glm::vec3& origin = glm::vec3(0.0f), const glm::vec3& direction = glm::vec3(0.0f))
+        : origin(origin), direction(glm::normalize(direction)) {}
+};
+
+class Gfx;
 class GARINLIBS_API Camera
 {
 public:
@@ -44,6 +53,8 @@ public:
   GLuint render_id;
 
   void update();
+
+  Ray ScreenToWorldRay(const glm::vec2& screenCoords);
 
   glm::mat4 GetProjectionMatrix()
   {
