@@ -79,7 +79,6 @@ public:
         glm::vec3& rayOrigin,
         glm::vec3& rayDirection)
     {
-        // Obtener coordenadas NDC
         glm::vec2 normalizedMouseCoords = EventSystem::screen_to_viewport();
         
         glm::vec4 clipNear = glm::vec4(normalizedMouseCoords.x, normalizedMouseCoords.y, -1.0f, 1.0f);
@@ -91,12 +90,43 @@ public:
         viewNear /= viewNear.w;
         viewFar /= viewFar.w;
         
-        // Transformar al espacio mundial
         glm::vec4 worldNear = viewMatrixInverse * viewNear;
         glm::vec4 worldFar = viewMatrixInverse * viewFar;
         
         rayOrigin = glm::vec3(worldNear);
         rayDirection = glm::normalize(glm::vec3(worldFar - worldNear));
+    }
+
+    static bool RayIntersectsTriangle(const glm::vec3& rayOrigin, const glm::vec3& rayDir,
+                            const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, float& t)
+    {
+        const float EPSILON = 0.0001f;
+
+        glm::vec3 e1 = v1 - v0;
+        glm::vec3 e2 = v2 - v0;
+
+        glm::vec3 h = glm::cross(rayDir, e2);
+        float a = glm::dot(e1, h);
+
+        if (a > -EPSILON && a < EPSILON)
+            return false;
+
+        float f = 1.0f / a;
+        glm::vec3 s = rayOrigin - v0;
+        float u = f * glm::dot(s, h);
+
+        if (u < 0.0f || u > 1.0f)
+            return false;
+
+        glm::vec3 q = glm::cross(s, e1);
+        float v = f * glm::dot(rayDir, q);
+
+        if (v < 0.0f || u + v > 1.0f)
+            return false;
+
+        t = f * glm::dot(e2, q);
+
+        return t > EPSILON;
     }
 
     static float min3(float a, float b, float c) {

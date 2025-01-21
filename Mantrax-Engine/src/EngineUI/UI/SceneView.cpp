@@ -99,9 +99,12 @@ void SceneView::on_draw()
 
             if (EventSystem::MouseCast2D(WorldPoint, data))
             {
-                if (found_object != data->object)
+                if (found_object->hasComponent<ModelComponent>())
                 {
-                    found_object = data->object;
+                    if (found_object != data->object)
+                    {
+                        found_object = data->object;
+                    }
                 }
             }
             else
