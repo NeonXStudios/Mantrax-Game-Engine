@@ -41,6 +41,7 @@ public:
     ImVec2 imagePosition;
     glm::vec2 WorldPoint = glm::vec2(0, 0);
     glm::vec2 ScreenPoint = glm::vec2(0, 0);
+    Entity* found_object;
 
     bool ignoreGui = false;
     bool right_click_held = false;

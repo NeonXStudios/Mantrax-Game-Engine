@@ -43,6 +43,7 @@ public:
     AssetsRegistry *assets_registry;
     TimeWatcher *watcher;
     GizmoCube *cube_gizmo;
+    EnhancedGizmoCube *enhanced_cube;
     GizmoCircle *circle_gizmo;
     GizmoSphere *sphere_gizmo;
     GizmoCapsule *capsule_gizmo;

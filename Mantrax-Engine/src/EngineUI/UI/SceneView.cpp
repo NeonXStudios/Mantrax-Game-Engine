@@ -79,7 +79,7 @@ void SceneView::on_draw()
             EventSystem::ViewportRenderPosition = glm::vec2(p.x, p.y);
             WorldPoint = EventSystem::screen_to_viewport();
 
-            if (EventSystem::MouseCast3D(WorldPoint, data))
+            if (EventSystem::MouseCast2D(WorldPoint, data))
             {
                 if (EngineUI::getInstance().select_obj != data->object)
                 {
@@ -93,6 +93,24 @@ void SceneView::on_draw()
                     EngineUI::getInstance().select_obj = nullptr;
                 }
             }
+        }else{
+            EventSystem::ViewportRenderPosition = glm::vec2(p.x, p.y);
+            WorldPoint = EventSystem::screen_to_viewport();
+
+            if (EventSystem::MouseCast2D(WorldPoint, data))
+            {
+                if (found_object != data->object)
+                {
+                    found_object = data->object;
+                }
+            }
+            else
+            {
+                if (!ImGuizmo::IsOver())
+                {
+                    found_object = nullptr;
+                }
+            }            
         }
 
         // CastDataUI *data_ui = new CastDataUI();

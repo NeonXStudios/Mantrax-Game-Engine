@@ -1,10 +1,16 @@
 #pragma once
 #include "GarinGraphics.h"
 #include "Core.h"
-#include <GarinMaths.h>
 #include <RenderPipeline.h>
 #include <UIBehaviour.h>
 #include <SceneManager.h>
+#include <algorithm> 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <utility> 
+
 
 struct GARINLIBS_API CastData {
     Entity* object;
@@ -30,81 +36,68 @@ public:
     static bool MouseCastUI(glm::vec2 coords, CastDataUI *data);
     static bool MouseCast3D(const glm::vec2& screenCoords, CastData* data);
 
-    // Función que verifica si un rayo intersecta un AABB
-    static bool RayIntersectsAABB(const glm::vec3& rayOrigin, const glm::vec3& rayDirection, const glm::vec3& min, const glm::vec3& max, float* tmin_out)
+    static bool RayIntersectsAABB(
+        const glm::vec3 &rayOrigin,
+        const glm::vec3 &rayDirection,
+        const glm::vec3 &boxMin,
+        const glm::vec3 &boxMax)
     {
-        float tmin = (min.x - rayOrigin.x) / rayDirection.x;
-        float tmax = (max.x - rayOrigin.x) / rayDirection.x;
+        float tMin = (boxMin.x - rayOrigin.x) / rayDirection.x;
+        float tMax = (boxMax.x - rayOrigin.x) / rayDirection.x;
 
-        if (tmin > tmax) std::swap(tmin, tmax);
+        if (tMin > tMax) std::swap(tMin, tMax);
 
-        float tymin = (min.y - rayOrigin.y) / rayDirection.y;
-        float tymax = (max.y - rayOrigin.y) / rayDirection.y;
+        float tyMin = (boxMin.y - rayOrigin.y) / rayDirection.y;
+        float tyMax = (boxMax.y - rayOrigin.y) / rayDirection.y;
 
-        if (tymin > tymax) std::swap(tymin, tymax);
+        if (tyMin > tyMax) std::swap(tyMin, tyMax);
 
-        if (tmin > tymax || tymin > tmax)
+        if ((tMin > tyMax) || (tyMin > tMax))
             return false;
 
-        if (tymin > tmin)
-            tmin = tymin;
+        if (tyMin > tMin)
+            tMin = tyMin;
 
-        if (tymax < tmax)
-            tmax = tymax;
+        if (tyMax < tMax)
+            tMax = tyMax;
 
-        float tzmin = (min.z - rayOrigin.z) / rayDirection.z;
-        float tzmax = (max.z - rayOrigin.z) / rayDirection.z;
+        float tzMin = (boxMin.z - rayOrigin.z) / rayDirection.z;
+        float tzMax = (boxMax.z - rayOrigin.z) / rayDirection.z;
 
-        if (tzmin > tzmax) std::swap(tzmin, tzmax);
+        if (tzMin > tzMax) std::swap(tzMin, tzMax);
 
-        if (tmin > tzmax || tzmin > tmax)
+        if ((tMin > tzMax) || (tzMin > tMax))
             return false;
-
-        if (tmin_out) *tmin_out = tmin;  // Pasamos tmin si es necesario
 
         return true;
     }
 
-
-    // static bool MouseCastNonScene(glm::vec2 coords, CastData *data, std::vector<Entity *> entitys)
-    // {
-    //     float closestZ = std::numeric_limits<float>::lowest();
-    //     Entity *closestObject = nullptr;
-
-    //     for (int i = 0; i < entitys.size(); i++)
-    //     {
-    //         Entity *objD = entitys[i];
-
-    //         glm::vec3 &obj = objD->get_transform()->Position;
-    //         float objWidth = objD->get_transform()->Scale.x;
-    //         float objHeight = objD->get_transform()->Scale.y;
-
-    //         float radians = objD->get_transform()->rotation.x;
-
-    //         glm::vec2 localPoint = RotatePoint(coords, obj, radians);
-
-    //         // Solo considera la coordenada Z para determinar qué objeto está más adelante
-    //         if (localPoint.x >= obj.x - objWidth && localPoint.x <= obj.x + objWidth &&
-    //             localPoint.y >= obj.y - objHeight && localPoint.y <= obj.y + objHeight)
-    //         {
-
-    //             // Comprueba si la coordenada Z es mayor que la más cercana hasta ahora
-    //             if (obj.z > closestZ)
-    //             {
-    //                 closestZ = obj.z;
-    //                 closestObject = objD;
-    //             }
-    //         }
-    //     }
-
-    //     if (closestObject != nullptr)
-    //     {
-    //         data->object = closestObject;
-    //         return true;
-    //     }
-
-    //     return false;
-    // }
+    static void ScreenToWorldRay(
+        glm::vec2 mouseCoords,
+        const glm::mat4& viewMatrixInverse,
+        const glm::mat4& projectionMatrixInverse,
+        glm::vec3& rayOrigin,
+        glm::vec3& rayDirection)
+    {
+        // Obtener coordenadas NDC
+        glm::vec2 normalizedMouseCoords = EventSystem::screen_to_viewport();
+        
+        glm::vec4 clipNear = glm::vec4(normalizedMouseCoords.x, normalizedMouseCoords.y, -1.0f, 1.0f);
+        glm::vec4 clipFar = glm::vec4(normalizedMouseCoords.x, normalizedMouseCoords.y, 1.0f, 1.0f);
+        
+        glm::vec4 viewNear = projectionMatrixInverse * clipNear;
+        glm::vec4 viewFar = projectionMatrixInverse * clipFar;
+        
+        viewNear /= viewNear.w;
+        viewFar /= viewFar.w;
+        
+        // Transformar al espacio mundial
+        glm::vec4 worldNear = viewMatrixInverse * viewNear;
+        glm::vec4 worldFar = viewMatrixInverse * viewFar;
+        
+        rayOrigin = glm::vec3(worldNear);
+        rayDirection = glm::normalize(glm::vec3(worldFar - worldNear));
+    }
 
     static glm::vec2 RotatePoint(const glm::vec2 &point, const glm::vec2 &center, float angle);
 };

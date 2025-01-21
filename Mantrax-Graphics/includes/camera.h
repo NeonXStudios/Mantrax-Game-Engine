@@ -31,7 +31,7 @@ public:
   glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
   glm::vec3 cameraVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
 
-  float fov = 65.0f;
+  float fov = 45.0f;
   float zoom = 0.043f;
   float distance_view = 1000.0f;
 

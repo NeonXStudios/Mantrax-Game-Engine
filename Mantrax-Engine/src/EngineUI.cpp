@@ -9,6 +9,7 @@
 #include <PerlinGenerator.h>
 #include <ComponentsDrawer.h>
 #include <GarinMaths.h>
+#include <UIMasterDrawer.h>
 
 float EngineUI::yaw = 0.0f;
 float EngineUI::pitch = 0.0f;
@@ -39,6 +40,7 @@ void EngineUI::on_start()
     circle_gizmo = new GizmoCircle();
     sphere_gizmo = new GizmoSphere();
     capsule_gizmo = new GizmoCapsule();
+    enhanced_cube = new EnhancedGizmoCube();
     grid = new GridDrawer(20.0f, 10.0f);
     grid->initialize();
 }
@@ -182,6 +184,15 @@ void EngineUI::on_draw()
                               select_obj->get_transform()->Position,
                               select_obj->get_transform()->Scale,
                               select_obj->get_transform()->get_euler_angles());
+    }
+
+    if (UIMasterDrawer::get_instance().get_component<SceneView>() != nullptr){
+        if (UIMasterDrawer::get_instance().get_component<SceneView>()->found_object != nullptr){
+            enhanced_cube->render(SceneManager::get_current_scene()->main_camera->GetView(),
+                               SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
+                               UIMasterDrawer::get_instance().get_component<SceneView>()->found_object->get_transform()->get_matrix(), 
+                               UIMasterDrawer::get_instance().get_component<SceneView>()->found_object->get_transform()->Scale * glm::vec3(1.3f), glm::vec3(0.0f, 1.0f, 0.0f));
+        }
     }
 
     glm::mat4 model = glm::mat4(1.0f);

@@ -148,6 +148,148 @@ private:
     }
 };
 
+class EnhancedGizmoCube
+{
+public:
+    EnhancedGizmoCube()
+    {
+        setupCube();
+    }
+
+    ~EnhancedGizmoCube()
+    {
+        glDeleteVertexArrays(1, &VAO);
+        glDeleteBuffers(1, &VBO);
+        glDeleteBuffers(1, &EBO);
+    }
+
+    void render(const glm::mat4 &view, const glm::mat4 &projection, const glm::mat4 &matrix_model, glm::vec3 multiplier_offset = glm::vec3(1.0f), glm::vec3 color = glm::vec3(1.0f))
+    {
+        glUseProgram(shaderProgram);
+
+        glm::vec3 scale;
+        glm::quat rotation;
+        glm::vec3 translation;
+        glm::vec3 skew;
+        glm::vec4 perspective;
+
+        bool success = glm::decompose(matrix_model, scale, rotation, translation, skew, perspective);
+
+        scale *= multiplier_offset * 2.0f;
+
+        glm::mat4 new_matrix_model =
+            glm::translate(glm::mat4(1.0f), translation) *
+            glm::mat4_cast(rotation) *
+            glm::scale(glm::mat4(1.0f), scale);
+
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(new_matrix_model));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+        glUniform3fv(glGetUniformLocation(shaderProgram, "inputColor"), 1, glm::value_ptr(color));
+
+        glLineWidth(4.0f);
+
+        glBindVertexArray(VAO);
+        glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+    }
+
+private:
+    unsigned int VAO, VBO, EBO;
+    unsigned int shaderProgram;
+
+    void setupCube()
+    {
+        float vertices[] = {
+            -0.5f, -0.5f, -0.5f, // 0
+            0.5f, -0.5f, -0.5f,  // 1
+            0.5f, 0.5f, -0.5f,   // 2
+            -0.5f, 0.5f, -0.5f,  // 3
+            -0.5f, -0.5f, 0.5f,  // 4
+            0.5f, -0.5f, 0.5f,   // 5
+            0.5f, 0.5f, 0.5f,    // 6
+            -0.5f, 0.5f, 0.5f    // 7
+        };
+
+        unsigned int indices[] = {
+            0, 1, 1, 2, 2, 3, 3, 0,
+            4, 5, 5, 6, 6, 7, 7, 4,
+            0, 4, 1, 5, 2, 6, 3, 7};
+
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &VBO);
+        glGenBuffers(1, &EBO);
+
+        glBindVertexArray(VAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+        glEnableVertexAttribArray(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
+        const char *vertexShaderSource = R"(
+        #version 330 core
+        layout(location = 0) in vec3 aPos;
+
+        uniform mat4 model;
+        uniform mat4 view;
+        uniform mat4 projection;
+
+        void main() {
+            gl_Position = projection * view * model * vec4(aPos, 1.0);
+        }
+        )";
+
+        const char *fragmentShaderSource = R"(
+        #version 330 core
+        out vec4 FragColor;
+
+        uniform vec3 inputColor;
+
+        void main() {
+            FragColor = vec4(inputColor, 1.0);
+        }
+        )";
+
+        unsigned int vertexShader = compileShader(GL_VERTEX_SHADER, vertexShaderSource);
+        unsigned int fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
+
+        shaderProgram = glCreateProgram();
+        glAttachShader(shaderProgram, vertexShader);
+        glAttachShader(shaderProgram, fragmentShader);
+        glLinkProgram(shaderProgram);
+
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+    }
+
+    unsigned int compileShader(GLenum type, const char *source)
+    {
+        unsigned int shader = glCreateShader(type);
+        glShaderSource(shader, 1, &source, NULL);
+        glCompileShader(shader);
+
+        int success;
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+        if (!success)
+        {
+            char infoLog[512];
+            glGetShaderInfoLog(shader, 512, NULL, infoLog);
+            std::cerr << "ERROR::SHADER_COMPILATION_FAILED\n"
+                      << infoLog << std::endl;
+        }
+        return shader;
+    }
+};
+
 class GizmoCircle
 {
 public:
