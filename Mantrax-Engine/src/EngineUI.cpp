@@ -41,6 +41,7 @@ void EngineUI::on_start()
     sphere_gizmo = new GizmoSphere();
     capsule_gizmo = new GizmoCapsule();
     enhanced_cube = new EnhancedGizmoCube();
+    camera_gizmo = new GizmoArrow();
     grid = new GridDrawer(20.0f, 10.0f);
     grid->initialize();
 }
@@ -185,6 +186,15 @@ void EngineUI::on_draw()
                               select_obj->get_transform()->Scale,
                               select_obj->get_transform()->get_euler_angles());
     }
+
+    if (select_obj != nullptr && select_obj->hasComponent<GCamera>())
+    {
+        camera_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(),
+                              SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
+                              select_obj->get_transform()->get_matrix(),
+                              glm::vec3(3.0f));
+    }
+
 
     if (UIMasterDrawer::get_instance().get_component<SceneView>() != nullptr){
         if (UIMasterDrawer::get_instance().get_component<SceneView>()->found_object != nullptr){

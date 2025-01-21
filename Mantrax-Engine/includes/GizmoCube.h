@@ -845,3 +845,147 @@ private:
         return shader;
     }
 };
+
+class GizmoArrow
+{
+public:
+    GizmoArrow()
+    {
+        setupArrow();
+    }
+
+    ~GizmoArrow()
+    {
+        glDeleteVertexArrays(1, &VAO);
+        glDeleteBuffers(1, &VBO);
+        glDeleteBuffers(1, &EBO);
+    }
+
+    void render(const glm::mat4 &view, const glm::mat4 &projection, const glm::mat4 matrix_model, glm::vec3 multiplier_offset = glm::vec3(1.0f))
+    {
+        glUseProgram(shaderProgram);
+
+        glm::vec3 scale;
+        glm::quat rotation;
+        glm::vec3 translation;
+        glm::vec3 skew;
+        glm::vec4 perspective;
+
+        bool success = glm::decompose(matrix_model, scale, rotation, translation, skew, perspective);
+
+        scale *= multiplier_offset * 2.0f;
+
+        glm::mat4 new_matrix_model =
+            glm::translate(glm::mat4(1.0f), translation) *
+            glm::mat4_cast(rotation) *
+            glm::scale(glm::mat4(1.0f), scale);
+
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(new_matrix_model));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+        glBindVertexArray(VAO);
+        glDrawElements(GL_LINES, 12, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+    }
+
+private:
+    unsigned int VAO, VBO, EBO;
+    unsigned int shaderProgram;
+
+    void setupArrow()
+    {
+        // Vértices de la flecha (cuerpo y punta)
+        float vertices[] = {
+            // Cuerpo de la flecha
+            0.0f, 0.0f, 0.0f, // base (0)
+            0.0f, 0.0f, 1.0f, // extremo (1)
+
+            // Punta de la flecha (triángulo)
+            0.0f, 0.0f, 1.0f, // punta (2)
+            0.1f, 0.0f, 0.9f, // lado derecho de la punta (3)
+            -0.1f, 0.0f, 0.9f, // lado izquierdo de la punta (4)
+        };
+
+        unsigned int indices[] = {
+            // Cuerpo de la flecha (línea recta)
+            0, 1, // línea base a extremo
+
+            // Punta de la flecha (triángulo)
+            1, 3, // línea de la punta derecha
+            1, 4, // línea de la punta izquierda
+            3, 4  // línea base de la punta (base del triángulo)
+        };
+
+        // Configuración de buffers
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &VBO);
+        glGenBuffers(1, &EBO);
+
+        glBindVertexArray(VAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+        glEnableVertexAttribArray(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
+        // Compilar shaders
+        const char *vertexShaderSource = R"(
+        #version 330 core
+        layout(location = 0) in vec3 aPos;
+
+        uniform mat4 model;
+        uniform mat4 view;
+        uniform mat4 projection;
+
+        void main() {
+            gl_Position = projection * view * model * vec4(aPos, 1.0);
+        }
+        )";
+
+        const char *fragmentShaderSource = R"(
+        #version 330 core
+        out vec4 FragColor;
+
+        void main() {
+            FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Color rojo
+        }
+        )";
+
+        unsigned int vertexShader = compileShader(GL_VERTEX_SHADER, vertexShaderSource);
+        unsigned int fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
+
+        shaderProgram = glCreateProgram();
+        glAttachShader(shaderProgram, vertexShader);
+        glAttachShader(shaderProgram, fragmentShader);
+        glLinkProgram(shaderProgram);
+
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+    }
+
+    unsigned int compileShader(GLenum type, const char *source)
+    {
+        unsigned int shader = glCreateShader(type);
+        glShaderSource(shader, 1, &source, NULL);
+        glCompileShader(shader);
+
+        int success;
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+        if (!success)
+        {
+            char infoLog[512];
+            glGetShaderInfoLog(shader, 512, NULL, infoLog);
+            std::cerr << "ERROR::SHADER_COMPILATION_FAILED\n"
+                      << infoLog << std::endl;
+        }
+        return shader;
+    }
+};

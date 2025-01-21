@@ -38,8 +38,6 @@ void RenderPipeline::render(std::function<void(void)> additional_Render)
         GLuint render_id = get_data_from_scene->main_camera->render_id;
         TextureTarget* target_global = find_target_by_id(render_id);
 
-        std::cout << "Global ID: " << render_id << std::endl;
-
         if (target_global == nullptr) {
             std::cerr << "Error: No se encontró TextureTarget para main_camera con render_id " << render_id << std::endl;
             continue;
@@ -61,7 +59,6 @@ void RenderPipeline::render(std::function<void(void)> additional_Render)
 
             camera->update();
             GLuint render_id_local = camera->render_id;
-            std::cout << "Local ID: " << render_id_local << std::endl;
 
             TextureTarget* target = find_target_by_id(render_id_local);
 

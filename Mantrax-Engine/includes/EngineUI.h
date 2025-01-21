@@ -47,6 +47,7 @@ public:
     GizmoCircle *circle_gizmo;
     GizmoSphere *sphere_gizmo;
     GizmoCapsule *capsule_gizmo;
+    GizmoArrow *camera_gizmo;
     GridDrawer *grid;
 
     UIBehaviour *ui_behaviour;
