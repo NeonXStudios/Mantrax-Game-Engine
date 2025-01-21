@@ -49,6 +49,7 @@ public:
     GizmoCapsule *capsule_gizmo;
     GizmoArrow *camera_gizmo;
     GridDrawer *grid;
+    Shader* outline_shader;
 
     UIBehaviour *ui_behaviour;
 

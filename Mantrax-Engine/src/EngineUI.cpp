@@ -44,6 +44,8 @@ void EngineUI::on_start()
     camera_gizmo = new GizmoArrow();
     grid = new GridDrawer(20.0f, 10.0f);
     grid->initialize();
+
+    outline_shader = new Shader("data/Shaders/outline_vertex.glsl", "data/Shaders/outline_fragment.glsl");
 }
 
 void EngineUI::on_edition_mode(float delta_time)

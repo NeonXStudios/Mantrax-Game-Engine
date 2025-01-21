@@ -106,9 +106,11 @@ void RenderPipeline::render_all_data(Scene* scene, glm::mat4 camera_matrix, glm:
                         material.p_shader->setVec3("ambientColor", glm::vec3(1.0f, 1.0f, 1.0f));
                         material.p_shader->setFloat("ambientStrength", 0.1f);
 
-                        material.p_shader->setVec3("lightDir", glm::vec3(-0.2f, -1.0f, -0.3f));
-                        material.p_shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-                        material.p_shader->setFloat("lightIntensity", 1.0f);
+                        // material.p_shader->setVec3("lightDir", glm::vec3(-0.2f, -1.0f, -0.3f));
+                        // material.p_shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+                        // material.p_shader->setFloat("lightIntensity", 1.0f);
+
+                        set_lights_in_shader(material.p_shader->ID, SceneManager::get_current_scene()->direction_lights, SceneManager::get_current_scene()->point_lights, SceneManager::get_current_scene()->spot_lights);
 
                         // material.p_shader->setBool("showBothSides", false);
 

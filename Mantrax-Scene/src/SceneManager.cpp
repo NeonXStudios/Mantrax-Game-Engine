@@ -271,6 +271,8 @@ Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
             }
         }
 
+        new_scene->awake();
+
         try
         {
             for (Entity *ent : new_scene->objects_worlds)

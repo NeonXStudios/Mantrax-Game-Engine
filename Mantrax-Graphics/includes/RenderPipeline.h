@@ -15,9 +15,8 @@
 class GARINLIBS_API RenderPipeline
 {
 public:
-    static std::unordered_set<int> layers_to_render;
     static CanvasManager *canvas;
-
+    static std::unordered_set<int> layers_to_render;
     static std::vector<ModelComponent *> renderables;
     static std::vector<TextureTarget *> render_targets;
     static std::vector<Camera *> camera_targets;
@@ -33,6 +32,52 @@ public:
     static void register_new_material(GMaterial *texture);
     static void unregister_material(GMaterial *texture);
     GMaterial *get_material(int id);
+
+    static void set_lights_in_shader(GLuint shaderID, 
+                        const std::vector<DirectionalLightData*>& dirLights,
+                        const std::vector<PointLightData*>& pointLights,
+                        const std::vector<SpotLightData*>& spotLights) 
+    {
+        glUniform1i(glGetUniformLocation(shaderID, "numDirectionalLights"), dirLights.size());
+        glUniform1i(glGetUniformLocation(shaderID, "numPointLights"), pointLights.size());
+        glUniform1i(glGetUniformLocation(shaderID, "numSpotLights"), spotLights.size());
+
+        for(size_t i = 0; i < dirLights.size(); i++) {
+            std::string base = "directionalLights[" + std::to_string(i) + "]";
+            glUniform3fv(glGetUniformLocation(shaderID, (base + ".direction").c_str()), 1, glm::value_ptr(dirLights[i]->direction));
+            glUniform3fv(glGetUniformLocation(shaderID, (base + ".color").c_str()), 1, glm::value_ptr(dirLights[i]->color));
+            glUniform1f(glGetUniformLocation(shaderID, (base + ".intensity").c_str()), dirLights[i]->intensity);
+            glUniform1i(glGetUniformLocation(shaderID, (base + ".enabled").c_str()), dirLights[i]->enabled);
+            glUniform1i(glGetUniformLocation(shaderID, (base + ".castShadows").c_str()), dirLights[i]->castShadows);
+        }
+
+        for(size_t i = 0; i < pointLights.size(); i++) {
+            std::string base = "pointLights[" + std::to_string(i) + "]";
+            glUniform3fv(glGetUniformLocation(shaderID, (base + ".position").c_str()), 1, glm::value_ptr(pointLights[i]->position));
+            glUniform3fv(glGetUniformLocation(shaderID, (base + ".color").c_str()), 1, glm::value_ptr(pointLights[i]->color));
+            glUniform1f(glGetUniformLocation(shaderID, (base + ".intensity").c_str()), pointLights[i]->intensity);
+            glUniform1f(glGetUniformLocation(shaderID, (base + ".range").c_str()), pointLights[i]->range);
+            glUniform1f(glGetUniformLocation(shaderID, (base + ".constant").c_str()), 1.0f);
+            glUniform1f(glGetUniformLocation(shaderID, (base + ".linear").c_str()), 0.09f);
+            glUniform1f(glGetUniformLocation(shaderID, (base + ".quadratic").c_str()), 0.032f);
+            glUniform1i(glGetUniformLocation(shaderID, (base + ".enabled").c_str()), pointLights[i]->enabled);
+        }
+
+        for(size_t i = 0; i < spotLights.size(); i++) {
+            std::string base = "spotLights[" + std::to_string(i) + "]";
+            glUniform3fv(glGetUniformLocation(shaderID, (base + ".position").c_str()), 1, glm::value_ptr(spotLights[i]->position));
+            glUniform3fv(glGetUniformLocation(shaderID, (base + ".direction").c_str()), 1, glm::value_ptr(spotLights[i]->direction));
+            glUniform3fv(glGetUniformLocation(shaderID, (base + ".color").c_str()), 1, glm::value_ptr(spotLights[i]->color));
+            glUniform1f(glGetUniformLocation(shaderID, (base + ".intensity").c_str()), spotLights[i]->intensity);
+            glUniform1f(glGetUniformLocation(shaderID, (base + ".range").c_str()), spotLights[i]->range);
+            glUniform1f(glGetUniformLocation(shaderID, (base + ".cutOff").c_str()), spotLights[i]->cutOff);
+            glUniform1f(glGetUniformLocation(shaderID, (base + ".outerCutOff").c_str()), spotLights[i]->outerCutOff);
+            glUniform1f(glGetUniformLocation(shaderID, (base + ".constant").c_str()), 1.0f);
+            glUniform1f(glGetUniformLocation(shaderID, (base + ".linear").c_str()), 0.09f);
+            glUniform1f(glGetUniformLocation(shaderID, (base + ".quadratic").c_str()), 0.032f);
+            glUniform1i(glGetUniformLocation(shaderID, (base + ".enabled").c_str()), spotLights[i]->enabled);
+        }
+    }
 
     static void addLayer(int layer);
     static void removeLayer(int layer);
