@@ -188,11 +188,19 @@ public:
 
         glUniform3fv(glGetUniformLocation(shaderProgram, "inputColor"), 1, glm::value_ptr(color));
 
-        glLineWidth(4.0f);
+        // Guarda el estado actual del ancho de línea
+        GLfloat currentLineWidth;
+        glGetFloatv(GL_LINE_WIDTH, &currentLineWidth);
+
+        // Aplica el nuevo ancho de línea solo para este renderizado
+        glLineWidth(5.0f);
 
         glBindVertexArray(VAO);
         glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+
+        // Restaura el ancho de línea anterior
+        glLineWidth(currentLineWidth);
     }
 
 private:

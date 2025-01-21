@@ -327,7 +327,6 @@ Scene *SceneManager::make_new_empty_scene(std::string scene_name)
             scene_raw->main_camera->render_id = RenderPipeline::add_render_texture()->get_render();
             scene_raw->main_camera->use_projection = false;
             scene_raw->main_camera->update();
-            //scene_raw->main_camera->target_render = Gfx::main_render;
         }
         else
         {

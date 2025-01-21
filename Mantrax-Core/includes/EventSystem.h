@@ -99,5 +99,16 @@ public:
         rayDirection = glm::normalize(glm::vec3(worldFar - worldNear));
     }
 
+    static float min3(float a, float b, float c) {
+        float temp = (a < b) ? a : b;
+        return (temp < c) ? temp : c;
+    }
+
+    static float max3(float a, float b, float c) {
+        float temp = (a > b) ? a : b;
+        return (temp > c) ? temp : c;
+    }
+
+
     static glm::vec2 RotatePoint(const glm::vec2 &point, const glm::vec2 &center, float angle);
 };

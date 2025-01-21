@@ -1,9 +1,9 @@
 #include <EventSystem.h>
+#include <algorithm>
+#include <iomanip>
 #include <iostream>
-#include <algorithm> 
+#include <string_view>
 
-using std::max;
-using std::min;
 
 glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
 
@@ -59,7 +59,6 @@ glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
         double NormalMousePosX = windowMousePosX;
         double NormalMousePosY = windowMousePosY;
 
-        // CALCULAR CENTRO DE LA TEXTURA CON EL MOUSE (0, 0)
         double centeredMousePosX = (NormalMousePosX * 2.0f - 1.0f) * (Gfx::render_width)*cam->zoom;
         double centeredMousePosY = (NormalMousePosY * 2.0f + 1.0f) * (Gfx::render_height)*cam->zoom;
 
@@ -90,79 +89,90 @@ glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
         return glm::vec2(WorldPointX, WorldPointY);
     }
 
-    bool EventSystem::MouseCast2D(glm::vec2 mouseCoords, CastData *data)
-    {
-        const float MIN_PICK_DISTANCE = 0.1f;
-        const float MAX_PICK_DISTANCE = 1000.0f;
-        const float EPSILON = 0.0001f;
-        float closestDistance = MAX_PICK_DISTANCE;
-        Entity* closestObject = nullptr;
+    bool EventSystem::MouseCast2D(glm::vec2 mouseCoords, CastData *data) 
+    { 
+        const float MIN_PICK_DISTANCE = 0.1f; 
+        const float MAX_PICK_DISTANCE = 1000.0f; 
+        const float EPSILON = 0.0001f; 
+        float closestDistance = MAX_PICK_DISTANCE; 
+        Entity* closestObject = nullptr; 
 
-        Camera* camera = SceneManager::get_current_scene()->main_camera;
-        // Get the actual view matrix (not inverse)
-        glm::mat4 viewMatrix = glm::inverse(camera->GetViewInverse());
-        glm::mat4 projectionMatrix = camera->GetProjectionMatrix();
+        Camera* camera = SceneManager::get_current_scene()->main_camera; 
+        glm::mat4 viewMatrix = glm::inverse(camera->GetViewInverse()); 
+        glm::mat4 projectionMatrix = camera->GetProjectionMatrix(); 
 
-        glm::vec3 rayOrigin, rayDirection;
-        ScreenToWorldRay(mouseCoords, glm::inverse(viewMatrix), glm::inverse(projectionMatrix), rayOrigin, rayDirection);
+        glm::vec3 rayOrigin, rayDirection; 
+        ScreenToWorldRay(mouseCoords, glm::inverse(viewMatrix), glm::inverse(projectionMatrix), rayOrigin, rayDirection); 
 
-        for (Entity* objD : SceneManager::get_current_scene()->objects_worlds)
-        {
-            glm::vec3 objPosition = objD->get_transform()->getPosition();
-            glm::vec3 objScale = objD->get_transform()->Scale;
-            glm::quat objRotation = objD->get_transform()->rotation;
+        for (Entity* objD : SceneManager::get_current_scene()->objects_worlds) 
+        { 
+            glm::vec3 objPosition = objD->get_transform()->getPosition(); 
+            glm::vec3 objScale = objD->get_transform()->Scale; 
+            glm::quat objRotation = objD->get_transform()->rotation; 
 
-            // Properly calculate and invert the object's transform matrix
-            glm::mat4 objectMatrix = objD->get_transform()->get_matrix();
-            glm::mat4 inverseObjectMatrix = glm::inverse(objectMatrix);
+            glm::mat4 modelNoScale = glm::translate(glm::mat4(1.0f), objPosition) * 
+                                    glm::mat4_cast(objRotation);
+            glm::mat4 inverseModelNoScale = glm::inverse(modelNoScale);
 
-            glm::vec3 boxMin = -objScale;
-            glm::vec3 boxMax = objScale;
+            const float BASE_SIZE = 1.0f;
+            glm::vec3 baseMin = glm::vec3(-BASE_SIZE);
+            glm::vec3 baseMax = glm::vec3(BASE_SIZE);
 
-            // Transform ray to object space
-            glm::vec3 localRayOrigin = glm::vec3(inverseObjectMatrix * glm::vec4(rayOrigin, 1.0f));
-            glm::vec3 localRayDirection = glm::normalize(glm::vec3(inverseObjectMatrix * glm::vec4(rayDirection, 0.0f)));
+            glm::vec3 localRayOrigin = glm::vec3(inverseModelNoScale * glm::vec4(rayOrigin, 1.0f));
+            glm::vec3 localRayDirection = glm::normalize(glm::vec3(inverseModelNoScale * glm::vec4(rayDirection, 0.0f)));
 
-            bool isInside = (localRayOrigin.x >= boxMin.x && localRayOrigin.x <= boxMax.x &&
-                            localRayOrigin.y >= boxMin.y && localRayOrigin.y <= boxMax.y &&
-                            localRayOrigin.z >= boxMin.z && localRayOrigin.z <= boxMax.z);
+            localRayOrigin /= objScale;
+            localRayDirection = glm::normalize(localRayDirection / objScale);
 
-            if (isInside || RayIntersectsAABB(localRayOrigin, localRayDirection, boxMin, boxMax))
-            {
-                float distance = 0.0f;
+            bool isInside = (localRayOrigin.x >= baseMin.x && localRayOrigin.x <= baseMax.x && 
+                            localRayOrigin.y >= baseMin.y && localRayOrigin.y <= baseMax.y && 
+                            localRayOrigin.z >= baseMin.z && localRayOrigin.z <= baseMax.z); 
 
-                if (!isInside) {
-                    // Calculate intersection point in world space for accurate distance
-                    float tx1 = (boxMin.x - localRayOrigin.x) / localRayDirection.x;
-                    float tx2 = (boxMax.x - localRayOrigin.x) / localRayDirection.x;
-                    float ty1 = (boxMin.y - localRayOrigin.y) / localRayDirection.y;
-                    float ty2 = (boxMax.y - localRayOrigin.y) / localRayDirection.y;
-                    float tz1 = (boxMin.z - localRayOrigin.z) / localRayDirection.z;
-                    float tz2 = (boxMax.z - localRayOrigin.z) / localRayDirection.z;
+            if (isInside || RayIntersectsAABB(localRayOrigin, localRayDirection, baseMin, baseMax)) 
+            { 
+                float distance = 0.0f; 
 
-                    float tmin = glm::min(glm::min(tx1, tx2), glm::min(ty1, ty2));
-                                        tmin = glm::min(tmin, glm::min(tz1, tz2));
+                if (!isInside) { 
+                    float tx1 = (baseMin.x - localRayOrigin.x) / localRayDirection.x; 
+                    float tx2 = (baseMax.x - localRayOrigin.x) / localRayDirection.x; 
+                    float ty1 = (baseMin.y - localRayOrigin.y) / localRayDirection.y; 
+                    float ty2 = (baseMax.y - localRayOrigin.y) / localRayDirection.y; 
+                    float tz1 = (baseMin.z - localRayOrigin.z) / localRayDirection.z; 
+                    float tz2 = (baseMax.z - localRayOrigin.z) / localRayDirection.z; 
 
-                    glm::vec3 localIntersection = localRayOrigin + localRayDirection * tmin;
-                    glm::vec3 worldIntersection = glm::vec3(objectMatrix * glm::vec4(localIntersection, 1.0f));
-                    distance = glm::distance(rayOrigin, worldIntersection);
-                }
+                    float txmin = (tx1 < tx2) ? tx1 : tx2;
+                    float txmax = (tx1 > tx2) ? tx1 : tx2;
+                    float tymin = (ty1 < ty2) ? ty1 : ty2;
+                    float tymax = (ty1 > ty2) ? ty1 : ty2;
+                    float tzmin = (tz1 < tz2) ? tz1 : tz2;
+                    float tzmax = (tz1 > tz2) ? tz1 : tz2;
 
-                if (distance < closestDistance - EPSILON)
-                {
-                    closestDistance = distance;
-                    closestObject = objD;
-                }
-            }
-        }
+                    float tmin = max3(txmin, tymin, tzmin);
+                    float tmax = min3(txmax, tymax, tzmax);
 
-        if (closestObject != nullptr && closestDistance >= MIN_PICK_DISTANCE && closestDistance <= MAX_PICK_DISTANCE)
-        {
-            data->object = closestObject;
-            return true;
-        }
+                    if (tmax >= tmin) {
+                        glm::vec3 localIntersection = localRayOrigin + localRayDirection * tmin;
+                        localIntersection *= objScale;
+                        glm::vec3 worldIntersection = glm::vec3(modelNoScale * glm::vec4(localIntersection, 1.0f));
+                        distance = glm::distance(rayOrigin, worldIntersection);
+                    }
+                } 
 
-        return false;
+                if (distance < closestDistance - EPSILON) 
+                { 
+                    closestDistance = distance; 
+                    closestObject = objD; 
+                } 
+            } 
+        } 
+
+        if (closestObject != nullptr && closestDistance >= MIN_PICK_DISTANCE && closestDistance <= MAX_PICK_DISTANCE) 
+        { 
+            data->object = closestObject; 
+            return true; 
+        } 
+
+        return false; 
     }
 
     bool EventSystem::MouseCast3D(const glm::vec2& screenCoords, CastData* data)

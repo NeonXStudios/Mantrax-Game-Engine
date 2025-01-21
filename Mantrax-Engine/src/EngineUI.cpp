@@ -153,7 +153,7 @@ void EngineUI::on_draw()
 {
     if (select_obj != nullptr && select_obj->hasComponent<GCollision>())
     {
-        glm::vec3 convert_gl_to_physx = (select_obj->get_transform()->Scale * std::any_cast<glm::vec3>(select_obj->getComponent<GCollision>().variableMap["boxSize"])) * 2.0f;
+        glm::vec3 convert_gl_to_physx = (std::any_cast<glm::vec3>(select_obj->getComponent<GCollision>().variableMap["boxSize"])) * 2.0f;
 
         for (GCollision *col : select_obj->getComponents<GCollision>())
         {
@@ -191,7 +191,7 @@ void EngineUI::on_draw()
             enhanced_cube->render(SceneManager::get_current_scene()->main_camera->GetView(),
                                SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
                                UIMasterDrawer::get_instance().get_component<SceneView>()->found_object->get_transform()->get_matrix(), 
-                               UIMasterDrawer::get_instance().get_component<SceneView>()->found_object->get_transform()->Scale * glm::vec3(1.3f), glm::vec3(0.0f, 1.0f, 0.0f));
+                               glm::vec3(1.1f), glm::vec3(0.8f));
         }
     }
 
