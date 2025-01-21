@@ -79,7 +79,7 @@ void SceneView::on_draw()
             EventSystem::ViewportRenderPosition = glm::vec2(p.x, p.y);
             WorldPoint = EventSystem::screen_to_viewport();
 
-            if (EventSystem::MouseCast2D(WorldPoint, data))
+            if (EventSystem::MouseCast2D(WorldPoint, data) && !ImGuizmo::IsOver())
             {
                 if (EngineUI::getInstance().select_obj != data->object)
                 {
@@ -99,9 +99,9 @@ void SceneView::on_draw()
 
             if (EventSystem::MouseCast2D(WorldPoint, data))
             {
-                if (found_object->hasComponent<ModelComponent>())
+                if (found_object != data->object)
                 {
-                    if (found_object != data->object)
+                    if (data->object->hasComponent<ModelComponent>())
                     {
                         found_object = data->object;
                     }
