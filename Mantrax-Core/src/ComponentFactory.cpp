@@ -39,6 +39,18 @@ Component *ComponentFactory::add_component(Entity *ent, std::string component_na
     {
         return &ent->addComponent<GAnimator>();
     }
+    else if (component_name == "GLightDirectional")
+    {
+        return &ent->addComponent<GLightDirectional>();
+    }
+    else if (component_name == "GLightSpot")
+    {
+        return &ent->addComponent<GLightSpot>();
+    }
+    else if (component_name == "GLightPoint")
+    {
+        return &ent->addComponent<GLightPoint>();
+    }
 
     return nullptr;
 }

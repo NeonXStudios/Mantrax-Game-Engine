@@ -4,38 +4,6 @@ using namespace nlohmann;
 
 void Scene::awake()
 {
-    PointLightData* pointLight = new PointLightData();
-    pointLight->position = glm::vec3(0.0f, 10.0f, 0.0f);  
-    pointLight->color = glm::vec3(1.0f, 1.0f, 1.0f);     
-    pointLight->intensity = 21.0f;                        
-    pointLight->enabled = true;
-
-    point_lights.push_back(pointLight);
-
-    DirectionalLightData* data = new DirectionalLightData();
-    data->direction = glm::vec3(-0.2f, -1.0f, -0.3f); 
-    data->color = glm::vec3(1.0f);                  
-    data->intensity = 1.0f;                          
-    data->enabled = false;                            
-    data->castShadows = true;                        
-
-    direction_lights.push_back(data);
-
-    SpotLightData* new_spot = new SpotLightData();
-    new_spot->position = glm::vec3(35.0f, 5.0f, 35.0f);           
-    new_spot->direction = glm::vec3(-1.0f, -1.0f, -1.0f);         
-    new_spot->color = glm::vec3(1.0f, 1.0f, 1.0f);             
-    new_spot->intensity = 1.0f;                                   
-    new_spot->range = 50.0f;                                      
-    new_spot->cutOff = glm::cos(glm::radians(12.5f));             
-    new_spot->outerCutOff = glm::cos(glm::radians(17.5f));       
-    new_spot->constant = 1.0f;                                    
-    new_spot->linear = 0.09f;                                      
-    new_spot->quadratic = 0.032f;                                 
-    new_spot->enabled = true;  
-
-    spot_lights.push_back(new_spot);
-    
     std::cout << "World loaded" << std::endl;
     on_awake();
 }

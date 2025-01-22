@@ -125,6 +125,23 @@ void EngineUI::on_edition_mode(float delta_time)
             entity->getComponent<GCamera>().update();
         }
 
+        if (entity->hasComponent<GLightPoint>())
+        {
+            entity->getComponent<GLightPoint>().update();
+        }
+
+        if (entity->hasComponent<GLightSpot>())
+        {
+            entity->getComponent<GLightSpot>().update();
+        }
+
+
+        if (entity->hasComponent<GLightDirectional>())
+        {
+            entity->getComponent<GLightDirectional>().update();
+        }
+
+
         for (Entity *transform : entity->childrens)
         {
             transform->transform_component->update();
@@ -189,7 +206,7 @@ void EngineUI::on_draw()
                               select_obj->get_transform()->get_euler_angles());
     }
 
-    if (select_obj != nullptr && select_obj->hasComponent<GCamera>())
+    if (select_obj != nullptr && select_obj->hasComponent<GCamera>() || select_obj != nullptr && select_obj->hasComponent<GLightSpot>())
     {
         camera_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(),
                               SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),

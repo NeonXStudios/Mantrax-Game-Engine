@@ -14,6 +14,9 @@
 #include "GAnimator.h"
 #include "GCamera.h"
 #include "GNoise.h"
+#include <GLightDirectional.h>
+#include <GLightSpot.h>
+#include <GLightPoint.h>
 #include <Scene.h>
 #include <GAudio.h>
 #include <AudioManager.h>

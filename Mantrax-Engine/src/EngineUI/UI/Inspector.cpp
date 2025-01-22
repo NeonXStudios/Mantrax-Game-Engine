@@ -182,6 +182,21 @@ void Inspector::on_draw()
             EngineUI::getInstance().select_obj->addComponent<GAnimator>().init();
             ImGui::CloseCurrentPopup();
         }
+        if (ImGui::Button("Point Light", ImVec2(-1, 0)))
+        {
+            EngineUI::getInstance().select_obj->addComponent<GLightPoint>().init();
+            ImGui::CloseCurrentPopup();
+        }
+        if (ImGui::Button("Spot Light", ImVec2(-1, 0)))
+        {
+            EngineUI::getInstance().select_obj->addComponent<GLightSpot>().init();
+            ImGui::CloseCurrentPopup();
+        }
+        if (ImGui::Button("Direction Light", ImVec2(-1, 0)))
+        {
+            EngineUI::getInstance().select_obj->addComponent<GLightDirectional>().init();
+            ImGui::CloseCurrentPopup();
+        }
         if (!EngineUI::getInstance().select_obj->hasComponent<GCamera>())
         {
             if (ImGui::Button("Camera", ImVec2(-1, 0)))
