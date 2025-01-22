@@ -198,6 +198,8 @@ Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
             VarVerify::set_value_if_exists(data_loaded[i], "object_id", object_int_id);
             VarVerify::set_value_if_exists(data_loaded[i], "layer", new_object->Layer);
 
+            new_object->get_transform()->update();
+
             new_object->object_int_id = object_int_id;
             new_object->object_string_id = std::to_string(object_int_id);
 

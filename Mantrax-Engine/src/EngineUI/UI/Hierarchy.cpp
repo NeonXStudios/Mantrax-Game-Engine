@@ -206,6 +206,13 @@ void Hierarchy::on_draw()
 
         if (ImGui::MenuItem("Create New Entity"))
         {
+            Entity* new_entity = SceneManager::get_current_scene()->make_entity();
+            new_entity->addComponent<ModelComponent>().init();
+            new_entity->addComponent<GMaterial>().init();
+        }
+
+        if (ImGui::MenuItem("Create New Entity Empty"))
+        {
             SceneManager::get_current_scene()->make_entity();
         }
 
@@ -328,7 +335,7 @@ void Hierarchy::render_scene_hierarchy(Scene* p_scene)
             new_folder_name = "";
         }
 
-        if (ImGui::MenuItem("Create New Entity"))
+        if (ImGui::MenuItem("Create New Entity Empty"))
         {
             p_scene->make_entity();
         }

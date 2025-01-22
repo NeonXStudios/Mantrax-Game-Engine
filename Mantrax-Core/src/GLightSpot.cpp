@@ -21,10 +21,9 @@ void GLightSpot::init(){
 }
 
 void GLightSpot::update(){
-    light->position = get_transform()->Position;           
+    light->position = get_transform()->getPosition();           
 
     glm::mat4 modelMatrix = get_transform()->get_matrix();
-
     glm::vec3 forward = glm::normalize(glm::vec3(modelMatrix[2])); 
 
 

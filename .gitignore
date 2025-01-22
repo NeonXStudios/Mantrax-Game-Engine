@@ -11,7 +11,7 @@ Compiler/COMPILER/bin/
 Compiler/LIB/bin/
 Compiler-Mantrax-PlayBackEngine/COMPILER/bin/
 Compiler-Mantrax-PlayBackEngine/LIB/bin/
-Mantrax-Hub-Electron/assets
+Mantrax-Hub-Electron/
 Mantrax-Hub-Electron/dist
 Mantrax-Hub-Electron/data
 Mantrax-Hub-Electron/node_modules

@@ -133,7 +133,6 @@ public:
 	glm::mat4 parent_matrix;
 
 	glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
-	glm::vec3 euler_rotation;
 	glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 Scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec4 Anchors;
@@ -280,8 +279,6 @@ public:
 
 	void set_rotation(const glm::vec3 &eulerAngles)
 	{
-		euler_rotation = eulerAngles;
-
 		glm::vec3 radians = glm::radians(eulerAngles);
 
 		glm::quat quatX = glm::angleAxis(radians.x, glm::vec3(1, 0, 0));
@@ -304,18 +301,25 @@ public:
 		float cosy_cosp = sqw - sqx - sqy + sqz;
 		euler.x = std::atan2(siny_cosp, cosy_cosp);
 
+		std::cout << "euler.x: " << euler.x << std::endl;  // Imprime el ángulo X
+
 		float sinp = 2.0f * (rotation.w * rotation.y - rotation.z * rotation.x);
 		if (std::abs(sinp) >= 1)
 			euler.y = std::copysign(glm::pi<float>() / 2, sinp);
 		else
 			euler.y = std::asin(sinp);
 
+		std::cout << "euler.y: " << euler.y << std::endl;  // Imprime el ángulo Y
+
 		float sinr_cosp = 2.0f * (rotation.w * rotation.z + rotation.x * rotation.y);
 		float cosr_cosp = sqw + sqx - sqy - sqz;
 		euler.z = std::atan2(sinr_cosp, cosr_cosp);
 
+		std::cout << "euler.z: " << euler.z << std::endl;  // Imprime el ángulo Z
+
 		return euler;
 	}
+
 
 	void setPosition(const glm::vec3 &pos)
 	{

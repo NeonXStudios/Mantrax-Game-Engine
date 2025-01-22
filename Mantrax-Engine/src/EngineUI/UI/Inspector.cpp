@@ -106,7 +106,7 @@ void Inspector::on_draw()
 
         // Rotation
         ImGui::TextDisabled("Rotation");
-        glm::vec3 eulerAngles = transform->euler_rotation;
+        glm::vec3 eulerAngles = transform->get_euler_angles();
         eulerAngles = EditorGUI::Vector3("##Rotation", eulerAngles);
         transform->set_rotation(eulerAngles);
         ImGui::Spacing();

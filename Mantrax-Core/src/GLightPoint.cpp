@@ -5,9 +5,10 @@ void GLightPoint::defines(){
     pointLight = new PointLightData();
 
     GVAR(Color, glm::vec3(1.0f), glm::vec3);   
+    GVAR(Radius, 5.0f, float);   
     GVAR(Intensity, 1.0f, float);   
 
-    pointLight->position = get_transform()->Position;  
+    pointLight->position = get_transform()->getPosition();  
     pointLight->color = GETVAR(Color, glm::vec3);     
     pointLight->intensity = GETVAR(Intensity, float);                        
     pointLight->enabled = enabled;
@@ -23,6 +24,7 @@ void GLightPoint::update(){
     pointLight->position = get_transform()->Position;  
     pointLight->color = GETVAR(Color, glm::vec3);     
     pointLight->intensity = GETVAR(Intensity, float);                        
+    pointLight->range = GETVAR(Radius, float);                        
     pointLight->enabled = enabled;
 }
 
