@@ -22,7 +22,13 @@ void GLightSpot::init(){
 
 void GLightSpot::update(){
     light->position = get_transform()->Position;           
-    light->direction = glm::vec3(get_transform()->rotation.x, get_transform()->rotation.y, get_transform()->rotation.z);         
+
+    glm::mat4 modelMatrix = get_transform()->get_matrix();
+
+    glm::vec3 forward = glm::normalize(glm::vec3(modelMatrix[2])); 
+
+
+    light->direction = forward;
     light->color = GETVAR(Color, glm::vec3);             
     light->intensity = GETVAR(Intensity, float);                                   
     light->range = GETVAR(Range, float);                                      
