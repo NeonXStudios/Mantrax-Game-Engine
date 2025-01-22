@@ -93,11 +93,11 @@ void Inspector::on_draw()
     ImGui::Spacing();
 
     // Transform
+    TransformComponent* transform = EngineUI::getInstance().select_obj->get_transform();
     {
         ImGui::TextDisabled("TRANSFORM");
         ImGui::Spacing();
 
-        TransformComponent* transform = EngineUI::getInstance().select_obj->get_transform();
 
         // Position
         ImGui::TextDisabled("Position");
