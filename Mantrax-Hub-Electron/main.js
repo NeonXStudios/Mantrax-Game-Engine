@@ -5,6 +5,8 @@ const path = require('path');
 const unzipper = require('unzipper');
 const { exec } = require('child_process');
 const os = require('os');
+const asar = require('asar');
+
 
 let mainWindow;
 const configPath = path.join(app.getPath('userData'), 'config.json');
@@ -200,11 +202,16 @@ ipcMain.on('maximize-app', () => {
     }
 });
 
+
 function extractZip(zipFilePath, outputDir, progressCallback) {
     return new Promise((resolve, reject) => {
+        // Asegurarse que el directorio de salida exista
+        fs.mkdirSync(outputDir, { recursive: true });
+        
         let totalEntries = 0;
         let extractedEntries = 0;
 
+        // Primera pasada: contar entradas
         fs.createReadStream(zipFilePath)
             .pipe(unzipper.Parse())
             .on('entry', (entry) => {
@@ -212,11 +219,15 @@ function extractZip(zipFilePath, outputDir, progressCallback) {
                 entry.autodrain();
             })
             .on('close', () => {
+                console.log('Total de archivos:', totalEntries); // Debug
+
+                // Segunda pasada: extraer archivos
                 fs.createReadStream(zipFilePath)
                     .pipe(unzipper.Parse())
-                    .on('entry', (entry) => {
+                    .on('entry', async (entry) => {
                         const fileName = entry.path;
                         const fullPath = path.join(outputDir, fileName);
+                        console.log('Extrayendo:', fileName); // Debug
 
                         try {
                             if (entry.type === 'Directory') {
@@ -229,28 +240,45 @@ function extractZip(zipFilePath, outputDir, progressCallback) {
                             } else {
                                 const dirName = path.dirname(fullPath);
                                 fs.mkdirSync(dirName, { recursive: true });
-                                entry.pipe(fs.createWriteStream(fullPath))
+
+                                entry
+                                    .pipe(fs.createWriteStream(fullPath))
                                     .on('finish', () => {
                                         extractedEntries++;
                                         if (progressCallback) {
                                             progressCallback(Math.round((extractedEntries / totalEntries) * 100));
                                         }
+                                    })
+                                    .on('error', (err) => {
+                                        console.error('Error escribiendo archivo:', err);
+                                        reject(err);
                                     });
                             }
                         } catch (err) {
+                            console.error('Error procesando entrada:', err);
+                            entry.autodrain();
                             reject(err);
                         }
                     })
-                    .on('close', resolve)
-                    .on('error', reject);
+                    .on('close', () => {
+                        console.log('Extracción completada');
+                        resolve();
+                    })
+                    .on('error', (err) => {
+                        console.error('Error en la extracción:', err);
+                        reject(err);
+                    });
             })
-            .on('error', reject);
+            .on('error', (err) => {
+                console.error('Error contando archivos:', err);
+                reject(err);
+            });
     });
 }
 
 ipcMain.on('download-engine', (event, downloadUrl) => {
     const downloadsPath = app.getPath('temp');
-    const filePath = path.join(downloadsPath, 'engine.zip');
+    const filePath = path.join(downloadsPath, 'Engine.zip');
 
 
     const homeDir = os.homedir();
