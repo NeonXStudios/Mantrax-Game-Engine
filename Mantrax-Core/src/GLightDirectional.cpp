@@ -4,7 +4,6 @@
 void GLightDirectional::defines(){
     light = new DirectionalLightData();
 
-    GVAR(Direction, glm::vec3(-0.2f, -1.0f, -0.3f), glm::vec3);
     GVAR(Color, glm::vec3(1.0f), glm::vec3);
     GVAR(Intensity, 1.0f, float);
     GVAR(CastShadows, true, bool);
@@ -19,7 +18,10 @@ void GLightDirectional::init(){
 }
 
 void GLightDirectional::update(){
-    light->direction = GETVAR(Direction, glm::vec3);
+    glm::mat4 modelMatrix = get_transform()->get_matrix();
+    glm::vec3 forward = glm::normalize(glm::vec3(modelMatrix[2])); 
+
+    light->direction = forward;
     light->color = GETVAR(Color, glm::vec3);
     light->intensity = GETVAR(Intensity, float);
     light->castShadows = GETVAR(CastShadows, bool);

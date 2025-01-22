@@ -206,7 +206,9 @@ void EngineUI::on_draw()
                               select_obj->get_transform()->get_euler_angles());
     }
 
-    if (select_obj != nullptr && select_obj->hasComponent<GCamera>() || select_obj != nullptr && select_obj->hasComponent<GLightSpot>())
+    if (select_obj != nullptr && select_obj->hasComponent<GCamera>() || 
+        select_obj != nullptr && select_obj->hasComponent<GLightSpot>() || 
+        select_obj != nullptr && select_obj->hasComponent<GLightDirectional>())
     {
         camera_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(),
                               SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
