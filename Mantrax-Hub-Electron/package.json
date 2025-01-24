@@ -40,6 +40,7 @@
     "async-exit-hook": "^2.0.1",
     "asynckit": "^0.4.0",
     "at-least-node": "^1.0.0",
+    "axios": "^1.7.9",
     "balanced-match": "^1.0.2",
     "base64-js": "^1.5.1",
     "bl": "^4.1.0",

@@ -67,6 +67,12 @@
             }
         }
 
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
         .hidden-svg {
             display: none;
         }
@@ -235,6 +241,12 @@
                             <i class="fa-solid fa-gear w-5 text-center"></i>
                             <span>Settings</span>
                         </div>
+
+                        <div class="flex items-center gap-3 hover:text-white cursor-pointer"
+                            onclick="openModalByID('assets-modal')">
+                            <i class="fa-solid fa-file w-5 text-center""></i>
+                            <span>Assets</span>
+                        </div>
                     </nav>
                 </div>
             </aside>
@@ -312,6 +324,20 @@
                 </div>
             </div>
         </div>
+
+        <div id="assets-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-[#2C294E] p-6 rounded-lg w-4/5 max-h-[100%] overflow-auto">
+                <h2 class="text-2xl font-bold mb-4 text-white">Asset Store</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="container-assets">
+                    
+                    <!-- CONTENT ASSETS HERE -->             
+            </div>
+
+            <div class="flex justify-end gap-4 mt-6">
+                <button onclick="closeModalByID('assets-modal')" class="bg-gray-500 px-4 py-2 rounded-lg text-white">Close</button>
+            </div>
+        </div>
+        
 
         <div id="documentation-modal"
             class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">

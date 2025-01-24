@@ -1,12 +1,24 @@
 const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron');
+const { exec } = require('child_process');
 const fs = require('fs');
 const https = require('https');
 const path = require('path');
 const unzipper = require('unzipper');
-const { exec } = require('child_process');
 const os = require('os');
 const asar = require('asar');
+const axios = require('axios');
+const url_assets = 'https://mantrax.neonxstudios.com/getdata.php'; 
 
+async function fetchAssets() {
+    try {
+        const response = await axios.get(url_assets);
+        const data = response.data;
+
+        return data;
+    } catch (error) {
+        console.error('Error al obtener los datos:', error.message);
+    }
+}
 
 let mainWindow;
 const configPath = path.join(app.getPath('userData'), 'config.json');
@@ -92,7 +104,7 @@ function createWindow() {
         mainWindow.webContents.send('load-config', config);
     });
 
-    // mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
 }
 
 app.on('closed', () => {
@@ -205,13 +217,11 @@ ipcMain.on('maximize-app', () => {
 
 function extractZip(zipFilePath, outputDir, progressCallback) {
     return new Promise((resolve, reject) => {
-        // Asegurarse que el directorio de salida exista
         fs.mkdirSync(outputDir, { recursive: true });
         
         let totalEntries = 0;
         let extractedEntries = 0;
 
-        // Primera pasada: contar entradas
         fs.createReadStream(zipFilePath)
             .pipe(unzipper.Parse())
             .on('entry', (entry) => {
@@ -219,7 +229,7 @@ function extractZip(zipFilePath, outputDir, progressCallback) {
                 entry.autodrain();
             })
             .on('close', () => {
-                console.log('Total de archivos:', totalEntries); // Debug
+                console.log('Total de archivos:', totalEntries);
 
                 // Segunda pasada: extraer archivos
                 fs.createReadStream(zipFilePath)
@@ -227,8 +237,7 @@ function extractZip(zipFilePath, outputDir, progressCallback) {
                     .on('entry', async (entry) => {
                         const fileName = entry.path;
                         const fullPath = path.join(outputDir, fileName);
-                        console.log('Extrayendo:', fileName); // Debug
-
+                        console.log('Extrayendo:', fileName);
                         try {
                             if (entry.type === 'Directory') {
                                 fs.mkdirSync(fullPath, { recursive: true });
@@ -495,5 +504,127 @@ async function deleteFileOrFolder(filePath) {
         await fs.promises.rm(filePath, { recursive: true, force: true });
     } else {
         await fs.promises.unlink(filePath);
+    }
+}
+
+
+ipcMain.on('get-project', async (event, projectPath) => {
+    try {
+        const data = await fetchAssets(); 
+        event.reply('get-progress', data); 
+    } catch (error) {
+        console.error('Error al obtener los datos:', error.message);
+        event.reply('delete-progress', { error: error.message }); 
+    }
+});
+
+async function fetchAssets() {
+    try {
+        const response = await axios.get(url_assets);
+        return response.data; 
+    } catch (error) {
+        console.error('Error al obtener los datos:', error.message);
+        throw error; 
+    }
+}
+
+ipcMain.on('start-download', async (event, { url, imglink, index, id }) => {
+    console.log('Download started', { url, imglink, index, id }); // Verifica si el evento se recibe
+
+    try {
+        // Ruta de la carpeta "storecache"
+        const storeCachePath = path.join(__dirname, 'storecache');
+
+        // Verificar si la carpeta "storecache" existe, si no, crearla
+        if (!fs.existsSync(storeCachePath)) {
+            fs.mkdirSync(storeCachePath, { recursive: true }); // Asegura que se cree toda la estructura de carpetas
+        }
+
+        // Crear una carpeta aleatoria dentro de "storecache"
+        const randomFolderName = id;
+        const folderPath = path.join(storeCachePath, randomFolderName);
+        
+        if (!fs.existsSync(folderPath)) {
+            fs.mkdirSync(folderPath, { recursive: true });
+        }
+
+        // Ruta para el archivo descargado
+        const filePath = path.join(folderPath, `downloaded-asset-${index}.zip`);
+
+        // Ruta para la imagen (portview.png)
+        const imageFilePath = path.join(folderPath, 'portview.png');
+
+        // Descargar la imagen
+        await downloadImage(imglink, imageFilePath);
+
+        const writer = fs.createWriteStream(filePath);
+        const response = await axios({
+            method: 'get',
+            url,
+            responseType: 'stream',
+        });
+
+        const totalLength = parseInt(response.headers['content-length'], 10);
+        let downloadedLength = 0;
+
+        response.data.on('data', (chunk) => {
+            downloadedLength += chunk.length;
+            const progress = Math.floor((downloadedLength / totalLength) * 100);
+            console.log(`Progress: ${progress}%`); // Verifica el progreso de la descarga
+
+            // Emitir progreso al renderer
+            event.sender.send('download-progress', { index, progress });
+        });
+
+        response.data.pipe(writer);
+
+        writer.on('finish', () => {
+            event.sender.send('download-complete', { index, folderPath });
+        });
+
+        writer.on('error', (err) => {
+            console.error('Error al escribir el archivo:', err);
+            event.sender.send('download-error', { index, error: err.message });
+        });
+    } catch (error) {
+        console.error('Error durante la descarga:', error.message);
+        event.sender.send('download-error', { index, error: error.message });
+    }
+});
+
+ipcMain.on('check-asset-existence', async (event, { asset_id }) => {
+    const storeCachePath = path.join(__dirname, 'storecache');
+    const folderPath = path.join(storeCachePath, asset_id);
+    console.log(folderPath);
+
+    if (fs.existsSync(folderPath)) {
+        event.sender.send('asset-installed', { asset_id });
+    } else {
+        event.sender.send('asset-exists', { asset_id });
+    }
+});
+
+// Función de descarga de imagen
+async function downloadImage(imgUrl, imageFilePath) {
+    try {
+        const response = await axios({
+            method: 'get',
+            url: imgUrl,
+            responseType: 'stream',
+        });
+
+        const writer = fs.createWriteStream(imageFilePath);
+        response.data.pipe(writer);
+
+
+        writer.on('finish', () => {
+            console.log(`Imagen descargada en ${imageFilePath}`);
+        });
+
+        writer.on('error', (err) => {
+            console.error('Error al descargar la imagen:', err);
+        });
+    } catch (error) {
+        console.error('Error al descargar la imagen:', error.message);
     }
 }

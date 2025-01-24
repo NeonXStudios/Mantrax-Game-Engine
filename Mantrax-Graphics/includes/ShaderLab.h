@@ -4,6 +4,7 @@
 #include <vector>
 #include <sstream>
 #include <memory>
+#include <algorithm>
 
 class ShaderElement
 {
@@ -43,16 +44,14 @@ private:
             return "in";
         if (StorageQualifier == "out")
             return "out";
-        return StorageQualifier;
+        if (StorageQualifier == "uniform")
+            return "uniform";
+        return "";
     }
 
     std::string TranslateFragmentQualifier() const
     {
-        if (StorageQualifier == "in")
-            return "in";
-        if (StorageQualifier == "out")
-            return "out";
-        return StorageQualifier;
+        return TranslateVertexQualifier();
     }
 };
 
@@ -91,10 +90,10 @@ public:
 
         for (const auto &line : Body)
         {
-            std::string translatedLine = line;
+            std::string translatedLine = TranslateControlStructures(line);
             ReplaceAll(translatedLine, "TXT2D", "texture");
             ReplaceAll(translatedLine, "_pos", "gl_Position");
-            oss << "    " << translatedLine << ";\n";
+            oss << "    " << translatedLine << "\n";
         }
 
         oss << "}";
@@ -110,6 +109,49 @@ private:
             str.replace(startPos, from.length(), to);
             startPos += to.length();
         }
+    }
+
+    std::string TranslateControlStructures(const std::string &line) const
+    {
+        std::string translatedLine = line;
+
+        // Translate 'for' loops
+        if (translatedLine.find("for(") == 0 || translatedLine.find("for (") == 0)
+        {
+            size_t startPos = translatedLine.find("(");
+            size_t endPos = translatedLine.find(")");
+            std::string forParams = translatedLine.substr(startPos + 1, endPos - startPos - 1);
+            translatedLine = "for (" + forParams + ")";
+        }
+
+        // Translate 'while' loops
+        if (translatedLine.find("while(") == 0 || translatedLine.find("while (") == 0)
+        {
+            size_t startPos = translatedLine.find("(");
+            size_t endPos = translatedLine.find(")");
+            std::string whileCondition = translatedLine.substr(startPos + 1, endPos - startPos - 1);
+            translatedLine = "while (" + whileCondition + ")";
+        }
+
+        // Translate 'if' conditions
+        if (translatedLine.find("if(") == 0 || translatedLine.find("if (") == 0)
+        {
+            size_t startPos = translatedLine.find("(");
+            size_t endPos = translatedLine.find(")");
+            std::string ifCondition = translatedLine.substr(startPos + 1, endPos - startPos - 1);
+            translatedLine = "if (" + ifCondition + ")";
+        }
+
+        // Translate 'else if' conditions
+        if (translatedLine.find("else if(") == 0 || translatedLine.find("else if (") == 0)
+        {
+            size_t startPos = translatedLine.find("(");
+            size_t endPos = translatedLine.find(")");
+            std::string elseIfCondition = translatedLine.substr(startPos + 1, endPos - startPos - 1);
+            translatedLine = "else if (" + elseIfCondition + ")";
+        }
+
+        return translatedLine;
     }
 };
 
@@ -190,7 +232,7 @@ public:
             fragmentFile << glslFragmentCode;
             fragmentFile.close();
 
-            std::cout << "Shaders compiled platform (OpenGL)\n";
+            std::cout << "Shaders compiled for platform (OpenGL)\n";
         }
         catch (const std::exception &err)
         {
@@ -220,6 +262,7 @@ public:
         ShaderFunction *currentFunction = nullptr;
         ShaderStruct *currentStruct = nullptr;
         bool isVertex = false;
+        int braceLevel = 0;
 
         while (std::getline(file, line))
         {
@@ -305,20 +348,42 @@ public:
                     auto func = std::make_unique<ShaderFunction>(parts[1]);
                     currentFunction = func.get();
                     shader.AddElement(std::move(func), isVertex);
+                    braceLevel = 0;
                 }
-            }
-            else if (trimmedLine == "{")
-            {
-                // Start of function body
-            }
-            else if (trimmedLine == "}")
-            {
-                // End of function body
-                currentFunction = nullptr;
             }
             else if (currentFunction)
             {
-                currentFunction->AddLineToBody(trimmedLine);
+                if (trimmedLine == "{")
+                {
+                    braceLevel++;
+                    currentFunction->AddLineToBody(trimmedLine);
+                }
+                else if (trimmedLine == "}")
+                {
+                    braceLevel--;
+                    currentFunction->AddLineToBody(trimmedLine);
+
+                    if (braceLevel == 0)
+                    {
+                        currentFunction = nullptr;
+                    }
+                }
+                else if (braceLevel > 0)
+                {
+                    // Handle control structures and other lines within function body
+                    if (trimmedLine.find("for(") == 0 || trimmedLine.find("for (") == 0 ||
+                        trimmedLine.find("while(") == 0 || trimmedLine.find("while (") == 0 ||
+                        trimmedLine.find("if(") == 0 || trimmedLine.find("if (") == 0 ||
+                        trimmedLine.find("else if(") == 0 || trimmedLine.find("else if (") == 0 ||
+                        trimmedLine == "else")
+                    {
+                        currentFunction->AddLineToBody(trimmedLine);
+                    }
+                    else if (!trimmedLine.empty())
+                    {
+                        currentFunction->AddLineToBody(trimmedLine);
+                    }
+                }
             }
         }
 
@@ -354,16 +419,3 @@ private:
         return tokens;
     }
 };
-
-// int main(int argc, char* argv[]) {
-//     if (argc < 2) {
-//         std::cerr << "Usage: " << argv[0] << " <shader file path>\n";
-//         return 1;
-//     }
-
-//     CustomShader shader = CustomShaderParser::ParseShaderFile(argv[1]);
-
-//     shader.SaveToFiles("output");
-
-//     return 0;
-// }

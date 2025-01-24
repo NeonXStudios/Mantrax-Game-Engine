@@ -107,9 +107,12 @@ void SceneManager::load_scene_wrapped(std::string scene_name_new, bool is_additi
 Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, std::string extension)
 {
     loading_new_scene = true;
+    SceneManager::get_scene_manager()->physic_world->collision_events->locked = true;
+
 
     if (!is_additive && SceneManager::get_scene_manager()->opened_scenes.size() > 0)
     {
+        std::cout << "Current Scene Starting Cleaning" << std::endl;
 
         for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
         {
@@ -121,15 +124,13 @@ Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
         std::cout << "Current Scene Cleaned" << std::endl;
     }
 
-    SceneManager::get_scene_manager()->physic_world->clear_components_in_world();
-
     Scene *new_scene = SceneManager::make_new_empty_scene(scene_name_new);
     new_scene->unload_scene = true;
 
     std::string file_path = "";
     std::string assets_path = FileManager::get_project_path() + "assets/";
 
-    std::cout << "Loading Scene From: " << assets_path << std::endl;
+    std::cout << "***********Loading Scene From: " << assets_path << std::endl;
 
     for (std::string file_getted : FileManager::get_files_by_extension(assets_path, extension))
     {
@@ -139,7 +140,6 @@ Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
             break;
         }
     }
-
 
     try
     {
@@ -267,7 +267,6 @@ Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
 
                 if (new_object_child && new_object_parent)
                 {
-                    // Usar attach_to con keepWorldPosition = false para mantener las transformaciones locales
                     new_object_child->get_transform()->attach_to(new_object_parent->transform_component, false);
                 }
             }
@@ -306,12 +305,14 @@ Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
 
         new_scene->unload_scene = false;
         loading_new_scene = false;
+        SceneManager::get_scene_manager()->physic_world->collision_events->locked = false;
         std::cout << "----------------> Already Loaded Scene" << std::endl;
     }
     catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }
+
 
     return new_scene;
 }
@@ -327,6 +328,7 @@ Scene *SceneManager::make_new_empty_scene(std::string scene_name)
 
         if (scene_raw->main_camera == nullptr)
         {
+
             scene_raw->main_camera = new Camera();
             scene_raw->main_camera->render_id = RenderPipeline::add_render_texture()->get_render();
             scene_raw->main_camera->use_projection = false;
@@ -342,6 +344,7 @@ Scene *SceneManager::make_new_empty_scene(std::string scene_name)
         std::cerr << e.what() << '\n';
     }
 
+
     SceneManager::get_scene_manager()->opened_scenes.push_back(scene_raw);
     return scene_raw;
 }
@@ -351,7 +354,7 @@ Scene *SceneManager::get_current_scene()
     if (SceneManager::get_scene_manager()->opened_scenes.size() <= 0)
     {
         std::cout << "Error not existe scene" << std::endl;
-        return nullptr;
+        return SceneManager::make_new_empty_scene("Empty Scene");
     }
 
     return SceneManager::get_scene_manager()->opened_scenes[0];

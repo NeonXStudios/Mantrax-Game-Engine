@@ -72,7 +72,7 @@ void GScript::clean()
             behaviour.reset();
             behaviour = nullptr;
 
-            std::cout << "Component Cleaned" << std::endl;
+            std::cout << "*********************** Component Cleaned" << std::endl;
         }
     }
     catch (const std::exception &e)

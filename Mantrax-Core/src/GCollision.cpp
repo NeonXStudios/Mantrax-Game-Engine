@@ -15,13 +15,25 @@ void GCollision::init()
         return;
     }
 
+    // Asegúrate de que no hay tareas pendientes en la simulación
+    SceneManager::get_scene_manager()->physic_world->mScene->fetchResults(true);  // Esperar que la simulación termine si es necesario
+
     if (SceneManager::get_scene_manager()->physic_world != nullptr && SceneManager::get_scene_manager()->physic_world->mScene != nullptr)
     {
-        shape = SceneManager::get_scene_manager()->physic_world->mPhysics->createShape(physx::PxBoxGeometry(boxSize.x, boxSize.y, boxSize.z), *SceneManager::get_scene_manager()->physic_world->mMaterial, true);
+        // Asegúrate de crear correctamente la geometría del shape
+        shape = SceneManager::get_scene_manager()->physic_world->mPhysics->createShape(physx::PxBoxGeometry(boxSize.x, boxSize.y, boxSize.z), 
+                                                                                      *SceneManager::get_scene_manager()->physic_world->mMaterial, true);
 
         if (shape)
         {
             shape->setName(entity->object_string_id.c_str());
+            
+            // Si el shape es un trigger, asegúrate de gestionarlo correctamente
+            if (shape->getFlags() & physx::PxShapeFlag::eTRIGGER_SHAPE)
+            {
+                // Desactivar trigger para evitar problemas en la simulación
+                shape->setFlags(shape->getFlags() & ~physx::PxShapeFlag::eTRIGGER_SHAPE);
+            }
         }
         else
         {
@@ -33,6 +45,7 @@ void GCollision::init()
         std::cout << "World physic is null" << std::endl;
     }
 }
+
 
 void GCollision::update()
 {

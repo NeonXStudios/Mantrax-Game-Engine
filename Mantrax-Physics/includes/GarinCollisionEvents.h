@@ -8,6 +8,8 @@ using namespace physx;
 class GARINLIBS_API GarinCollisionEvents : public PxSimulationEventCallback
 {
 public:
+    bool locked;
+
     void onContact(const PxContactPairHeader &pairHeader, const PxContactPair *pairs, PxU32 nbPairs) override;
 
     void onTrigger(PxTriggerPair *pairs, PxU32 count) override;

@@ -116,9 +116,8 @@ void PhysicsEngine::start_world_physics()
 
 void PhysicsEngine::update_world_physics()
 {
-    if (mScene != nullptr)
+    if (mScene != nullptr && !SceneManager::get_scene_manager()->loading_new_scene)
     {
-
         mScene->simulate(1.0f / Gfx::targetFPS);
         mScene->fetchResults(true);
     }
@@ -128,56 +127,9 @@ void PhysicsEngine::delete_phys_world()
 {
 }
 
+
 void PhysicsEngine::clear_components_in_world() 
 { 
-    try 
-    { 
-        if (!mScene) return;
+    std::cout << "/**************************************************************************************************************************" << std::endl;
 
-        const PxU32 actorCount = mScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC); 
-        std::vector<PxActor*> actors(actorCount); 
-        mScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC, actors.data(), actorCount); 
-
-        for (PxActor* actor : actors) 
-        { 
-            if (PxRigidDynamic* dynActor = actor->is<PxRigidDynamic>())
-            {
-                dynActor->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, true);
-                dynActor->setLinearVelocity(PxVec3(0.0f));
-                dynActor->setAngularVelocity(PxVec3(0.0f));
-            }
-        }
-
-        mScene->simulate(1.0f/60.0f);
-        mScene->fetchResults(true);
-
-        for (PxActor* actor : actors) 
-        { 
-            if (actor) 
-            { 
-                if (PxRigidActor* rigidActor = actor->is<PxRigidActor>()) 
-                { 
-                    const PxU32 shapeCount = rigidActor->getNbShapes(); 
-                    std::vector<PxShape*> shapes(shapeCount); 
-                    rigidActor->getShapes(shapes.data(), shapeCount); 
-
-                    for (PxShape* shape : shapes) 
-                    { 
-                        if (shape)
-                        {
-                            rigidActor->detachShape(*shape);
-                            shape->release(); 
-                        }
-                    } 
-                } 
-                actor->release(); 
-            } 
-        } 
-
-        std::cout << "All actors and shapes successfully released." << std::endl; 
-    } 
-    catch (const std::exception& e) 
-    { 
-        std::cerr << "Error while clearing components: " << e.what() << std::endl; 
-    } 
 }

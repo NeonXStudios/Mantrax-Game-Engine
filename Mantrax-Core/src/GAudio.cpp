@@ -132,6 +132,7 @@ void GAudio::clean()
         {
             std::cerr << "Error al liberar el sonido: " << FMOD_ErrorString(result) << std::endl;
         }
+        
         AudioManager::GetManager()->result = result;
     }
 

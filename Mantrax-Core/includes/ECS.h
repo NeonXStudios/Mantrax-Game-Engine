@@ -113,6 +113,23 @@ public:
 		glm::vec3 val = std::any_cast<glm::vec3>(variableMap[name]);
 	}
 
+	template <typename T>
+	void set_var(const std::string& name, const T& value) {
+		variableMap[name] = value;
+	}
+
+	// Función para obtener el valor desde el map
+	template <typename T>
+	T get_var(const std::string& name) {
+		try {
+			return std::any_cast<T>(variableMap.at(name));
+		} catch (const std::out_of_range& e) {
+			throw std::runtime_error("Variable not found: " + name);
+		} catch (const std::bad_any_cast& e) {
+			throw std::runtime_error("Incorrect type for variable: " + name);
+		}
+	}
+
 	virtual void defines() {}
 	virtual void init() {}
 	virtual void update() {}

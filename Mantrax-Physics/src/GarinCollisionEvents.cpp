@@ -5,6 +5,8 @@ using namespace physx;
 
 void GarinCollisionEvents::onContact(const PxContactPairHeader &pairHeader, const PxContactPair *pairs, PxU32 nbPairs)
 {
+    if (locked) return;
+
     for (PxU32 i = 0; i < nbPairs; i++)
     {
         const PxContactPair &cp = pairs[i];
@@ -35,6 +37,8 @@ void GarinCollisionEvents::onContact(const PxContactPairHeader &pairHeader, cons
 
 void GarinCollisionEvents::onTrigger(PxTriggerPair *pairs, PxU32 count)
 {
+    if (locked) return;
+
     for (PxU32 i = 0; i < count; i++)
     {
         PxTriggerPair &triggerPair = pairs[i];
@@ -90,6 +94,8 @@ void GarinCollisionEvents::onTrigger(PxTriggerPair *pairs, PxU32 count)
 
 void GarinCollisionEvents::onConstraintBreak(PxConstraintInfo *constraints, PxU32 count)
 {
+    if (locked) return;
+
     for (PxU32 i = 0; i < count; i++)
     {
         PxConstraintInfo &constraint = constraints[i];
@@ -99,6 +105,8 @@ void GarinCollisionEvents::onConstraintBreak(PxConstraintInfo *constraints, PxU3
 
 void GarinCollisionEvents::onWake(PxActor **actors, PxU32 count)
 {
+    if (locked) return;
+
     for (PxU32 i = 0; i < count; i++)
     {
         PxActor *actor = actors[i];
@@ -108,6 +116,8 @@ void GarinCollisionEvents::onWake(PxActor **actors, PxU32 count)
 
 void GarinCollisionEvents::onSleep(PxActor **actors, PxU32 count)
 {
+    if (locked) return;
+
     for (PxU32 i = 0; i < count; i++)
     {
         PxActor *actor = actors[i];
