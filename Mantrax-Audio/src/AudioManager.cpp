@@ -21,26 +21,27 @@ void AudioManager::create()
 
 void AudioManager::StartSystem()
 {
+    int numDrivers = 0;
+    system->getNumDrivers(&numDrivers);
+    
+    if (numDrivers == 0) {
+        std::cout << "No audio output devices found. Running without audio." << std::endl;
+        return;
+    }
+
     result = system->init(512, FMOD_INIT_NORMAL, nullptr);
 
     if (result != FMOD_OK)
     {
-        printf("FMOD error! (%d) %s\n", result, FMOD_ErrorString(result));
-        exit(-1);
-    }
-
-    if (result != FMOD_OK)
-    {
-        printf("FMOD error! (%d) %s\n", result, FMOD_ErrorString(result));
-        exit(-1);
-    }
-
-    if (result == FMOD_OK && AudioManager::instance != nullptr)
-    {
-        std::cout << "AUDIO MANAGER LOADED FROM DLL" << std::endl;
+        std::cout << "FMOD initialization warning: (" << result << ") " 
+                  << FMOD_ErrorString(result) 
+                  << ". Continuing without audio." << std::endl;
+        return;
     }
 
     result = system->set3DSettings(1.0f, 1.0f, 1.0f);
+
+    std::cout << "AUDIO MANAGER LOADED FROM DLL" << std::endl;
 }
 
 void AudioManager::Update()

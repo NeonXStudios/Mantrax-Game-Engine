@@ -98,6 +98,8 @@ int main(int argc, char *arvg[])
 
         scene_game->draw_ui();
 
+        audioManager->Update();
+
         Gfx::swap_buffer();
     }
 
