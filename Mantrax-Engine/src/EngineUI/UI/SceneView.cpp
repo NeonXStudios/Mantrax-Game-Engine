@@ -24,7 +24,7 @@ void SceneView::on_draw()
     ImVec2 windowSize = ImGui::GetContentRegionAvail();
 
     ImVec2 p = ImGui::GetCursorScreenPos();
-    ImGui::Image((void *)(intptr_t)SceneManager::get_current_scene()->main_camera->render_id, ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::Image((void *)(intptr_t)SceneManager::get_current_scene()->main_camera->render_id, ImVec2(SceneManager::get_current_scene()->main_camera->width, SceneManager::get_current_scene()->main_camera->height), ImVec2(0, 1), ImVec2(1, 0));
     imagePosition = ImGui::GetWindowPos();
 
     ImVec2 buttonPosition = ImVec2(p.x + 10, p.y + 10);
@@ -67,8 +67,8 @@ void SceneView::on_draw()
         SceneManager::get_current_scene()->main_camera->use_projection = !SceneManager::get_current_scene()->main_camera->use_projection;
     }
 
-    Gfx::render_width = windowSize.x; 
-    Gfx::render_height = windowSize.y;
+    SceneManager::get_current_scene()->main_camera->width = windowSize.x;
+    SceneManager::get_current_scene()->main_camera->height = windowSize.y;
 
     if (ImGui::IsWindowHovered())
     {
@@ -474,6 +474,9 @@ void SceneDataView::draw() {
     {
         work_scene->main_camera->use_projection = !work_scene->main_camera->use_projection;
     }
+
+    work_scene->main_camera->width = windowSize.x;
+    work_scene->main_camera->height = windowSize.y;
 
     // Gfx::render_width = windowSize.x; 
     // Gfx::render_height = windowSize.y;
