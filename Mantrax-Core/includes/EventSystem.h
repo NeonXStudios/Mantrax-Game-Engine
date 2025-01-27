@@ -28,11 +28,11 @@ class GARINLIBS_API EventSystem
 public:
     static glm::vec2 ViewportRenderPosition;
 
-    static glm::vec2 screen_to_viewport();
+    static glm::vec2 screen_to_viewport(Camera* cam);
     static vec2 get_mouse_position_in_viewport(glm::vec2 WindowSize, glm::vec2 ScreenSize);
     static glm::vec2 mouse_to_view_port_position(glm::vec2 WindowSize);
     static glm::vec2 mouse_to_screen_pos(glm::vec2 WindowSize);
-    static bool MouseCast2D(glm::vec2 coords, CastData *data);
+    static bool MouseCast2D(glm::vec2 coords, CastData *data, Camera* camera);
     static bool MouseCastUI(glm::vec2 coords, CastDataUI *data);
     static bool MouseCast3D(const glm::vec2& screenCoords, CastData* data);
 
@@ -77,9 +77,10 @@ public:
         const glm::mat4& viewMatrixInverse,
         const glm::mat4& projectionMatrixInverse,
         glm::vec3& rayOrigin,
-        glm::vec3& rayDirection)
+        glm::vec3& rayDirection,
+        Camera* cam)
     {
-        glm::vec2 normalizedMouseCoords = EventSystem::screen_to_viewport();
+        glm::vec2 normalizedMouseCoords = EventSystem::screen_to_viewport(cam);
         
         glm::vec4 clipNear = glm::vec4(normalizedMouseCoords.x, normalizedMouseCoords.y, -1.0f, 1.0f);
         glm::vec4 clipFar = glm::vec4(normalizedMouseCoords.x, normalizedMouseCoords.y, 1.0f, 1.0f);

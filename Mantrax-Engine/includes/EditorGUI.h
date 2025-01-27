@@ -192,27 +192,24 @@ public:
     {
         ImGui::PushID(component->component_id);
 
-        // --- Checkbox para habilitar o deshabilitar el componente ---
         bool enabledCTMP = component->enabled;
         ImGui::Checkbox("", &enabledCTMP);
         component->enabled = enabledCTMP;
 
         ImGui::SameLine();
 
-        // --- Ajustes de estilo para el TreeNode ---
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(6.0f, 4.0f));
 
-        // --- El árbol principal que muestra el nombre del componente ---
-        bool treeNodeOpen = ImGui::TreeNodeEx(componentName.c_str(),
-                                              ImGuiTreeNodeFlags_DefaultOpen | // Por si deseas que esté abierto por defecto
+        std::string component_name = componentName + "##" + std::to_string(component->component_id);
+
+        bool treeNodeOpen = ImGui::TreeNodeEx(component_name.c_str(),
+                                              ImGuiTreeNodeFlags_DefaultOpen | 
                                                   ImGuiTreeNodeFlags_AllowItemOverlap);
 
         ImGui::PopStyleVar(2);
 
-        // --- Botón de 3 puntos (menú contextual) alineado a la derecha ---
-        //     Ajusta la posición (GetContentRegionMax().x - XX) según tu preferencia.
-        float iconOffset = 28.0f; // Un margen para que no se pise con el triángulo del TreeNode
+        float iconOffset = 28.0f; 
         ImGui::SameLine(ImGui::GetContentRegionMax().x - iconOffset);
 
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(3.0f, 2.0f));
@@ -263,6 +260,7 @@ public:
                 else
                 {
                     GCamera *cameraComponent = &owner->getComponent<GCamera>();
+                    
                     if (cameraComponent && cameraComponent->a_camera->render_id != -1)
                     {
                         GLuint textureID = cameraComponent->a_camera->render_id;
@@ -289,211 +287,6 @@ public:
                 {
                     UIMasterDrawer::get_instance().get_component<AnimatorView>()->is_open = true;
                     UIMasterDrawer::get_instance().get_component<AnimatorView>()->animator = &owner->getComponent<GAnimator>();
-                }
-            }
-
-            if (componentName == "GMaterial")
-            {
-                Shader *shader = owner->getComponent<GMaterial>().p_shader;
-                if (shader)
-                {
-                    GLuint shaderID = shader->ID;
-
-                    struct Uniform
-                    {
-                        std::string name;
-                        GLenum type;
-                        GLint size;
-                        GLint location;
-                        std::vector<float> floatValues;
-                        std::vector<int> intValues;
-                        GLuint textureID;
-                    };
-
-                    auto obtenerUniforms = [&](std::vector<Uniform> &uniforms)
-                    {
-                        uniforms.clear();
-
-                        GLint numUniforms = 0;
-                        glGetProgramiv(shaderID, GL_ACTIVE_UNIFORMS, &numUniforms);
-
-                        GLint maxNameLength = 0;
-                        glGetProgramiv(shaderID, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxNameLength);
-
-                        for (GLint i = 0; i < numUniforms; ++i)
-                        {
-                            std::string uniformName;
-                            uniformName.resize(maxNameLength);
-
-                            GLsizei nameLength = 0;
-                            GLint size = 0;
-                            GLenum type = 0;
-
-                            glGetActiveUniform(shaderID, i, maxNameLength, &nameLength, &size, &type, &uniformName[0]);
-                            uniformName.resize(nameLength);
-
-                            GLint location = glGetUniformLocation(shaderID, uniformName.c_str());
-
-                            Uniform uniform;
-                            uniform.name = uniformName;
-                            uniform.type = type;
-                            uniform.size = size;
-                            uniform.location = location;
-
-                            // Inicializar los valores según el tipo
-                            switch (type)
-                            {
-                            case GL_FLOAT:
-                                uniform.floatValues = {0.0f};
-                                break;
-                            case GL_FLOAT_VEC2:
-                                uniform.floatValues = {0.0f, 0.0f};
-                                break;
-                            case GL_FLOAT_VEC3:
-                                uniform.floatValues = {0.0f, 0.0f, 0.0f};
-                                break;
-                            case GL_FLOAT_VEC4:
-                                uniform.floatValues = {0.0f, 0.0f, 0.0f, 0.0f};
-                                break;
-                            case GL_INT:
-                            case GL_BOOL:
-                                uniform.intValues = {0};
-                                break;
-                            // Agrega más casos según tus necesidades
-                            default:
-                                // Ignorar tipos no manejados
-                                continue;
-                            }
-
-                            uniforms.push_back(uniform);
-                        }
-                    };
-
-                    // Función lambda para inicializar los valores actuales de los uniforms desde el shader
-                    auto inicializarValoresUniforms = [&](std::vector<Uniform> &uniforms)
-                    {
-                        glUseProgram(shaderID); // Vincular el shader antes de obtener los valores
-
-                        for (auto &uniform : uniforms)
-                        {
-                            switch (uniform.type)
-                            {
-                            case GL_FLOAT:
-                                glGetUniformfv(shaderID, uniform.location, &uniform.floatValues[0]);
-                                break;
-                            case GL_FLOAT_VEC2:
-                                glGetUniformfv(shaderID, uniform.location, uniform.floatValues.data());
-                                break;
-                            case GL_FLOAT_VEC3:
-                                glGetUniformfv(shaderID, uniform.location, uniform.floatValues.data());
-                                break;
-                            case GL_FLOAT_VEC4:
-                                glGetUniformfv(shaderID, uniform.location, uniform.floatValues.data());
-                                break;
-                            case GL_INT:
-                            case GL_BOOL:
-                                glGetUniformiv(shaderID, uniform.location, &uniform.intValues[0]);
-                                break;
-                            // Agrega más casos según tus necesidades
-                            default:
-                                break;
-                            }
-                        }
-
-                        glUseProgram(0); // Desvincular el shader si lo deseas
-                    };
-
-                    // Función lambda para renderizar los controles de ImGui para los uniforms
-                    auto renderUniformsImGui = [&](std::vector<Uniform> &uniforms)
-                    {
-                        // ImGui::Begin("Editar Uniforms");
-
-                        // // Vincular el programa de shader para poder actualizar los uniforms
-                        // glUseProgram(shaderID);
-
-                        // for (auto &uniform : uniforms)
-                        // {
-                        //     ImGui::PushID(uniform.name.c_str()); // Para evitar conflictos de ID en ImGui
-
-                        //     // Obtener el nombre limpio (sin [0] para arrays)
-                        //     std::string displayName = uniform.name;
-                        //     size_t arrayStart = displayName.find('[');
-                        //     if (arrayStart != std::string::npos)
-                        //     {
-                        //         displayName = displayName.substr(0, arrayStart);
-                        //     }
-
-                        //     // Crear controles según el tipo de uniform
-                        //     bool valorCambiado = false;
-                        //     switch (uniform.type)
-                        //     {
-                        //     case GL_FLOAT:
-                        //         valorCambiado = ImGui::SliderFloat(displayName.c_str(), &uniform.floatValues[0], -10.0f, 10.0f);
-                        //         if (valorCambiado)
-                        //         {
-                        //             glUniform1f(uniform.location, uniform.floatValues[0]);
-                        //         }
-                        //         break;
-                        //     case GL_FLOAT_VEC2:
-                        //         valorCambiado = ImGui::SliderFloat2(displayName.c_str(), uniform.floatValues.data(), -10.0f, 10.0f);
-                        //         if (valorCambiado)
-                        //         {
-                        //             glUniform2fv(uniform.location, 1, uniform.floatValues.data());
-                        //         }
-                        //         break;
-                        //     case GL_FLOAT_VEC3:
-                        //         valorCambiado = ImGui::ColorEdit3(displayName.c_str(), uniform.floatValues.data());
-                        //         if (valorCambiado)
-                        //         {
-                        //             glUniform3fv(uniform.location, 1, uniform.floatValues.data());
-                        //         }
-                        //         break;
-                        //     case GL_FLOAT_VEC4:
-                        //         valorCambiado = ImGui::ColorEdit4(displayName.c_str(), uniform.floatValues.data());
-                        //         if (valorCambiado)
-                        //         {
-                        //             glUniform4fv(uniform.location, 1, uniform.floatValues.data());
-                        //         }
-                        //         break;
-                        //     case GL_INT:
-                        //     case GL_BOOL:
-                        //         valorCambiado = ImGui::InputInt(displayName.c_str(), &uniform.intValues[0]);
-                        //         if (valorCambiado)
-                        //         {
-                        //             glUniform1i(uniform.location, uniform.intValues[0]);
-                        //         }
-                        //         break;
-                        //     // Agrega más casos según tus necesidades
-                        //     default:
-                        //         ImGui::Text("%s: Tipo no manejado", displayName.c_str());
-                        //         break;
-                        //     }
-
-                        //     ImGui::PopID();
-                        // }
-
-                        // ImGui::End();
-                        glUseProgram(0); // Desvincular el shader después de actualizar
-                    };
-
-                    // Variables estáticas para mantener el estado entre llamadas
-                    static std::vector<Uniform> uniforms;
-                    static bool inicializado = false;
-
-                    // Inicializar los uniforms una sola vez
-                    if (!inicializado)
-                    {
-                        obtenerUniforms(uniforms);            // Obtener los uniforms activos
-                        inicializarValoresUniforms(uniforms); // Inicializar sus valores actuales
-                        inicializado = true;
-                    }
-
-                    // Renderizar los controles de ImGui para los uniforms
-                    renderUniformsImGui(uniforms);
-                }
-                else
-                {
-                    // Opcional: manejar el caso donde componentName no es "GMaterial"
                 }
             }
 

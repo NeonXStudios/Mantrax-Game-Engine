@@ -10,32 +10,45 @@
 class GridDrawer {
 public:
     GridDrawer(int gridSize, float spacing)
-        : gridSize(gridSize), spacing(spacing), shaderProgram(0), VAO(0), VBO(0) {}
+        : gridSize(gridSize), spacing(spacing), shaderProgram(0), VAO(0), VBO(0), 
+          axisVAO(0), axisVBO(0), gridVertexCount(0), axisVertexCount(0) {}
 
     ~GridDrawer() {
         glDeleteVertexArrays(1, &VAO);
         glDeleteBuffers(1, &VBO);
+        glDeleteVertexArrays(1, &axisVAO);
+        glDeleteBuffers(1, &axisVBO);
         glDeleteProgram(shaderProgram);
     }
 
-    // Inicializa el grid y sus recursos (shaders, VBO, VAO)
     void initialize() {
-        // Crear y compilar los shaders
         shaderProgram = createShaderProgram();
 
-        // Generar datos del grid
-        std::vector<float> vertices;
-        generateGrid(vertices);
+        // Generate grid vertices
+        std::vector<float> gridVertices;
+        generateGrid(gridVertices);
+        gridVertexCount = gridVertices.size() / 3;
 
-        // Configurar VAO y VBO
+        // Generate axis vertices
+        std::vector<float> axisVertices;
+        generateAxisArrows(axisVertices);
+        axisVertexCount = axisVertices.size() / 3;
+
+        // Setup grid VAO/VBO
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
-
         glBindVertexArray(VAO);
-
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, gridVertices.size() * sizeof(float), gridVertices.data(), GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
 
+        // Setup axis VAO/VBO
+        glGenVertexArrays(1, &axisVAO);
+        glGenBuffers(1, &axisVBO);
+        glBindVertexArray(axisVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, axisVBO);
+        glBufferData(GL_ARRAY_BUFFER, axisVertices.size() * sizeof(float), axisVertices.data(), GL_STATIC_DRAW);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
@@ -45,30 +58,51 @@ public:
 
     void draw(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model, const glm::vec3& lineColor) {
         glUseProgram(shaderProgram);
-
-        // Pasar las matrices uniformes
+        
+        // Set matrices
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
-        // Pasar el color del grid
+        // Draw grid
         glUniform3f(glGetUniformLocation(shaderProgram, "lineColor"), lineColor.r, lineColor.g, lineColor.b);
-
-        // Dibujar las líneas
         glBindVertexArray(VAO);
-        glDrawArrays(GL_LINES, 0, (gridSize * 2 + 1) * 4);
-    }
+        glDrawArrays(GL_LINES, 0, gridVertexCount);
 
+        // Draw axes with different colors
+        float axisLineWidth = 3.0f;
+        GLfloat currentLineWidth;
+        glGetFloatv(GL_LINE_WIDTH, &currentLineWidth);
+        glLineWidth(axisLineWidth);
+
+        glBindVertexArray(axisVAO);
+        
+        // X axis (Red)
+        glUniform3f(glGetUniformLocation(shaderProgram, "lineColor"), 1.0f, 0.0f, 0.0f);
+        glDrawArrays(GL_LINES, 0, 6);  // Main line + arrow head
+
+        // Y axis (Green)
+        glUniform3f(glGetUniformLocation(shaderProgram, "lineColor"), 0.0f, 1.0f, 0.0f);
+        glDrawArrays(GL_LINES, 6, 6);  // Main line + arrow head
+
+        // Z axis (Blue)
+        glUniform3f(glGetUniformLocation(shaderProgram, "lineColor"), 0.0f, 0.0f, 1.0f);
+        glDrawArrays(GL_LINES, 12, 6);  // Main line + arrow head
+
+        glLineWidth(currentLineWidth);
+    }
 
 private:
-    int gridSize;          // Tamaño del grid (número de líneas en cada dirección)
-    float spacing;         // Espaciado entre líneas
-    GLuint shaderProgram;  // Shader program
-    GLuint VAO, VBO;       // OpenGL VAO y VBO para los vértices del grid
+    int gridSize;
+    float spacing;
+    GLuint shaderProgram;
+    GLuint VAO, VBO;
+    GLuint axisVAO, axisVBO;
+    GLsizei gridVertexCount;
+    GLsizei axisVertexCount;
 
-    // Genera los datos del grid como líneas
     void generateGrid(std::vector<float>& vertices) {
-        // Líneas verticales
+        // Vertical lines
         for (int i = -gridSize; i <= gridSize; ++i) {
             vertices.push_back(i * spacing);
             vertices.push_back(-gridSize * spacing);
@@ -79,7 +113,7 @@ private:
             vertices.push_back(0.0f);
         }
 
-        // Líneas horizontales
+        // Horizontal lines
         for (int i = -gridSize; i <= gridSize; ++i) {
             vertices.push_back(-gridSize * spacing);
             vertices.push_back(i * spacing);
@@ -91,9 +125,41 @@ private:
         }
     }
 
-    // Crea y compila los shaders
+    void generateAxisArrows(std::vector<float>& vertices) {
+        float axisLength = gridSize * spacing * 0.05f;  // Length of the axis lines
+        float arrowSize = spacing * 0.2f;  // Size of arrow heads
+
+        // X-axis (including arrow head)
+        // Main line
+        vertices.push_back(0.0f); vertices.push_back(0.0f); vertices.push_back(0.0f);  // Origin
+        vertices.push_back(axisLength); vertices.push_back(0.0f); vertices.push_back(0.0f);  // X direction
+        // Arrow head
+        vertices.push_back(axisLength); vertices.push_back(0.0f); vertices.push_back(0.0f);
+        vertices.push_back(axisLength - arrowSize); vertices.push_back(arrowSize); vertices.push_back(0.0f);
+        vertices.push_back(axisLength); vertices.push_back(0.0f); vertices.push_back(0.0f);
+        vertices.push_back(axisLength - arrowSize); vertices.push_back(-arrowSize); vertices.push_back(0.0f);
+
+        vertices.push_back(0.0f); vertices.push_back(0.0f); vertices.push_back(0.0f);
+        vertices.push_back(0.0f); vertices.push_back(-axisLength); vertices.push_back(0.0f); 
+
+        vertices.push_back(0.0f); vertices.push_back(-axisLength); vertices.push_back(0.0f); 
+        vertices.push_back(arrowSize); vertices.push_back(-axisLength + arrowSize); vertices.push_back(0.0f); 
+        vertices.push_back(0.0f); vertices.push_back(-axisLength); vertices.push_back(0.0f); 
+        vertices.push_back(-arrowSize); vertices.push_back(-axisLength + arrowSize); vertices.push_back(0.0f);
+
+
+        // Z-axis (including arrow head)
+        // Main line
+        vertices.push_back(0.0f); vertices.push_back(0.0f); vertices.push_back(0.0f);
+        vertices.push_back(0.0f); vertices.push_back(0.0f); vertices.push_back(axisLength);
+        // Arrow head
+        vertices.push_back(0.0f); vertices.push_back(0.0f); vertices.push_back(axisLength);
+        vertices.push_back(arrowSize); vertices.push_back(0.0f); vertices.push_back(axisLength - arrowSize);
+        vertices.push_back(0.0f); vertices.push_back(0.0f); vertices.push_back(axisLength);
+        vertices.push_back(-arrowSize); vertices.push_back(0.0f); vertices.push_back(axisLength - arrowSize);
+    }
+
     GLuint createShaderProgram() {
-        // Vertex Shader
         const char* vertexShaderSource = R"(
             #version 330 core
             layout (location = 0) in vec3 aPos;
@@ -107,7 +173,6 @@ private:
             }
         )";
 
-        // Fragment Shader
         const char* fragmentShaderSource = R"(
             #version 330 core
             out vec4 FragColor;
@@ -119,33 +184,28 @@ private:
             }
         )";
 
-        // Compilar Vertex Shader
         GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
         glCompileShader(vertexShader);
         checkCompileErrors(vertexShader, "VERTEX");
 
-        // Compilar Fragment Shader
         GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
         glCompileShader(fragmentShader);
         checkCompileErrors(fragmentShader, "FRAGMENT");
 
-        // Linkear Shaders
         GLuint program = glCreateProgram();
         glAttachShader(program, vertexShader);
         glAttachShader(program, fragmentShader);
         glLinkProgram(program);
         checkCompileErrors(program, "PROGRAM");
 
-        // Limpiar Shaders
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
 
         return program;
     }
 
-    // Verifica errores de compilación o enlace de shaders
     void checkCompileErrors(GLuint shader, std::string type) {
         GLint success;
         GLchar infoLog[1024];

@@ -61,6 +61,9 @@ int Gfx::create_windows(settings_window settings)
         return -1;
     }
 
+    glfwWindowHint(GLFW_SAMPLES, 4); 
+    glEnable(GL_MULTISAMPLE);
+
     glEnable(GL_DEPTH_TEST);
 
     startTime = glfwGetTime();
@@ -69,6 +72,8 @@ int Gfx::create_windows(settings_window settings)
 
     targetFPS = 120.0;
     targetFrameTime = 1.0 / targetFPS;
+
+
 
     setup_render_texture(1920, 1080);
 

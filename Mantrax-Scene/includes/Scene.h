@@ -36,6 +36,7 @@ public:
     virtual void on_destroy() {};
     virtual void draw_ui() {};
     virtual void on_edition_mode(float delta_time) {}
+    virtual void on_draw_gizmos() { }
 
     // SCENE FUNCTIONS
     void awake();

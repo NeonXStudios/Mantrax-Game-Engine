@@ -112,16 +112,12 @@ Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
 
     if (!is_additive && SceneManager::get_scene_manager()->opened_scenes.size() > 0)
     {
-        std::cout << "Current Scene Starting Cleaning" << std::endl;
-
         for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
         {
             scn->clean_scene();
         }
 
         SceneManager::get_scene_manager()->opened_scenes.clear();
-
-        std::cout << "Current Scene Cleaned" << std::endl;
     }
 
     Scene *new_scene = SceneManager::make_new_empty_scene(scene_name_new);
@@ -129,8 +125,6 @@ Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
 
     std::string file_path = "";
     std::string assets_path = FileManager::get_project_path() + "assets/";
-
-    std::cout << "***********Loading Scene From: " << assets_path << std::endl;
 
     for (std::string file_getted : FileManager::get_files_by_extension(assets_path, extension))
     {
@@ -219,19 +213,19 @@ Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
                             json var_object = data[i];
                             if (var_object["type"] == "string")
                             {
-                                cmpGet->setup_var(var_object["name"], (std::string)var_object["value"]);
+                                cmpGet->set_var<std::string>(var_object["name"], (std::string)var_object["value"]);
                             }
                             else if (var_object["type"] == "float")
                             {
-                                cmpGet->setup_var(var_object["name"], (float)var_object["value"]);
+                                cmpGet->set_var<float>(var_object["name"], (float)var_object["value"]);
                             }
                             else if (var_object["type"] == "int")
                             {
-                                cmpGet->setup_var(var_object["name"], (int)var_object["value"]);
+                                cmpGet->set_var<int>(var_object["name"], (int)var_object["value"]);
                             }
                             else if (var_object["type"] == "bool")
                             {
-                                cmpGet->setup_var(var_object["name"], (bool)var_object["value"]);
+                                cmpGet->set_var<bool>(var_object["name"], (bool)var_object["value"]);
                             }
                             else if (var_object["type"] == "v3")
                             {
@@ -240,7 +234,7 @@ Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
                                 val.y = var_object["value"][1].get<float>();
                                 val.z = var_object["value"][2].get<float>();
 
-                                cmpGet->setup_var(var_object["name"], val);
+                                cmpGet->set_var<glm::vec3>(var_object["name"], (glm::vec3)val);
                             }
                         }
                     }

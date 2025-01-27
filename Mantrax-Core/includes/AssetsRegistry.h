@@ -23,7 +23,6 @@ public:
         processingThread = std::thread(&AssetsRegistry::periodicFileProcessing, this);
     }
 
-    // Detener el procesamiento de archivos
     void stop()
     {
         stopProcessing = true;
@@ -44,7 +43,6 @@ private:
     std::thread processingThread;
     bool stopProcessing;
 
-    // Generar un ID aleatorio para el campo Type
     std::string generateRandomID()
     {
         std::random_device rd;
@@ -53,7 +51,6 @@ private:
         return std::to_string(distrib(gen));
     }
 
-    // Crear un archivo .garin con la estructura JSON
     void createGarinFile(const fs::path &filePath)
     {
         std::string fileName = filePath.stem().string();
@@ -61,10 +58,9 @@ private:
 
         fs::path garinPath = filePath.parent_path() / (fileName + ".garin");
 
-        // Verificar si el archivo .garin ya existe
         if (fs::exists(garinPath))
         {
-            return; // No hacer nada si ya existe
+            return; 
         }
 
         json garinFile = {
@@ -85,7 +81,6 @@ private:
         }
     }
 
-    // Procesar archivos en la carpeta de forma recursiva
     void processFilesInDirectory(const fs::path &dirPath)
     {
         std::vector<std::thread> threads;

@@ -48,7 +48,7 @@ void SceneView::on_draw()
     }
 
     ImGui::SetCursorScreenPos(ImVec2(buttonPosition.x + 200, buttonPosition.y));
-    if (ImGui::Button("Make New Window Scene"))
+    if (ImGui::ImageButton((void *)(intptr_t)IconsManager::NEW_ENTITY(), ImVec2(24, 24)))
     {
         SceneDataView* new_data_scene_View = new SceneDataView();
         new_data_scene_View->work_scene = SceneManager::make_new_empty_scene("Entitie Scene");
@@ -57,7 +57,7 @@ void SceneView::on_draw()
         windows_data.push_back(new_data_scene_View);
     }
 
-    float imageRightX = p.x + Gfx::render_width;
+    float imageRightX = p.x + SceneManager::get_current_scene()->main_camera->width;
     ImVec2 rightButtonPosition = ImVec2(imageRightX - 50, p.y + 10);
     ImGui::SetCursorScreenPos(rightButtonPosition);
 
@@ -77,9 +77,9 @@ void SceneView::on_draw()
         if (ImGui::IsMouseClicked(0))
         {
             EventSystem::ViewportRenderPosition = glm::vec2(p.x, p.y);
-            WorldPoint = EventSystem::screen_to_viewport();
+            WorldPoint = EventSystem::screen_to_viewport(SceneManager::get_current_scene()->main_camera);
 
-            if (EventSystem::MouseCast2D(WorldPoint, data) && !ImGuizmo::IsOver())
+            if (EventSystem::MouseCast2D(WorldPoint, data, SceneManager::get_current_scene()->main_camera) && !ImGuizmo::IsOver())
             {
                 if (EngineUI::getInstance().select_obj != data->object)
                 {
@@ -95,9 +95,9 @@ void SceneView::on_draw()
             }
         }else{
             EventSystem::ViewportRenderPosition = glm::vec2(p.x, p.y);
-            WorldPoint = EventSystem::screen_to_viewport();
+            WorldPoint = EventSystem::screen_to_viewport(SceneManager::get_current_scene()->main_camera);
 
-            if (EventSystem::MouseCast2D(WorldPoint, data))
+            if (EventSystem::MouseCast2D(WorldPoint, data, SceneManager::get_current_scene()->main_camera))
             {
                 if (found_object != data->object)
                 {
@@ -160,7 +160,7 @@ void SceneView::on_draw()
         float *projection = (float *)glm::value_ptr(SceneManager::get_current_scene()->main_camera->GetProjectionMatrix());
         float *view = (float *)glm::value_ptr(SceneManager::get_current_scene()->main_camera->GetView());
 
-        ImGuizmo::SetRect(p.x, p.y, Gfx::render_width, Gfx::render_height);
+        ImGuizmo::SetRect(p.x, p.y, SceneManager::get_current_scene()->main_camera->width, SceneManager::get_current_scene()->main_camera->height);
 
         bool res = ImGuizmo::Manipulate(view, projection, gizmoOperation, gizmoMode, glm::value_ptr(matrix));
         ignoreGui &= !ImGuizmo::IsOver();
@@ -337,7 +337,7 @@ void SceneView::on_draw()
     if (camera_with_max_depth != nullptr)
     {
         ImVec2 windowSize = ImGui::GetContentRegionAvail();
-        ImGui::Image((void*)(intptr_t)camera_with_max_depth->render_id, ImVec2(Gfx::render_width, Gfx::render_height), ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::Image((void*)(intptr_t)camera_with_max_depth->render_id, ImVec2(camera_with_max_depth->width, camera_with_max_depth->height), ImVec2(0, 1), ImVec2(1, 0));
     }
     else
     {
@@ -436,14 +436,12 @@ void SceneDataView::draw() {
 
     ImGui::Image(
         (void *)(intptr_t)work_scene->main_camera->render_id,
-        available_size,                                      
+        ImVec2(work_scene->main_camera->width, work_scene->main_camera->height),                                      
         ImVec2(0, 1),                                         
         ImVec2(1, 0)      
     );
 
-    imagePosition = ImGui::GetWindowPos();
-    ImGui::End();
-
+    
 
     ImVec2 buttonPosition = ImVec2(p.x + 10, p.y + 10);
     ImGui::SetCursorScreenPos(buttonPosition);
@@ -465,7 +463,8 @@ void SceneDataView::draw() {
         gizmoOperation = ImGuizmo::SCALE;
     }
 
-    float imageRightX = p.x + Gfx::render_width;
+
+    float imageRightX = p.x + work_scene->main_camera->width;
     ImVec2 rightButtonPosition = ImVec2(imageRightX - 50, p.y + 10);
     ImGui::SetCursorScreenPos(rightButtonPosition);
 
@@ -475,11 +474,12 @@ void SceneDataView::draw() {
         work_scene->main_camera->use_projection = !work_scene->main_camera->use_projection;
     }
 
+    imagePosition = ImGui::GetWindowPos();
+    ImGui::End();
+
+
     work_scene->main_camera->width = windowSize.x;
     work_scene->main_camera->height = windowSize.y;
-
-    // Gfx::render_width = windowSize.x; 
-    // Gfx::render_height = windowSize.y;
 
     if (ImGui::IsWindowHovered())
     {
@@ -488,9 +488,9 @@ void SceneDataView::draw() {
         if (ImGui::IsMouseClicked(0))
         {
             EventSystem::ViewportRenderPosition = glm::vec2(p.x, p.y);
-            WorldPoint = EventSystem::screen_to_viewport();
+            WorldPoint = EventSystem::screen_to_viewport(work_scene->main_camera);
 
-            if (EventSystem::MouseCast2D(WorldPoint, data))
+            if (EventSystem::MouseCast2D(WorldPoint, data, work_scene->main_camera))
             {
                 if (EngineUI::getInstance().select_obj != data->object)
                 {
@@ -527,7 +527,7 @@ void SceneDataView::draw() {
         float *projection = (float *)glm::value_ptr(work_scene->main_camera->GetProjectionMatrix());
         float *view = (float *)glm::value_ptr(work_scene->main_camera->GetView());
 
-        ImGuizmo::SetRect(p.x, p.y, Gfx::render_width, Gfx::render_height);
+        ImGuizmo::SetRect(p.x, p.y, work_scene->main_camera->width, work_scene->main_camera->height);
 
         bool res = ImGuizmo::Manipulate(view, projection, gizmoOperation, gizmoMode, glm::value_ptr(matrix));
         ignoreGui &= !ImGuizmo::IsOver();

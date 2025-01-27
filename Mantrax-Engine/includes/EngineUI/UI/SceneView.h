@@ -12,6 +12,7 @@
 class SceneDataView {
 public:
     int window_id;
+    Entity* found_object;
 
     ImVec2 imageSizeSCENE;
     ImVec2 imagePosition;

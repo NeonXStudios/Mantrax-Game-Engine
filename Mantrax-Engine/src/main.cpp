@@ -81,8 +81,12 @@ int main(int argc, char *arvg[])
         Gfx::timer_control();
         Gfx::process_window_size();
 
-        RenderPipeline::render([scene_game]()
-                               { scene_game->on_draw(); });
+        RenderPipeline::find_target_by_id(SceneManager::get_current_scene()->main_camera->render_id)->bind_new_render_data("GizmosData",
+            [scene_game]()
+                            { scene_game->on_draw(); }
+        );
+
+        RenderPipeline::render([](){});
         scene_game->on_edition_mode(Timer::delta_time);
         SceneManager::on_edition_mode();
         scene_game->draw_ui();

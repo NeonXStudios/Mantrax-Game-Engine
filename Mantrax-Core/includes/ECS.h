@@ -84,41 +84,11 @@ public:
 		return transform;
 	}
 
-	void setup_var(const std::string &name, int value)
-	{
-		variableMap[name] = value;
-	}
-
-	void setup_var(const std::string &name, float value)
-	{
-		variableMap[name] = value;
-	}
-
-	void setup_var(const std::string &name, bool value)
-	{
-		variableMap[name] = value;
-	}
-
-	void setup_var(const std::string &name, const std::string &value)
-	{
-		variableMap[name] = value;
-
-		std::string val = std::any_cast<std::string>(variableMap[name]);
-	}
-
-	void setup_var(const std::string &name, const glm::vec3 &value)
-	{
-		variableMap[name] = value;
-
-		glm::vec3 val = std::any_cast<glm::vec3>(variableMap[name]);
-	}
-
 	template <typename T>
 	void set_var(const std::string& name, const T& value) {
 		variableMap[name] = value;
 	}
 
-	// Función para obtener el valor desde el map
 	template <typename T>
 	T get_var(const std::string& name) {
 		try {

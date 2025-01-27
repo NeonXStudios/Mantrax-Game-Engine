@@ -65,7 +65,7 @@ void EngineUI::on_edition_mode(float delta_time)
             float deltaX = -InputSystem::get_mouse_x() * configs->camera_speed_sens * delta_time;
             float deltaY = -InputSystem::get_mouse_y() * configs->camera_speed_sens * delta_time;
 
-            if (camera->use_projection)
+            if (camera->use_projection) 
             {
                 if (InputSystem::on_key_pressed(GLFW_KEY_Q))
                 {

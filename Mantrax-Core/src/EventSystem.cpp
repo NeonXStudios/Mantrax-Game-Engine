@@ -7,22 +7,20 @@
 
 glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
 
-    glm::vec2 EventSystem::screen_to_viewport() {
+    glm::vec2 EventSystem::screen_to_viewport(Camera* cam) {
         double x, y;
         glfwGetCursorPos(Gfx::get_game_window(), &x, &y);
-        
-        Camera *cam = SceneManager::get_current_scene()->main_camera;
         
         float viewportX = x - ViewportRenderPosition.x;
         float viewportY = y - ViewportRenderPosition.y;
         
-        if (viewportX < 0 || viewportX > Gfx::render_width ||
-            viewportY < 0 || viewportY > Gfx::render_height) {
+        if (viewportX < 0 || viewportX > cam->width ||
+            viewportY < 0 || viewportY > cam->height) {
             return glm::vec2(0.0f, 0.0f);
         }
         
-        float normalizedX = viewportX / static_cast<float>(Gfx::render_width);
-        float normalizedY = viewportY / static_cast<float>(Gfx::render_height);
+        float normalizedX = viewportX / static_cast<float>(cam->width);
+        float normalizedY = viewportY / static_cast<float>(cam->height);
         
         float ndcX = (normalizedX * 2.0f) - 1.0f;
         float ndcY = 1.0f - (normalizedY * 2.0f);
@@ -175,19 +173,18 @@ glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
     //     return false; 
     // }
 
-    bool EventSystem::MouseCast2D(glm::vec2 mouseCoords, CastData* data) {
+    bool EventSystem::MouseCast2D(glm::vec2 mouseCoords, CastData* data, Camera* camera) {
         const float MIN_PICK_DISTANCE = 0.1f;
         const float MAX_PICK_DISTANCE = 1000.0f;
         const float EPSILON = 0.0001f;
         float closestDistance = MAX_PICK_DISTANCE;
         Entity* closestObject = nullptr;
 
-        Camera* camera = SceneManager::get_current_scene()->main_camera;
         glm::mat4 viewMatrix = glm::inverse(camera->GetViewInverse());
         glm::mat4 projectionMatrix = camera->GetProjectionMatrix();
 
         glm::vec3 rayOrigin, rayDirection;
-        ScreenToWorldRay(mouseCoords, glm::inverse(viewMatrix), glm::inverse(projectionMatrix), rayOrigin, rayDirection);
+        ScreenToWorldRay(mouseCoords, glm::inverse(viewMatrix), glm::inverse(projectionMatrix), rayOrigin, rayDirection, camera);
 
         for (Entity* objD : SceneManager::get_current_scene()->objects_worlds) {
             glm::vec3 objPosition = objD->get_transform()->getPosition();

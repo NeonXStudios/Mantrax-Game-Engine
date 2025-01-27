@@ -33,10 +33,10 @@ void TextureTarget::setup()
 }
 
 void TextureTarget::draw (
-    glm::mat4 camera_matrix, 
-    glm::mat4 projection_matrix, 
-    glm::mat4 view_matrix, 
-    glm::vec3 camera_position, 
+    glm::mat4 camera_matrix,
+    glm::mat4 projection_matrix,
+    glm::mat4 view_matrix,
+    glm::vec3 camera_position,
     Scene* scene_data,
     std::function<void(void)> additional_Render)
 {
@@ -53,9 +53,24 @@ void TextureTarget::draw (
 
     RenderPipeline::render_all_data(scene_data, camera_matrix, projection_matrix, view_matrix, camera_position);
 
+    if (additional_Render != nullptr)
+    {
+        additional_Render();
+    }
 
-    additional_Render();
     scene_data->on_draw();
+
+    if (!AppSettings::is_playing)
+    {
+        scene_data->on_draw_gizmos();
+    }
+
+    for (auto& render : extra_renders) {
+        if (render.func) { 
+            render.func(); 
+        }
+    }
+
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -84,6 +99,16 @@ void TextureTarget::cleanup()
     }
 }
 
+void TextureTarget::bind_new_render_data(const std::string& id, std::function<void(void)> render_to_attach) 
+{
+        auto it = std::find_if(extra_renders.begin(), extra_renders.end(),
+            [&id](const RenderFunction& rf) { return rf.id == id; });
+            
+        if (it == extra_renders.end()) {
+            extra_renders.push_back({id, render_to_attach});
+        }
+}
+
 unsigned int TextureTarget::get_render()
 {
     return texture;
@@ -92,6 +117,9 @@ unsigned int TextureTarget::get_render()
 TextureTarget::~TextureTarget()
 {
     cleanup();
+
+    extra_renders.clear();
+
     auto& targets = RenderPipeline::render_targets;
     targets.erase(std::remove(targets.begin(), targets.end(), this), targets.end());
 }

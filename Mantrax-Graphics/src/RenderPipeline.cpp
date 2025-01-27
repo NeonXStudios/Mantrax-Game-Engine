@@ -73,7 +73,7 @@ void RenderPipeline::render(std::function<void(void)> additional_Render)
                 camera->GetView(),
                 camera->cameraPosition,
                 get_data_from_scene,
-                [](){}
+                nullptr
             );
         }
     }
