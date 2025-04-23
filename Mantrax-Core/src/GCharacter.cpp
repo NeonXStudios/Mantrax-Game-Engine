@@ -1,5 +1,6 @@
 #include "../includes/GCharacter.h"
 #include <GarinGraphics.h>
+#include <ServiceLocator.h>
 
 void GCharacter::defines()
 {
@@ -9,18 +10,20 @@ void GCharacter::defines()
 
 void GCharacter::init()
 {
-    if (SceneManager::get_scene_manager()->physic_world->mScene == nullptr)
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
+    if (sceneM->physic_world->mScene == nullptr)
     {
         std::cout << "physxScene Component Null" << std::endl;
     }
 
-    if (SceneManager::get_scene_manager()->physic_world->mMaterial == nullptr)
+    if (sceneM->physic_world->mMaterial == nullptr)
     {
         std::cout << "physxMaterial Component Null" << std::endl;
     }
 
-    auto *physxScene = SceneManager::get_scene_manager()->physic_world->mScene;
-    auto *physxMaterial = SceneManager::get_scene_manager()->physic_world->mMaterial;
+    auto *physxScene = sceneM->physic_world->mScene;
+    auto *physxMaterial = sceneM->physic_world->mMaterial;
 
     PxCapsuleControllerDesc desc;
     desc.height = GETVAR(Height, float);
@@ -28,7 +31,7 @@ void GCharacter::init()
     desc.position = PxExtendedVec3(0, 5, 0);
     desc.material = physxMaterial;
 
-    gController = SceneManager::get_scene_manager()->physic_world->gManager->createController(desc);
+    gController = sceneM->physic_world->gManager->createController(desc);
 
     if (!gController)
     {
@@ -49,6 +52,8 @@ void GCharacter::update()
 
 void GCharacter::modifyCapsule(float newHeight, float newRadius)
 {
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
     if (gController)
     {
         gController->release();
@@ -57,9 +62,9 @@ void GCharacter::modifyCapsule(float newHeight, float newRadius)
         desc.height = newHeight;
         desc.radius = newRadius;
         desc.position = gController->getPosition();
-        desc.material = SceneManager::get_scene_manager()->physic_world->mMaterial;
+        desc.material = sceneM->physic_world->mMaterial;
 
-        gController = SceneManager::get_scene_manager()->physic_world->gManager->createController(desc);
+        gController = sceneM->physic_world->gManager->createController(desc);
     }
 }
 

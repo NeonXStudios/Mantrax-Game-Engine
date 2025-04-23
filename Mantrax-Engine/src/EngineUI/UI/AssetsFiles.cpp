@@ -13,6 +13,7 @@
 #include <memory>
 #include <UIMasterDrawer.h>
 #include <SceneView.h>
+#include <ServiceLocator.h>
 
 static std::unordered_map<std::string, std::unique_ptr<TextureManager>> s_ThumbnailCache;
 
@@ -377,6 +378,8 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
 
 void AssetsFiles::drawer_files(std::string extension, std::string file_name, std::string file_path_complete)
 {
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
     if (extension == ".scene")
     {
         if (!AppSettings::is_playing)
@@ -385,7 +388,7 @@ void AssetsFiles::drawer_files(std::string extension, std::string file_name, std
         }
     }else if (extension == ".entitie"){
         SceneDataView* new_data_scene_View = new SceneDataView();
-        new_data_scene_View->work_scene = SceneManager::get_scene_manager()->load_scene(file_name, true, ".entitie");
+        new_data_scene_View->work_scene = sceneM->load_scene(file_name, true, ".entitie");
 
         UIMasterDrawer::get_instance().get_component<SceneView>()->windows_data.push_back(new_data_scene_View);
     }

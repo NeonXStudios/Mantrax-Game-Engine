@@ -1,5 +1,6 @@
 #include "../includes/PhysicsEngine.h"
 #include <GarinGraphics.h>
+#include <ServiceLocator.h>
 
 void PhysicsEngine::start_world_physics()
 {
@@ -116,7 +117,9 @@ void PhysicsEngine::start_world_physics()
 
 void PhysicsEngine::update_world_physics()
 {
-    if (mScene != nullptr && !SceneManager::get_scene_manager()->loading_new_scene)
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
+    if (mScene != nullptr && !sceneM->loading_new_scene)
     {
         mScene->simulate(1.0f / Gfx::targetFPS);
         mScene->fetchResults(true);

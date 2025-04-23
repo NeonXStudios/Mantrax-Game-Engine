@@ -10,6 +10,7 @@
 #include <unordered_set>
 #include <iostream>
 #include <EngineUIBehaviour.h>
+#include <ServiceLocator.h>
 
 static bool first_frame = false;
 static bool create_folder_modal = false;
@@ -154,6 +155,8 @@ void Hierarchy::draw_entity_node(Entity *entity)
 // Función principal para dibujar la jerarquía
 void Hierarchy::on_draw()
 {
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
         if (!first_frame)
     {
         std::string org_path = FileManager::get_project_path() + "organizer.json";
@@ -206,14 +209,14 @@ void Hierarchy::on_draw()
 
         if (ImGui::MenuItem("Create New Entity"))
         {
-            Entity* new_entity = SceneManager::get_current_scene()->make_entity();
+            Entity* new_entity = sceneM->get_current_scene()->make_entity();
             new_entity->addComponent<ModelComponent>().init();
             new_entity->addComponent<GMaterial>().init();
         }
 
         if (ImGui::MenuItem("Create New Entity Empty"))
         {
-            SceneManager::get_current_scene()->make_entity();
+            sceneM->get_current_scene()->make_entity();
         }
 
         ImGui::EndPopup();
@@ -261,7 +264,7 @@ void Hierarchy::on_draw()
     }
 
 
-    for (Scene* p_scene : SceneManager::get_scene_manager()->opened_scenes)
+    for (Scene* p_scene : sceneM->opened_scenes)
     {
         bool render_once = true; 
 

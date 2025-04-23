@@ -5,15 +5,18 @@
 #include <GarinIO.h>
 #include <RenderPipeline.h>
 #include <UIStyle.h>
+#include <ServiceLocator.h>
 
 using namespace nlohmann;
 
 void EditorConfigs::save_config()
 {
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
     json settings;
 
-    settings["current_scene"] = SceneManager::get_current_scene()->scene_name;
-    settings["camera_state"] = SceneManager::get_current_scene()->main_camera->use_projection;
+    settings["current_scene"] = sceneM->get_current_scene()->scene_name;
+    settings["camera_state"] = sceneM->get_current_scene()->main_camera->use_projection;
     settings["settings_render"] = RenderPipeline::layers_to_render;
 
     settings["start_scene"] = start_scene;
@@ -25,6 +28,8 @@ void EditorConfigs::save_config()
 
 void EditorConfigs::load_config()
 {
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
     json settings = json::parse(FileManager::read_file(current_proyect + "/GameSettings.data"));
 
     VarVerify::set_value_if_exists(settings, "current_scene", current_scene);
@@ -81,7 +86,7 @@ void EditorConfigs::load_config()
         UIStyle::SetStyleUI(DarkRounded);
     }
 
-    if (SceneManager::get_current_scene()->main_camera == nullptr)
+    if (sceneM->get_current_scene()->main_camera == nullptr)
     {
         std::cout << "Main camera its null" << std::endl;
         return;
@@ -98,5 +103,5 @@ void EditorConfigs::load_config()
         RenderPipeline::layers_to_render.insert(item.get<int>());
     }
 
-    VarVerify::set_value_if_exists(settings, "camera_state", SceneManager::get_current_scene()->main_camera->use_projection);
+    VarVerify::set_value_if_exists(settings, "camera_state", sceneM->get_current_scene()->main_camera->use_projection);
 }

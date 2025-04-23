@@ -1,5 +1,6 @@
 #include "../includes/GCollision.h"
 #include <GarinGraphics.h>
+#include <ServiceLocator.h>
 
 void GCollision::defines()
 {
@@ -9,29 +10,27 @@ void GCollision::defines()
 
 void GCollision::init()
 {
-    if (!SceneManager::get_scene_manager()->physic_world->mPhysics || !SceneManager::get_scene_manager()->physic_world || !SceneManager::get_scene_manager()->physic_world->mScene)
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
+    if (!sceneM->physic_world->mPhysics || !sceneM->physic_world || !sceneM->physic_world->mScene)
     {
         std::cerr << "Error: Recursos de PhysX no están inicializados." << std::endl;
         return;
     }
 
-    // Asegúrate de que no hay tareas pendientes en la simulación
-    SceneManager::get_scene_manager()->physic_world->mScene->fetchResults(true);  // Esperar que la simulación termine si es necesario
+    sceneM->physic_world->mScene->fetchResults(true); 
 
-    if (SceneManager::get_scene_manager()->physic_world != nullptr && SceneManager::get_scene_manager()->physic_world->mScene != nullptr)
+    if (sceneM->physic_world != nullptr && sceneM->physic_world->mScene != nullptr)
     {
-        // Asegúrate de crear correctamente la geometría del shape
-        shape = SceneManager::get_scene_manager()->physic_world->mPhysics->createShape(physx::PxBoxGeometry(boxSize.x, boxSize.y, boxSize.z), 
-                                                                                      *SceneManager::get_scene_manager()->physic_world->mMaterial, true);
+        shape = sceneM->physic_world->mPhysics->createShape(physx::PxBoxGeometry(boxSize.x, boxSize.y, boxSize.z), 
+                                                                                      *sceneM->physic_world->mMaterial, true);
 
         if (shape)
         {
             shape->setName(entity->object_string_id.c_str());
             
-            // Si el shape es un trigger, asegúrate de gestionarlo correctamente
             if (shape->getFlags() & physx::PxShapeFlag::eTRIGGER_SHAPE)
             {
-                // Desactivar trigger para evitar problemas en la simulación
                 shape->setFlags(shape->getFlags() & ~physx::PxShapeFlag::eTRIGGER_SHAPE);
             }
         }

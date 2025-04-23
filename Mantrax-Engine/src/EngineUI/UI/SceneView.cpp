@@ -4,6 +4,7 @@
 #include <SceneData.h>
 #include <UIAdministrator.h>
 #include <array> 
+#include <ServiceLocator.h>
 
 using namespace ImGuizmo;
 
@@ -12,6 +13,8 @@ static ImGuizmo::OPERATION gizmoOperation(ImGuizmo::TRANSLATE);
 
 void SceneView::on_draw()
 {
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
     ImGui::PushID(343456);
 
     std::string new_name = "Scene View##" + std::to_string(window_id);
@@ -24,7 +27,7 @@ void SceneView::on_draw()
     ImVec2 windowSize = ImGui::GetContentRegionAvail();
 
     ImVec2 p = ImGui::GetCursorScreenPos();
-    ImGui::Image((void *)(intptr_t)SceneManager::get_current_scene()->main_camera->render_id, ImVec2(SceneManager::get_current_scene()->main_camera->width, SceneManager::get_current_scene()->main_camera->height), ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::Image((void *)(intptr_t)sceneM->get_current_scene()->main_camera->render_id, ImVec2(sceneM->get_current_scene()->main_camera->width, sceneM->get_current_scene()->main_camera->height), ImVec2(0, 1), ImVec2(1, 0));
     imagePosition = ImGui::GetWindowPos();
 
     ImVec2 buttonPosition = ImVec2(p.x + 10, p.y + 10);
@@ -51,24 +54,24 @@ void SceneView::on_draw()
     if (ImGui::ImageButton((void *)(intptr_t)IconsManager::NEW_ENTITY(), ImVec2(24, 24)))
     {
         SceneDataView* new_data_scene_View = new SceneDataView();
-        new_data_scene_View->work_scene = SceneManager::make_new_empty_scene("Entitie Scene");
+        new_data_scene_View->work_scene = sceneM->make_new_empty_scene("Entitie Scene");
         Entity* ent = new_data_scene_View->work_scene->make_entity();
 
         windows_data.push_back(new_data_scene_View);
     }
 
-    float imageRightX = p.x + SceneManager::get_current_scene()->main_camera->width;
+    float imageRightX = p.x + sceneM->get_current_scene()->main_camera->width;
     ImVec2 rightButtonPosition = ImVec2(imageRightX - 50, p.y + 10);
     ImGui::SetCursorScreenPos(rightButtonPosition);
 
-    auto current_camera_type_icon = SceneManager::get_current_scene()->main_camera->use_projection ? IconsManager::PERSPECTIVE() : IconsManager::ORTHO();
+    auto current_camera_type_icon = sceneM->get_current_scene()->main_camera->use_projection ? IconsManager::PERSPECTIVE() : IconsManager::ORTHO();
     if (ImGui::ImageButton((void *)(intptr_t)current_camera_type_icon, ImVec2(24, 24)))
     {
-        SceneManager::get_current_scene()->main_camera->use_projection = !SceneManager::get_current_scene()->main_camera->use_projection;
+        sceneM->get_current_scene()->main_camera->use_projection = !sceneM->get_current_scene()->main_camera->use_projection;
     }
 
-    SceneManager::get_current_scene()->main_camera->width = windowSize.x;
-    SceneManager::get_current_scene()->main_camera->height = windowSize.y;
+    sceneM->get_current_scene()->main_camera->width = windowSize.x;
+    sceneM->get_current_scene()->main_camera->height = windowSize.y;
 
     if (ImGui::IsWindowHovered())
     {
@@ -77,9 +80,9 @@ void SceneView::on_draw()
         if (ImGui::IsMouseClicked(0))
         {
             EventSystem::ViewportRenderPosition = glm::vec2(p.x, p.y);
-            WorldPoint = EventSystem::screen_to_viewport(SceneManager::get_current_scene()->main_camera);
+            WorldPoint = EventSystem::screen_to_viewport(sceneM->get_current_scene()->main_camera);
 
-            if (EventSystem::MouseCast2D(WorldPoint, data, SceneManager::get_current_scene()->main_camera) && !ImGuizmo::IsOver())
+            if (EventSystem::MouseCast2D(WorldPoint, data, sceneM->get_current_scene()->main_camera) && !ImGuizmo::IsOver())
             {
                 if (EngineUI::getInstance().select_obj != data->object)
                 {
@@ -95,9 +98,9 @@ void SceneView::on_draw()
             }
         }else{
             EventSystem::ViewportRenderPosition = glm::vec2(p.x, p.y);
-            WorldPoint = EventSystem::screen_to_viewport(SceneManager::get_current_scene()->main_camera);
+            WorldPoint = EventSystem::screen_to_viewport(sceneM->get_current_scene()->main_camera);
 
-            if (EventSystem::MouseCast2D(WorldPoint, data, SceneManager::get_current_scene()->main_camera))
+            if (EventSystem::MouseCast2D(WorldPoint, data, sceneM->get_current_scene()->main_camera))
             {
                 if (found_object != data->object)
                 {
@@ -157,10 +160,10 @@ void SceneView::on_draw()
             parentMatrix = transform->parent->get_matrix();
         }
 
-        float *projection = (float *)glm::value_ptr(SceneManager::get_current_scene()->main_camera->GetProjectionMatrix());
-        float *view = (float *)glm::value_ptr(SceneManager::get_current_scene()->main_camera->GetView());
+        float *projection = (float *)glm::value_ptr(sceneM->get_current_scene()->main_camera->GetProjectionMatrix());
+        float *view = (float *)glm::value_ptr(sceneM->get_current_scene()->main_camera->GetView());
 
-        ImGuizmo::SetRect(p.x, p.y, SceneManager::get_current_scene()->main_camera->width, SceneManager::get_current_scene()->main_camera->height);
+        ImGuizmo::SetRect(p.x, p.y, sceneM->get_current_scene()->main_camera->width, sceneM->get_current_scene()->main_camera->height);
 
         bool res = ImGuizmo::Manipulate(view, projection, gizmoOperation, gizmoMode, glm::value_ptr(matrix));
         ignoreGui &= !ImGuizmo::IsOver();
@@ -272,13 +275,13 @@ void SceneView::on_draw()
         Entity *safe_to_delete = EngineUI::getInstance().select_obj;
         EngineUI::getInstance().select_obj = nullptr;
 
-        SceneManager::get_current_scene()->destroy(safe_to_delete);
+        sceneM->get_current_scene()->destroy(safe_to_delete);
     }
 
     if (ImGui::IsWindowHovered() && ImGui::IsKeyDown(ImGuiKey_F) && EngineUI::getInstance().select_obj != nullptr)
     {
         TransformComponent* selectedObj = EngineUI::getInstance().select_obj->get_transform();
-        Camera* camera = SceneManager::get_current_scene()->main_camera;
+        Camera* camera = sceneM->get_current_scene()->main_camera;
 
         glm::vec3 targetPosition = selectedObj->Position;
 
@@ -317,7 +320,7 @@ void SceneView::on_draw()
     Camera* camera_with_max_depth = nullptr;
     float max_depth = -1.0f;
 
-    for (Entity* ent : SceneManager::get_current_scene()->objects_worlds)
+    for (Entity* ent : sceneM->get_current_scene()->objects_worlds)
     {
         if (ent->hasComponent<GCamera>())
         {
@@ -887,10 +890,12 @@ void SceneDataView::draw() {
 
 
 void SceneDataView::close_window(){
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
     auto& windows_data = UIMasterDrawer::get_instance().get_component<SceneView>()->windows_data;
         windows_data.erase(std::remove_if(windows_data.begin(), windows_data.end(),
             [this](SceneDataView* item) { return item->window_id == this->window_id; }),
             windows_data.end());
 
-    SceneManager::close_scene(work_scene);
+    sceneM->close_scene(work_scene);
 }

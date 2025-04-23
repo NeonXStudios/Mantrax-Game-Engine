@@ -18,10 +18,10 @@ enum GARINLIBS_API graphic_api
 
 struct GARINLIBS_API settings_window
 {
-    std::string window_name = "Garin Engine";
-    int width = 800;
-    int height = 600;
-    bool maximized = false;
+    std::string window_name = "Mantrax Engine";
+    int width = 1920;
+    int height = 1080;
+    bool maximized = true;
     graphic_api api_graphic = OpenGL;
 };
 
@@ -63,10 +63,10 @@ public:
     static void process_window_size();
     static void swap_buffer();
     static void change_name(std::string name);
-
-    static void setup_render_texture(int width, int height);
-    static int create_windows(settings_window windows_setting);
+    
+    static int create_windows(settings_window windows_setting = settings_window());
     static int get_current_screen();
     static int get_width();
     static int get_height();
+    static void setup_render_texture(int width, int height);
 };

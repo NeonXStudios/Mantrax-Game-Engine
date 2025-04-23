@@ -4,6 +4,7 @@
 #include <GarinBehaviours.h>
 #include <GarinIO.h>
 #include <Gfx.h>
+#include <ServiceLocator.h>
 
 DynamicLibLoader *DynamicLibLoader::instance = nullptr;
 
@@ -93,7 +94,6 @@ void DynamicLibLoader::load_components(std::string _path)
         InputSystem::get_mouse_x,
         InputSystem::get_mouse_y,
         SceneManager::load_scene_wrapped);
-
     try
     {
         typedef void (*FuncType)(GameBehaviourFactory *engine);
@@ -123,8 +123,8 @@ void DynamicLibLoader::load_components(std::string _path)
             return;
         }
 
-        Scene *scene = SceneManager::get_current_scene();
-        func_graphics(SceneManager::get_scene_manager(), Gfx::get_game_window(), &Timer::delta_time, AudioManager::instance, FileManager::game_path);
+        Scene *scene = ServiceLocator::get<SceneManager>().get()->get_current_scene();
+        func_graphics(ServiceLocator::get<SceneManager>().get(), Gfx::get_game_window(), &Timer::delta_time, ServiceLocator::get<AudioManager>().get(), FileManager::game_path);
     }
     catch (const std::exception &e)
     {

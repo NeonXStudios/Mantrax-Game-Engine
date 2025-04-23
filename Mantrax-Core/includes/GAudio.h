@@ -12,6 +12,7 @@ class GARINLIBS_API GAudio : public Component
 {
     Sound *sound = nullptr;
     Channel *channel = nullptr;
+    AudioManager* audio_m;
     bool IsSpatial3D = true;
     FMOD_RESULT result;
     float pan = 0;

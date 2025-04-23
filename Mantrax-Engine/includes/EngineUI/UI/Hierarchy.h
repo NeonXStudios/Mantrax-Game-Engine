@@ -4,6 +4,7 @@
 #include <ECS.h>
 #include <nlohmann/json.hpp>
 #include <fstream>
+#include <ServiceLocator.h>
 
 using json = nlohmann::json;
 
@@ -79,7 +80,9 @@ public:
 
         folders.clear();
 
-        Scene *current_scene = SceneManager::get_current_scene();
+        SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
+        Scene *current_scene = sceneM->get_current_scene();
         if (!current_scene)
         {
             std::cerr << "No hay una escena activa para cargar los objetos." << std::endl;

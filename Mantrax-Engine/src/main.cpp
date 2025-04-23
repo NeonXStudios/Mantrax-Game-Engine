@@ -9,11 +9,12 @@
 #include <EditorConfigs.h>
 #include <filesystem>
 #include <EngineUI.h>
+#include <ServiceLocator.h>
+#include <EngineStartCore.h>
 
 namespace fs = std::filesystem;
 
-SceneManager *sceneManager = new SceneManager();
-AudioManager *audioManager = new AudioManager();
+EngineStartCore * engine_m = nullptr;
 GameBehaviourFactory *factory_behaviour = new GameBehaviourFactory();
 RenderPipeline *piprender = new RenderPipeline();
 EngineUI *engine = new EngineUI();
@@ -40,40 +41,21 @@ int main(int argc, char *arvg[])
     {
         return -2;
     }
+    
+    fs::path project_path = fs::path(arvg[1]);
+    FileManager::game_path = project_path.string() + "/";
 
-    audioManager->create();
-    audioManager->StartSystem();
-
-    sceneManager->create();
+    
+    ServiceLocator::provide_new<EngineStartCore>();
+    engine_m = ServiceLocator::get<EngineStartCore>().get();
+    engine_m->run_engine();
 
     EngineUI *scene_game = &EngineUI::getInstance();
 
-    scene_game->configs = new EditorConfigs();
-
-    settings_window window_config = settings_window();
-    window_config.window_name = "Mantrax Engine";
-    window_config.width = 1920;
-    window_config.height = 1080;
-    window_config.maximized = true;
-
-    Gfx::create_windows(window_config);
     scene_game->on_awake();
-
-    scene_game->configs->project_select = true;
-    fs::path project_path = fs::path(arvg[1]);
-
-    scene_game->configs->current_proyect = project_path.string() + "/";
-    FileManager::game_path = scene_game->configs->current_proyect;
-
-    RenderPipeline::init();
-    SceneManager::on_awake();
-    SceneManager::get_scene_manager()->load_scene(scene_game->configs->start_scene);
-    std::cout << "************************" << std::endl;
-
-    scene_game->configs->load_config();
-
+    scene_game->configs->project_select = argc != 0;
+    scene_game->configs->current_proyect = FileManager::game_path;
     scene_game->on_start();
-    SceneManager::on_start();
 
     while (!Gfx::try_window_close())
     {
@@ -81,23 +63,20 @@ int main(int argc, char *arvg[])
         Gfx::timer_control();
         Gfx::process_window_size();
 
-        RenderPipeline::find_target_by_id(SceneManager::get_current_scene()->main_camera->render_id)->bind_new_render_data("GizmosData",
+        RenderPipeline::find_target_by_id(engine_m->sceneManager->get_current_scene()->main_camera->render_id)->bind_new_render_data("GizmosData",
             [scene_game]()
                             { scene_game->on_draw(); }
         );
 
         RenderPipeline::render([](){});
         scene_game->on_edition_mode(Timer::delta_time);
-        SceneManager::on_edition_mode();
+        engine_m->sceneManager->on_edition_mode();
         scene_game->draw_ui();
 
         Gfx::swap_buffer();
     }
 
-    SceneManager::on_clean_scenes();
-    Gfx::clear_graphics();
-    sceneManager->release();
-    audioManager->release();
+    engine_m->shutdown_services();
 
     return 0;
 }

@@ -5,17 +5,15 @@
 #include <vector>
 #include <VarVerify.h>
 #include <RenderPipeline.h>
+#include <ServiceLocator.h>
 
 using namespace std;
-
-SceneManager *SceneManager::instance = nullptr;
-bool SceneManager::loading_new_scene = false;
 
 void SceneManager::on_awake()
 {
     start_physic_world();
 
-    for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
+    for (Scene *scn : opened_scenes)
     {
         scn->awake();
     }
@@ -23,7 +21,7 @@ void SceneManager::on_awake()
 
 void SceneManager::on_start()
 {
-    for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
+    for (Scene *scn : opened_scenes)
     {
         scn->init();
     }
@@ -33,9 +31,9 @@ void SceneManager::on_update()
 {
     if (loading_new_scene == false)
     {
-        SceneManager::get_scene_manager()->physic_world->update_world_physics();
+        physic_world->update_world_physics();
 
-        for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
+        for (Scene *scn : opened_scenes)
         {
             scn->update(Timer::delta_time);
         }
@@ -44,7 +42,7 @@ void SceneManager::on_update()
 
 void SceneManager::on_edition_mode()
 {
-    for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
+    for (Scene *scn : opened_scenes)
     {
         scn->on_edition_mode(Timer::delta_time);
     }
@@ -52,41 +50,20 @@ void SceneManager::on_edition_mode()
 
 void SceneManager::on_clean_scenes()
 {
-    for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
+    for (Scene *scn : opened_scenes)
     {
         scn->on_destroy();
     }
 }
 
-void SceneManager::create()
-{
-    if (SceneManager::instance)
-        throw std::exception("SceneManager already created.");
-
-    SceneManager::instance = new SceneManager();
-    std::cout << "SceneManager Created" << endl;
-}
-
-void SceneManager::release()
-{
-    if (!SceneManager::instance)
-        return;
-    delete SceneManager::instance;
-}
-
-SceneManager *SceneManager::get_scene_manager()
-{
-    return instance;
-}
-
 string *SceneManager::get_open_scene_name()
 {
-    return &SceneManager::get_current_scene()->scene_name;
+    return &get_current_scene()->scene_name;
 }
 
 void SceneManager::clear_open_scene()
 {
-    for (Entity *g : SceneManager::get_current_scene()->objects_worlds)
+    for (Entity *g : get_current_scene()->objects_worlds)
     {
         g->ClearAllComponentes();
     }
@@ -96,31 +73,33 @@ void SceneManager::clear_open_scene()
 
 void SceneManager::link_scene(Scene *scene_to_link)
 {
-    SceneManager::get_scene_manager()->opened_scenes.push_back(scene_to_link);
+    opened_scenes.push_back(scene_to_link);
 }
 
 void SceneManager::load_scene_wrapped(std::string scene_name_new, bool is_additive)
 {
-    SceneManager::get_scene_manager()->load_scene(scene_name_new, is_additive);
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
+    sceneM->load_scene(scene_name_new, is_additive);
 }
 
 Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, std::string extension)
 {
     loading_new_scene = true;
-    SceneManager::get_scene_manager()->physic_world->collision_events->locked = true;
+    physic_world->collision_events->locked = true;
 
 
-    if (!is_additive && SceneManager::get_scene_manager()->opened_scenes.size() > 0)
+    if (!is_additive && opened_scenes.size() > 0)
     {
-        for (Scene *scn : SceneManager::get_scene_manager()->opened_scenes)
+        for (Scene *scn : opened_scenes)
         {
             scn->clean_scene();
         }
 
-        SceneManager::get_scene_manager()->opened_scenes.clear();
+        opened_scenes.clear();
     }
 
-    Scene *new_scene = SceneManager::make_new_empty_scene(scene_name_new);
+    Scene *new_scene = make_new_empty_scene(scene_name_new);
     new_scene->unload_scene = true;
 
     std::string file_path = "";
@@ -299,7 +278,7 @@ Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
 
         new_scene->unload_scene = false;
         loading_new_scene = false;
-        SceneManager::get_scene_manager()->physic_world->collision_events->locked = false;
+        physic_world->collision_events->locked = false;
         std::cout << "----------------> Already Loaded Scene" << std::endl;
     }
     catch (const std::exception &e)
@@ -339,38 +318,38 @@ Scene *SceneManager::make_new_empty_scene(std::string scene_name)
     }
 
 
-    SceneManager::get_scene_manager()->opened_scenes.push_back(scene_raw);
+    opened_scenes.push_back(scene_raw);
     return scene_raw;
 }
 
 Scene *SceneManager::get_current_scene()
 {
-    if (SceneManager::get_scene_manager()->opened_scenes.size() <= 0)
+    if (opened_scenes.size() <= 0)
     {
         std::cout << "Error not existe scene" << std::endl;
         return SceneManager::make_new_empty_scene("Empty Scene");
     }
 
-    return SceneManager::get_scene_manager()->opened_scenes[0];
+    return opened_scenes[0];
 }
 
 void SceneManager::start_physic_world()
 {
     std::cout << "******* Starting Physic World" << std::endl;
 
-    if (SceneManager::get_scene_manager()->physic_world == nullptr)
+    if (physic_world == nullptr)
     {
-        SceneManager::get_scene_manager()->physic_world = new PhysicsEngine();
+        physic_world = new PhysicsEngine();
     }
 
-    SceneManager::get_scene_manager()->physic_world->start_world_physics();
+    physic_world->start_world_physics();
 
     std::cout << "Physic World Started" << std::endl;
 }
 
 Scene* SceneManager::get_parent_scene_from_object(Entity* object)
 {
-    for (Scene* _scene : SceneManager::get_scene_manager()->opened_scenes) {
+    for (Scene* _scene : opened_scenes) {
         for (Entity* _ent : _scene->objects_worlds)
         {
             if (_ent == object) {
@@ -386,8 +365,6 @@ void SceneManager::close_scene(Scene* p_scene)
 {
     p_scene->clean_scene();
     p_scene->clean_all_components();
-
-    auto& opened_scenes = SceneManager::get_scene_manager()->opened_scenes;
 
     auto it = std::find(opened_scenes.begin(), opened_scenes.end(), p_scene);
     if (it != opened_scenes.end()) {

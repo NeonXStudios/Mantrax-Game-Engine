@@ -1,9 +1,12 @@
 #include <EngineSettings.h>
 #include <EngineUI.h>
 #include <SceneManager.h>
+#include <ServiceLocator.h>
 
 void EngineSettings::on_draw()
 {
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
     window_flags |= ImGuiWindowFlags_MenuBar;
 
@@ -51,10 +54,10 @@ void EngineSettings::on_draw()
         ImGui::BeginGroup();
         ImGui::Indent(10.0f);
 
-        bool useProjection = SceneManager::get_current_scene()->main_camera->use_projection;
+        bool useProjection = sceneM->get_current_scene()->main_camera->use_projection;
         if (ImGui::Checkbox("Use Projection", &useProjection))
         {
-            SceneManager::get_current_scene()->main_camera->use_projection = useProjection;
+            sceneM->get_current_scene()->main_camera->use_projection = useProjection;
         }
         if (ImGui::IsItemHovered())
         {

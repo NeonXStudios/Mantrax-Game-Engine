@@ -3,13 +3,16 @@
 #include <EditorGUI.h>
 #include <EngineUI.h>
 #include <UIAdministrator.h>
+#include <ServiceLocator.h>
 
 void Inspector::on_draw()
 {
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
     if (EngineUI::getInstance().select_obj == nullptr)
         return;
 
-    if (SceneManager::get_parent_scene_from_object(EngineUI::getInstance().select_obj) != SceneManager::get_current_scene()) 
+    if (sceneM->get_parent_scene_from_object(EngineUI::getInstance().select_obj) != sceneM->get_current_scene()) 
         return;
 
     std::string new_name = "Inspector##" + std::to_string(window_id);

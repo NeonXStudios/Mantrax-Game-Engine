@@ -1,6 +1,7 @@
 #include "../includes/GAudio.h"
 #include <GarinComponents.h>
 #include <GarinGraphics.h>
+#include <ServiceLocator.h>
 
 void GAudio::defines()
 {
@@ -12,7 +13,10 @@ void GAudio::defines()
 
 void GAudio::init()
 {
-    FMOD_RESULT initResult = AudioManager::GetManager()->result;
+    audio_m = ServiceLocator::get<AudioManager>().get();
+
+    FMOD_RESULT initResult = audio_m->result;
+
     if (initResult != FMOD_OK)
     {
         std::cout << "ERROR: FMOD initialization failed" << std::endl;
@@ -21,7 +25,7 @@ void GAudio::init()
     {
         std::string audio = FileManager::get_project_path() + GETVAR(AudioPath, std::string);
 
-        FMOD_RESULT loadResult = AudioManager::GetManager()->system->createSound(audio.c_str(), FMOD_3D | FMOD_3D_LINEARROLLOFF, nullptr, &sound);
+        FMOD_RESULT loadResult = audio_m->system->createSound(audio.c_str(), FMOD_3D | FMOD_3D_LINEARROLLOFF, nullptr, &sound);
 
         if (loadResult != FMOD_OK)
         {
@@ -29,7 +33,7 @@ void GAudio::init()
         }
         else
         {
-            FMOD_RESULT playResult = AudioManager::GetManager()->system->playSound(sound, nullptr, false, &channel);
+            FMOD_RESULT playResult = audio_m->system->playSound(sound, nullptr, false, &channel);
             channel->setVolume(0);
 
             if (playResult != FMOD_OK)
@@ -90,14 +94,16 @@ void GAudio::SetPauseState(bool pauseState)
 
 void GAudio::update()
 {
-    if (SceneManager::get_current_scene() == nullptr)
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
+    if (sceneM->get_current_scene() == nullptr)
     {
         return;
     }
 
-    if (IsSpatial3D && SceneManager::get_current_scene()->main_camera != nullptr && entity != nullptr)
+    if (IsSpatial3D && sceneM->get_current_scene()->main_camera != nullptr && entity != nullptr)
     {
-        Camera *cam = SceneManager::get_current_scene()->main_camera;
+        Camera *cam = sceneM->get_current_scene()->main_camera;
 
         FMOD_VECTOR position = {entity->get_transform()->Position.x, entity->get_transform()->Position.y, cam->cameraPosition.z};
         FMOD_VECTOR velocity = {cam->cameraVelocity.x, cam->cameraVelocity.y, cam->cameraVelocity.z};
@@ -133,7 +139,7 @@ void GAudio::clean()
             std::cerr << "Error al liberar el sonido: " << FMOD_ErrorString(result) << std::endl;
         }
         
-        AudioManager::GetManager()->result = result;
+        audio_m->result = result;
     }
 
     std::cout << ">>>>>>>>>> Limpiando audio" << std::endl;
@@ -147,7 +153,7 @@ void GAudio::play_one_shot()
         return;
     }
 
-    FMOD::System *system = AudioManager::instance->system;
+    FMOD::System *system = audio_m->system;
 
     if (system == nullptr)
     {

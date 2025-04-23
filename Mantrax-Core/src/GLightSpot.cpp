@@ -1,5 +1,6 @@
 #include <GLightSpot.h>
 #include <SceneManager.h>
+#include <ServiceLocator.h>
 
 void GLightSpot::defines(){
     light = new SpotLightData();
@@ -13,7 +14,8 @@ void GLightSpot::defines(){
     GVAR(Linear, 0.09f, float1);
     GVAR(Quadratic, 0.032f, float1);
 
-    SceneManager::get_current_scene()->spot_lights.push_back(light);                 
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    sceneM->get_current_scene()->spot_lights.push_back(light);                 
 }
 
 void GLightSpot::init(){
@@ -40,7 +42,8 @@ void GLightSpot::update(){
 }
 
 void GLightSpot::clean(){
-    auto& spot_lights = SceneManager::get_current_scene()->spot_lights;
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    auto& spot_lights = sceneM->get_current_scene()->spot_lights;
 
     auto it = std::find(spot_lights.begin(), spot_lights.end(), light);
     if (it != spot_lights.end()) {

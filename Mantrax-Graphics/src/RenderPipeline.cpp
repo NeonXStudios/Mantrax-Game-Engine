@@ -1,6 +1,7 @@
 #include "../includes/RenderPipeline.h"
 #include <Timer.h>
 #include <IDGenerator.h>
+#include <ServiceLocator.h>
 
 std::unordered_set<int> RenderPipeline::layers_to_render;
 std::vector<ModelComponent *> RenderPipeline::renderables = std::vector<ModelComponent *>();
@@ -23,12 +24,14 @@ void RenderPipeline::init()
 
 void RenderPipeline::render(std::function<void(void)> additional_Render)
 {
-    if (SceneManager::get_scene_manager() == nullptr || SceneManager::get_current_scene() == nullptr)
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
+    if (sceneM == nullptr || sceneM->get_current_scene() == nullptr)
     {
         return;
     }
 
-    for (Scene* get_data_from_scene : SceneManager::get_scene_manager()->opened_scenes) {
+    for (Scene* get_data_from_scene : sceneM->opened_scenes) {
         if (get_data_from_scene->main_camera == nullptr) {
             std::cerr << "Error: main_camera es nullptr para la escena" << std::endl;
             continue;
@@ -83,6 +86,8 @@ void RenderPipeline::render_all_data(Scene* scene, glm::mat4 camera_matrix, glm:
 {
     try
     {
+        SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
         //RenderPipeline::canvas->render_ui();
 
         for (ModelComponent *cmp : renderables)
@@ -110,7 +115,10 @@ void RenderPipeline::render_all_data(Scene* scene, glm::mat4 camera_matrix, glm:
                         // material.p_shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
                         // material.p_shader->setFloat("lightIntensity", 1.0f);
 
-                        set_lights_in_shader(material.p_shader->ID, SceneManager::get_current_scene()->direction_lights, SceneManager::get_current_scene()->point_lights, SceneManager::get_current_scene()->spot_lights);
+                        set_lights_in_shader(material.p_shader->ID, 
+                                             sceneM->get_current_scene()->direction_lights, 
+                                             sceneM->get_current_scene()->point_lights, 
+                                             sceneM->get_current_scene()->spot_lights);
 
                         // material.p_shader->setBool("showBothSides", false);
 

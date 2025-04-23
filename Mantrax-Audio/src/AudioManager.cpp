@@ -1,23 +1,9 @@
 #include "../includes/AudioManager.h"
 #include <iostream>
 #include <GarinGraphics.h>
+#include <ServiceLocator.h>
 
 using namespace std;
-
-AudioManager *AudioManager::instance = nullptr;
-
-void AudioManager::create()
-{
-
-    if (AudioManager::instance)
-        throw std::exception("AudioManager already created.");
-    AudioManager::instance = new AudioManager();
-
-    if (AudioManager::instance != nullptr)
-    {
-        AudioManager::instance->StartSystem();
-    }
-}
 
 void AudioManager::StartSystem()
 {
@@ -46,12 +32,14 @@ void AudioManager::StartSystem()
 
 void AudioManager::Update()
 {
-    if (SceneManager::get_current_scene() == nullptr)
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
+    if (sceneM->get_current_scene() == nullptr)
     {
         return;
     }
 
-    Camera *cam = SceneManager::get_current_scene()->main_camera;
+    Camera *cam = sceneM->get_current_scene()->main_camera;
 
     FMOD_VECTOR position = {cam->cameraPosition.x, cam->cameraPosition.y, cam->cameraPosition.z};
     FMOD_VECTOR velocity = {cam->cameraVelocity.x, cam->cameraVelocity.y, cam->cameraVelocity.z};
@@ -69,25 +57,8 @@ void AudioManager::Update()
     system->update();
 }
 
-AudioManager *AudioManager::GetManager()
-{
-    return AudioManager::instance;
-}
-
-AudioManager::~AudioManager()
+void AudioManager::release()
 {
     result = system->close();
     result = system->release();
-}
-
-void AudioManager::release()
-{
-    if (!AudioManager::instance)
-        return;
-    delete AudioManager::instance;
-}
-
-extern "C" GARINLIBS_API AudioManager *GetAudioManager()
-{
-    return AudioManager::instance;
 }

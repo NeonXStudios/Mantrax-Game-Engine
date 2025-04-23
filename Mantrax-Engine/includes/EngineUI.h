@@ -39,7 +39,7 @@ public:
     void operator=(const EngineUI &) = delete;
 
     Entity *select_obj;
-    EditorConfigs *configs;
+    EditorConfigs *configs = new EditorConfigs();
     AssetsRegistry *assets_registry;
     TimeWatcher *watcher;
     GizmoCube *cube_gizmo;

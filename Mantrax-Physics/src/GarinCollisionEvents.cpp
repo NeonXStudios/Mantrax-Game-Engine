@@ -1,5 +1,6 @@
 #include <GarinCollisionEvents.h>
 #include <SceneManager.h>
+#include <ServiceLocator.h>
 
 using namespace physx;
 
@@ -37,6 +38,8 @@ void GarinCollisionEvents::onContact(const PxContactPairHeader &pairHeader, cons
 
 void GarinCollisionEvents::onTrigger(PxTriggerPair *pairs, PxU32 count)
 {
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
     if (locked) return;
 
     for (PxU32 i = 0; i < count; i++)
@@ -63,8 +66,8 @@ void GarinCollisionEvents::onTrigger(PxTriggerPair *pairs, PxU32 count)
                 return;
             }
 
-            Entity *entity = SceneManager::get_current_scene()->find_entity_by_id(otherActorId);
-            Entity *entity_me = SceneManager::get_current_scene()->find_entity_by_id(triggerActorId);
+            Entity *entity = sceneM->get_current_scene()->find_entity_by_id(otherActorId);
+            Entity *entity_me = sceneM->get_current_scene()->find_entity_by_id(triggerActorId);
 
             if (!entity || !entity_me)
             {

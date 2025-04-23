@@ -11,9 +11,11 @@
 #include <SceneManager.h>
 #include <FileManager.h>
 #include <EditorGUI.h>
+#include <ServiceLocator.h>
 
 void MainBar::on_draw()
 {
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
 
     ShowNewScenePopup();
 
@@ -36,7 +38,7 @@ void MainBar::on_draw()
                 {
                     std::string bg_pick_path = EngineUI::getInstance().configs->current_proyect + "/gb.jpg";
                     GarinIO::screenshot(Gfx::main_render->get_render(), 1920, 1080, bg_pick_path.c_str());
-                    SceneData::save_scene(SceneManager::get_current_scene());
+                    SceneData::save_scene(sceneM->get_current_scene());
                 }
             }
 
@@ -218,6 +220,8 @@ void MainBar::on_draw()
 
 void MainBar::ShowNewScenePopup()
 {
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
     if (show_new_scene_popup)
     {
         ImGui::OpenPopup("New Scene");
@@ -230,7 +234,7 @@ void MainBar::ShowNewScenePopup()
 
         if (ImGui::Button("OK", ImVec2(120, 0)))
         {
-            SceneManager::get_scene_manager()->load_scene(new_scene_name);
+            sceneM->load_scene(new_scene_name);
             show_new_scene_popup = false;
             ImGui::CloseCurrentPopup();
         }

@@ -1,4 +1,5 @@
 #include <GLightDirectional.h>
+#include <ServiceLocator.h>
 #include <SceneManager.h>
 
 void GLightDirectional::defines(){
@@ -10,7 +11,7 @@ void GLightDirectional::defines(){
 
     light->enabled = enabled;           
 
-    SceneManager::get_current_scene()->direction_lights.push_back(light);                 
+    ServiceLocator::get<SceneManager>().get()->get_current_scene()->direction_lights.push_back(light);                 
 }
 
 void GLightDirectional::init(){
@@ -28,7 +29,7 @@ void GLightDirectional::update(){
 }
 
 void GLightDirectional::clean(){
-    auto& direction_lights = SceneManager::get_current_scene()->direction_lights;
+    auto& direction_lights = ServiceLocator::get<SceneManager>().get()->get_current_scene()->direction_lights;
 
     auto it = std::find(direction_lights.begin(), direction_lights.end(), light);
     if (it != direction_lights.end()) {

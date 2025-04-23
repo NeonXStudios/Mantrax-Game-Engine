@@ -10,6 +10,7 @@
 #include <ComponentsDrawer.h>
 #include <GarinMaths.h>
 #include <UIMasterDrawer.h>
+#include <ServiceLocator.h>
 
 float EngineUI::yaw = 0.0f;
 float EngineUI::pitch = 0.0f;
@@ -24,6 +25,7 @@ void EngineUI::on_awake()
 
 void EngineUI::on_start()
 {
+    configs->load_config();
 
     UIMasterDrawer::get_instance().register_uis();
     std::cout << "Work Path: " << FileManager::get_execute_path() << std::endl;
@@ -50,7 +52,9 @@ void EngineUI::on_start()
 
 void EngineUI::on_edition_mode(float delta_time)
 {
-    SceneManager::get_current_scene()->main_camera->update();
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
+    sceneM->get_current_scene()->main_camera->update();
 
     std::string directory_path = FileManager::get_game_path() + "/clscpp";
 
@@ -58,7 +62,7 @@ void EngineUI::on_edition_mode(float delta_time)
 
     if (ImGui::IsMouseDown(ImGuiMouseButton_Right) && configs->project_select)
     {
-        auto &camera = SceneManager::get_current_scene()->main_camera;
+        auto &camera = sceneM->get_current_scene()->main_camera;
 
         if (camera != nullptr)
         {
@@ -116,7 +120,7 @@ void EngineUI::on_edition_mode(float delta_time)
         }
     }
 
-    for (Entity *entity : SceneManager::get_current_scene()->objects_worlds)
+    for (Entity *entity : sceneM->get_current_scene()->objects_worlds)
     {
         entity->transform_component->update();
 
@@ -153,7 +157,7 @@ void EngineUI::on_edition_mode(float delta_time)
         }
     }
 
-    std::string window_name = "Mantrax Editor - " + SceneManager::get_current_scene()->scene_name;
+    std::string window_name = "Mantrax Editor - " + sceneM->get_current_scene()->scene_name;
 
     Gfx::change_name(window_name);
 
@@ -171,14 +175,16 @@ void EngineUI::on_update(float delta_time)
 
 void EngineUI::on_draw()
 {
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
     if (select_obj != nullptr && select_obj->hasComponent<GCollision>())
     {
         glm::vec3 convert_gl_to_physx = (std::any_cast<glm::vec3>(select_obj->getComponent<GCollision>().variableMap["boxSize"])) * 2.0f;
 
         for (GCollision *col : select_obj->getComponents<GCollision>())
         {
-            cube_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(),
-                               SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
+            cube_gizmo->render(sceneM->get_current_scene()->main_camera->GetView(),
+                               sceneM->get_current_scene()->main_camera->GetProjectionMatrix(),
                                select_obj->get_transform()->get_matrix(), std::any_cast<glm::vec3>(col->variableMap["boxSize"]));
         }
     }
@@ -188,19 +194,19 @@ void EngineUI::on_draw()
         glm::vec3 t_min = glm::vec3(std::any_cast<float>(select_obj->getComponent<GAudio>().variableMap["AudioMin"]));
         glm::vec3 t_max = glm::vec3(std::any_cast<float>(select_obj->getComponent<GAudio>().variableMap["AudioMax"]));
 
-        sphere_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(),
-                             SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
+        sphere_gizmo->render(sceneM->get_current_scene()->main_camera->GetView(),
+                             sceneM->get_current_scene()->main_camera->GetProjectionMatrix(),
                              select_obj->get_transform()->Position, t_max, glm::vec3(0.0f));
 
-        sphere_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(),
-                             SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
+        sphere_gizmo->render(sceneM->get_current_scene()->main_camera->GetView(),
+                             sceneM->get_current_scene()->main_camera->GetProjectionMatrix(),
                              select_obj->get_transform()->Position, t_min, glm::vec3(0.0f));
     }
 
     if (select_obj != nullptr && select_obj->hasComponent<GCharacter>())
     {
-        capsule_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(),
-                              SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
+        capsule_gizmo->render(sceneM->get_current_scene()->main_camera->GetView(),
+                              sceneM->get_current_scene()->main_camera->GetProjectionMatrix(),
                               select_obj->get_transform()->Position,
                               select_obj->get_transform()->Scale,
                               select_obj->get_transform()->get_euler_angles());
@@ -210,8 +216,8 @@ void EngineUI::on_draw()
         select_obj != nullptr && select_obj->hasComponent<GLightSpot>() || 
         select_obj != nullptr && select_obj->hasComponent<GLightDirectional>())
     {
-        camera_gizmo->render(SceneManager::get_current_scene()->main_camera->GetView(),
-                              SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
+        camera_gizmo->render(sceneM->get_current_scene()->main_camera->GetView(),
+                             sceneM->get_current_scene()->main_camera->GetProjectionMatrix(),
                               select_obj->get_transform()->get_matrix(),
                               glm::vec3(3.0f));
     }
@@ -219,23 +225,25 @@ void EngineUI::on_draw()
 
     if (UIMasterDrawer::get_instance().get_component<SceneView>() != nullptr){
         if (UIMasterDrawer::get_instance().get_component<SceneView>()->found_object != nullptr){
-            enhanced_cube->render(SceneManager::get_current_scene()->main_camera->GetView(),
-                               SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
-                               UIMasterDrawer::get_instance().get_component<SceneView>()->found_object->get_transform()->get_matrix(), 
-                               glm::vec3(1.1f), glm::vec3(0.8f));
+            enhanced_cube->render(sceneM->get_current_scene()->main_camera->GetView(),
+                                  sceneM->get_current_scene()->main_camera->GetProjectionMatrix(),
+                                  UIMasterDrawer::get_instance().get_component<SceneView>()->found_object->get_transform()->get_matrix(), 
+                                  glm::vec3(1.1f), glm::vec3(0.8f));
         }
     }
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    grid->draw(SceneManager::get_current_scene()->main_camera->GetProjectionMatrix(),
-            SceneManager::get_current_scene()->main_camera->GetView(),
+    grid->draw(sceneM->get_current_scene()->main_camera->GetProjectionMatrix(),
+               sceneM->get_current_scene()->main_camera->GetView(),
             model,
             glm::vec3(0.5f, 0.5f, 0.5f));
 }
 
 void EngineUI::draw_ui()
 {
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
     GarinUI::get_ui_manager()->render_new_frame_ui_context(true);
 
     if (configs->project_select == true)
@@ -298,7 +306,7 @@ void EngineUI::draw_ui()
         {
             if (ImGui::IsKeyReleased(ImGuiKey_S))
             {
-                SceneData::save_scene(SceneManager::get_current_scene());
+                SceneData::save_scene(sceneM->get_current_scene());
                 configs->save_config();
 
                 std::string info = "Scene Saved + Game Config: " + configs->current_scene;
@@ -312,7 +320,7 @@ void EngineUI::draw_ui()
             {
                 if (select_obj != nullptr)
                 {
-                    Entity *new_entity = SceneManager::get_current_scene()->make_entity();
+                    Entity *new_entity = sceneM->get_current_scene()->make_entity();
 
                     new_entity->get_transform()->Position = select_obj->get_transform()->Position;
                     new_entity->get_transform()->rotation = select_obj->get_transform()->rotation;

@@ -1,5 +1,6 @@
 #include <GLightPoint.h>
 #include <SceneManager.h>
+#include <ServiceLocator.h>
 
 void GLightPoint::defines(){
     pointLight = new PointLightData();
@@ -13,7 +14,8 @@ void GLightPoint::defines(){
     pointLight->intensity = GETVAR(Intensity, float);                        
     pointLight->enabled = enabled;
 
-    SceneManager::get_current_scene()->point_lights.push_back(pointLight);
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    sceneM->get_current_scene()->point_lights.push_back(pointLight);
 }
 
 void GLightPoint::init(){
@@ -29,7 +31,9 @@ void GLightPoint::update(){
 }
 
 void GLightPoint::clean() {
-    auto& pointLights = SceneManager::get_current_scene()->point_lights;
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
+    auto& pointLights = sceneM->get_current_scene()->point_lights;
 
     auto it = std::find(pointLights.begin(), pointLights.end(), pointLight);
     if (it != pointLights.end()) {

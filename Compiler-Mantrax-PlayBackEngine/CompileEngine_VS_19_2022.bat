@@ -27,6 +27,7 @@ msbuild .\Mantrax_PlayBackEngine.sln
 
 cd debug
 
-.\Mantrax_PlayBackEngine.exe F:\GarinProyects\MyFirstGame
+.\Mantrax_PlayBackEngine.exe C:/Proyects/GarinProyects/MyFirstGame
+
 
 pause

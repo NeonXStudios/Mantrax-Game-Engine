@@ -2,6 +2,7 @@
 #include "../includes/GCollision.h"
 #include <GarinGraphics.h>
 #include <SceneManager.h>
+#include <ServiceLocator.h>
 
 void GBody::defines()
 {
@@ -14,12 +15,14 @@ void GBody::init()
 {
     try
     {
-        if (!SceneManager::get_scene_manager()->physic_world->mPhysics || !SceneManager::get_scene_manager()->physic_world || !SceneManager::get_scene_manager()->physic_world->mScene)
+        SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
+        if (!sceneM->physic_world->mPhysics || !sceneM->physic_world || !sceneM->physic_world->mScene)
         {
             std::cerr << "Error: Recursos de PhysX no están inicializados." << std::endl;
             return;
         }
-        mPhysics = SceneManager::get_scene_manager()->physic_world->mPhysics;
+        mPhysics = sceneM->physic_world->mPhysics;
 
         physx::PxVec3 position_start = physx::PxVec3(
             entity->get_transform()->getPosition().x,
@@ -38,7 +41,7 @@ void GBody::init()
         body->setName(entity->object_string_id.c_str());
 
         physx::PxRigidBodyExt::updateMassAndInertia(*body, GETVAR(mass, float));
-        SceneManager::get_scene_manager()->physic_world->mScene->addActor(*body);
+        sceneM->physic_world->mScene->addActor(*body);
 
         body->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, GETVAR(isStatic, bool));
         body->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !GETVAR(useGravity, bool));
@@ -66,7 +69,9 @@ void GBody::init()
 
 void GBody::update()
 {
-    if (body != nullptr && SceneManager::get_scene_manager()->physic_world != nullptr && SceneManager::get_scene_manager()->physic_world->mScene != nullptr)
+    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
+    if (body != nullptr && sceneM->physic_world != nullptr && sceneM->physic_world->mScene != nullptr)
     {
         if (entity->hasComponent<GCollision>())
         {

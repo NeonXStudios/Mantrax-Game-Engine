@@ -27,6 +27,6 @@ msbuild .\Mantrax_Engine.sln
 
 cd debug
 
-.\Mantrax_Engine.exe F:\GarinProyects\MyFirstGame
+.\Mantrax_Engine.exe C:/Proyects/GarinProyects/MyFirstGame
 
 pause

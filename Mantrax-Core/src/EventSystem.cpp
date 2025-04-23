@@ -3,7 +3,7 @@
 #include <iomanip>
 #include <iostream>
 #include <string_view>
-
+#include <ServiceLocator.h>
 
 glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
 
@@ -49,7 +49,9 @@ glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
     {
         double x, y;
         glfwGetCursorPos(Gfx::get_game_window(), &x, &y);
-        Camera *cam = SceneManager::get_current_scene()->main_camera;
+        SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
+        Camera *cam = sceneM->get_current_scene()->main_camera;
 
         double windowMousePosX = x - ViewportRenderPosition.x;
         double windowMousePosY = y - ViewportRenderPosition.y;
@@ -185,8 +187,9 @@ glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
 
         glm::vec3 rayOrigin, rayDirection;
         ScreenToWorldRay(mouseCoords, glm::inverse(viewMatrix), glm::inverse(projectionMatrix), rayOrigin, rayDirection, camera);
+        SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
 
-        for (Entity* objD : SceneManager::get_current_scene()->objects_worlds) {
+        for (Entity* objD : sceneM->get_current_scene()->objects_worlds) {
             glm::vec3 objPosition = objD->get_transform()->getPosition();
             glm::vec3 objScale = objD->get_transform()->Scale;
             glm::quat objRotation = objD->get_transform()->rotation;
@@ -239,7 +242,9 @@ glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
 
     bool EventSystem::MouseCast3D(const glm::vec2& screenCoords, CastData* data)
     {
-        Camera* camera = SceneManager::get_current_scene()->main_camera;
+        SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
+        Camera* camera = sceneM->get_current_scene()->main_camera;
 
         glm::vec3 rayOrigin = camera->cameraPosition;  
         glm::vec3 rayDirection = camera->ScreenToWorldRay(screenCoords).direction; 
@@ -248,9 +253,9 @@ glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
         Entity* closestObject = nullptr;
 
         // Recorrer todos los objetos en la escena para encontrar la intersección
-        for (int i = 0; i < SceneManager::get_current_scene()->objects_worlds.size(); i++)
+        for (int i = 0; i < sceneM->get_current_scene()->objects_worlds.size(); i++)
         {
-            Entity* objD = SceneManager::get_current_scene()->objects_worlds[i];
+            Entity* objD = sceneM->get_current_scene()->objects_worlds[i];
 
             glm::vec3& objPosition = objD->get_transform()->getPosition();
             glm::vec3 objScale = objD->get_transform()->Scale;
@@ -275,7 +280,9 @@ glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
     {
         try
         {
-            if (SceneManager::get_current_scene() != nullptr)
+            SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+
+            if (sceneM->get_current_scene() != nullptr)
             {
                 float closestZ = std::numeric_limits<float>::lowest();
                 UIBehaviour *closestObject = nullptr;
