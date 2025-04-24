@@ -40,5 +40,4 @@ public:
 
     // EXECUTE GAME PATH
     static std::string game_path;
-    static std::string get_game_path();
 };

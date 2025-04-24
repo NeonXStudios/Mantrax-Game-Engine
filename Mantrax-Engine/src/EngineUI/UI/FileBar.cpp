@@ -6,7 +6,7 @@ void FileBar::on_draw()
     std::string new_name = "Classes##" + std::to_string(window_id);
 
     ImGui::Begin(new_name.c_str(), & is_open);
-    ShowDirectoryTree(FileManager::get_game_path() + "/clscpp");
+    ShowDirectoryTree(FileManager::get_project_path() + "/clscpp");
 
     if (ImGui::BeginPopupContextWindow("AssetsPopup", ImGuiMouseButton_Right))
     {
@@ -20,7 +20,7 @@ void FileBar::on_draw()
 
     if (ImGui::Button("Open Class Proyect"))
     {
-        std::filesystem::current_path(FileManager::get_game_path() + "/clscpp");
+        std::filesystem::current_path(FileManager::get_project_path() + "/clscpp");
 
         int result = system("code .");
     }
@@ -138,8 +138,8 @@ void FileBar::OpenAssociatedFiles(const std::filesystem::path &path)
 
 void FileBar::create_script_files(const std::string &script_name)
 {
-    std::string header_file = FileManager::get_game_path() + "assets/clscpp/" + script_name + ".h";
-    std::string source_file = FileManager::get_game_path() + "assets/clscpp/" + script_name + ".cpp";
+    std::string header_file = FileManager::get_project_path() + "assets/clscpp/" + script_name + ".h";
+    std::string source_file = FileManager::get_project_path() + "assets/clscpp/" + script_name + ".cpp";
 
     // Crear archivo .h
     std::ofstream header(header_file);

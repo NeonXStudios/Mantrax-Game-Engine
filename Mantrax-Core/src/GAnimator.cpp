@@ -10,7 +10,7 @@ void GAnimator::init()
 {
     clean();
 
-    std::string load_path = FileManager::get_game_path() + GETVAR(AnimatorPath, std::string);
+    std::string load_path = FileManager::get_project_path() + GETVAR(AnimatorPath, std::string);
     std::string file_content = FileManager::read_file(load_path);
 
     nlohmann::json animations_tree;

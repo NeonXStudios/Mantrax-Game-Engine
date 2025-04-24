@@ -5,6 +5,7 @@
 #include <GarinIO.h>
 #include <RenderPipeline.h>
 #include <UIStyle.h>
+#include <FileManager.h>
 #include <ServiceLocator.h>
 
 using namespace nlohmann;
@@ -31,7 +32,8 @@ void EditorConfigs::load_config()
 {
     SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
     RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
-
+    current_proyect = FileManager::game_path;
+    project_select = current_proyect != ""; 
     json settings = json::parse(FileManager::read_file(current_proyect + "/GameSettings.data"));
 
     VarVerify::set_value_if_exists(settings, "current_scene", current_scene);

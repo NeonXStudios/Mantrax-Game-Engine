@@ -10,11 +10,9 @@ void EngineStartCore::run_engine()
     sceneManager = ServiceLocator::get<SceneManager>().get();
     audioManager = ServiceLocator::get<AudioManager>().get();
     render_pipeline = ServiceLocator::get<RenderPipeline>().get();
-    
-    audioManager->StartSystem();
-    
-    Gfx::create_windows();
 
+    Gfx::create_windows();
+    audioManager->StartSystem();
     render_pipeline->init();
 
     sceneManager->on_awake();

@@ -7,12 +7,13 @@
 
 void Inspector::on_draw()
 {
+    EngineUI *editor_ui = ServiceLocator::get<EngineUI>().get();
     SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
 
-    if (EngineUI::getInstance().select_obj == nullptr)
+    if (editor_ui->select_obj == nullptr)
         return;
 
-    if (sceneM->get_parent_scene_from_object(EngineUI::getInstance().select_obj) != sceneM->get_current_scene()) 
+    if (sceneM->get_parent_scene_from_object(editor_ui->select_obj) != sceneM->get_current_scene()) 
         return;
 
     std::string new_name = "Inspector##" + std::to_string(window_id);
@@ -22,14 +23,14 @@ void Inspector::on_draw()
     {
         ImGui::BeginGroup();
         static char nameBuf[256];
-        strcpy(nameBuf, EngineUI::getInstance().select_obj->name_object.c_str());
+        strcpy(nameBuf, editor_ui->select_obj->name_object.c_str());
         
         float availableWidth = ImGui::GetContentRegionAvail().x - 25;
         ImGui::SetNextItemWidth(availableWidth);
         
         if (ImGui::InputText("##Name", nameBuf, sizeof(nameBuf)))
         {
-            EngineUI::getInstance().select_obj->name_object = nameBuf;
+            editor_ui->select_obj->name_object = nameBuf;
         }
 
         ImGui::SameLine(availableWidth + 5);
@@ -61,11 +62,11 @@ void Inspector::on_draw()
         // Tag
         ImGui::TextDisabled("Tag");
         static char tagBuf[128];
-        strcpy(tagBuf, EngineUI::getInstance().select_obj->object_tag.c_str());
+        strcpy(tagBuf, editor_ui->select_obj->object_tag.c_str());
         ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x * 0.45f);
         if (ImGui::InputText("##Tag", tagBuf, sizeof(tagBuf)))
         {
-            EngineUI::getInstance().select_obj->object_tag = tagBuf;
+            editor_ui->select_obj->object_tag = tagBuf;
         }
 
         ImGui::SameLine();
@@ -78,7 +79,7 @@ void Inspector::on_draw()
         int currentLayer = 0;
         for (int i = 0; i < layerNames.size(); ++i)
         {
-            if (EngineUI::getInstance().select_obj->Layer == (1 << i))
+            if (editor_ui->select_obj->Layer == (1 << i))
             {
                 currentLayer = i;
                 break;
@@ -87,7 +88,7 @@ void Inspector::on_draw()
         ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
         if (ImGui::Combo("##Layer", &currentLayer, layerNames.data(), static_cast<int>(layerNames.size())))
         {
-            EngineUI::getInstance().select_obj->Layer = (1 << currentLayer);
+            editor_ui->select_obj->Layer = (1 << currentLayer);
         }
     }
 
@@ -96,7 +97,7 @@ void Inspector::on_draw()
     ImGui::Spacing();
 
     // Transform
-    TransformComponent* transform = EngineUI::getInstance().select_obj->get_transform();
+    TransformComponent* transform = editor_ui->select_obj->get_transform();
     {
         ImGui::TextDisabled("TRANSFORM");
         ImGui::Spacing();
@@ -126,7 +127,7 @@ void Inspector::on_draw()
     ImGui::Spacing();
 
     // Components
-    UIAdministrator::draw_ui(EngineUI::getInstance().select_obj);
+    UIAdministrator::draw_ui(editor_ui->select_obj);
 
      ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
@@ -142,69 +143,69 @@ void Inspector::on_draw()
 
         if (ImGui::Button("Render Mesh", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<ModelComponent>().init();
+            editor_ui->select_obj->addComponent<ModelComponent>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Rigid Body", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GBody>().init();
+            editor_ui->select_obj->addComponent<GBody>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Box Collider", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GCollision>().init();
+            editor_ui->select_obj->addComponent<GCollision>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Material", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GMaterial>().init();
+            editor_ui->select_obj->addComponent<GMaterial>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Game Script", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GScript>().init();
+            editor_ui->select_obj->addComponent<GScript>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Character Controller", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GCharacter>().init();
+            editor_ui->select_obj->addComponent<GCharacter>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Audio Source", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GAudio>().init();
+            editor_ui->select_obj->addComponent<GAudio>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Perlin Component", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GNoise>().init();
+            editor_ui->select_obj->addComponent<GNoise>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Animator", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GAnimator>().init();
+            editor_ui->select_obj->addComponent<GAnimator>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Point Light", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GLightPoint>().init();
+            editor_ui->select_obj->addComponent<GLightPoint>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Spot Light", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GLightSpot>().init();
+            editor_ui->select_obj->addComponent<GLightSpot>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Direction Light", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GLightDirectional>().init();
+            editor_ui->select_obj->addComponent<GLightDirectional>().init();
             ImGui::CloseCurrentPopup();
         }
-        if (!EngineUI::getInstance().select_obj->hasComponent<GCamera>())
+        if (!editor_ui->select_obj->hasComponent<GCamera>())
         {
             if (ImGui::Button("Camera", ImVec2(-1, 0)))
             {
-                EngineUI::getInstance().select_obj->addComponent<GCamera>().init();
+                editor_ui->select_obj->addComponent<GCamera>().init();
                 ImGui::CloseCurrentPopup();
             }
         }

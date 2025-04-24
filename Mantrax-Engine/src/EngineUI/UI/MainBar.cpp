@@ -15,6 +15,7 @@
 
 void MainBar::on_draw()
 {
+    EngineUI *editor_ui = ServiceLocator::get<EngineUI>().get();
     SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
 
     ShowNewScenePopup();
@@ -36,7 +37,7 @@ void MainBar::on_draw()
             {
                 if (!AppSettings::is_playing)
                 {
-                    std::string bg_pick_path = EngineUI::getInstance().configs->current_proyect + "/gb.jpg";
+                    std::string bg_pick_path = editor_ui->configs->current_proyect + "/gb.jpg";
                     GarinIO::screenshot(Gfx::main_render->get_render(), 1920, 1080, bg_pick_path.c_str());
                     SceneData::save_scene(sceneM->get_current_scene());
                 }
@@ -55,7 +56,7 @@ void MainBar::on_draw()
             {
                 if (!AppSettings::is_playing)
                 {
-                    EngineUI::getInstance().configs->project_select = false;
+                    editor_ui->configs->project_select = false;
                 }
             }
 
@@ -128,62 +129,62 @@ void MainBar::on_draw()
             if (ImGui::MenuItem("Default Classic"))
             {
                 UIStyle::SetStyleUI(DefaultClassic);
-                EngineUI::getInstance().configs->current_theme = "DefaultClassic";
+                editor_ui->configs->current_theme = "DefaultClassic";
             }
             if (ImGui::MenuItem("Default Light"))
             {
                 UIStyle::SetStyleUI(DefaultWhite);
-                EngineUI::getInstance().configs->current_theme = "DefaultWhite";
+                editor_ui->configs->current_theme = "DefaultWhite";
             }
             if (ImGui::MenuItem("Default Dark"))
             {
                 UIStyle::SetStyleUI(DefaultDark);
-                EngineUI::getInstance().configs->current_theme = "DefaultDark";
+                editor_ui->configs->current_theme = "DefaultDark";
             }
             if (ImGui::MenuItem("Darkness"))
             {
                 UIStyle::SetStyleUI(Darkness);
-                EngineUI::getInstance().configs->current_theme = "Darkness";
+                editor_ui->configs->current_theme = "Darkness";
             }
             if (ImGui::MenuItem("Dracula"))
             {
                 UIStyle::SetStyleUI(Dracula);
-                EngineUI::getInstance().configs->current_theme = "Dracula";
+                editor_ui->configs->current_theme = "Dracula";
             }
             if (ImGui::MenuItem("RedDark"))
             {
                 UIStyle::SetStyleUI(RedDark);
-                EngineUI::getInstance().configs->current_theme = "RedDark";
+                editor_ui->configs->current_theme = "RedDark";
             }
             if (ImGui::MenuItem("Dark"))
             {
                 UIStyle::SetStyleUI(Dark);
-                EngineUI::getInstance().configs->current_theme = "Dark";
+                editor_ui->configs->current_theme = "Dark";
             }
             if (ImGui::MenuItem("Grey"))
             {
                 UIStyle::SetStyleUI(Grey);
-                EngineUI::getInstance().configs->current_theme = "Grey";
+                editor_ui->configs->current_theme = "Grey";
             }
             if (ImGui::MenuItem("WhiteY"))
             {
                 UIStyle::SetStyleUI(WhiteY);
-                EngineUI::getInstance().configs->current_theme = "WhiteY";
+                editor_ui->configs->current_theme = "WhiteY";
             }
             if (ImGui::MenuItem("DarkGrey"))
             {
                 UIStyle::SetStyleUI(DarkGrey);
-                EngineUI::getInstance().configs->current_theme = "DarkGrey";
+                editor_ui->configs->current_theme = "DarkGrey";
             }
             if (ImGui::MenuItem("Black"))
             {
                 UIStyle::SetStyleUI(Black);
-                EngineUI::getInstance().configs->current_theme = "Black";
+                editor_ui->configs->current_theme = "Black";
             }
             if (ImGui::MenuItem("DarkRounded"))
             {
                 UIStyle::SetStyleUI(DarkRounded);
-                EngineUI::getInstance().configs->current_theme = "DarkRounded";
+                editor_ui->configs->current_theme = "DarkRounded";
             }
             ImGui::EndMenu();
         }
@@ -195,7 +196,7 @@ void MainBar::on_draw()
         if (ImGui::ImageButton((void *)(intptr_t)current_icon, ImVec2(16, 16)))
         {
             std::string command = ".\\data\\PlayBackEngine\\Mantrax_PlayBackEngine.exe";
-            std::string parameter = EngineUI::getInstance().configs->current_proyect;
+            std::string parameter = editor_ui->configs->current_proyect;
             std::string fullCommand = command + " " + parameter;
 
             std::string newWorkDir = FileManager::get_execute_path();
@@ -213,8 +214,8 @@ void MainBar::on_draw()
     ImGui::PopStyleVar();
 
     ImGui::Begin("Scene Settings");
-    EngineUI::getInstance().configs->camera_speed_sens =
-        EditorGUI::Float("Camera sensitivity", EngineUI::getInstance().configs->camera_speed_sens);
+    editor_ui->configs->camera_speed_sens =
+        EditorGUI::Float("Camera sensitivity", editor_ui->configs->camera_speed_sens);
     ImGui::End();
 }
 

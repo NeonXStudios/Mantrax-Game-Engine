@@ -60,10 +60,11 @@ bool Hierarchy::is_in_any_folder(Entity *entity)
 
 void Hierarchy::draw_entity_node(Entity *entity)
 {
+    EngineUI *editor_ui = ServiceLocator::get<EngineUI>().get();
     ImGui::PushID(entity->object_int_id);
 
     bool node_open = false;
-    bool selected = (entity == EngineUI::getInstance().select_obj);
+    bool selected = (entity == editor_ui->select_obj);
 
     std::string name_tree = entity->name_object + "##" + std::to_string(window_id);
 
@@ -79,13 +80,13 @@ void Hierarchy::draw_entity_node(Entity *entity)
 
         if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
         {
-            if (EngineUI::getInstance().select_obj != entity)
+            if (editor_ui->select_obj != entity)
             {
-                EngineUI::getInstance().select_obj = entity;
+                editor_ui->select_obj = entity;
             }
             else
             {
-                EngineUI::getInstance().select_obj = nullptr;
+                editor_ui->select_obj = nullptr;
             }
         }
     }
@@ -93,13 +94,13 @@ void Hierarchy::draw_entity_node(Entity *entity)
     {
         if (ImGui::Selectable(name_tree.c_str(), selected))
         {
-            if (EngineUI::getInstance().select_obj != entity)
+            if (editor_ui->select_obj != entity)
             {
-                EngineUI::getInstance().select_obj = entity;
+                editor_ui->select_obj = entity;
             }
             else
             {
-                EngineUI::getInstance().select_obj = nullptr;
+                editor_ui->select_obj = nullptr;
             }
         }
     }

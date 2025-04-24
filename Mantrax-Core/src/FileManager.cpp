@@ -125,11 +125,6 @@ std::string FileManager::get_project_path()
     return FileManager::game_path + "/";
 }
 
-std::string FileManager::get_game_path()
-{
-    return FileManager::game_path + "/";
-}
-
 bool FileManager::check_file_if_exist(const std::string &path)
 {
     return std::filesystem::exists(path);

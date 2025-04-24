@@ -5,6 +5,7 @@
 
 void EngineSettings::on_draw()
 {
+    EngineUI *editor_ui = ServiceLocator::get<EngineUI>().get();
     SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
@@ -18,7 +19,7 @@ void EngineSettings::on_draw()
     {
         if (ImGui::MenuItem("Save Settings"))
         {
-            EngineUI::getInstance().configs->save_config();
+            editor_ui->configs->save_config();
         }
         ImGui::EndMenuBar();
     }
@@ -42,7 +43,7 @@ void EngineSettings::on_draw()
 
         ImGui::Spacing();
         ImGui::PushItemWidth(-1);
-        EngineUI::getInstance().configs->start_scene = EditorGUI::InputText("Start Scene", EngineUI::getInstance().configs->start_scene);
+        editor_ui->configs->start_scene = EditorGUI::InputText("Start Scene", editor_ui->configs->start_scene);
         ImGui::PopItemWidth();
 
         ImGui::Unindent(10.0f);
@@ -98,7 +99,7 @@ void EngineSettings::on_draw()
     ImGui::Separator();
     if (ImGui::Button("Apply Settings", ImVec2(-1, 30)))
     {
-        EngineUI::getInstance().configs->save_config();
+        editor_ui->configs->save_config();
     }
 
     ImGui::End();

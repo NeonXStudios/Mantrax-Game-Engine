@@ -114,6 +114,8 @@ Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
         }
     }
 
+    std::cout << "Loading scene path: " << assets_path << std::endl;
+
     try
     {
         std::ifstream file(file_path);

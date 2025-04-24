@@ -105,7 +105,7 @@ void AssetsFiles::on_draw()
 
         if (ImGui::Button("Open Visual Code Work Space", ImVec2(-1, 30)))
         {
-            std::filesystem::current_path(FileManager::get_game_path() + "/");
+            std::filesystem::current_path(FileManager::get_project_path() + "/");
             std::string open_command = "code . " + FileManager::get_project_path() + "/clscpp";
             int result = system(open_command.c_str());
             (void)result;
@@ -395,14 +395,14 @@ void AssetsFiles::drawer_files(std::string extension, std::string file_name, std
     }
     else if (extension == ".slab" || extension == ".lua" || extension == ".glsl")
     {
-        std::filesystem::current_path(FileManager::get_game_path() + "/assets/");
+        std::filesystem::current_path(FileManager::get_project_path() + "/assets/");
         std::string open_command = "code . " + file_path_complete;
         int result = system(open_command.c_str());
         (void)result;
     }
     else if (extension == ".h")
     {
-        std::filesystem::current_path(FileManager::get_game_path() + "/");
+        std::filesystem::current_path(FileManager::get_project_path() + "/");
         std::string open_command = "code . " + file_path_complete;
         int result = system(open_command.c_str());
         (void)result;

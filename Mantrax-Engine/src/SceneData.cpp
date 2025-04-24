@@ -4,7 +4,7 @@
 void SceneData::load_scene(std::string scene_name_new, bool is_additive)
 {
     SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
-
+    
     sceneM->load_scene(scene_name_new, is_additive);
 }
 

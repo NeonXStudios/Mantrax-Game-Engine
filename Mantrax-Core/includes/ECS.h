@@ -109,120 +109,127 @@ public:
 	virtual void deserialize(std::string g, std::string path = "") {}
 };
 
-#define GVAR(name, value, type) variableMap[#name] = static_cast<type>(value)
-#define GETVAR(name, type) std::any_cast<type>(variableMap.at(#name))
-
 class GARINLIBS_API TransformComponent
 {
 public:
-	glm::mat4 Matrix = glm::mat4(1.0f);
-	glm::mat4 MatrixLocal = glm::mat4(1.0f);
-	glm::mat4 parent_matrix;
+    glm::mat4 Matrix = glm::mat4(1.0f);
+    glm::mat4 MatrixLocal = glm::mat4(1.0f);
+    glm::mat4 parent_matrix;
 
-	glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
-	glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 Scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	glm::vec3 euler_angle = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec4 Anchors;
-	Entity *entity = nullptr;
+    glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+    glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 Scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    glm::vec3 euler_angle = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec4 Anchors;
+    Entity *entity = nullptr;
 
-	TransformComponent *parent = nullptr;
-	vector<TransformComponent *> childrens;
+    TransformComponent *parent = nullptr;
+    vector<TransformComponent *> childrens;
 
-	bool adapt_position = true;
-	bool adapt_rotation = true;
-	bool adapt_scale = false;
+    bool adapt_position = true;
+    bool adapt_rotation = true;
+    bool adapt_scale = false;
 
-	void attach_to(TransformComponent* new_parent, bool keep_world_position = false)
+    void attach_to(TransformComponent* new_parent, bool keep_world_position = true)
     {
+        // Always keep world position by default for better predictability
         if (new_parent == parent)
             return;
 
-        glm::vec3 worldPos;
-        glm::quat worldRot;
-        glm::vec3 worldScale;
+        // Store current world position, rotation and scale
+        glm::vec3 worldPos = getPosition();
+        glm::quat worldRot = getRotation();
+        glm::vec3 worldScale = getScale();
 
-        if (keep_world_position)
-        {
-            worldPos = getPosition();
-            worldRot = getRotation();
-            worldScale = getScale();
-        }
-
+        // Remove from current parent
         if (parent)
         {
             auto& siblings = parent->childrens;
             siblings.erase(std::remove(siblings.begin(), siblings.end(), this), siblings.end());
         }
 
+        // Set new parent
         parent = new_parent;
 
+        // Add to new parent's children list
         if (parent)
         {
             parent->childrens.push_back(this);
 
             if (keep_world_position)
             {
+                // Calculate local transforms to maintain world position
                 glm::mat4 parentWorldMatrix = parent->get_matrix();
                 glm::mat4 parentInverseMatrix = glm::inverse(parentWorldMatrix);
 
+                // Calculate local position
                 glm::vec4 localPos = parentInverseMatrix * glm::vec4(worldPos, 1.0f);
                 Position = glm::vec3(localPos);
 
-                glm::quat parentRot = glm::quat_cast(parentWorldMatrix);
+                // Calculate local rotation - FIXED: ensure proper quaternion multiplication order
+                glm::quat parentRot = parent->getRotation(); // Get actual world rotation, not from matrix
                 rotation = glm::inverse(parentRot) * worldRot;
+                rotation = glm::normalize(rotation); // Normalize to avoid floating point errors
 
+                // Calculate local scale
                 glm::vec3 parentScale = parent->getScale();
                 Scale = worldScale / parentScale;
             }
         }
         else if (keep_world_position)
         {
+            // No parent, just use world transforms directly
             Position = worldPos;
             rotation = worldRot;
             Scale = worldScale;
         }
 
+        // Update matrices
         update();
 
-        // Actualizar todos los hijos
+        // Update all children recursively
         for (auto* child : childrens)
         {
             child->update();
         }
     }
 
-	void update()
+    void update()
     {
-        MatrixLocal = glm::mat4(1.0f);
-
+        // FIXED: Ensure rotation is normalized to prevent drift
         rotation = glm::normalize(rotation);
 
-        // Aplicar transformaciones en orden: Scale -> Rotation -> Translation
+        // Build local matrix correctly (Scale -> Rotation -> Translation)
         glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), Scale);
         glm::mat4 rotationMatrix = glm::mat4_cast(rotation);
         glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), Position);
         
+        // FIXED: Proper order of transformations
         MatrixLocal = translationMatrix * rotationMatrix * scaleMatrix;
 
         if (parent)
         {
+            // Get parent matrix ONCE
             parent_matrix = parent->get_matrix();
             
             if (!adapt_position || !adapt_rotation || !adapt_scale)
             {
+                // FIXED: Build a customized parent matrix based on flags
+                glm::mat4 adaptedParentMatrix = glm::mat4(1.0f);
+                
+                // Extract components from parent matrix
                 glm::vec3 parentPos = glm::vec3(0.0f);
-                glm::quat parentRot = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+                glm::quat parentRot = glm::quat(1.0f, 0.0f, 0.0f, 0.0f); // Identity
                 glm::vec3 parentScale = glm::vec3(1.0f);
                 
                 if (adapt_position)
                 {
-                    parentPos = glm::vec3(parent_matrix[3]);
+                    parentPos = parent->getPosition();
                 }
                 
                 if (adapt_rotation)
                 {
-                    parentRot = glm::quat_cast(parent_matrix);
+                    parentRot = parent->getRotation();
                 }
                 
                 if (adapt_scale)
@@ -230,15 +237,17 @@ public:
                     parentScale = parent->getScale();
                 }
                 
-                // Reconstruir la matriz del padre con las adaptaciones
-                glm::mat4 adaptedParentMatrix = glm::translate(glm::mat4(1.0f), parentPos);
-                adaptedParentMatrix *= glm::mat4_cast(parentRot);
+                // Rebuild parent matrix with adaptations
+                // FIXED: Ensure correct transform order
+                adaptedParentMatrix = glm::translate(glm::mat4(1.0f), parentPos);
+                adaptedParentMatrix = adaptedParentMatrix * glm::mat4_cast(parentRot);
                 adaptedParentMatrix = glm::scale(adaptedParentMatrix, parentScale);
                 
                 Matrix = adaptedParentMatrix * MatrixLocal;
             }
             else
             {
+                // Combine with parent matrix
                 Matrix = parent_matrix * MatrixLocal;
             }
         }
@@ -248,173 +257,253 @@ public:
         }
     }
 
-	void setAdaptPosition(bool adapt) { adapt_position = adapt; }
-	void setAdaptRotation(bool adapt) { adapt_rotation = adapt; }
-	void setAdaptScale(bool adapt) { adapt_scale = adapt; }
+    void setAdaptPosition(bool adapt) { adapt_position = adapt; update(); updateChildren(); }
+    void setAdaptRotation(bool adapt) { adapt_rotation = adapt; update(); updateChildren(); }
+    void setAdaptScale(bool adapt) { adapt_scale = adapt; update(); updateChildren(); }
 
-	void detach_from_parent()
-	{
-		if (parent)
-		{
-			glm::mat4 worldMatrix = get_matrix();
+    // FIXED: Added helper function to update children recursively
+    void updateChildren()
+    {
+        for (auto* child : childrens)
+        {
+            child->update();
+            child->updateChildren();
+        }
+    }
 
-			auto &siblings = parent->childrens;
-			siblings.erase(std::remove(siblings.begin(), siblings.end(), this), siblings.end());
+    void detach_from_parent()
+    {
+        if (parent)
+        {
+            // Save current world transformation
+            glm::mat4 worldMatrix = get_matrix();
 
-			parent = nullptr;
+            // Remove from parent's children list
+            auto &siblings = parent->childrens;
+            siblings.erase(std::remove(siblings.begin(), siblings.end(), this), siblings.end());
 
-			Position = glm::vec3(worldMatrix[3]);
-			rotation = glm::quat_cast(worldMatrix);
-			Scale = glm::vec3(
-				glm::length(glm::vec3(worldMatrix[0])),
-				glm::length(glm::vec3(worldMatrix[1])),
-				glm::length(glm::vec3(worldMatrix[2])));
+            parent = nullptr;
 
-			update();
-		}
-	}
+            // Extract world transformation components
+            Position = glm::vec3(worldMatrix[3]);
+            rotation = glm::quat_cast(worldMatrix);
+            rotation = glm::normalize(rotation); // FIXED: Normalize after extraction
+            
+            // Extract scale from world matrix columns
+            Scale = glm::vec3(
+                glm::length(glm::vec3(worldMatrix[0])),
+                glm::length(glm::vec3(worldMatrix[1])),
+                glm::length(glm::vec3(worldMatrix[2])));
 
-	glm::mat4 get_matrix() const
-	{
-		return Matrix;
-	}
+            update();
+            
+            // Update children
+            updateChildren();
+        }
+    }
 
-	void set_rotation(const glm::vec3& eulerAngles)
+    glm::mat4 get_matrix() const
+    {
+        return Matrix;
+    }
+
+    void set_rotation(const glm::vec3& eulerAngles)
     {
         glm::vec3 radians = glm::radians(eulerAngles);
         
+        // FIXED: Create quaternions for each axis
         glm::quat quatX = glm::angleAxis(radians.x, glm::vec3(1, 0, 0));
         glm::quat quatY = glm::angleAxis(radians.y, glm::vec3(0, 1, 0));
         glm::quat quatZ = glm::angleAxis(radians.z, glm::vec3(0, 0, 1));
         
-        glm::quat newRotation = quatZ * quatY * quatX; 
+        // FIXED: Ensure proper Euler angle order (ZYX convention)
+        glm::quat newRotation = quatZ * quatY * quatX;
+        newRotation = glm::normalize(newRotation); // FIXED: Normalize
         setRotation(newRotation);
     }
 
-	glm::vec3 get_euler_angles() const
-	{
-			glm::mat4 this_matrix = get_matrix();
+    glm::vec3 get_euler_angles() const
+    {
+        // Get world rotation quaternion
+        glm::quat worldRot = getRotation();
+        
+        // Convert to Euler angles
+        glm::vec3 eulerRotation = glm::degrees(glm::eulerAngles(worldRot));
 
-			glm::mat4 parentMatrix(1.0f);
-			if (parent)
-			{
-				parentMatrix = parent->get_matrix();
-			}
+        // Normalize angles to [-180, 180] range
+        for (int i = 0; i < 3; i++)
+        {
+            if (std::abs(eulerRotation[i]) < 0.0001f)
+            {
+                eulerRotation[i] = 0.0f;
+            }
+            while (eulerRotation[i] > 180.0f)
+                eulerRotation[i] -= 360.0f;
+            while (eulerRotation[i] < -180.0f)
+                eulerRotation[i] += 360.0f;
+        }
 
-			glm::mat4 localMatrix = glm::inverse(parentMatrix) * this_matrix;
+        return eulerRotation;
+    }
 
-			glm::vec3 translation = glm::vec3(localMatrix[3]);
+    void setPosition(const glm::vec3 &pos)
+    {
+        if (parent)
+        {
+            // FIXED: Use parent's inverse world matrix
+            glm::mat4 parentWorldMatrix = parent->get_matrix();
+            glm::mat4 parentInverseMatrix = glm::inverse(parentWorldMatrix);
+            Position = glm::vec3(parentInverseMatrix * glm::vec4(pos, 1.0f));
+        }
+        else
+        {
+            Position = pos;
+        }
+        update();
+        
+        // Update children
+        updateChildren();
+    }
 
-			glm::vec3 scale(
+    void setRotation(const glm::quat &rot)
+    {
+        if (parent)
+        {
+            // FIXED: Convert world rotation to local space properly
+            glm::quat parentRot = parent->getRotation(); // Use actual rotation getter
+            rotation = glm::inverse(parentRot) * rot;
+            rotation = glm::normalize(rotation); // FIXED: Normalize to prevent drift
+        }
+        else
+        {
+            rotation = glm::normalize(rot); // FIXED: Normalize
+        }
+        update();
+        
+        // Update children
+        updateChildren();
+    }
 
-			glm::length(glm::vec3(localMatrix[0])),
-						glm::length(glm::vec3(localMatrix[1])),
-						glm::length(glm::vec3(localMatrix[2])));
+    void setScale(const glm::vec3 &scale)
+    {
+        if (parent)
+        {
+            // Convert world scale to local space
+            glm::vec3 parentScale = parent->getScale();
+            // FIXED: Avoid division by zero
+            Scale = glm::vec3(
+                parentScale.x != 0.0f ? scale.x / parentScale.x : scale.x,
+                parentScale.y != 0.0f ? scale.y / parentScale.y : scale.y,
+                parentScale.z != 0.0f ? scale.z / parentScale.z : scale.z
+            );
+        }
+        else
+        {
+            Scale = scale;
+        }
+        update();
+        
+        // Update children
+        updateChildren();
+    }
 
-			glm::mat3 rotationMat(
-						glm::vec3(localMatrix[0]) / scale.x,
-						glm::vec3(localMatrix[1]) / scale.y,
-						glm::vec3(localMatrix[2]) / scale.z
-						);
+    void setPositionLocal(const glm::vec3 &pos)
+    {
+        Position = pos;
+        update();
+        
+        // Update children
+        updateChildren();
+    }
 
-			glm::quat rotation = glm::quat_cast(rotationMat);
-			glm::vec3 eulerRotation = glm::degrees(glm::eulerAngles(rotation));
+    void setRotationLocal(const glm::quat &rot)
+    {
+        rotation = glm::normalize(rot); // FIXED: Normalize
+        update();
+        
+        // Update children
+        updateChildren();
+    }
 
-			for (int i = 0; i < 3; i++)
-			{
-						if (std::abs(eulerRotation[i]) < 0.0001f)
-						{
-							eulerRotation[i] = 0.0f;
-						}
-						while (eulerRotation[i] > 180.0f)
-							eulerRotation[i] -= 360.0f;
-						while (eulerRotation[i] < -180.0f)
-							eulerRotation[i] += 360.0f;
-			}
+    void setScaleLocal(const glm::vec3 &scale)
+    {
+        Scale = scale;
+        update();
+        
+        // Update children
+        updateChildren();
+    }
 
+    glm::vec3 getPosition() const
+    {
+        if (parent)
+        {
+            // FIXED: Use parent's matrix directly
+            glm::vec4 worldPos = parent->get_matrix() * glm::vec4(Position, 1.0f);
+            return glm::vec3(worldPos);
+        }
+        return Position;
+    }
 
-		return eulerRotation;
-	}
+    glm::quat getRotation() const
+    {
+        if (parent)
+        {
+            // FIXED: Get parent's rotation directly
+            glm::quat parentRot = parent->getRotation();
+            return glm::normalize(parentRot * rotation); // FIXED: Normalize
+        }
+        return rotation;
+    }
 
+    glm::vec3 getScale() const
+    {
+        if (parent)
+        {
+            glm::vec3 parentScale = parent->getScale();
+            return Scale * parentScale;
+        }
+        return Scale;
+    }
 
-	void setPosition(const glm::vec3 &pos)
-	{
-		Position = pos;
-		if (parent)
-		{
-			glm::mat4 worldMatrix = parent->get_matrix();
-			Position = glm::vec3(glm::inverse(worldMatrix) * glm::vec4(pos, 1.0f));
-		}
-	}
+    glm::vec3 get_position_local() const { return Position; }
+    glm::quat get_rotation_local() const { return rotation; }
+    glm::vec3 get_scale_local() const { return Scale; }
 
-	void setRotation(const glm::quat &rot)
-	{
-		rotation = rot;
-		if (parent)
-		{
-			glm::quat parentRot = glm::quat_cast(parent->get_matrix());
-			rotation = glm::inverse(parentRot) * rot;
-		}
-	}
-
-	void setScale(const glm::vec3 &scale)
-	{
-		Scale = scale;
-		if (parent)
-		{
-			glm::vec3 parentScale = parent->getScale();
-			Scale = scale / parentScale;
-		}
-	}
-
-	void setPositionLocal(const glm::vec3 &pos)
-	{
-		Position = pos;
-	}
-
-	void setRotationLocal(const glm::quat &rot)
-	{
-		rotation = rot;
-	}
-
-	void setScaleLocal(const glm::vec3 &scale)
-	{
-		Scale = scale;
-	}
-
-	glm::vec3 getPosition() const
-	{
-		if (parent)
-		{
-			glm::vec4 worldPos = parent->get_matrix() * glm::vec4(Position, 1.0f);
-			return glm::vec3(worldPos);
-		}
-		return Position;
-	}
-
-	glm::quat getRotation() const
-	{
-		if (parent)
-		{
-			glm::quat parentRot = glm::quat_cast(parent->get_matrix());
-			return parentRot * rotation;
-		}
-		return rotation;
-	}
-
-	glm::vec3 getScale() const
-	{
-		if (parent)
-		{
-			glm::vec3 parentScale = parent->getScale();
-			return Scale * parentScale;
-		}
-		return Scale;
-	}
-
-	glm::vec3 get_position_local() const { return Position; }
-	glm::quat get_rotation_local() const { return rotation; }
-	glm::vec3 get_scale_local() const { return Scale; }
+    // Debugging utility function
+    void validateTransforms()
+    {
+        // Calculate world position directly
+        glm::vec3 worldPos = getPosition();
+        
+        // Calculate world position through matrix
+        glm::vec3 matrixPos = glm::vec3(Matrix[3]);
+        
+        // Compare and log if there's a significant difference
+        float distance = glm::distance(worldPos, matrixPos);
+        if (distance > 0.001f)
+        {
+            std::cout << "Transform position mismatch: " 
+                    << "Calculated world pos: (" << worldPos.x << ", " << worldPos.y << ", " << worldPos.z << ") " 
+                    << "Matrix position: (" << matrixPos.x << ", " << matrixPos.y << ", " << matrixPos.z << ") "
+                    << "Distance: " << distance << std::endl;
+        }
+        
+        // Check rotation
+        glm::quat worldRot = getRotation();
+        glm::quat matrixRot = glm::quat_cast(Matrix);
+        float rotDiff = glm::length(worldRot - matrixRot);
+        if (rotDiff > 0.001f)
+        {
+            std::cout << "Transform rotation mismatch! Difference: " << rotDiff << std::endl;
+        }
+        
+        // Do the same for children
+        for (auto* child : childrens)
+        {
+            child->validateTransforms();
+        }
+    }
 };
 
 class GARINLIBS_API Entity
@@ -664,4 +753,6 @@ public:
 	}
 };
 
-#endif // ECSCOMPONENT_H
+#define GVAR(name, value, type) variableMap[#name] = static_cast<type>(value)
+#define GETVAR(name, type) std::any_cast<type>(variableMap.at(#name))
+#endif

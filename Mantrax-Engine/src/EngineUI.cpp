@@ -12,9 +12,6 @@
 #include <UIMasterDrawer.h>
 #include <ServiceLocator.h>
 
-float EngineUI::yaw = 0.0f;
-float EngineUI::pitch = 0.0f;
-
 void EngineUI::on_awake()
 {
     // old_stdout = std::cout.rdbuf(buffer_stdout.rdbuf());
@@ -46,8 +43,6 @@ void EngineUI::on_start()
     camera_gizmo = new GizmoArrow();
     grid = new GridDrawer(20.0f, 10.0f);
     grid->initialize();
-
-    outline_shader = new Shader("data/Shaders/outline_vertex.glsl", "data/Shaders/outline_fragment.glsl");
 }
 
 void EngineUI::on_edition_mode(float delta_time)
@@ -56,7 +51,7 @@ void EngineUI::on_edition_mode(float delta_time)
 
     sceneM->get_current_scene()->main_camera->update();
 
-    std::string directory_path = FileManager::get_game_path() + "/clscpp";
+    std::string directory_path = FileManager::get_project_path() + "/clscpp";
 
     watcher->start_file_watcher(directory_path, []() {});
 

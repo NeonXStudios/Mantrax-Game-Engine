@@ -34,6 +34,7 @@ int main(int argc, char *arvg[])
 {
     EngineStartCore * engine_m = new EngineStartCore();
     GameBehaviourFactory *factory_behaviour = new GameBehaviourFactory();
+    ServiceLocator::provide_new<EngineUI>();
 
     if (argc == 0)
     {
@@ -46,12 +47,10 @@ int main(int argc, char *arvg[])
     
     engine_m->run_engine();
 
-    EngineUI *scene_game = &EngineUI::getInstance();
+    EngineUI *editor_ui = ServiceLocator::get<EngineUI>().get();
 
-    scene_game->on_awake();
-    scene_game->configs->project_select = argc != 0;
-    scene_game->configs->current_proyect = FileManager::game_path;
-    scene_game->on_start();
+    editor_ui->on_awake();
+    editor_ui->on_start();
 
     while (!Gfx::try_window_close())
     {
@@ -59,15 +58,17 @@ int main(int argc, char *arvg[])
         Gfx::timer_control();
         Gfx::process_window_size();
 
-        engine_m->render_pipeline->find_target_by_id(engine_m->sceneManager->get_current_scene()->main_camera->render_id)->bind_new_render_data("GizmosData",
-            [scene_game]()
-                            { scene_game->on_draw(); }
+        engine_m->render_pipeline->find_target_by_id(
+            engine_m->sceneManager->get_current_scene()->main_camera->render_id)->bind_new_render_data("GizmosData", [editor_ui]()
+                            { 
+                                editor_ui->on_draw(); 
+                            }
         );
 
         engine_m->render_pipeline->render([](){});
-        scene_game->on_edition_mode(Timer::delta_time);
         engine_m->sceneManager->on_edition_mode();
-        scene_game->draw_ui();
+        editor_ui->on_edition_mode(Timer::delta_time);
+        editor_ui->draw_ui();
 
         Gfx::swap_buffer();
     }

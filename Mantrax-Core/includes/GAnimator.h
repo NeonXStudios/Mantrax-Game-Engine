@@ -47,7 +47,7 @@ public:
         {
             if (textureId == -1)
             {
-                std::string texture_path = FileManager::get_game_path() + imagePath;
+                std::string texture_path = FileManager::get_project_path() + imagePath;
                 texture_loaded = new TextureManager(texture_path);
                 textureId = texture_loaded->get_texture();
                 texture_loaded->active(GL_TEXTURE0);

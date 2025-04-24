@@ -11,7 +11,8 @@ void GraphicsManagerUI::on_draw()
     ImGui::Begin("Graphics Settings", &is_open);
     ImGui::BeginChild("Layers");
 
-    const std::vector<std::string> layerNames = {
+    const std::vector<std::string> layerNames = 
+    {
         "Background",
         "Parallax 1",
         "Parallax 2",
@@ -31,7 +32,8 @@ void GraphicsManagerUI::on_draw()
         "Text",
         "Overlays",
         "Post-Processing",
-        "Debug"};
+        "Debug"
+    };
 
     const std::vector<int> layerOptions = {
         LAYER_0, LAYER_1, LAYER_2, LAYER_3, LAYER_4,

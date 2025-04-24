@@ -22,9 +22,9 @@ TextureManager::TextureManager(const std::string &texture_path)
     
     if (data)
     {
-        std::cout << "Loading texture: " << texture_path << std::endl;
-        std::cout << "Original channels: " << nrChannels << std::endl;
-        std::cout << "Dimensions: " << width << "x" << height << std::endl;
+        // std::cout << "Loading texture: " << texture_path << std::endl;
+        // std::cout << "Original channels: " << nrChannels << std::endl;
+        // std::cout << "Dimensions: " << width << "x" << height << std::endl;
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         

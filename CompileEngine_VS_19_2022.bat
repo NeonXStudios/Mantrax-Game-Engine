@@ -1,4 +1,5 @@
 @echo off
+cd Compiler
 cd LIB
 mkdir bin
 cd bin

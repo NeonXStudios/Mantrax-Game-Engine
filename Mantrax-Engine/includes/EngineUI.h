@@ -26,14 +26,8 @@
 class GARINLIBS_API EngineUI
 {
 public:
-    static EngineUI &getInstance()
-    {
-        static EngineUI instance;
-        return instance;
-    }
-
-    static float yaw;
-    static float pitch;
+    float yaw = 0.0f;
+    float pitch = 0.0f;
 
     EngineUI(const EngineUI &) = delete;
     void operator=(const EngineUI &) = delete;
@@ -49,8 +43,6 @@ public:
     GizmoCapsule *capsule_gizmo;
     GizmoArrow *camera_gizmo;
     GridDrawer *grid;
-    Shader* outline_shader;
-
     UIBehaviour *ui_behaviour;
 
     std::stringstream buffer_stdout;

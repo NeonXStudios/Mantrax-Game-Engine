@@ -13,6 +13,8 @@ static ImGuizmo::OPERATION gizmoOperation(ImGuizmo::TRANSLATE);
 
 void SceneView::on_draw()
 {
+    EngineUI *editor_ui = ServiceLocator::get<EngineUI>().get();
+
     SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
 
     ImGui::PushID(343456);
@@ -84,16 +86,16 @@ void SceneView::on_draw()
 
             if (EventSystem::MouseCast2D(WorldPoint, data, sceneM->get_current_scene()->main_camera) && !ImGuizmo::IsOver())
             {
-                if (EngineUI::getInstance().select_obj != data->object)
+                if (editor_ui->select_obj != data->object)
                 {
-                    EngineUI::getInstance().select_obj = data->object;
+                    editor_ui->select_obj = data->object;
                 }
             }
             else
             {
                 if (!ImGuizmo::IsOver())
                 {
-                    EngineUI::getInstance().select_obj = nullptr;
+                    editor_ui->select_obj = nullptr;
                 }
             }
         }else{
@@ -142,117 +144,90 @@ void SceneView::on_draw()
         //     }
         // }
 
-        if (ImGui::IsMouseDragging(0) && EngineUI::getInstance().ui_behaviour != nullptr)
+        if (ImGui::IsMouseDragging(0) && editor_ui->ui_behaviour != nullptr)
         {
-            EngineUI::getInstance().ui_behaviour->behaviour->Position = glm::vec3(ScreenPoint.x, ScreenPoint.y, EngineUI::getInstance().ui_behaviour->behaviour->Position.z);
+            editor_ui->ui_behaviour->behaviour->Position = glm::vec3(ScreenPoint.x, ScreenPoint.y, editor_ui->ui_behaviour->behaviour->Position.z);
         }
     }
 
-    if (EngineUI::getInstance().select_obj != nullptr)
+    if (editor_ui->select_obj != nullptr)
     {
-        TransformComponent *transform = EngineUI::getInstance().select_obj->get_transform();
-
+        TransformComponent *transform = editor_ui->select_obj->get_transform();
+    
         glm::mat4 matrix = transform->get_matrix();
-
+    
         glm::mat4 parentMatrix(1.0f);
         if (transform->parent)
         {
             parentMatrix = transform->parent->get_matrix();
         }
-
+    
         float *projection = (float *)glm::value_ptr(sceneM->get_current_scene()->main_camera->GetProjectionMatrix());
         float *view = (float *)glm::value_ptr(sceneM->get_current_scene()->main_camera->GetView());
-
+    
         ImGuizmo::SetRect(p.x, p.y, sceneM->get_current_scene()->main_camera->width, sceneM->get_current_scene()->main_camera->height);
-
+    
         bool res = ImGuizmo::Manipulate(view, projection, gizmoOperation, gizmoMode, glm::value_ptr(matrix));
         ignoreGui &= !ImGuizmo::IsOver();
-
+    
         if (res)
         {
             if (transform->parent)
             {
-                glm::mat4 localMatrix = glm::inverse(parentMatrix) * matrix;
-
-                glm::vec3 translation = glm::vec3(localMatrix[3]);
-
-                glm::vec3 scale(
-                    glm::length(glm::vec3(localMatrix[0])),
-                    glm::length(glm::vec3(localMatrix[1])),
-                    glm::length(glm::vec3(localMatrix[2])));
-
-                glm::mat3 rotationMat(
-                    glm::vec3(localMatrix[0]) / scale.x,
-                    glm::vec3(localMatrix[1]) / scale.y,
-                    glm::vec3(localMatrix[2]) / scale.z
-                    );
-
-                glm::quat rotation = glm::quat_cast(rotationMat);
-                glm::vec3 eulerRotation = glm::degrees(glm::eulerAngles(rotation));
-
-                for (int i = 0; i < 3; i++)
-                {
-                    if (std::abs(eulerRotation[i]) < 0.0001f)
-                    {
-                        eulerRotation[i] = 0.0f;
-                    }
-                    while (eulerRotation[i] > 180.0f)
-                        eulerRotation[i] -= 360.0f;
-                    while (eulerRotation[i] < -180.0f)
-                        eulerRotation[i] += 360.0f;
-                }
-
-                transform->Position = translation;
-                transform->Scale = scale;
-                transform->set_rotation(eulerRotation);
+                glm::vec3 worldPosition = glm::vec3(matrix[3]);
+                
+                glm::vec3 worldScale(
+                    glm::length(glm::vec3(matrix[0])),
+                    glm::length(glm::vec3(matrix[1])),
+                    glm::length(glm::vec3(matrix[2])));
+                    
+                glm::mat3 worldRotMat(
+                    glm::vec3(matrix[0]) / worldScale.x,
+                    glm::vec3(matrix[1]) / worldScale.y,
+                    glm::vec3(matrix[2]) / worldScale.z
+                );
+                glm::quat worldRotation = glm::normalize(glm::quat_cast(worldRotMat));
+                
+                transform->setPosition(worldPosition);
+                transform->setRotation(worldRotation);
+                transform->setScale(worldScale);
             }
             else
             {
                 glm::vec3 translation = glm::vec3(matrix[3]);
-
+    
                 glm::vec3 scale(
                     glm::length(glm::vec3(matrix[0])),
                     glm::length(glm::vec3(matrix[1])),
                     glm::length(glm::vec3(matrix[2])));
-
+    
                 glm::mat3 rotationMat(
                     glm::vec3(matrix[0]) / scale.x,
                     glm::vec3(matrix[1]) / scale.y,
                     glm::vec3(matrix[2]) / scale.z);
-
-                glm::quat rotation = glm::quat_cast(rotationMat);
-                glm::vec3 eulerRotation = glm::degrees(glm::eulerAngles(rotation));
-
-                for (int i = 0; i < 3; i++)
+    
+                glm::quat rotation = glm::normalize(glm::quat_cast(rotationMat));
+                
+                if (!editor_ui->select_obj->hasComponent<GBody>())
                 {
-                    if (std::abs(eulerRotation[i]) < 0.0001f)
-                    {
-                        eulerRotation[i] = 0.0f;
-                    }
-                    while (eulerRotation[i] > 180.0f)
-                        eulerRotation[i] -= 360.0f;
-                    while (eulerRotation[i] < -180.0f)
-                        eulerRotation[i] += 360.0f;
-                }
-
-                if (!EngineUI::getInstance().select_obj->hasComponent<GBody>())
-                {
-                    transform->Position = translation;
-                    transform->Scale = scale;
-                    transform->set_rotation(eulerRotation);
+                    transform->setPositionLocal(translation);
+                    transform->setScaleLocal(scale);
+                    transform->setRotationLocal(rotation);
                 }
                 else
                 {
-                    transform->Position = translation;
-                    transform->Scale = scale;
-                    transform->set_rotation(eulerRotation);
-
-                    EngineUI::getInstance().select_obj->getComponent<GBody>().body->setLinearVelocity(PxVec3(0, 0, 0));
-                    EngineUI::getInstance().select_obj->getComponent<GBody>().set_position(translation);
+                    transform->setPositionLocal(translation);
+                    transform->setScaleLocal(scale);
+                    transform->setRotationLocal(rotation);
+    
+                    editor_ui->select_obj->getComponent<GBody>().body->setLinearVelocity(PxVec3(0, 0, 0));
+                    editor_ui->select_obj->getComponent<GBody>().set_position(translation);
                 }
             }
+            
+            transform->validateTransforms();
         }
-
+    
         if (!ImGui::IsMouseDown(1))
         {
             if (InputSystem::on_key_pressed(GLFW_KEY_W))
@@ -270,28 +245,28 @@ void SceneView::on_draw()
         }
     }
 
-    if (ImGui::IsKeyDown(ImGuiKey_Delete) && EngineUI::getInstance().select_obj != nullptr)
+    if (ImGui::IsKeyDown(ImGuiKey_Delete) && editor_ui->select_obj != nullptr)
     {
-        Entity *safe_to_delete = EngineUI::getInstance().select_obj;
-        EngineUI::getInstance().select_obj = nullptr;
+        Entity *safe_to_delete = editor_ui->select_obj;
+        editor_ui->select_obj = nullptr;
 
         sceneM->get_current_scene()->destroy(safe_to_delete);
     }
 
-    if (ImGui::IsWindowHovered() && ImGui::IsKeyDown(ImGuiKey_F) && EngineUI::getInstance().select_obj != nullptr)
+    if (ImGui::IsWindowHovered() && ImGui::IsKeyDown(ImGuiKey_F) && editor_ui->select_obj != nullptr)
     {
-        TransformComponent* selectedObj = EngineUI::getInstance().select_obj->get_transform();
+        TransformComponent* selectedObj = editor_ui->select_obj->get_transform();
         Camera* camera = sceneM->get_current_scene()->main_camera;
 
         glm::vec3 targetPosition = selectedObj->Position;
 
         glm::vec3 directionToTarget = glm::normalize(targetPosition - camera->cameraPosition);
 
-        EngineUI::yaw = atan2(directionToTarget.x, directionToTarget.z);
-        EngineUI::pitch = -asin(directionToTarget.y);
+        editor_ui->yaw = atan2(directionToTarget.x, directionToTarget.z);
+        editor_ui->pitch = -asin(directionToTarget.y);
 
-        glm::quat rotationX = glm::angleAxis(EngineUI::pitch, glm::vec3(1.0f, 0.0f, 0.0f));
-        glm::quat rotationY = glm::angleAxis(EngineUI::yaw, glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::quat rotationX = glm::angleAxis(editor_ui->pitch, glm::vec3(1.0f, 0.0f, 0.0f));
+        glm::quat rotationY = glm::angleAxis(editor_ui->yaw, glm::vec3(0.0f, 1.0f, 0.0f));
 
         glm::quat targetRotation = glm::normalize(rotationY * rotationX);
 
@@ -375,6 +350,8 @@ SceneDataView::SceneDataView()
 }
 
 void SceneDataView::draw() {
+    EngineUI *editor_ui = ServiceLocator::get<EngineUI>().get();
+
     ImGui::PushID(window_id);
 
     std::string unique_window_name = "Scene Window##" + std::to_string(window_id);
@@ -495,29 +472,29 @@ void SceneDataView::draw() {
 
             if (EventSystem::MouseCast2D(WorldPoint, data, work_scene->main_camera))
             {
-                if (EngineUI::getInstance().select_obj != data->object)
+                if (editor_ui->select_obj != data->object)
                 {
-                    EngineUI::getInstance().select_obj = data->object;
+                    editor_ui->select_obj = data->object;
                 }
             }
             else
             {
                 if (!ImGuizmo::IsOver())
                 {
-                    EngineUI::getInstance().select_obj = nullptr;
+                    editor_ui->select_obj = nullptr;
                 }
             }
         }
 
-        if (ImGui::IsMouseDragging(0) && EngineUI::getInstance().ui_behaviour != nullptr)
+        if (ImGui::IsMouseDragging(0) && editor_ui->ui_behaviour != nullptr)
         {
-            EngineUI::getInstance().ui_behaviour->behaviour->Position = glm::vec3(ScreenPoint.x, ScreenPoint.y, EngineUI::getInstance().ui_behaviour->behaviour->Position.z);
+            editor_ui->ui_behaviour->behaviour->Position = glm::vec3(ScreenPoint.x, ScreenPoint.y, editor_ui->ui_behaviour->behaviour->Position.z);
         }
     }
 
-    if (EngineUI::getInstance().select_obj != nullptr)
+    if (editor_ui->select_obj != nullptr)
     {
-        TransformComponent *transform = EngineUI::getInstance().select_obj->get_transform();
+        TransformComponent *transform = editor_ui->select_obj->get_transform();
 
         glm::mat4 matrix = transform->get_matrix();
 
@@ -601,7 +578,7 @@ void SceneDataView::draw() {
                         eulerRotation[i] += 360.0f;
                 }
 
-                if (!EngineUI::getInstance().select_obj->hasComponent<GBody>())
+                if (!editor_ui->select_obj->hasComponent<GBody>())
                 {
                     transform->Position = translation;
                     transform->Scale = scale;
@@ -613,8 +590,8 @@ void SceneDataView::draw() {
                     transform->Scale = scale;
                     transform->set_rotation(eulerRotation);
 
-                    EngineUI::getInstance().select_obj->getComponent<GBody>().body->setLinearVelocity(PxVec3(0, 0, 0));
-                    EngineUI::getInstance().select_obj->getComponent<GBody>().set_position(translation);
+                    editor_ui->select_obj->getComponent<GBody>().body->setLinearVelocity(PxVec3(0, 0, 0));
+                    editor_ui->select_obj->getComponent<GBody>().set_position(translation);
                 }
             }
         }
@@ -636,28 +613,28 @@ void SceneDataView::draw() {
         }
     }
 
-    if (ImGui::IsKeyDown(ImGuiKey_Delete) && EngineUI::getInstance().select_obj != nullptr)
+    if (ImGui::IsKeyDown(ImGuiKey_Delete) && editor_ui->select_obj != nullptr)
     {
-        Entity *safe_to_delete = EngineUI::getInstance().select_obj;
-        EngineUI::getInstance().select_obj = nullptr;
+        Entity *safe_to_delete = editor_ui->select_obj;
+        editor_ui->select_obj = nullptr;
 
         work_scene->destroy(safe_to_delete);
     }
 
-    if (ImGui::IsWindowHovered() && ImGui::IsKeyDown(ImGuiKey_F) && EngineUI::getInstance().select_obj != nullptr)
+    if (ImGui::IsWindowHovered() && ImGui::IsKeyDown(ImGuiKey_F) && editor_ui->select_obj != nullptr)
     {
-        TransformComponent* selectedObj = EngineUI::getInstance().select_obj->get_transform();
+        TransformComponent* selectedObj = editor_ui->select_obj->get_transform();
         Camera* camera = work_scene->main_camera;
 
         glm::vec3 targetPosition = selectedObj->Position;
 
         glm::vec3 directionToTarget = glm::normalize(targetPosition - camera->cameraPosition);
 
-        EngineUI::yaw = atan2(directionToTarget.x, directionToTarget.z);
-        EngineUI::pitch = -asin(directionToTarget.y);
+        editor_ui->yaw = atan2(directionToTarget.x, directionToTarget.z);
+        editor_ui->pitch = -asin(directionToTarget.y);
 
-        glm::quat rotationX = glm::angleAxis(EngineUI::pitch, glm::vec3(1.0f, 0.0f, 0.0f));
-        glm::quat rotationY = glm::angleAxis(EngineUI::yaw, glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::quat rotationX = glm::angleAxis(editor_ui->pitch, glm::vec3(1.0f, 0.0f, 0.0f));
+        glm::quat rotationY = glm::angleAxis(editor_ui->yaw, glm::vec3(0.0f, 1.0f, 0.0f));
 
         glm::quat targetRotation = glm::normalize(rotationY * rotationX);
 
@@ -703,19 +680,19 @@ void SceneDataView::draw() {
         "Debug"};
 
 
-    if (EngineUI::getInstance().select_obj != nullptr)
+    if (editor_ui->select_obj != nullptr)
     {
         {
         ImGui::BeginGroup();
         static char nameBuf[256];
-        strcpy(nameBuf, EngineUI::getInstance().select_obj->name_object.c_str());
+        strcpy(nameBuf, editor_ui->select_obj->name_object.c_str());
         
         float availableWidth = ImGui::GetContentRegionAvail().x - 25;
         ImGui::SetNextItemWidth(availableWidth);
         
         if (ImGui::InputText("##Name", nameBuf, sizeof(nameBuf)))
         {
-            EngineUI::getInstance().select_obj->name_object = nameBuf;
+            editor_ui->select_obj->name_object = nameBuf;
         }
 
         ImGui::SameLine(availableWidth + 5);
@@ -747,11 +724,11 @@ void SceneDataView::draw() {
         // Tag
         ImGui::TextDisabled("Tag");
         static char tagBuf[128];
-        strcpy(tagBuf, EngineUI::getInstance().select_obj->object_tag.c_str());
+        strcpy(tagBuf, editor_ui->select_obj->object_tag.c_str());
         ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x * 0.45f);
         if (ImGui::InputText("##Tag", tagBuf, sizeof(tagBuf)))
         {
-            EngineUI::getInstance().select_obj->object_tag = tagBuf;
+            editor_ui->select_obj->object_tag = tagBuf;
         }
 
         ImGui::SameLine();
@@ -764,7 +741,7 @@ void SceneDataView::draw() {
         int currentLayer = 0;
         for (int i = 0; i < layerNames.size(); ++i)
         {
-            if (EngineUI::getInstance().select_obj->Layer == (1 << i))
+            if (editor_ui->select_obj->Layer == (1 << i))
             {
                 currentLayer = i;
                 break;
@@ -773,7 +750,7 @@ void SceneDataView::draw() {
         ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
         if (ImGui::Combo("##Layer", &currentLayer, layerNames.data(), static_cast<int>(layerNames.size())))
         {
-            EngineUI::getInstance().select_obj->Layer = (1 << currentLayer);
+            editor_ui->select_obj->Layer = (1 << currentLayer);
         }
     }
 
@@ -786,7 +763,7 @@ void SceneDataView::draw() {
         ImGui::TextDisabled("TRANSFORM");
         ImGui::Spacing();
 
-        TransformComponent* transform = EngineUI::getInstance().select_obj->get_transform();
+        TransformComponent* transform = editor_ui->select_obj->get_transform();
 
         // Position
         ImGui::TextDisabled("Position");
@@ -812,7 +789,7 @@ void SceneDataView::draw() {
     ImGui::Spacing();
 
     // Components
-    UIAdministrator::draw_ui(EngineUI::getInstance().select_obj);
+    UIAdministrator::draw_ui(editor_ui->select_obj);
 
      ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
@@ -828,54 +805,54 @@ void SceneDataView::draw() {
 
         if (ImGui::Button("Render Mesh", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<ModelComponent>().init();
+            editor_ui->select_obj->addComponent<ModelComponent>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Rigid Body", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GBody>().init();
+            editor_ui->select_obj->addComponent<GBody>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Box Collider", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GCollision>().init();
+            editor_ui->select_obj->addComponent<GCollision>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Material", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GMaterial>().init();
+            editor_ui->select_obj->addComponent<GMaterial>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Game Script", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GScript>().init();
+            editor_ui->select_obj->addComponent<GScript>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Character Controller", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GCharacter>().init();
+            editor_ui->select_obj->addComponent<GCharacter>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Audio Source", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GAudio>().init();
+            editor_ui->select_obj->addComponent<GAudio>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Perlin Component", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GNoise>().init();
+            editor_ui->select_obj->addComponent<GNoise>().init();
             ImGui::CloseCurrentPopup();
         }
         if (ImGui::Button("Animator", ImVec2(-1, 0)))
         {
-            EngineUI::getInstance().select_obj->addComponent<GAnimator>().init();
+            editor_ui->select_obj->addComponent<GAnimator>().init();
             ImGui::CloseCurrentPopup();
         }
-        if (!EngineUI::getInstance().select_obj->hasComponent<GCamera>())
+        if (!editor_ui->select_obj->hasComponent<GCamera>())
         {
             if (ImGui::Button("Camera", ImVec2(-1, 0)))
             {
-                EngineUI::getInstance().select_obj->addComponent<GCamera>().init();
+                editor_ui->select_obj->addComponent<GCamera>().init();
                 ImGui::CloseCurrentPopup();
             }
         }
