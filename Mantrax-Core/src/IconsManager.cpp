@@ -32,8 +32,14 @@ void IconsManager::init()
     IconsManager::icons->perspective = new TextureManager(FileManager::get_execute_path() + "icons/Perspective.png");
     IconsManager::icons->texture_error_icon = new TextureManager(FileManager::get_execute_path() + "icons/grid.png");
     IconsManager::icons->new_entity = new TextureManager(FileManager::get_execute_path() + "icons/NewEntity.png");
+    IconsManager::icons->animator = new TextureManager(FileManager::get_execute_path() + "icons/animator.png");
 
     std::cout << "ICONS MANAGER SETUP CORRECTLY" << std::endl;
+}
+
+unsigned int IconsManager::ANIMATOR()
+{
+    return IconsManager::icons->animator->get_texture();
 }
 
 unsigned int IconsManager::NEW_ENTITY()

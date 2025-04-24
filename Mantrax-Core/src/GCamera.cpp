@@ -1,17 +1,22 @@
 #include <GCamera.h>
 #include <RenderPipeline.h>
 #include <GarinMaths.h>
+#include <ServiceLocator.h>
 
 void GCamera::defines()
 {
-    GVAR(Depth, RenderPipeline::camera_targets.size(), int);
+    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+
+    GVAR(Depth, render_pipeline->camera_targets.size(), int);
     GVAR(Projection, true, bool);
 }
 
 void GCamera::init()
 {
-    a_camera = RenderPipeline::add_camera();
-    a_camera->render_id = RenderPipeline::add_render_texture()->get_render();
+    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+    
+    a_camera = render_pipeline->add_camera();
+    a_camera->render_id = render_pipeline->add_render_texture()->get_render();
 }
 
 void GCamera::update()
@@ -40,6 +45,8 @@ void GCamera::update()
 
 void GCamera::clean()
 {
-    auto &targets = RenderPipeline::camera_targets;
+    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+
+    auto &targets = render_pipeline->camera_targets;
     targets.erase(std::remove(targets.begin(), targets.end(), a_camera), targets.end());
 }

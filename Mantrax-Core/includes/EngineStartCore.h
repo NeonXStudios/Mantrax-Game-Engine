@@ -17,7 +17,9 @@ class GARINLIBS_API EngineStartCore
 public:
     SceneManager *sceneManager = nullptr;
     AudioManager *audioManager = nullptr;
+    RenderPipeline *render_pipeline = nullptr;
 
     void run_engine();
+    void render_engine();
     void shutdown_services();
 };

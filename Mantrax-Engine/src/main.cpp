@@ -14,11 +14,6 @@
 
 namespace fs = std::filesystem;
 
-EngineStartCore * engine_m = nullptr;
-GameBehaviourFactory *factory_behaviour = new GameBehaviourFactory();
-RenderPipeline *piprender = new RenderPipeline();
-EngineUI *engine = new EngineUI();
-
 // int start_engine(int argc, char *argv[]);
 
 // int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -37,6 +32,9 @@ EngineUI *engine = new EngineUI();
 
 int main(int argc, char *arvg[])
 {
+    EngineStartCore * engine_m = new EngineStartCore();
+    GameBehaviourFactory *factory_behaviour = new GameBehaviourFactory();
+
     if (argc == 0)
     {
         return -2;
@@ -46,8 +44,6 @@ int main(int argc, char *arvg[])
     FileManager::game_path = project_path.string() + "/";
 
     
-    ServiceLocator::provide_new<EngineStartCore>();
-    engine_m = ServiceLocator::get<EngineStartCore>().get();
     engine_m->run_engine();
 
     EngineUI *scene_game = &EngineUI::getInstance();
@@ -63,12 +59,12 @@ int main(int argc, char *arvg[])
         Gfx::timer_control();
         Gfx::process_window_size();
 
-        RenderPipeline::find_target_by_id(engine_m->sceneManager->get_current_scene()->main_camera->render_id)->bind_new_render_data("GizmosData",
+        engine_m->render_pipeline->find_target_by_id(engine_m->sceneManager->get_current_scene()->main_camera->render_id)->bind_new_render_data("GizmosData",
             [scene_game]()
                             { scene_game->on_draw(); }
         );
 
-        RenderPipeline::render([](){});
+        engine_m->render_pipeline->render([](){});
         scene_game->on_edition_mode(Timer::delta_time);
         engine_m->sceneManager->on_edition_mode();
         scene_game->draw_ui();

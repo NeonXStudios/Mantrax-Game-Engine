@@ -322,9 +322,10 @@ void AssetsFiles::ShowDirectoryTree(const std::filesystem::path &path)
                 EditorGUI::DrawIcon(IconsManager::SOUND());
             else if (extension == ".glsl" || extension == ".vert" || extension == ".frag" || extension == ".shader" || extension == ".slab")
                 EditorGUI::DrawIcon(IconsManager::SHADER());
+            else if (extension == ".animation")
+                EditorGUI::DrawIcon(IconsManager::ANIMATOR());
             else if (extension != ".garin")
                 EditorGUI::DrawIcon(IconsManager::UNKNOWN());
-
             // Comprobar si este archivo está seleccionado
             bool is_selected = (selected_item == entry.path().string());
 

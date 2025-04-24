@@ -3,13 +3,6 @@
 #include <IDGenerator.h>
 #include <ServiceLocator.h>
 
-std::unordered_set<int> RenderPipeline::layers_to_render;
-std::vector<ModelComponent *> RenderPipeline::renderables = std::vector<ModelComponent *>();
-std::vector<TextureTarget *> RenderPipeline::render_targets = std::vector<TextureTarget *>();
-std::vector<Camera *> RenderPipeline::camera_targets = std::vector<Camera *>();
-std::unordered_map<int, GMaterial *> RenderPipeline::m_materials = std::unordered_map<int, GMaterial *>();
-
-CanvasManager *RenderPipeline::canvas = nullptr;
 
 void RenderPipeline::init()
 {

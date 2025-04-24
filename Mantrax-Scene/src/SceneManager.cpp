@@ -292,6 +292,8 @@ Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
 
 Scene *SceneManager::make_new_empty_scene(std::string scene_name)
 {
+    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+
     Scene *scene_raw = new Scene();
     scene_raw->scene_name = scene_name;
     
@@ -303,7 +305,7 @@ Scene *SceneManager::make_new_empty_scene(std::string scene_name)
         {
 
             scene_raw->main_camera = new Camera();
-            scene_raw->main_camera->render_id = RenderPipeline::add_render_texture()->get_render();
+            scene_raw->main_camera->render_id = render_pipeline->add_render_texture()->get_render();
             scene_raw->main_camera->use_projection = false;
             scene_raw->main_camera->update();
         }

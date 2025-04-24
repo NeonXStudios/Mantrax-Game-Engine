@@ -12,12 +12,13 @@ using namespace nlohmann;
 void EditorConfigs::save_config()
 {
     SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
 
     json settings;
 
     settings["current_scene"] = sceneM->get_current_scene()->scene_name;
     settings["camera_state"] = sceneM->get_current_scene()->main_camera->use_projection;
-    settings["settings_render"] = RenderPipeline::layers_to_render;
+    settings["settings_render"] = render_pipeline->layers_to_render;
 
     settings["start_scene"] = start_scene;
     settings["camera_sens"] = camera_speed_sens;
@@ -29,6 +30,7 @@ void EditorConfigs::save_config()
 void EditorConfigs::load_config()
 {
     SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
 
     json settings = json::parse(FileManager::read_file(current_proyect + "/GameSettings.data"));
 
@@ -96,11 +98,11 @@ void EditorConfigs::load_config()
         std::cout << "Loading camera config" << std::endl;
     }
 
-    RenderPipeline::layers_to_render.clear();
+    render_pipeline->layers_to_render.clear();
 
     for (const auto &item : settings["settings_render"])
     {
-        RenderPipeline::layers_to_render.insert(item.get<int>());
+        render_pipeline->layers_to_render.insert(item.get<int>());
     }
 
     VarVerify::set_value_if_exists(settings, "camera_state", sceneM->get_current_scene()->main_camera->use_projection);

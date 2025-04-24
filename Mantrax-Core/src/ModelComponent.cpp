@@ -3,6 +3,7 @@
 #include <GarinIO.h>
 #include <IconsManager.h>
 #include <ResourcesManager.h>
+#include <ServiceLocator.h>
 
 using namespace nlohmann;
 
@@ -16,6 +17,8 @@ void ModelComponent::defines()
 
 void ModelComponent::init()
 {
+    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+
     std::cout << "****** Started Model" << std::endl;
 
     texture_sampler = ResourcesManager::get_resource<TextureManager>(GETVAR(ColorBase, std::string));
@@ -29,7 +32,7 @@ void ModelComponent::init()
 
     texture_sampler->active(GL_TEXTURE0);
 
-    RenderPipeline::renderables.push_back(this);
+    render_pipeline->renderables.push_back(this);
 }
 
 void ModelComponent::update()
@@ -58,6 +61,6 @@ std::string ModelComponent::serialize()
 
 void ModelComponent::clean()
 {
-    // CLEAN HERE
-    RenderPipeline::delete_from_render(this);
+    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+    render_pipeline->delete_from_render(this);
 }

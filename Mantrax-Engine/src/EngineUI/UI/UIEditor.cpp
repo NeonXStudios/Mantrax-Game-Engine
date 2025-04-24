@@ -1,10 +1,12 @@
 #include <UIEditor.h>
 #include <Gfx.h>
-
 #include <RenderPipeline.h>
+#include <ServiceLocator.h>
 
 void UIEditor::on_draw()
 {
+    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+
     std::string new_name = "UIEditor##" + std::to_string(window_id);
     ImGui::Begin(new_name.c_str(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDecoration);
 
@@ -18,7 +20,7 @@ void UIEditor::on_draw()
 
     if (ImGui::Button("Text", ImVec2(-1, 50)))
     {
-        RenderPipeline::canvas->add_new_ui_component_type_text();
+        render_pipeline->canvas->add_new_ui_component_type_text();
     }
 
     ImGui::Button("Button", ImVec2(-1, 50));

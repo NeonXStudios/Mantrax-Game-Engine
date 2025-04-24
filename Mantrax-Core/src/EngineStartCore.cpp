@@ -3,16 +3,19 @@
 
 void EngineStartCore::run_engine()
 {
-    
     ServiceLocator::provide_new<SceneManager>();
-    sceneManager = ServiceLocator::get<SceneManager>().get();
-
     ServiceLocator::provide_new<AudioManager>();
+    ServiceLocator::provide_new<RenderPipeline>();
+
+    sceneManager = ServiceLocator::get<SceneManager>().get();
     audioManager = ServiceLocator::get<AudioManager>().get();
+    render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+    
     audioManager->StartSystem();
     
     Gfx::create_windows();
-    RenderPipeline::init();
+
+    render_pipeline->init();
 
     sceneManager->on_awake();
 }

@@ -1,6 +1,7 @@
 #include "../includes/Gfx.h"
 #include <SceneManager.h>
 #include <RenderPipeline.h>
+#include <ServiceLocator.h>
 
 GLFWwindow *Gfx::window = nullptr;
 double Gfx::startTime = 0;
@@ -206,7 +207,8 @@ GLFWwindow *Gfx::get_game_window()
 
 void Gfx::setup_render_texture(int width, int height)
 {
-    Gfx::main_render = RenderPipeline::add_render_texture();
+    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+    Gfx::main_render = render_pipeline->add_render_texture();
 }
 
 void Gfx::render_to_texture()

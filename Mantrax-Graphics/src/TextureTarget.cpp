@@ -1,6 +1,7 @@
 #include <TextureTarget.h>
 #include <RenderPipeline.h>
 #include <Gfx.h>
+#include <ServiceLocator.h>
 
 void TextureTarget::setup()
 {
@@ -44,14 +45,14 @@ void TextureTarget::draw (
     {
         return;
     }
-
+    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
     glViewport(0, 0, Gfx::render_width, Gfx::render_height);
 
     Gfx::clear_render();
 
-    RenderPipeline::render_all_data(scene_data, camera_matrix, projection_matrix, view_matrix, camera_position);
+    render_pipeline->render_all_data(scene_data, camera_matrix, projection_matrix, view_matrix, camera_position);
 
     if (additional_Render != nullptr)
     {
@@ -116,10 +117,11 @@ unsigned int TextureTarget::get_render()
 
 TextureTarget::~TextureTarget()
 {
+    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
     cleanup();
 
     extra_renders.clear();
 
-    auto& targets = RenderPipeline::render_targets;
+    auto& targets = render_pipeline->render_targets;
     targets.erase(std::remove(targets.begin(), targets.end(), this), targets.end());
 }

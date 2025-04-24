@@ -70,6 +70,8 @@ glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
 
     glm::vec2 EventSystem::mouse_to_screen_pos(glm::vec2 WindowSize)
     {
+        RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+
         double x, y;
         glfwGetCursorPos(Gfx::get_game_window(), &x, &y);
 
@@ -80,8 +82,8 @@ glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
         double NormalMousePosY = (-windowMousePosY / Gfx::render_height);
 
         // CALCULAR CENTRO DE LA TEXTURA CON EL MOUSE (0, 0)
-        double centeredMousePosX = ((NormalMousePosX * 2.0f - 1.0f) * (Gfx::render_width / 2) * RenderPipeline::canvas->zoom);
-        double centeredMousePosY = ((NormalMousePosY * 2.0f + 1.0f) * (Gfx::render_height / 2) * RenderPipeline::canvas->zoom);
+        double centeredMousePosX = ((NormalMousePosX * 2.0f - 1.0f) * (Gfx::render_width / 2) * render_pipeline->canvas->zoom);
+        double centeredMousePosY = ((NormalMousePosY * 2.0f + 1.0f) * (Gfx::render_height / 2) * render_pipeline->canvas->zoom);
 
         double WorldPointX = centeredMousePosX;
         double WorldPointY = centeredMousePosY;
@@ -280,6 +282,8 @@ glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
     {
         try
         {
+            RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+
             SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
 
             if (sceneM->get_current_scene() != nullptr)
@@ -287,10 +291,10 @@ glm::vec2 EventSystem::ViewportRenderPosition = glm::vec2(0.0f, 0.0f);
                 float closestZ = std::numeric_limits<float>::lowest();
                 UIBehaviour *closestObject = nullptr;
 
-                for (int i = 0; i < RenderPipeline::canvas->ui.size(); i++)
+                for (int i = 0; i < render_pipeline->canvas->ui.size(); i++)
                 {
 
-                    UIBehaviour *objD = RenderPipeline::canvas->ui[i];
+                    UIBehaviour *objD = render_pipeline->canvas->ui[i];
 
                     if (objD == nullptr)
                     {

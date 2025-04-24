@@ -1,9 +1,13 @@
 #include <GraphicsManagerUI.h>
 #include <SceneData.h>
 #include <RenderPipeline.h>
+#include <ServiceLocator.h>
 
 void GraphicsManagerUI::on_draw()
 {
+    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+
+
     ImGui::Begin("Graphics Settings", &is_open);
     ImGui::BeginChild("Layers");
 
@@ -39,14 +43,14 @@ void GraphicsManagerUI::on_draw()
     {
         const int &layer = layerOptions[i];
         const std::string &layerName = layerNames[i];
-        bool isSelected = RenderPipeline::layers_to_render.find(layer) != RenderPipeline::layers_to_render.end();
+        bool isSelected = render_pipeline->layers_to_render.find(layer) != render_pipeline->layers_to_render.end();
 
         if (ImGui::Checkbox(layerName.c_str(), &isSelected))
         {
             if (isSelected)
-                RenderPipeline::addLayer(layer);
+                render_pipeline->addLayer(layer);
             else
-                RenderPipeline::removeLayer(layer);
+                render_pipeline->removeLayer(layer);
         }
     }
 

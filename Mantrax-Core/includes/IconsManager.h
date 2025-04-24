@@ -33,8 +33,10 @@ public:
     TextureManager *ortho;
     TextureManager *perspective;
     TextureManager *new_entity;
+    TextureManager *animator;
 
     static unsigned int ENGINE_LOGO();
+    static unsigned int ANIMATOR();
     static unsigned int NEW_ENTITY();
     static unsigned int SHADER();
     static unsigned int ORTHO();

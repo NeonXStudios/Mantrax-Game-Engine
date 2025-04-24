@@ -15,25 +15,25 @@
 class GARINLIBS_API RenderPipeline
 {
 public:
-    static CanvasManager *canvas;
-    static std::unordered_set<int> layers_to_render;
-    static std::vector<ModelComponent *> renderables;
-    static std::vector<TextureTarget *> render_targets;
-    static std::vector<Camera *> camera_targets;
-    static std::unordered_map<std::string, TextureTarget *> view_renders;
-    static std::unordered_map<int, GMaterial *> m_materials;
+    CanvasManager *canvas = nullptr;
+    std::unordered_set<int> layers_to_render;
+    std::vector<ModelComponent *> renderables = std::vector<ModelComponent *>();
+    std::vector<TextureTarget *> render_targets = std::vector<TextureTarget *>();
+    std::vector<Camera *> camera_targets = std::vector<Camera *>();
+    std::unordered_map<std::string, TextureTarget *> view_renders = std::unordered_map<std::string, TextureTarget *>();
+    std::unordered_map<int, GMaterial *> m_materials = std::unordered_map<int, GMaterial *>();
 
-    static void init();
-    static void render(std::function<void(void)> additional_Render);
+    void init();
+    void render(std::function<void(void)> additional_Render);
 
-    static void render_all_data(Scene* scene, glm::mat4 camera_matrix, glm::mat4 projection_matrix, glm::mat4 view_matrix, glm::vec3 camera_position);
-    static void delete_from_render(ModelComponent *renderable);
+    void render_all_data(Scene* scene, glm::mat4 camera_matrix, glm::mat4 projection_matrix, glm::mat4 view_matrix, glm::vec3 camera_position);
+    void delete_from_render(ModelComponent *renderable);
 
-    static void register_new_material(GMaterial *texture);
-    static void unregister_material(GMaterial *texture);
+    void register_new_material(GMaterial *texture);
+    void unregister_material(GMaterial *texture);
     GMaterial *get_material(int id);
 
-    static void set_lights_in_shader(GLuint shaderID, 
+    void set_lights_in_shader(GLuint shaderID, 
                         const std::vector<DirectionalLightData*>& dirLights,
                         const std::vector<PointLightData*>& pointLights,
                         const std::vector<SpotLightData*>& spotLights) 
@@ -79,10 +79,10 @@ public:
         }
     }
 
-    static void addLayer(int layer);
-    static void removeLayer(int layer);
-    static Camera *add_camera();
-    static TextureTarget *add_render_texture();
-    static TextureTarget* find_target_by_id(GLuint render_id_local);
-    static void renderQuad();
+    void addLayer(int layer);
+    void removeLayer(int layer);
+    Camera *add_camera();
+    TextureTarget *add_render_texture();
+    TextureTarget* find_target_by_id(GLuint render_id_local);
+    void renderQuad();
 };

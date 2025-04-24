@@ -1,6 +1,7 @@
 #include "../includes/GMaterial.h"
 #include <ResourcesManager.h>
 #include <RenderPipeline.h>
+#include <ServiceLocator.h>
 
 void GMaterial::defines()
 {
@@ -29,10 +30,12 @@ void GMaterial::clean()
 
 GMaterial::GMaterial()
 {
-    RenderPipeline::register_new_material(this);
+    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+    render_pipeline->register_new_material(this);
 }
 
 GMaterial::~GMaterial()
 {
-    RenderPipeline::unregister_material(this);
+    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+    render_pipeline->unregister_material(this);
 }
