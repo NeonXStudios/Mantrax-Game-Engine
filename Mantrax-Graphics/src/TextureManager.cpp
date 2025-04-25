@@ -36,7 +36,7 @@ TextureManager::TextureManager(const std::string &texture_path)
         }
     }
     else
-    {
+    { 
         std::cerr << "Error loading texture: " << texture_path << std::endl;
         std::cerr << "STB Error: " << stbi_failure_reason() << std::endl;
         glDeleteTextures(1, &texture_maked);
@@ -46,7 +46,7 @@ TextureManager::TextureManager(const std::string &texture_path)
     stbi_image_free(data);
 
     if (texture_maked == 0) {
-        std::cerr << "Critical error: Texture ID is 0 after initialization for: " << texture_path << std::endl;
+        std::cerr << "Critical error: Texture ID is 0 after initialization for: "<< texture_path << std::endl;
     }
 }
 

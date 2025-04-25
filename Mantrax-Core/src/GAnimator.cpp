@@ -1,4 +1,6 @@
 #include "../includes/GAnimator.h"
+#include <ServiceLocator.h>
+#include <MaterialService.h>
 
 void GAnimator::defines()
 {
@@ -137,7 +139,9 @@ void GAnimator::next_frame()
                     {
                         if (current_frame < stateFound.frames.size())
                         {
-                            entity->getComponent<ModelComponent>().texture_sampler->set_texture(stateFound.frames[current_frame].texture_loaded->get_texture());
+                            ServiceLocator::get<MaterialService>().get()->
+                                                                        get_material(entity->getComponent<ModelComponent>().component_id)
+                                                                      ->get_texture("BASE")->set_texture(stateFound.frames[current_frame].texture_loaded->get_texture());
                             wait_time = stateFound.frames[current_frame].duration;
                         }
 

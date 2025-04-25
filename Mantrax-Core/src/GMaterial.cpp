@@ -24,18 +24,25 @@ void GMaterial::update()
     }
 }
 
+void GMaterial::create_texture(const std::string& name, std::string texture_path)
+{
+    if (textures.find(name) == textures.end())
+    {
+        textures[name] = new TextureManager(texture_path);
+    }
+}
+
+TextureManager* GMaterial::get_texture(const std::string& name)
+{
+    auto it = textures.find(name);
+    if (it != textures.end())
+    {
+        return it->second;
+    }
+    return nullptr;
+}
+
 void GMaterial::clean()
 {
-}
 
-GMaterial::GMaterial()
-{
-    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
-    render_pipeline->register_new_material(this);
-}
-
-GMaterial::~GMaterial()
-{
-    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
-    render_pipeline->unregister_material(this);
 }

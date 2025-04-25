@@ -11,27 +11,24 @@
 #include <functional>
 #include <CanvasManager.h>
 #include <TextureManager.h>
+#include <MaterialService.h>
 
 class GARINLIBS_API RenderPipeline
 {
 public:
     CanvasManager *canvas = nullptr;
+    MaterialService* p_materials = nullptr;
     std::unordered_set<int> layers_to_render;
     std::vector<ModelComponent *> renderables = std::vector<ModelComponent *>();
     std::vector<TextureTarget *> render_targets = std::vector<TextureTarget *>();
     std::vector<Camera *> camera_targets = std::vector<Camera *>();
     std::unordered_map<std::string, TextureTarget *> view_renders = std::unordered_map<std::string, TextureTarget *>();
-    std::unordered_map<int, GMaterial *> m_materials = std::unordered_map<int, GMaterial *>();
 
     void init();
     void render(std::function<void(void)> additional_Render);
 
     void render_all_data(Scene* scene, glm::mat4 camera_matrix, glm::mat4 projection_matrix, glm::mat4 view_matrix, glm::vec3 camera_position);
     void delete_from_render(ModelComponent *renderable);
-
-    void register_new_material(GMaterial *texture);
-    void unregister_material(GMaterial *texture);
-    GMaterial *get_material(int id);
 
     void set_lights_in_shader(GLuint shaderID, 
                         const std::vector<DirectionalLightData*>& dirLights,

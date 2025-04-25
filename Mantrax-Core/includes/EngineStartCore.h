@@ -10,11 +10,13 @@
 #include <filesystem>
 #include <EngineUI.h>
 #include <ServiceLocator.h>
+#include <MaterialService.h>
 #include <Core.h>
 
 class GARINLIBS_API EngineStartCore
 {
 public:
+MaterialService* material_manager = nullptr;
     SceneManager *sceneManager = nullptr;
     AudioManager *audioManager = nullptr;
     RenderPipeline *render_pipeline = nullptr;

@@ -13,6 +13,8 @@ void RenderPipeline::init()
     {
         std::cout << "First render target its null" << std::endl;
     }
+
+    p_materials = ServiceLocator::get<MaterialService>().get();
 }
 
 void RenderPipeline::render(std::function<void(void)> additional_Render)
@@ -87,16 +89,22 @@ void RenderPipeline::render_all_data(Scene* scene, glm::mat4 camera_matrix, glm:
         {
             if (cmp->entity->hasComponent<GMaterial>())
             {
-                GMaterial &material = cmp->entity->getComponent<GMaterial>();
-
-                if (scene->verify_if_entity_is_from_this_scene(material.entity))
+                GMaterial* materialPtr = p_materials->get_material(cmp->get_var<int>("MaterialID"));
+                if (!materialPtr) {
+                    std::cout << "Material With ID: " << cmp->get_var<int>("MaterialID") << " Not Found" << std::endl;
+                    continue;
+                }
+                
+                GMaterial& material = *materialPtr;
+                
+                
+                if (scene->verify_if_entity_is_from_this_scene(cmp->entity))
                 {
-
                     if (layers_to_render.find(cmp->entity->Layer) != layers_to_render.end() && material.enabled)
                     {
                         material.p_shader->use();
-
-                        cmp->texture_sampler->use_texture(material.p_shader->ID);
+                        
+                        material.get_texture("BASE")->use_texture(material.p_shader->ID);
 
                         material.p_shader->setMat4("model", cmp->get_transform()->get_matrix());
                         material.p_shader->setVec3("viewPos", camera_position);
@@ -110,7 +118,7 @@ void RenderPipeline::render_all_data(Scene* scene, glm::mat4 camera_matrix, glm:
 
                         set_lights_in_shader(material.p_shader->ID, 
                                              sceneM->get_current_scene()->direction_lights, 
-                                             sceneM->get_current_scene()->point_lights, 
+                                             sceneM->get_current_scene()->point_lights,
                                              sceneM->get_current_scene()->spot_lights);
 
                         // material.p_shader->setBool("showBothSides", false);
@@ -151,43 +159,6 @@ void RenderPipeline::addLayer(int layer)
 void RenderPipeline::removeLayer(int layer)
 {
     layers_to_render.erase(layer);
-}
-
-void RenderPipeline::register_new_material(GMaterial *mat)
-{
-    int id_generated = IDGenerator::generate_id();
-    m_materials.emplace(id_generated, mat);
-}
-
-void RenderPipeline::unregister_material(GMaterial *mat)
-{
-    auto it = std::find_if(
-        m_materials.begin(),
-        m_materials.end(),
-        [mat](const std::pair<int, GMaterial *> &entry)
-        {
-            return entry.second == mat;
-        });
-
-    if (it != m_materials.end())
-    {
-        delete it->second;
-        m_materials.erase(it);
-    }
-    else
-    {
-        std::cerr << "Error: La textura no se encontró en el mapa." << std::endl;
-    }
-}
-
-GMaterial *RenderPipeline::get_material(int id)
-{
-    auto it = m_materials.find(id);
-    if (it != m_materials.end())
-    {
-        return it->second;
-    }
-    return nullptr;
 }
 
 TextureTarget *RenderPipeline::add_render_texture()

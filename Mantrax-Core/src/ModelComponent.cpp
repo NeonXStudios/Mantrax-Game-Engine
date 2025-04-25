@@ -9,10 +9,8 @@ using namespace nlohmann;
 
 void ModelComponent::defines()
 {
+    GVAR(MaterialID, -1, int);
     GVAR(Model, "assets/packages/models/Plane.fbx", std::string);
-
-    GVAR(ColorBase, "", std::string);
-    GVAR(CastAmbience, true, bool);
 }
 
 void ModelComponent::init()
@@ -21,17 +19,7 @@ void ModelComponent::init()
 
     std::cout << "****** Started Model" << std::endl;
 
-    texture_sampler = ResourcesManager::get_resource<TextureManager>(GETVAR(ColorBase, std::string));
-
-    if (!FileManager::check_file_if_exist(FileManager::get_project_path() + GETVAR(ColorBase, std::string)))
-    {
-        texture_sampler->set_texture(IconsManager::TEXTURE_ERROR());
-    }
-
     model = ResourcesManager::get_resource<Model>(GETVAR(Model, std::string));
-
-    texture_sampler->active(GL_TEXTURE0);
-
     render_pipeline->renderables.push_back(this);
 }
 

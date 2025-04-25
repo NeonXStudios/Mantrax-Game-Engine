@@ -18,11 +18,11 @@ public:
 
     std::unordered_map<std::string, TextureManager *> textures;
 
-    GMaterial();
-    ~GMaterial();
-
     void defines() override;
     void init() override;
     void update() override;
     void clean() override;
+
+    void create_texture(const std::string& name, std::string texture_path);
+    TextureManager* get_texture(const std::string& name);
 };
