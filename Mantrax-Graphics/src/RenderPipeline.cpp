@@ -90,7 +90,9 @@ void RenderPipeline::render_all_data(Scene* scene, glm::mat4 camera_matrix, glm:
             if (cmp->entity->hasComponent<GMaterial>())
             {
                 GMaterial* materialPtr = p_materials->get_material(cmp->get_var<int>("MaterialID"));
+
                 if (!materialPtr) {
+
                     continue;
                 }
                 

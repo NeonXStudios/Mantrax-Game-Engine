@@ -11,6 +11,7 @@
 #include <GarinMaths.h>
 #include <UIMasterDrawer.h>
 #include <ServiceLocator.h>
+#include <GLightPoint.h>
 
 void EngineUI::on_awake()
 {
@@ -192,6 +193,15 @@ void EngineUI::on_draw()
         sphere_gizmo->render(sceneM->get_current_scene()->main_camera->GetView(),
                              sceneM->get_current_scene()->main_camera->GetProjectionMatrix(),
                              select_obj->get_transform()->Position, t_max, glm::vec3(0.0f));
+
+        sphere_gizmo->render(sceneM->get_current_scene()->main_camera->GetView(),
+                             sceneM->get_current_scene()->main_camera->GetProjectionMatrix(),
+                             select_obj->get_transform()->Position, t_min, glm::vec3(0.0f));
+    }
+
+    if (select_obj != nullptr && select_obj->hasComponent<GLightPoint>())
+    {
+        glm::vec3 t_min = glm::vec3(std::any_cast<float>(select_obj->getComponent<GLightPoint>().variableMap["Radius"]));
 
         sphere_gizmo->render(sceneM->get_current_scene()->main_camera->GetView(),
                              sceneM->get_current_scene()->main_camera->GetProjectionMatrix(),

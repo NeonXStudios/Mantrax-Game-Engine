@@ -9,13 +9,14 @@ class VarVerify
 {
 public:
     template <typename T>
-    static void set_value_if_exists(const json &j, const std::string &key, T &value)
+    static bool set_value_if_exists(const json &j, const std::string &key, T &value)
     {
         try
         {
             if (j.contains(key))
             {
                 value = j[key].get<T>();
+                return true;
             }
         }
         catch (const json::type_error &e)
@@ -34,5 +35,7 @@ public:
         {
             std::cerr << "Unknown error occurred." << std::endl;
         }
+
+        return false;
     }
 };

@@ -1,6 +1,8 @@
 #include <MaterialService.h>
 #include <nlohmann/json.hpp>
 #include <IconsManager.h>
+#include <VarVerify.h>
+#include <IDGenerator.h>
 
 using namespace nlohmann;
 
@@ -41,7 +43,16 @@ void MaterialService::start_services(){
             std::cout << "Material Loaded: " << (FileManager::get_project_path() + (std::string)data_loaded["BaseMap"]) << std::endl;
         }
 
+        if (data_loaded.contains("ID"))
+        {
+            mat->set_var<int>("MaterialID", (int)data_loaded["ID"]);
+        }else{
+            mat->set_var<int>("MaterialID", IDGenerator::generate_id());
+        }
+
         mat->create_texture("BASE", (FileManager::get_project_path() + (std::string)data_loaded["BaseMap"]));
+
+        std::cout << "Debug ID: " << mat->get_var<int>("MaterialID") << std::endl;
     }
 
     std::cout << "Total Materials Found: " << FileManager::get_files_by_extension(FileManager::get_project_path(), ".mat").size() << std::endl;
@@ -62,16 +73,20 @@ GMaterial* MaterialService::add_new_material()
     GMaterial* newMat = new GMaterial();  
     newMat->defines();
     newMat->init();
-    newMat->set_var<int>("MaterialID", materials.size());
     materials.push_back(newMat);         
     return newMat;                      
 }
 
 GMaterial* MaterialService::get_material(int id)
 {
-    if (id >= 0 && id < static_cast<int>(materials.size()))
+    for (GMaterial* mat : materials)
     {
-        return materials[id];
+        if (id == mat->get_var<int>("MaterialID"))
+        {   
+            return mat;
+        }
     }
+    
+    
     return nullptr;
 }
