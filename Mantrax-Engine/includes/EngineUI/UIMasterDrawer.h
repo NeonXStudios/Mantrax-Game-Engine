@@ -15,6 +15,7 @@
 #include <AnimatorView.h>
 #include <UIEditor.h>
 #include <CompilerView.h>
+#include <MaterialMaker.h>
 
 // BEHAVIOUR
 #include <EngineUIBehaviour.h>
