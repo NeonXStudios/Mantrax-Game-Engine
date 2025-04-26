@@ -456,9 +456,9 @@ private:
 class GizmoSphere
 {
 public:
-    GizmoSphere(float radius = 1.0f, unsigned int stacks = 18, unsigned int slices = 36)
+    GizmoSphere(float radius = 1.0f, unsigned int segments = 36)
     {
-        setupSphere(radius, stacks, slices);
+        setupSphere(radius, segments);
     }
 
     ~GizmoSphere()
@@ -496,47 +496,21 @@ private:
     unsigned int shaderProgram;
     unsigned int indicesCount;
 
-    void setupSphere(float radius, unsigned int stacks, unsigned int slices)
+    void setupSphere(float radius, unsigned int segments)
     {
         std::vector<float> vertices;
         std::vector<unsigned int> indices;
 
-        // Generar vértices
-        for (unsigned int i = 0; i <= stacks; ++i)
-        {
-            float stackAngle = glm::pi<float>() * (-0.5f + (float)i / stacks); // De -PI/2 a PI/2
-            float xy = radius * cos(stackAngle);
-            float z = radius * sin(stackAngle);
+        // Los tres círculos principales como en el gizmo de Unity
 
-            for (unsigned int j = 0; j <= slices; ++j)
-            {
-                float sliceAngle = 2.0f * glm::pi<float>() * (float)j / slices;
-                float x = xy * cos(sliceAngle);
-                float y = xy * sin(sliceAngle);
+        // 1. Círculo en el plano XZ (horizontal, como el ecuador)
+        addCircleXZ(vertices, indices, radius, segments);
 
-                vertices.push_back(x);
-                vertices.push_back(y);
-                vertices.push_back(z);
-            }
-        }
+        // 2. Círculo en el plano YZ (vertical)
+        addCircleYZ(vertices, indices, radius, segments);
 
-        // Generar índices
-        for (unsigned int i = 0; i < stacks; ++i)
-        {
-            for (unsigned int j = 0; j < slices; ++j)
-            {
-                unsigned int first = (i * (slices + 1)) + j;
-                unsigned int second = first + slices + 1;
-
-                indices.push_back(first);
-                indices.push_back(second);
-                indices.push_back(first + 1);
-
-                indices.push_back(second);
-                indices.push_back(second + 1);
-                indices.push_back(first + 1);
-            }
-        }
+        // 3. Círculo en el plano XY (vertical)
+        addCircleXY(vertices, indices, radius, segments);
 
         indicesCount = indices.size();
 
@@ -592,6 +566,87 @@ private:
 
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
+    }
+
+    // Añade un círculo en el plano XZ (horizontal)
+    void addCircleXZ(std::vector<float> &vertices, std::vector<unsigned int> &indices, float radius, unsigned int segments)
+    {
+        unsigned int baseIndex = vertices.size() / 3;
+
+        for (unsigned int i = 0; i <= segments; ++i)
+        {
+            float angle = 2.0f * glm::pi<float>() * (float)i / segments;
+            float x = radius * cos(angle);
+            float z = radius * sin(angle);
+
+            vertices.push_back(x);
+            vertices.push_back(0.0f); // Y siempre es 0 para un círculo en el plano XZ
+            vertices.push_back(z);
+
+            if (i < segments)
+            {
+                indices.push_back(baseIndex + i);
+                indices.push_back(baseIndex + i + 1);
+            }
+        }
+
+        // Cerrar el círculo
+        indices.push_back(baseIndex + segments);
+        indices.push_back(baseIndex);
+    }
+
+    // Añade un círculo en el plano YZ (vertical)
+    void addCircleYZ(std::vector<float> &vertices, std::vector<unsigned int> &indices, float radius, unsigned int segments)
+    {
+        unsigned int baseIndex = vertices.size() / 3;
+
+        for (unsigned int i = 0; i <= segments; ++i)
+        {
+            float angle = 2.0f * glm::pi<float>() * (float)i / segments;
+            float y = radius * cos(angle);
+            float z = radius * sin(angle);
+
+            vertices.push_back(0.0f); // X siempre es 0 para un círculo en el plano YZ
+            vertices.push_back(y);
+            vertices.push_back(z);
+
+            if (i < segments)
+            {
+                indices.push_back(baseIndex + i);
+                indices.push_back(baseIndex + i + 1);
+            }
+        }
+
+        // Cerrar el círculo
+        indices.push_back(baseIndex + segments);
+        indices.push_back(baseIndex);
+    }
+
+    // Añade un círculo en el plano XY (vertical)
+    void addCircleXY(std::vector<float> &vertices, std::vector<unsigned int> &indices, float radius, unsigned int segments)
+    {
+        unsigned int baseIndex = vertices.size() / 3;
+
+        for (unsigned int i = 0; i <= segments; ++i)
+        {
+            float angle = 2.0f * glm::pi<float>() * (float)i / segments;
+            float x = radius * cos(angle);
+            float y = radius * sin(angle);
+
+            vertices.push_back(x);
+            vertices.push_back(y);
+            vertices.push_back(0.0f); // Z siempre es 0 para un círculo en el plano XY
+
+            if (i < segments)
+            {
+                indices.push_back(baseIndex + i);
+                indices.push_back(baseIndex + i + 1);
+            }
+        }
+
+        // Cerrar el círculo
+        indices.push_back(baseIndex + segments);
+        indices.push_back(baseIndex);
     }
 
     unsigned int compileShader(GLenum type, const char *source)
@@ -902,8 +957,8 @@ private:
             0.0f, 0.0f, 1.0f, // extremo (1)
 
             // Punta de la flecha (triángulo)
-            0.0f, 0.0f, 1.0f, // punta (2)
-            0.1f, 0.0f, 0.9f, // lado derecho de la punta (3)
+            0.0f, 0.0f, 1.0f,  // punta (2)
+            0.1f, 0.0f, 0.9f,  // lado derecho de la punta (3)
             -0.1f, 0.0f, 0.9f, // lado izquierdo de la punta (4)
         };
 

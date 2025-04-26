@@ -8,12 +8,12 @@
 void Inspector::on_draw()
 {
     EngineUI *editor_ui = ServiceLocator::get<EngineUI>().get();
-    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
 
     if (editor_ui->select_obj == nullptr)
         return;
 
-    if (sceneM->get_parent_scene_from_object(editor_ui->select_obj) != sceneM->get_current_scene()) 
+    if (sceneM->get_parent_scene_from_object(editor_ui->select_obj) != sceneM->get_current_scene())
         return;
 
     std::string new_name = "Inspector##" + std::to_string(window_id);
@@ -24,25 +24,24 @@ void Inspector::on_draw()
         ImGui::BeginGroup();
         static char nameBuf[256];
         strcpy(nameBuf, editor_ui->select_obj->name_object.c_str());
-        
+
         float availableWidth = ImGui::GetContentRegionAvail().x - 25;
         ImGui::SetNextItemWidth(availableWidth);
-        
+
         if (ImGui::InputText("##Name", nameBuf, sizeof(nameBuf)))
         {
             editor_ui->select_obj->name_object = nameBuf;
         }
 
         ImGui::SameLine(availableWidth + 5);
-        
-        // Centramos el texto "+" en el botón
+
         float buttonSize = 20;
         ImVec2 cursorPos = ImGui::GetCursorPos();
         if (ImGui::Button("##AddComponent", ImVec2(buttonSize, buttonSize)))
         {
             ImGui::OpenPopup("AddComponentPopup");
         }
-        
+
         // Calculamos la posición para centrar el "+"
         ImVec2 textSize = ImGui::CalcTextSize("+");
         float textPosX = cursorPos.x + (buttonSize - textSize.x) * 0.5f;
@@ -50,9 +49,8 @@ void Inspector::on_draw()
         ImGui::GetWindowDrawList()->AddText(
             ImVec2(ImGui::GetWindowPos().x + textPosX, ImGui::GetWindowPos().y + textPosY),
             ImGui::GetColorU32(ImGui::GetStyle().Colors[ImGuiCol_Text]),
-            "+"
-        );
-        
+            "+");
+
         ImGui::EndGroup();
         ImGui::Spacing();
     }
@@ -97,11 +95,10 @@ void Inspector::on_draw()
     ImGui::Spacing();
 
     // Transform
-    TransformComponent* transform = editor_ui->select_obj->get_transform();
+    TransformComponent *transform = editor_ui->select_obj->get_transform();
     {
         ImGui::TextDisabled("TRANSFORM");
         ImGui::Spacing();
-
 
         // Position
         ImGui::TextDisabled("Position");
@@ -129,7 +126,7 @@ void Inspector::on_draw()
     // Components
     UIAdministrator::draw_ui(editor_ui->select_obj);
 
-     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
     if (ImGui::BeginPopup("AddComponentPopup", ImGuiWindowFlags_NoMove))

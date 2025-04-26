@@ -6,6 +6,8 @@
 #include <GarinUI.h>
 #include <IconsManager.h>
 #include <Core.h>
+#include <MaterialService.h>
+#include <ServiceLocator.h>
 #include <GarinComponents.h>
 
 using namespace std;
@@ -13,7 +15,7 @@ using namespace std;
 class GARINLIBS_API EditorGUI
 {
 public:
-    static std::string InputText(const std::string &Name, const std::string &value, ImVec2 size = ImVec2(200, 20))
+    static std::string InputText(const std::string &Name, const std::string &value, ImVec2 size = ImVec2(200, 30))
     {
         char GetName[128];
         strcpy_s(GetName, value.c_str());
@@ -204,12 +206,12 @@ public:
         std::string component_name = componentName + "##" + std::to_string(component->component_id);
 
         bool treeNodeOpen = ImGui::TreeNodeEx(component_name.c_str(),
-                                              ImGuiTreeNodeFlags_DefaultOpen | 
+                                              ImGuiTreeNodeFlags_DefaultOpen |
                                                   ImGuiTreeNodeFlags_AllowItemOverlap);
 
         ImGui::PopStyleVar(2);
 
-        float iconOffset = 28.0f; 
+        float iconOffset = 28.0f;
         ImGui::SameLine(ImGui::GetContentRegionMax().x - iconOffset);
 
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(3.0f, 2.0f));
@@ -260,7 +262,7 @@ public:
                 else
                 {
                     GCamera *cameraComponent = &owner->getComponent<GCamera>();
-                    
+
                     if (cameraComponent && cameraComponent->a_camera->render_id != -1)
                     {
                         GLuint textureID = cameraComponent->a_camera->render_id;
@@ -281,6 +283,70 @@ public:
                 }
             }
 
+            if (componentName == "ModelComponent")
+            {
+                ImVec2 windowSize = ImVec2(ImGui::GetContentRegionAvail().x, 150);
+                ModelComponent *model_component = &owner->getComponent<ModelComponent>();
+                MaterialService *mat_service = ServiceLocator::get<MaterialService>().get();
+                GMaterial *current_material = mat_service->get_material(model_component->get_var<int>("MaterialID"));
+
+                if (current_material)
+                {
+                    ImTextureID current_texture_id = (void *)(intptr_t)current_material->get_texture("BASE")->get_texture();
+                    ImGui::Image(current_texture_id, ImVec2(100, 100));
+                }
+
+                if (ImGui::Button("Select Material", ImVec2(120, 30)))
+                {
+                    ImGui::OpenPopup("MaterialSelectorPopup");
+                }
+
+                ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+                ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+                if (ImGui::BeginPopup("MaterialSelectorPopup"))
+                {
+                    ImGui::Text("Select Material:");
+                    ImGui::Separator();
+
+                    float popupWidth = ImGui::GetContentRegionAvail().x;
+                    int columns = std::max(1, (int)(popupWidth / 110));
+
+                    if (columns > 1)
+                    {
+                        ImGui::Columns(columns, nullptr, false);
+                    }
+
+                    for (GMaterial *mat_get : mat_service->materials)
+                    {
+                        ImTextureID texture_id = (void *)(intptr_t)mat_get->get_texture("BASE")->get_texture();
+
+                        ImGui::PushID(mat_get);
+
+                        if (ImGui::ImageButton(texture_id, ImVec2(100, 100)))
+                        {
+                            int material_id = mat_get->get_var<int>("MaterialID");
+                            model_component->set_var<int>("MaterialID", material_id);
+
+                            ImGui::CloseCurrentPopup();
+                        }
+
+                        ImGui::PopID();
+
+                        if (columns > 1)
+                        {
+                            ImGui::NextColumn();
+                        }
+                    }
+
+                    if (columns > 1)
+                    {
+                        ImGui::Columns(1);
+                    }
+
+                    ImGui::EndPopup();
+                }
+            }
             if (componentName == "GAnimator")
             {
                 if (ImGui::Button("Open Animator", ImVec2(-1, 20)))
