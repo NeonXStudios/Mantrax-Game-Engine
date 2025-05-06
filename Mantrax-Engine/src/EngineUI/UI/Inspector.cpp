@@ -198,6 +198,11 @@ void Inspector::on_draw()
             editor_ui->select_obj->addComponent<GLightDirectional>().init();
             ImGui::CloseCurrentPopup();
         }
+        if (ImGui::Button("Tile Map", ImVec2(-1, 0)))
+        {
+            editor_ui->select_obj->addComponent<TileMap>().init();
+            ImGui::CloseCurrentPopup();
+        }
         if (!editor_ui->select_obj->hasComponent<GCamera>())
         {
             if (ImGui::Button("Camera", ImVec2(-1, 0)))

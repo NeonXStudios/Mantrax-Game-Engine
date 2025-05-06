@@ -3,12 +3,12 @@
 
 void SceneData::load_scene(std::string scene_name_new, bool is_additive)
 {
-    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
-    
+    SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
+
     sceneM->load_scene(scene_name_new, is_additive);
 }
 
-void SceneData::save_scene(Scene* current_scene, std::string extension)
+void SceneData::save_scene(Scene *current_scene, std::string extension)
 {
     try
     {
@@ -89,6 +89,22 @@ void SceneData::save_scene(Scene* current_scene, std::string extension)
                         datavar["value"] = {val.x, val.y, val.z};
                         datavar["type"] = "v3";
                     }
+                    else if (value.type() == typeid(std::vector<std::string>))
+                    {
+                        std::vector<std::string> val = std::any_cast<std::vector<std::string>>(value);
+
+                        std::cout << "First Val: " << val[0] << std::endl;
+
+                        datavar["name"] = key;
+
+                        datavar["value"] = nlohmann::json::array();
+                        for (const auto &str : val)
+                        {
+                            datavar["value"].push_back(str);
+                        }
+
+                        datavar["type"] = "string_array";
+                    }
 
                     varsdata.push_back(datavar);
                 }
@@ -111,10 +127,9 @@ void SceneData::save_scene(Scene* current_scene, std::string extension)
     }
 }
 
-
-void SceneData::save_entitie(Scene* current_scene)
+void SceneData::save_entitie(Scene *current_scene)
 {
-try
+    try
     {
         json object;
         for (size_t i = 0; i < current_scene->objects_worlds.size(); i++)
@@ -192,6 +207,22 @@ try
                         datavar["name"] = key;
                         datavar["value"] = {val.x, val.y, val.z};
                         datavar["type"] = "v3";
+                    }
+                    else if (value.type() == typeid(std::vector<std::string>))
+                    {
+                        std::vector<std::string> val = std::any_cast<std::vector<std::string>>(value);
+
+                        std::cout << "First Val: " << val[0] << std::endl;
+
+                        datavar["name"] = key;
+
+                        datavar["value"] = nlohmann::json::array();
+                        for (const auto &str : val)
+                        {
+                            datavar["value"].push_back(str);
+                        }
+
+                        datavar["type"] = "string_array";
                     }
 
                     varsdata.push_back(datavar);

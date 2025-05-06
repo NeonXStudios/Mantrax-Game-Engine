@@ -17,6 +17,8 @@ public:
 
     char script_name[128] = "";
     std::string selected_item;
+    std::string popup_name = "";
+    std::string selected_folder = "";
 
     void ShowDirectoryTree(const std::filesystem::path &path);
     void drawer_files(std::string extension, std::string filename, std::string file_path_complete);

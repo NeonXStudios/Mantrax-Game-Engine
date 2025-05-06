@@ -15,7 +15,7 @@ using namespace std;
 class GARINLIBS_API EditorGUI
 {
 public:
-    static std::string InputText(const std::string &Name, const std::string &value, ImVec2 size = ImVec2(200, 30))
+    static std::string InputText(const std::string &Name, const std::string &value, ImVec2 size = ImVec2(-1, 30))
     {
         char GetName[128];
         strcpy_s(GetName, value.c_str());
@@ -23,7 +23,7 @@ public:
         ImGui::SetNextItemWidth(size.x);
 
         ImGui::InputTextMultiline(
-            Name.c_str(),
+            _labelPrefix(Name.c_str()).c_str(),
             GetName, sizeof(GetName),
             ImVec2(size.x, size.y),
             ImGuiInputTextFlags_AutoSelectAll);
@@ -106,9 +106,22 @@ public:
         return text;
     }
 
-    static float Float(const std::string &name, float value)
+    static float Float(const std::string &name, float value, ImVec2 size = ImVec2(50, 20))
     {
+        ImGuiStyle &style = ImGui::GetStyle();
+        ImVec2 original_padding = style.FramePadding;
+
+        float target_height = size.y;
+        float font_height = ImGui::GetFontSize();
+        float padding_y = (target_height - font_height) * 0.5f;
+        style.FramePadding.y = std::max(padding_y, 0.0f);
+
+        ImGui::SetNextItemWidth(size.x);
+
         ImGui::DragFloat(name.c_str(), &value);
+
+        style.FramePadding = original_padding;
+
         return value;
     }
 
@@ -293,10 +306,10 @@ public:
                 if (current_material)
                 {
                     ImTextureID current_texture_id = (void *)(intptr_t)current_material->get_texture("BASE")->get_texture();
-                    ImGui::Image(current_texture_id, ImVec2(100, 100));
+                    ImGui::Image(current_texture_id, ImVec2(32, 32));
                 }
 
-                if (ImGui::Button("Select Material", ImVec2(120, 30)))
+                if (ImGui::Button("Select Material", ImVec2(-1, 30)))
                 {
                     ImGui::OpenPopup("MaterialSelectorPopup");
                 }
@@ -370,7 +383,6 @@ public:
         {
             ImGui::Dummy(ImVec2(10.0f, 0.0f));
             ImGui::SameLine();
-            ImGui::Separator();
 
             if (value.type() == typeid(std::string))
             {
@@ -393,13 +405,17 @@ public:
                 ImVec2 val_text_size = ImGui::CalcTextSize(val_str.c_str());
                 ImVec2 val_pos = ImGui::GetCursorScreenPos();
 
-                float offset = 2.0f;
+                float offset = 0.0f;
                 float rounding = 2.0f;
                 ImDrawList *draw_list = ImGui::GetWindowDrawList();
                 ImVec4 bg_color = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+                ImVec2 window_pos = ImGui::GetWindowPos();
+                ImVec2 content_region_max = ImGui::GetWindowContentRegionMax();
+                float full_width = window_pos.x + content_region_max.x;
+
                 draw_list->AddRectFilled(
                     ImVec2(val_pos.x - offset, val_pos.y - offset),
-                    ImVec2(val_pos.x + val_text_size.x + offset, val_pos.y + val_text_size.y + offset),
+                    ImVec2(full_width, val_pos.y + val_text_size.y + offset),
                     ImGui::GetColorU32(bg_color),
                     rounding);
 
@@ -634,7 +650,7 @@ public:
         ImGui::Text(label);
         ImGui::SameLine();
 
-        ImGui::SetCursorPosX(x + width * 0.5f + ImGui::GetStyle().ItemInnerSpacing.x);
+        ImGui::SetCursorPosX(x + width * 0.2f + ImGui::GetStyle().ItemInnerSpacing.x);
         ImGui::SetNextItemWidth(-1);
 
         std::string labelID = "##";

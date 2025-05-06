@@ -9,13 +9,13 @@ using namespace nlohmann;
 
 void ModelComponent::defines()
 {
-    GVAR(MaterialID, -1, int);
     GVAR(Model, "assets/packages/models/Plane.fbx", std::string);
+    GVAR(MaterialID, -1, int);
 }
 
 void ModelComponent::init()
 {
-    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+    RenderPipeline *render_pipeline = ServiceLocator::get<RenderPipeline>().get();
 
     std::cout << "****** Started Model" << std::endl;
 
@@ -49,6 +49,6 @@ std::string ModelComponent::serialize()
 
 void ModelComponent::clean()
 {
-    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+    RenderPipeline *render_pipeline = ServiceLocator::get<RenderPipeline>().get();
     render_pipeline->delete_from_render(this);
 }

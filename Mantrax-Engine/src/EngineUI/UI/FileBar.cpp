@@ -5,7 +5,7 @@ void FileBar::on_draw()
 {
     std::string new_name = "Classes##" + std::to_string(window_id);
 
-    ImGui::Begin(new_name.c_str(), & is_open);
+    ImGui::Begin(new_name.c_str(), &is_open);
     ShowDirectoryTree(FileManager::get_project_path() + "/clscpp");
 
     if (ImGui::BeginPopupContextWindow("AssetsPopup", ImGuiMouseButton_Right))

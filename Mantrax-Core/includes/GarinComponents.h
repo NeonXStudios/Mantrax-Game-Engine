@@ -17,6 +17,7 @@
 #include <GLightDirectional.h>
 #include <GLightSpot.h>
 #include <GLightPoint.h>
+#include <TileMap.h>
 #include <Scene.h>
 #include <GAudio.h>
 #include <AudioManager.h>

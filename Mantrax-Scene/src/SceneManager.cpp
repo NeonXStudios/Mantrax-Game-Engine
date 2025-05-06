@@ -78,16 +78,15 @@ void SceneManager::link_scene(Scene *scene_to_link)
 
 void SceneManager::load_scene_wrapped(std::string scene_name_new, bool is_additive)
 {
-    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
 
     sceneM->load_scene(scene_name_new, is_additive);
 }
 
-Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, std::string extension)
+Scene *SceneManager::load_scene(std::string scene_name_new, bool is_additive, std::string extension)
 {
     loading_new_scene = true;
     physic_world->collision_events->locked = true;
-
 
     if (!is_additive && opened_scenes.size() > 0)
     {
@@ -208,14 +207,16 @@ Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
                             {
                                 cmpGet->set_var<bool>(var_object["name"], (bool)var_object["value"]);
                             }
-                            else if (var_object["type"] == "v3")
+                            else if (var_object["type"] == "string_array")
                             {
-                                glm::vec3 val;
-                                val.x = var_object["value"][0].get<float>();
-                                val.y = var_object["value"][1].get<float>();
-                                val.z = var_object["value"][2].get<float>();
+                                std::vector<std::string> val;
 
-                                cmpGet->set_var<glm::vec3>(var_object["name"], (glm::vec3)val);
+                                for (const auto &item : var_object["value"])
+                                {
+                                    val.push_back(item.get<std::string>());
+                                }
+
+                                cmpGet->set_var<std::vector<std::string>>(var_object["name"], val);
                             }
                         }
                     }
@@ -288,17 +289,16 @@ Scene* SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
         std::cerr << e.what() << '\n';
     }
 
-
     return new_scene;
 }
 
 Scene *SceneManager::make_new_empty_scene(std::string scene_name)
 {
-    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+    RenderPipeline *render_pipeline = ServiceLocator::get<RenderPipeline>().get();
 
     Scene *scene_raw = new Scene();
     scene_raw->scene_name = scene_name;
-    
+
     try
     {
         std::cout << "------Making new Scene" << std::endl;
@@ -320,7 +320,6 @@ Scene *SceneManager::make_new_empty_scene(std::string scene_name)
     {
         std::cerr << e.what() << '\n';
     }
-
 
     opened_scenes.push_back(scene_raw);
     return scene_raw;
@@ -351,12 +350,14 @@ void SceneManager::start_physic_world()
     std::cout << "Physic World Started" << std::endl;
 }
 
-Scene* SceneManager::get_parent_scene_from_object(Entity* object)
+Scene *SceneManager::get_parent_scene_from_object(Entity *object)
 {
-    for (Scene* _scene : opened_scenes) {
-        for (Entity* _ent : _scene->objects_worlds)
+    for (Scene *_scene : opened_scenes)
+    {
+        for (Entity *_ent : _scene->objects_worlds)
         {
-            if (_ent == object) {
+            if (_ent == object)
+            {
                 return _scene;
             }
         }
@@ -365,13 +366,14 @@ Scene* SceneManager::get_parent_scene_from_object(Entity* object)
     return nullptr;
 }
 
-void SceneManager::close_scene(Scene* p_scene)
+void SceneManager::close_scene(Scene *p_scene)
 {
     p_scene->clean_scene();
     p_scene->clean_all_components();
 
     auto it = std::find(opened_scenes.begin(), opened_scenes.end(), p_scene);
-    if (it != opened_scenes.end()) {
+    if (it != opened_scenes.end())
+    {
         opened_scenes.erase(it);
     }
 }

@@ -14,5 +14,6 @@ class MaterialMaker : public EngineUIBehaviour
 {
 public:
     Data mat_struct = Data();
+    bool opened_menu_to_save;
     void on_draw() override;
 };

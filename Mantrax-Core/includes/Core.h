@@ -1,4 +1,3 @@
-#pragma once
 #ifdef _WIN32
 #ifdef GARINLIBS_EXPORTS
 #define GARINLIBS_API __declspec(dllexport)

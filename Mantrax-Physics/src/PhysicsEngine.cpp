@@ -117,7 +117,7 @@ void PhysicsEngine::start_world_physics()
 
 void PhysicsEngine::update_world_physics()
 {
-    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
 
     if (mScene != nullptr && !sceneM->loading_new_scene)
     {
@@ -130,9 +130,7 @@ void PhysicsEngine::delete_phys_world()
 {
 }
 
-
-void PhysicsEngine::clear_components_in_world() 
-{ 
+void PhysicsEngine::clear_components_in_world()
+{
     std::cout << "/**************************************************************************************************************************" << std::endl;
-
 }

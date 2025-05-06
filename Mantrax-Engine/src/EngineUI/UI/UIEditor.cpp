@@ -5,7 +5,7 @@
 
 void UIEditor::on_draw()
 {
-    RenderPipeline* render_pipeline = ServiceLocator::get<RenderPipeline>().get();
+    RenderPipeline *render_pipeline = ServiceLocator::get<RenderPipeline>().get();
 
     std::string new_name = "UIEditor##" + std::to_string(window_id);
     ImGui::Begin(new_name.c_str(), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDecoration);

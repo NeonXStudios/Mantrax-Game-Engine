@@ -16,16 +16,13 @@
 void MainBar::on_draw()
 {
     EngineUI *editor_ui = ServiceLocator::get<EngineUI>().get();
-    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
 
     ShowNewScenePopup();
 
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8.0f, 8.0f));
     if (ImGui::BeginMainMenuBar())
     {
-        ImGui::Image((void *)(intptr_t)IconsManager::ENGINE_LOGO(), ImVec2(32, 28));
-        ImGui::SameLine();
-
         if (ImGui::BeginMenu("File"))
         {
             if (ImGui::MenuItem("New Scene"))
@@ -189,11 +186,25 @@ void MainBar::on_draw()
             ImGui::EndMenu();
         }
 
-        float rightOffset = ImGui::GetContentRegionMax().x - 32.0f;
-        ImGui::SameLine(rightOffset);
+        ImVec2 buttonSize(23, 23);
+
+        ImVec2 windowSize = ImGui::GetWindowSize();
+
+        float centerX = (windowSize.x - buttonSize.x) * 0.5f;
+        float centerY = (windowSize.y - buttonSize.y) * 0.5f;
+
+        ImGui::SetCursorPos(ImVec2(centerX, centerY));
 
         unsigned int current_icon = AppSettings::is_playing ? IconsManager::PAUSE() : IconsManager::PLAY();
-        if (ImGui::ImageButton((void *)(intptr_t)current_icon, ImVec2(16, 16)))
+
+        if (ImGui::ImageButton(
+                (void *)(intptr_t)current_icon,
+                buttonSize,
+                ImVec2(0, 0),
+                ImVec2(1, 1),
+                0,
+                ImVec4(0, 0, 0, 0),
+                ImVec4(1, 1, 1, 1)))
         {
             std::string command = ".\\data\\PlayBackEngine\\Mantrax_PlayBackEngine.exe";
             std::string parameter = editor_ui->configs->current_proyect;
@@ -212,16 +223,11 @@ void MainBar::on_draw()
         ImGui::EndMainMenuBar();
     }
     ImGui::PopStyleVar();
-
-    ImGui::Begin("Scene Settings");
-    editor_ui->configs->camera_speed_sens =
-        EditorGUI::Float("Camera sensitivity", editor_ui->configs->camera_speed_sens);
-    ImGui::End();
 }
 
 void MainBar::ShowNewScenePopup()
 {
-    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
 
     if (show_new_scene_popup)
     {

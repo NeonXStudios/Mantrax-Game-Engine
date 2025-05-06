@@ -10,8 +10,6 @@ void MaterialMaker::on_draw()
 {
     ImGui::SetNextWindowSize(ImVec2(300, 400));
 
-    mat_struct.name_material = EditorGUI::InputText("Material Name", mat_struct.name_material);
-
     ImGui::Begin("Material Maker");
     mat_struct.main_path = EditorGUI::InputText("MAIN", mat_struct.main_path);
     auto result = EditorGUI::Drag_Objetive("IMAGECLASS");
@@ -34,17 +32,28 @@ void MaterialMaker::on_draw()
         mat_struct.height_path = resulta.value();
     }
 
+    static json mat_object;
+
     if (ImGui::Button("Save Material", ImVec2(-1, 25)))
     {
-        json mat_object;
-
         mat_struct.id = IDGenerator::generate_id();
         mat_object["ID"] = mat_struct.id;
         mat_object["BaseMap"] = mat_struct.main_path;
         mat_object["NormalMap"] = mat_struct.normal_path;
         mat_object["HeightMap"] = mat_struct.height_path;
 
-        FileManager::write_file(FileManager::get_project_path() + "assets/" + mat_struct.name_material + ".mat", mat_object.dump(4));
+        opened_menu_to_save = true;
     }
     ImGui::End();
+
+    static std::string file_save;
+
+    if (opened_menu_to_save)
+    {
+
+        if (FileDialog::save_file("Save Material", file_save, FileManager::get_project_path().c_str(), ".mat", mat_object.dump(4)))
+        {
+            opened_menu_to_save = false;
+        }
+    }
 }

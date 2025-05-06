@@ -7,13 +7,15 @@
 #include <iostream>
 #include <sstream>
 
-class GridDrawer {
+class GridDrawer
+{
 public:
     GridDrawer(int gridSize, float spacing)
-        : gridSize(gridSize), spacing(spacing), shaderProgram(0), VAO(0), VBO(0), 
+        : gridSize(gridSize), spacing(spacing), shaderProgram(0), VAO(0), VBO(0),
           axisVAO(0), axisVBO(0), gridVertexCount(0), axisVertexCount(0) {}
 
-    ~GridDrawer() {
+    ~GridDrawer()
+    {
         glDeleteVertexArrays(1, &VAO);
         glDeleteBuffers(1, &VBO);
         glDeleteVertexArrays(1, &axisVAO);
@@ -21,7 +23,8 @@ public:
         glDeleteProgram(shaderProgram);
     }
 
-    void initialize() {
+    void initialize()
+    {
         shaderProgram = createShaderProgram();
 
         // Generate grid vertices
@@ -40,7 +43,7 @@ public:
         glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, gridVertices.size() * sizeof(float), gridVertices.data(), GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
         glEnableVertexAttribArray(0);
 
         // Setup axis VAO/VBO
@@ -49,45 +52,46 @@ public:
         glBindVertexArray(axisVAO);
         glBindBuffer(GL_ARRAY_BUFFER, axisVBO);
         glBufferData(GL_ARRAY_BUFFER, axisVertices.size() * sizeof(float), axisVertices.data(), GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
         glEnableVertexAttribArray(0);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
     }
 
-    void draw(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model, const glm::vec3& lineColor) {
+    void draw(const glm::mat4 &projection, const glm::mat4 &view, const glm::mat4 &model, const glm::vec3 &lineColor)
+    {
         glUseProgram(shaderProgram);
-        
+
         // Set matrices
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
+        float axisLineWidth = 5.0f;
+        GLfloat currentLineWidth;
+        glGetFloatv(GL_LINE_WIDTH, &currentLineWidth);
+        glLineWidth(axisLineWidth);
         // Draw grid
         glUniform3f(glGetUniformLocation(shaderProgram, "lineColor"), lineColor.r, lineColor.g, lineColor.b);
         glBindVertexArray(VAO);
         glDrawArrays(GL_LINES, 0, gridVertexCount);
 
         // Draw axes with different colors
-        float axisLineWidth = 3.0f;
-        GLfloat currentLineWidth;
-        glGetFloatv(GL_LINE_WIDTH, &currentLineWidth);
-        glLineWidth(axisLineWidth);
 
         glBindVertexArray(axisVAO);
-        
+
         // X axis (Red)
         glUniform3f(glGetUniformLocation(shaderProgram, "lineColor"), 1.0f, 0.0f, 0.0f);
-        glDrawArrays(GL_LINES, 0, 6);  // Main line + arrow head
+        glDrawArrays(GL_LINES, 0, 6); // Main line + arrow head
 
         // Y axis (Green)
         glUniform3f(glGetUniformLocation(shaderProgram, "lineColor"), 0.0f, 1.0f, 0.0f);
-        glDrawArrays(GL_LINES, 6, 6);  // Main line + arrow head
+        glDrawArrays(GL_LINES, 6, 6); // Main line + arrow head
 
         // Z axis (Blue)
         glUniform3f(glGetUniformLocation(shaderProgram, "lineColor"), 0.0f, 0.0f, 1.0f);
-        glDrawArrays(GL_LINES, 12, 6);  // Main line + arrow head
+        glDrawArrays(GL_LINES, 12, 6); // Main line + arrow head
 
         glLineWidth(currentLineWidth);
     }
@@ -101,9 +105,11 @@ private:
     GLsizei gridVertexCount;
     GLsizei axisVertexCount;
 
-    void generateGrid(std::vector<float>& vertices) {
+    void generateGrid(std::vector<float> &vertices)
+    {
         // Vertical lines
-        for (int i = -gridSize; i <= gridSize; ++i) {
+        for (int i = -gridSize; i <= gridSize; ++i)
+        {
             vertices.push_back(i * spacing);
             vertices.push_back(-gridSize * spacing);
             vertices.push_back(0.0f);
@@ -114,7 +120,8 @@ private:
         }
 
         // Horizontal lines
-        for (int i = -gridSize; i <= gridSize; ++i) {
+        for (int i = -gridSize; i <= gridSize; ++i)
+        {
             vertices.push_back(-gridSize * spacing);
             vertices.push_back(i * spacing);
             vertices.push_back(0.0f);
@@ -125,42 +132,79 @@ private:
         }
     }
 
-    void generateAxisArrows(std::vector<float>& vertices) {
-        float axisLength = gridSize * spacing * 0.05f;  // Length of the axis lines
-        float arrowSize = spacing * 0.2f;  // Size of arrow heads
+    void generateAxisArrows(std::vector<float> &vertices)
+    {
+        float axisLength = gridSize * spacing * 0.05f; // Length of the axis lines
+        float arrowSize = spacing * 0.2f;              // Size of arrow heads
 
         // X-axis (including arrow head)
         // Main line
-        vertices.push_back(0.0f); vertices.push_back(0.0f); vertices.push_back(0.0f);  // Origin
-        vertices.push_back(axisLength); vertices.push_back(0.0f); vertices.push_back(0.0f);  // X direction
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f); // Origin
+        vertices.push_back(axisLength);
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f); // X direction
         // Arrow head
-        vertices.push_back(axisLength); vertices.push_back(0.0f); vertices.push_back(0.0f);
-        vertices.push_back(axisLength - arrowSize); vertices.push_back(arrowSize); vertices.push_back(0.0f);
-        vertices.push_back(axisLength); vertices.push_back(0.0f); vertices.push_back(0.0f);
-        vertices.push_back(axisLength - arrowSize); vertices.push_back(-arrowSize); vertices.push_back(0.0f);
+        vertices.push_back(axisLength);
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f);
+        vertices.push_back(axisLength - arrowSize);
+        vertices.push_back(arrowSize);
+        vertices.push_back(0.0f);
+        vertices.push_back(axisLength);
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f);
+        vertices.push_back(axisLength - arrowSize);
+        vertices.push_back(-arrowSize);
+        vertices.push_back(0.0f);
 
-        vertices.push_back(0.0f); vertices.push_back(0.0f); vertices.push_back(0.0f);
-        vertices.push_back(0.0f); vertices.push_back(-axisLength); vertices.push_back(0.0f); 
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f);
+        vertices.push_back(-axisLength);
+        vertices.push_back(0.0f);
 
-        vertices.push_back(0.0f); vertices.push_back(-axisLength); vertices.push_back(0.0f); 
-        vertices.push_back(arrowSize); vertices.push_back(-axisLength + arrowSize); vertices.push_back(0.0f); 
-        vertices.push_back(0.0f); vertices.push_back(-axisLength); vertices.push_back(0.0f); 
-        vertices.push_back(-arrowSize); vertices.push_back(-axisLength + arrowSize); vertices.push_back(0.0f);
-
+        vertices.push_back(0.0f);
+        vertices.push_back(-axisLength);
+        vertices.push_back(0.0f);
+        vertices.push_back(arrowSize);
+        vertices.push_back(-axisLength + arrowSize);
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f);
+        vertices.push_back(-axisLength);
+        vertices.push_back(0.0f);
+        vertices.push_back(-arrowSize);
+        vertices.push_back(-axisLength + arrowSize);
+        vertices.push_back(0.0f);
 
         // Z-axis (including arrow head)
         // Main line
-        vertices.push_back(0.0f); vertices.push_back(0.0f); vertices.push_back(0.0f);
-        vertices.push_back(0.0f); vertices.push_back(0.0f); vertices.push_back(axisLength);
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f);
+        vertices.push_back(axisLength);
         // Arrow head
-        vertices.push_back(0.0f); vertices.push_back(0.0f); vertices.push_back(axisLength);
-        vertices.push_back(arrowSize); vertices.push_back(0.0f); vertices.push_back(axisLength - arrowSize);
-        vertices.push_back(0.0f); vertices.push_back(0.0f); vertices.push_back(axisLength);
-        vertices.push_back(-arrowSize); vertices.push_back(0.0f); vertices.push_back(axisLength - arrowSize);
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f);
+        vertices.push_back(axisLength);
+        vertices.push_back(arrowSize);
+        vertices.push_back(0.0f);
+        vertices.push_back(axisLength - arrowSize);
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f);
+        vertices.push_back(axisLength);
+        vertices.push_back(-arrowSize);
+        vertices.push_back(0.0f);
+        vertices.push_back(axisLength - arrowSize);
     }
 
-    GLuint createShaderProgram() {
-        const char* vertexShaderSource = R"(
+    GLuint createShaderProgram()
+    {
+        const char *vertexShaderSource = R"(
             #version 330 core
             layout (location = 0) in vec3 aPos;
 
@@ -173,7 +217,7 @@ private:
             }
         )";
 
-        const char* fragmentShaderSource = R"(
+        const char *fragmentShaderSource = R"(
             #version 330 core
             out vec4 FragColor;
 
@@ -206,20 +250,26 @@ private:
         return program;
     }
 
-    void checkCompileErrors(GLuint shader, std::string type) {
+    void checkCompileErrors(GLuint shader, std::string type)
+    {
         GLint success;
         GLchar infoLog[1024];
-        if (type != "PROGRAM") {
+        if (type != "PROGRAM")
+        {
             glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-            if (!success) {
+            if (!success)
+            {
                 glGetShaderInfoLog(shader, 1024, NULL, infoLog);
                 std::cerr << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n"
                           << infoLog << "\n"
                           << std::endl;
             }
-        } else {
+        }
+        else
+        {
             glGetProgramiv(shader, GL_LINK_STATUS, &success);
-            if (!success) {
+            if (!success)
+            {
                 glGetProgramInfoLog(shader, 1024, NULL, infoLog);
                 std::cerr << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n"
                           << infoLog << "\n"

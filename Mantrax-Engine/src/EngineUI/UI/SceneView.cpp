@@ -3,7 +3,7 @@
 #include <string>
 #include <SceneData.h>
 #include <UIAdministrator.h>
-#include <array> 
+#include <array>
 #include <ServiceLocator.h>
 
 using namespace ImGuizmo;
@@ -15,7 +15,7 @@ void SceneView::on_draw()
 {
     EngineUI *editor_ui = ServiceLocator::get<EngineUI>().get();
 
-    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
 
     ImGui::PushID(343456);
 
@@ -55,9 +55,9 @@ void SceneView::on_draw()
     ImGui::SetCursorScreenPos(ImVec2(buttonPosition.x + 200, buttonPosition.y));
     if (ImGui::ImageButton((void *)(intptr_t)IconsManager::NEW_ENTITY(), ImVec2(24, 24)))
     {
-        SceneDataView* new_data_scene_View = new SceneDataView();
+        SceneDataView *new_data_scene_View = new SceneDataView();
         new_data_scene_View->work_scene = sceneM->make_new_empty_scene("Entitie Scene");
-        Entity* ent = new_data_scene_View->work_scene->make_entity();
+        Entity *ent = new_data_scene_View->work_scene->make_entity();
 
         windows_data.push_back(new_data_scene_View);
     }
@@ -71,6 +71,12 @@ void SceneView::on_draw()
     {
         sceneM->get_current_scene()->main_camera->use_projection = !sceneM->get_current_scene()->main_camera->use_projection;
     }
+
+    float sensX = p.x + sceneM->get_current_scene()->main_camera->width;
+    ImVec2 rightButtonPositionsens = ImVec2(sensX - 350, p.y + 10);
+    ImGui::SetCursorScreenPos(rightButtonPositionsens);
+
+    ServiceLocator::get<EngineUI>().get()->configs->camera_speed_sens = EditorGUI::Float("Camera sensitivity", ServiceLocator::get<EngineUI>().get()->configs->camera_speed_sens, ImVec2(60, 25));
 
     sceneM->get_current_scene()->main_camera->width = windowSize.x;
     sceneM->get_current_scene()->main_camera->height = windowSize.y;
@@ -98,7 +104,9 @@ void SceneView::on_draw()
                     editor_ui->select_obj = nullptr;
                 }
             }
-        }else{
+        }
+        else
+        {
             EventSystem::ViewportRenderPosition = glm::vec2(p.x, p.y);
             WorldPoint = EventSystem::screen_to_viewport(sceneM->get_current_scene()->main_camera);
 
@@ -118,7 +126,7 @@ void SceneView::on_draw()
                 {
                     found_object = nullptr;
                 }
-            }            
+            }
         }
 
         // CastDataUI *data_ui = new CastDataUI();
@@ -153,41 +161,40 @@ void SceneView::on_draw()
     if (editor_ui->select_obj != nullptr)
     {
         TransformComponent *transform = editor_ui->select_obj->get_transform();
-    
+
         glm::mat4 matrix = transform->get_matrix();
-    
+
         glm::mat4 parentMatrix(1.0f);
         if (transform->parent)
         {
             parentMatrix = transform->parent->get_matrix();
         }
-    
+
         float *projection = (float *)glm::value_ptr(sceneM->get_current_scene()->main_camera->GetProjectionMatrix());
         float *view = (float *)glm::value_ptr(sceneM->get_current_scene()->main_camera->GetView());
-    
+
         ImGuizmo::SetRect(p.x, p.y, sceneM->get_current_scene()->main_camera->width, sceneM->get_current_scene()->main_camera->height);
-    
+
         bool res = ImGuizmo::Manipulate(view, projection, gizmoOperation, gizmoMode, glm::value_ptr(matrix));
         ignoreGui &= !ImGuizmo::IsOver();
-    
+
         if (res)
         {
             if (transform->parent)
             {
                 glm::vec3 worldPosition = glm::vec3(matrix[3]);
-                
+
                 glm::vec3 worldScale(
                     glm::length(glm::vec3(matrix[0])),
                     glm::length(glm::vec3(matrix[1])),
                     glm::length(glm::vec3(matrix[2])));
-                    
+
                 glm::mat3 worldRotMat(
                     glm::vec3(matrix[0]) / worldScale.x,
                     glm::vec3(matrix[1]) / worldScale.y,
-                    glm::vec3(matrix[2]) / worldScale.z
-                );
+                    glm::vec3(matrix[2]) / worldScale.z);
                 glm::quat worldRotation = glm::normalize(glm::quat_cast(worldRotMat));
-                
+
                 transform->setPosition(worldPosition);
                 transform->setRotation(worldRotation);
                 transform->setScale(worldScale);
@@ -195,19 +202,19 @@ void SceneView::on_draw()
             else
             {
                 glm::vec3 translation = glm::vec3(matrix[3]);
-    
+
                 glm::vec3 scale(
                     glm::length(glm::vec3(matrix[0])),
                     glm::length(glm::vec3(matrix[1])),
                     glm::length(glm::vec3(matrix[2])));
-    
+
                 glm::mat3 rotationMat(
                     glm::vec3(matrix[0]) / scale.x,
                     glm::vec3(matrix[1]) / scale.y,
                     glm::vec3(matrix[2]) / scale.z);
-    
+
                 glm::quat rotation = glm::normalize(glm::quat_cast(rotationMat));
-                
+
                 if (!editor_ui->select_obj->hasComponent<GBody>())
                 {
                     transform->setPositionLocal(translation);
@@ -219,15 +226,15 @@ void SceneView::on_draw()
                     transform->setPositionLocal(translation);
                     transform->setScaleLocal(scale);
                     transform->setRotationLocal(rotation);
-    
+
                     editor_ui->select_obj->getComponent<GBody>().body->setLinearVelocity(PxVec3(0, 0, 0));
                     editor_ui->select_obj->getComponent<GBody>().set_position(translation);
                 }
             }
-            
+
             transform->validateTransforms();
         }
-    
+
         if (!ImGui::IsMouseDown(1))
         {
             if (InputSystem::on_key_pressed(GLFW_KEY_W))
@@ -255,8 +262,8 @@ void SceneView::on_draw()
 
     if (ImGui::IsWindowHovered() && ImGui::IsKeyDown(ImGuiKey_F) && editor_ui->select_obj != nullptr)
     {
-        TransformComponent* selectedObj = editor_ui->select_obj->get_transform();
-        Camera* camera = sceneM->get_current_scene()->main_camera;
+        TransformComponent *selectedObj = editor_ui->select_obj->get_transform();
+        Camera *camera = sceneM->get_current_scene()->main_camera;
 
         glm::vec3 targetPosition = selectedObj->Position;
 
@@ -292,15 +299,15 @@ void SceneView::on_draw()
 
     ImGuizmo::SetDrawlist();
 
-    Camera* camera_with_max_depth = nullptr;
+    Camera *camera_with_max_depth = nullptr;
     float max_depth = -1.0f;
 
-    for (Entity* ent : sceneM->get_current_scene()->objects_worlds)
+    for (Entity *ent : sceneM->get_current_scene()->objects_worlds)
     {
         if (ent->hasComponent<GCamera>())
         {
-            GCamera& camera_component = ent->getComponent<GCamera>();
-            Camera* camera = camera_component.a_camera;
+            GCamera &camera_component = ent->getComponent<GCamera>();
+            Camera *camera = camera_component.a_camera;
 
             int current_depth = std::any_cast<int>(camera_component.variableMap["Depth"]);
 
@@ -315,7 +322,7 @@ void SceneView::on_draw()
     if (camera_with_max_depth != nullptr)
     {
         ImVec2 windowSize = ImGui::GetContentRegionAvail();
-        ImGui::Image((void*)(intptr_t)camera_with_max_depth->render_id, ImVec2(camera_with_max_depth->width, camera_with_max_depth->height), ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::Image((void *)(intptr_t)camera_with_max_depth->render_id, ImVec2(camera_with_max_depth->width, camera_with_max_depth->height), ImVec2(0, 1), ImVec2(1, 0));
     }
     else
     {
@@ -324,10 +331,10 @@ void SceneView::on_draw()
         ImVec2 textPos = ImVec2((windowSize.x - textSize.x) * 0.5f, (windowSize.y - textSize.y) * 0.5f);
         ImGui::SetCursorPos(textPos);
 
-        ImFont* boldFont = ImGui::GetIO().Fonts->Fonts[0]; 
-        ImGui::PushFont(boldFont); 
-        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10, 10)); 
-        ImGui::SetWindowFontScale(2.0f); 
+        ImFont *boldFont = ImGui::GetIO().Fonts->Fonts[0];
+        ImGui::PushFont(boldFont);
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10, 10));
+        ImGui::SetWindowFontScale(2.0f);
 
         ImGui::Text("No valid camera found in the scene.");
 
@@ -338,7 +345,7 @@ void SceneView::on_draw()
     ImGui::End();
     ImGui::PopID();
 
-    for (SceneDataView* scene_data_to_render : windows_data)
+    for (SceneDataView *scene_data_to_render : windows_data)
     {
         scene_data_to_render->draw();
     }
@@ -349,7 +356,8 @@ SceneDataView::SceneDataView()
     window_id = IDGenerator::generate_id();
 }
 
-void SceneDataView::draw() {
+void SceneDataView::draw()
+{
     EngineUI *editor_ui = ServiceLocator::get<EngineUI>().get();
 
     ImGui::PushID(window_id);
@@ -362,48 +370,51 @@ void SceneDataView::draw() {
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar;
 
     ImGui::Begin(unique_window_name.c_str(), nullptr);
-        if (ImGui::BeginMenuBar()) {
-            if (ImGui::BeginMenu("File")) {
-
-                if (ImGui::MenuItem("Save")) {
-                    SceneData::save_entitie(work_scene);
-                }
-
-                if (ImGui::MenuItem("Close")) {
-                    close_window();
-                }
-                
-                ImGui::EndMenu();
-            }
-            ImGui::EndMenuBar(); 
-        }
-
-        ImGuiID dockspace_id = ImGui::GetID(unique_window_name.c_str());
-        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
-
-        static bool initialized = false;
-        if (!initialized)
+    if (ImGui::BeginMenuBar())
+    {
+        if (ImGui::BeginMenu("File"))
         {
-            initialized = true;
 
-            ImGui::DockBuilderRemoveNode(dockspace_id);
-            ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
+            if (ImGui::MenuItem("Save"))
+            {
+                SceneData::save_entitie(work_scene);
+            }
 
-            ImGuiID dock_left = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.25f, nullptr, &dockspace_id);
-            ImGuiID dock_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id);
-            ImGuiID dock_center = dockspace_id; 
+            if (ImGui::MenuItem("Close"))
+            {
+                close_window();
+            }
 
-            ImGui::DockBuilderDockWindow(unique_entitie_name.c_str(), dock_right);
-            ImGui::DockBuilderDockWindow(unique_hierarchy_name.c_str(), dock_left);
-            ImGui::DockBuilderDockWindow(unique_view_name.c_str(), dock_center);
-
-            ImGui::DockBuilderFinish(dockspace_id);
+            ImGui::EndMenu();
         }
+        ImGui::EndMenuBar();
+    }
+
+    ImGuiID dockspace_id = ImGui::GetID(unique_window_name.c_str());
+    ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+
+    static bool initialized = false;
+    if (!initialized)
+    {
+        initialized = true;
+
+        ImGui::DockBuilderRemoveNode(dockspace_id);
+        ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
+
+        ImGuiID dock_left = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.25f, nullptr, &dockspace_id);
+        ImGuiID dock_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.25f, nullptr, &dockspace_id);
+        ImGuiID dock_center = dockspace_id;
+
+        ImGui::DockBuilderDockWindow(unique_entitie_name.c_str(), dock_right);
+        ImGui::DockBuilderDockWindow(unique_hierarchy_name.c_str(), dock_left);
+        ImGui::DockBuilderDockWindow(unique_view_name.c_str(), dock_center);
+
+        ImGui::DockBuilderFinish(dockspace_id);
+    }
 
     ImGui::End();
 
     ImGui::SetNextWindowSizeConstraints(ImVec2(300, 200), ImVec2(FLT_MAX, FLT_MAX));
-
 
     ImGuizmo::SetDrawlist();
 
@@ -416,12 +427,9 @@ void SceneDataView::draw() {
 
     ImGui::Image(
         (void *)(intptr_t)work_scene->main_camera->render_id,
-        ImVec2(work_scene->main_camera->width, work_scene->main_camera->height),                                      
-        ImVec2(0, 1),                                         
-        ImVec2(1, 0)      
-    );
-
-    
+        ImVec2(work_scene->main_camera->width, work_scene->main_camera->height),
+        ImVec2(0, 1),
+        ImVec2(1, 0));
 
     ImVec2 buttonPosition = ImVec2(p.x + 10, p.y + 10);
     ImGui::SetCursorScreenPos(buttonPosition);
@@ -443,7 +451,6 @@ void SceneDataView::draw() {
         gizmoOperation = ImGuizmo::SCALE;
     }
 
-
     float imageRightX = p.x + work_scene->main_camera->width;
     ImVec2 rightButtonPosition = ImVec2(imageRightX - 50, p.y + 10);
     ImGui::SetCursorScreenPos(rightButtonPosition);
@@ -456,7 +463,6 @@ void SceneDataView::draw() {
 
     imagePosition = ImGui::GetWindowPos();
     ImGui::End();
-
 
     work_scene->main_camera->width = windowSize.x;
     work_scene->main_camera->height = windowSize.y;
@@ -623,8 +629,8 @@ void SceneDataView::draw() {
 
     if (ImGui::IsWindowHovered() && ImGui::IsKeyDown(ImGuiKey_F) && editor_ui->select_obj != nullptr)
     {
-        TransformComponent* selectedObj = editor_ui->select_obj->get_transform();
-        Camera* camera = work_scene->main_camera;
+        TransformComponent *selectedObj = editor_ui->select_obj->get_transform();
+        Camera *camera = work_scene->main_camera;
 
         glm::vec3 targetPosition = selectedObj->Position;
 
@@ -657,7 +663,7 @@ void SceneDataView::draw() {
 
     ImGui::SetNextWindowSizeConstraints(ImVec2(300, 200), ImVec2(FLT_MAX, FLT_MAX));
     ImGui::Begin(unique_entitie_name.c_str());
-        const std::array<const char *, 20> layerNames = {
+    const std::array<const char *, 20> layerNames = {
         "Background",
         "Parallax 1",
         "Parallax 2",
@@ -679,200 +685,199 @@ void SceneDataView::draw() {
         "Post-Processing",
         "Debug"};
 
-
     if (editor_ui->select_obj != nullptr)
     {
         {
-        ImGui::BeginGroup();
-        static char nameBuf[256];
-        strcpy(nameBuf, editor_ui->select_obj->name_object.c_str());
-        
-        float availableWidth = ImGui::GetContentRegionAvail().x - 25;
-        ImGui::SetNextItemWidth(availableWidth);
-        
-        if (ImGui::InputText("##Name", nameBuf, sizeof(nameBuf)))
-        {
-            editor_ui->select_obj->name_object = nameBuf;
-        }
+            ImGui::BeginGroup();
+            static char nameBuf[256];
+            strcpy(nameBuf, editor_ui->select_obj->name_object.c_str());
 
-        ImGui::SameLine(availableWidth + 5);
-        
-        // Centramos el texto "+" en el botón
-        float buttonSize = 20;
-        ImVec2 cursorPos = ImGui::GetCursorPos();
-        if (ImGui::Button("##AddComponent", ImVec2(buttonSize, buttonSize)))
-        {
-            ImGui::OpenPopup("AddComponentPopup");
-        }
-        
-        // Calculamos la posición para centrar el "+"
-        ImVec2 textSize = ImGui::CalcTextSize("+");
-        float textPosX = cursorPos.x + (buttonSize - textSize.x) * 0.5f;
-        float textPosY = cursorPos.y + (buttonSize - textSize.y) * 0.5f;
-        ImGui::GetWindowDrawList()->AddText(
-            ImVec2(ImGui::GetWindowPos().x + textPosX, ImGui::GetWindowPos().y + textPosY),
-            ImGui::GetColorU32(ImGui::GetStyle().Colors[ImGuiCol_Text]),
-            "+"
-        );
-        
-        ImGui::EndGroup();
-        ImGui::Spacing();
-    }
+            float availableWidth = ImGui::GetContentRegionAvail().x - 25;
+            ImGui::SetNextItemWidth(availableWidth);
 
-    // Tag y Layer
-    {
-        // Tag
-        ImGui::TextDisabled("Tag");
-        static char tagBuf[128];
-        strcpy(tagBuf, editor_ui->select_obj->object_tag.c_str());
-        ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x * 0.45f);
-        if (ImGui::InputText("##Tag", tagBuf, sizeof(tagBuf)))
-        {
-            editor_ui->select_obj->object_tag = tagBuf;
-        }
-
-        ImGui::SameLine();
-        float spacing = ImGui::GetContentRegionAvail().x * 0.1f;
-        ImGui::Dummy(ImVec2(spacing, 0));
-        ImGui::SameLine();
-
-        // Layer
-        ImGui::TextDisabled("Layer");
-        int currentLayer = 0;
-        for (int i = 0; i < layerNames.size(); ++i)
-        {
-            if (editor_ui->select_obj->Layer == (1 << i))
+            if (ImGui::InputText("##Name", nameBuf, sizeof(nameBuf)))
             {
-                currentLayer = i;
-                break;
+                editor_ui->select_obj->name_object = nameBuf;
+            }
+
+            ImGui::SameLine(availableWidth + 5);
+
+            // Centramos el texto "+" en el botón
+            float buttonSize = 20;
+            ImVec2 cursorPos = ImGui::GetCursorPos();
+            if (ImGui::Button("##AddComponent", ImVec2(buttonSize, buttonSize)))
+            {
+                ImGui::OpenPopup("AddComponentPopup");
+            }
+
+            // Calculamos la posición para centrar el "+"
+            ImVec2 textSize = ImGui::CalcTextSize("+");
+            float textPosX = cursorPos.x + (buttonSize - textSize.x) * 0.5f;
+            float textPosY = cursorPos.y + (buttonSize - textSize.y) * 0.5f;
+            ImGui::GetWindowDrawList()->AddText(
+                ImVec2(ImGui::GetWindowPos().x + textPosX, ImGui::GetWindowPos().y + textPosY),
+                ImGui::GetColorU32(ImGui::GetStyle().Colors[ImGuiCol_Text]),
+                "+");
+
+            ImGui::EndGroup();
+            ImGui::Spacing();
+        }
+
+        // Tag y Layer
+        {
+            // Tag
+            ImGui::TextDisabled("Tag");
+            static char tagBuf[128];
+            strcpy(tagBuf, editor_ui->select_obj->object_tag.c_str());
+            ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x * 0.45f);
+            if (ImGui::InputText("##Tag", tagBuf, sizeof(tagBuf)))
+            {
+                editor_ui->select_obj->object_tag = tagBuf;
+            }
+
+            ImGui::SameLine();
+            float spacing = ImGui::GetContentRegionAvail().x * 0.1f;
+            ImGui::Dummy(ImVec2(spacing, 0));
+            ImGui::SameLine();
+
+            // Layer
+            ImGui::TextDisabled("Layer");
+            int currentLayer = 0;
+            for (int i = 0; i < layerNames.size(); ++i)
+            {
+                if (editor_ui->select_obj->Layer == (1 << i))
+                {
+                    currentLayer = i;
+                    break;
+                }
+            }
+            ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+            if (ImGui::Combo("##Layer", &currentLayer, layerNames.data(), static_cast<int>(layerNames.size())))
+            {
+                editor_ui->select_obj->Layer = (1 << currentLayer);
             }
         }
-        ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-        if (ImGui::Combo("##Layer", &currentLayer, layerNames.data(), static_cast<int>(layerNames.size())))
-        {
-            editor_ui->select_obj->Layer = (1 << currentLayer);
-        }
-    }
 
-    ImGui::Spacing();
-    ImGui::Separator();
-    ImGui::Spacing();
-
-    // Transform
-    {
-        ImGui::TextDisabled("TRANSFORM");
         ImGui::Spacing();
-
-        TransformComponent* transform = editor_ui->select_obj->get_transform();
-
-        // Position
-        ImGui::TextDisabled("Position");
-        transform->Position = EditorGUI::Vector3("##Position", transform->Position);
-        ImGui::Spacing();
-
-        // Rotation
-        ImGui::TextDisabled("Rotation");
-        glm::vec3 eulerAngles = transform->get_euler_angles();
-        eulerAngles = EditorGUI::Vector3("##Rotation", eulerAngles);
-        transform->set_rotation(eulerAngles);
-        ImGui::Spacing();
-
-        // Scale
-        ImGui::TextDisabled("Scale");
-        transform->Scale = EditorGUI::Vector3("##Scale", transform->Scale);
-
-        transform->update();
-    }
-
-    ImGui::Spacing();
-    ImGui::Separator();
-    ImGui::Spacing();
-
-    // Components
-    UIAdministrator::draw_ui(editor_ui->select_obj);
-
-     ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
-    if (ImGui::BeginPopup("AddComponentPopup", ImGuiWindowFlags_NoMove))
-    {
-        ImGui::Text("Components");
         ImGui::Separator();
         ImGui::Spacing();
 
-        // Lista de componentes con scroll
-        ImGui::BeginChild("ComponentsList", ImVec2(600, 400), true);
+        // Transform
+        {
+            ImGui::TextDisabled("TRANSFORM");
+            ImGui::Spacing();
 
-        if (ImGui::Button("Render Mesh", ImVec2(-1, 0)))
-        {
-            editor_ui->select_obj->addComponent<ModelComponent>().init();
-            ImGui::CloseCurrentPopup();
+            TransformComponent *transform = editor_ui->select_obj->get_transform();
+
+            // Position
+            ImGui::TextDisabled("Position");
+            transform->Position = EditorGUI::Vector3("##Position", transform->Position);
+            ImGui::Spacing();
+
+            // Rotation
+            ImGui::TextDisabled("Rotation");
+            glm::vec3 eulerAngles = transform->get_euler_angles();
+            eulerAngles = EditorGUI::Vector3("##Rotation", eulerAngles);
+            transform->set_rotation(eulerAngles);
+            ImGui::Spacing();
+
+            // Scale
+            ImGui::TextDisabled("Scale");
+            transform->Scale = EditorGUI::Vector3("##Scale", transform->Scale);
+
+            transform->update();
         }
-        if (ImGui::Button("Rigid Body", ImVec2(-1, 0)))
+
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::Spacing();
+
+        // Components
+        UIAdministrator::draw_ui(editor_ui->select_obj);
+
+        ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+        if (ImGui::BeginPopup("AddComponentPopup", ImGuiWindowFlags_NoMove))
         {
-            editor_ui->select_obj->addComponent<GBody>().init();
-            ImGui::CloseCurrentPopup();
-        }
-        if (ImGui::Button("Box Collider", ImVec2(-1, 0)))
-        {
-            editor_ui->select_obj->addComponent<GCollision>().init();
-            ImGui::CloseCurrentPopup();
-        }
-        if (ImGui::Button("Material", ImVec2(-1, 0)))
-        {
-            editor_ui->select_obj->addComponent<GMaterial>().init();
-            ImGui::CloseCurrentPopup();
-        }
-        if (ImGui::Button("Game Script", ImVec2(-1, 0)))
-        {
-            editor_ui->select_obj->addComponent<GScript>().init();
-            ImGui::CloseCurrentPopup();
-        }
-        if (ImGui::Button("Character Controller", ImVec2(-1, 0)))
-        {
-            editor_ui->select_obj->addComponent<GCharacter>().init();
-            ImGui::CloseCurrentPopup();
-        }
-        if (ImGui::Button("Audio Source", ImVec2(-1, 0)))
-        {
-            editor_ui->select_obj->addComponent<GAudio>().init();
-            ImGui::CloseCurrentPopup();
-        }
-        if (ImGui::Button("Perlin Component", ImVec2(-1, 0)))
-        {
-            editor_ui->select_obj->addComponent<GNoise>().init();
-            ImGui::CloseCurrentPopup();
-        }
-        if (ImGui::Button("Animator", ImVec2(-1, 0)))
-        {
-            editor_ui->select_obj->addComponent<GAnimator>().init();
-            ImGui::CloseCurrentPopup();
-        }
-        if (!editor_ui->select_obj->hasComponent<GCamera>())
-        {
-            if (ImGui::Button("Camera", ImVec2(-1, 0)))
+            ImGui::Text("Components");
+            ImGui::Separator();
+            ImGui::Spacing();
+
+            // Lista de componentes con scroll
+            ImGui::BeginChild("ComponentsList", ImVec2(600, 400), true);
+
+            if (ImGui::Button("Render Mesh", ImVec2(-1, 0)))
             {
-                editor_ui->select_obj->addComponent<GCamera>().init();
+                editor_ui->select_obj->addComponent<ModelComponent>().init();
                 ImGui::CloseCurrentPopup();
             }
-        }
+            if (ImGui::Button("Rigid Body", ImVec2(-1, 0)))
+            {
+                editor_ui->select_obj->addComponent<GBody>().init();
+                ImGui::CloseCurrentPopup();
+            }
+            if (ImGui::Button("Box Collider", ImVec2(-1, 0)))
+            {
+                editor_ui->select_obj->addComponent<GCollision>().init();
+                ImGui::CloseCurrentPopup();
+            }
+            if (ImGui::Button("Material", ImVec2(-1, 0)))
+            {
+                editor_ui->select_obj->addComponent<GMaterial>().init();
+                ImGui::CloseCurrentPopup();
+            }
+            if (ImGui::Button("Game Script", ImVec2(-1, 0)))
+            {
+                editor_ui->select_obj->addComponent<GScript>().init();
+                ImGui::CloseCurrentPopup();
+            }
+            if (ImGui::Button("Character Controller", ImVec2(-1, 0)))
+            {
+                editor_ui->select_obj->addComponent<GCharacter>().init();
+                ImGui::CloseCurrentPopup();
+            }
+            if (ImGui::Button("Audio Source", ImVec2(-1, 0)))
+            {
+                editor_ui->select_obj->addComponent<GAudio>().init();
+                ImGui::CloseCurrentPopup();
+            }
+            if (ImGui::Button("Perlin Component", ImVec2(-1, 0)))
+            {
+                editor_ui->select_obj->addComponent<GNoise>().init();
+                ImGui::CloseCurrentPopup();
+            }
+            if (ImGui::Button("Animator", ImVec2(-1, 0)))
+            {
+                editor_ui->select_obj->addComponent<GAnimator>().init();
+                ImGui::CloseCurrentPopup();
+            }
+            if (!editor_ui->select_obj->hasComponent<GCamera>())
+            {
+                if (ImGui::Button("Camera", ImVec2(-1, 0)))
+                {
+                    editor_ui->select_obj->addComponent<GCamera>().init();
+                    ImGui::CloseCurrentPopup();
+                }
+            }
 
-        ImGui::EndChild();
-        ImGui::EndPopup();
-    }
+            ImGui::EndChild();
+            ImGui::EndPopup();
+        }
     }
     ImGui::End();
     ImGui::PopID();
 }
 
+void SceneDataView::close_window()
+{
+    SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
 
-void SceneDataView::close_window(){
-    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
-
-    auto& windows_data = UIMasterDrawer::get_instance().get_component<SceneView>()->windows_data;
-        windows_data.erase(std::remove_if(windows_data.begin(), windows_data.end(),
-            [this](SceneDataView* item) { return item->window_id == this->window_id; }),
-            windows_data.end());
+    auto &windows_data = UIMasterDrawer::get_instance().get_component<SceneView>()->windows_data;
+    windows_data.erase(std::remove_if(windows_data.begin(), windows_data.end(),
+                                      [this](SceneDataView *item)
+                                      { return item->window_id == this->window_id; }),
+                       windows_data.end());
 
     sceneM->close_scene(work_scene);
 }

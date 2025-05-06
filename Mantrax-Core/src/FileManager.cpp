@@ -2,6 +2,126 @@
 
 std::string FileManager::game_path = "";
 
+bool FileManager::delete_folder(std::string folder_path)
+{
+    try
+    {
+        if (fs::exists(folder_path.c_str()))
+        {
+            fs::remove_all(folder_path.c_str());
+            std::cout << "Succefully on try delete folder" << std::endl;
+            return true;
+        }
+        else
+        {
+            std::cout << "Folder not found.\n";
+            return false;
+        }
+    }
+    catch (const fs::filesystem_error &e)
+    {
+        std::cerr << "Error on try delete folder: " << e.what() << '\n';
+        return false;
+    }
+}
+
+bool FileManager::check_file_extension(const std::string &path)
+{
+    fs::path p(path);
+    return p.has_extension();
+}
+
+bool FileManager::open_file(const std::string &file_path)
+{
+    try
+    {
+        fs::path p = fs::path(file_path).lexically_normal();
+
+        if (!fs::exists(p) || !fs::is_regular_file(p))
+        {
+            std::cerr << "El archivo no existe o no es un archivo válido: " << p << std::endl;
+            return false;
+        }
+
+#ifdef _WIN32
+        std::string comando = "start \"\" \"" + p.string() + "\"";
+#elif __APPLE__
+        std::string comando = "open \"" + p.string() + "\"";
+#elif __linux__
+        std::string comando = "xdg-open \"" + p.string() + "\"";
+#else
+        std::cerr << "Plataforma no soportada.\n";
+        return false;
+#endif
+
+        int resultado = system(comando.c_str());
+        return resultado == 0;
+    }
+    catch (const fs::filesystem_error &e)
+    {
+        std::cerr << "Error on try get file: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+bool FileManager::open_explorer(const std::string &folder_path)
+{
+    try
+    {
+        bool is_file = check_file_extension(folder_path);
+
+        if (!fs::exists(folder_path) || !fs::is_directory(folder_path))
+        {
+            std::cerr << "La ruta no existe o no es una carpeta: " << folder_path << std::endl;
+            return false;
+        }
+
+        fs::path clean_path = fs::path(folder_path).lexically_normal();
+        std::string normalized_path = clean_path.string();
+
+#ifdef _WIN32
+        std::string command = "explorer \"" + normalized_path + "\"";
+#elif __linux__
+        std::string command = "xdg-open \"" + normalized_path + "\"";
+#elif __APPLE__
+        std::string command = "open \"" + normalized_path + "\"";
+#else
+        std::cerr << "Plataforma no soportada para abrir el explorador.\n";
+        return false;
+#endif
+
+        int result = system(command.c_str());
+        return result == 0;
+    }
+    catch (const fs::filesystem_error &e)
+    {
+        std::cerr << "Error al acceder a la carpeta: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+bool FileManager::make_dir(const std::string &path)
+{
+    try
+    {
+        if (fs::create_directories(path))
+        {
+            std::cout << "Directory created successfully.\n";
+            return true;
+        }
+        else
+        {
+            std::cout << "Directory already exists or could not be created.\n";
+            return false;
+        }
+    }
+    catch (const fs::filesystem_error &e)
+    {
+        std::cerr << "Error creating directory: " << e.what() << '\n';
+        return false;
+    }
+}
+
 std::vector<fs::directory_entry> FileManager::get_files_noT(const std::string &path)
 {
     std::vector<fs::directory_entry> files;

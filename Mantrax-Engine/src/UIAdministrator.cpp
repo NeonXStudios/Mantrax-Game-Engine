@@ -53,4 +53,7 @@ void UIAdministrator::draw_ui_in_order(Entity *owner, std::string component_name
 
     if (component_name == "GLightDirectional")
         ComponentsDrawer::draw_ui<GLightDirectional>(owner, 13);
+
+    if (component_name == "TileMap")
+        ComponentsDrawer::draw_ui<TileMap>(owner, 14);
 }

@@ -156,9 +156,9 @@ void Hierarchy::draw_entity_node(Entity *entity)
 // Función principal para dibujar la jerarquía
 void Hierarchy::on_draw()
 {
-    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
 
-        if (!first_frame)
+    if (!first_frame)
     {
         std::string org_path = FileManager::get_project_path() + "organizer.json";
         load_from_json(org_path);
@@ -210,7 +210,7 @@ void Hierarchy::on_draw()
 
         if (ImGui::MenuItem("Create New Entity"))
         {
-            Entity* new_entity = sceneM->get_current_scene()->make_entity();
+            Entity *new_entity = sceneM->get_current_scene()->make_entity();
             new_entity->addComponent<ModelComponent>().init();
             new_entity->addComponent<GMaterial>().init();
         }
@@ -264,21 +264,24 @@ void Hierarchy::on_draw()
         ImGui::EndPopup();
     }
 
-
-    for (Scene* p_scene : sceneM->opened_scenes)
+    for (Scene *p_scene : sceneM->opened_scenes)
     {
-        bool render_once = true; 
+        bool render_once = true;
 
-        if (UIMasterDrawer::get_instance().get_component<SceneView>()->windows_data.size() > 0) {
-            for (SceneDataView* scene_work : UIMasterDrawer::get_instance().get_component<SceneView>()->windows_data) {
-                if (p_scene == scene_work->work_scene) {
-                    render_once = false; 
+        if (UIMasterDrawer::get_instance().get_component<SceneView>()->windows_data.size() > 0)
+        {
+            for (SceneDataView *scene_work : UIMasterDrawer::get_instance().get_component<SceneView>()->windows_data)
+            {
+                if (p_scene == scene_work->work_scene)
+                {
+                    render_once = false;
                     break;
                 }
             }
         }
 
-        if (render_once) {
+        if (render_once)
+        {
             render_scene_view(p_scene);
         }
     }
@@ -286,7 +289,7 @@ void Hierarchy::on_draw()
     ImGui::End();
 }
 
-void Hierarchy::render_scene_hierarchy(Scene* p_scene)
+void Hierarchy::render_scene_hierarchy(Scene *p_scene)
 {
     if (!first_frame)
     {
@@ -388,40 +391,39 @@ void Hierarchy::render_scene_hierarchy(Scene* p_scene)
         ImGui::EndPopup();
     }
 
-
     render_scene_view(p_scene);
 
     ImGui::End();
 }
 
-void Hierarchy::render_scene_view(Scene* p_scene)
+void Hierarchy::render_scene_view(Scene *p_scene)
 {
-    std::unordered_set<Entity*> drawn_entities;
+    std::unordered_set<Entity *> drawn_entities;
 
     std::string new_entitie = p_scene->scene_name + "##" + std::to_string(window_id);
 
-    if (ImGui::TreeNode(new_entitie.c_str())) 
+    if (ImGui::TreeNode(new_entitie.c_str()))
     {
-        for (auto it = folders.begin(); it != folders.end(); )
+        for (auto it = folders.begin(); it != folders.end();)
         {
-            FolderMap* folder = *it;
-            ImGui::PushID(folder->container_id.c_str()); 
+            FolderMap *folder = *it;
+            ImGui::PushID(folder->container_id.c_str());
 
             EditorGUI::DrawIcon(IconsManager::FOLDER());
 
-            bool is_open = ImGui::TreeNodeEx(folder->container_name.c_str(), ImGuiTreeNodeFlags_OpenOnArrow); 
+            bool is_open = ImGui::TreeNodeEx(folder->container_name.c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
 
-            if (ImGui::BeginDragDropTarget())  
+            if (ImGui::BeginDragDropTarget())
             {
-                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ENTITY_CELL"))
+                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY_CELL"))
                 {
-                    IM_ASSERT(payload->DataSize == sizeof(Entity*));
-                    Entity* droppedEntity = *(Entity**)payload->Data;
+                    IM_ASSERT(payload->DataSize == sizeof(Entity *));
+                    Entity *droppedEntity = *(Entity **)payload->Data;
 
                     // Remueve la entidad de todas las carpetas y agrega la nueva
                     remove_entity_from_all_folders(droppedEntity);
 
-                    ObjectMap* new_object_map = new ObjectMap();
+                    ObjectMap *new_object_map = new ObjectMap();
                     new_object_map->object = droppedEntity;
                     new_object_map->container_id = folder->container_id;
 
@@ -460,7 +462,7 @@ void Hierarchy::render_scene_view(Scene* p_scene)
             // Dibujar las entidades dentro de la carpeta si está abierta
             if (is_open)
             {
-                for (ObjectMap* obj : folder->objects_map)
+                for (ObjectMap *obj : folder->objects_map)
                 {
                     if (obj->object->get_transform()->parent == nullptr &&
                         drawn_entities.find(obj->object) == drawn_entities.end())
@@ -481,7 +483,7 @@ void Hierarchy::render_scene_view(Scene* p_scene)
         }
 
         // Renderiza las entidades que no están en ninguna carpeta
-        for (Entity* ent : p_scene->objects_worlds)
+        for (Entity *ent : p_scene->objects_worlds)
         {
             if (ent->get_transform()->parent == nullptr &&
                 !is_in_any_folder(ent) &&

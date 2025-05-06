@@ -485,10 +485,17 @@ public:
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
+        GLfloat currentLineWidth;
+        glGetFloatv(GL_LINE_WIDTH, &currentLineWidth);
+
+        // Aplica el nuevo ancho de línea solo para este renderizado
+        glLineWidth(5.0f);
+
         // Dibujar la esfera
         glBindVertexArray(VAO);
         glDrawElements(GL_LINES, indicesCount, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+        glLineWidth(currentLineWidth);
     }
 
 private:

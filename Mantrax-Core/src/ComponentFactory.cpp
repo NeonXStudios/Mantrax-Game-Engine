@@ -51,6 +51,10 @@ Component *ComponentFactory::add_component(Entity *ent, std::string component_na
     {
         return &ent->addComponent<GLightPoint>();
     }
+    else if (component_name == "TileMap")
+    {
+        return &ent->addComponent<TileMap>();
+    }
 
     return nullptr;
 }
