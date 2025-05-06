@@ -3,6 +3,7 @@
 #include <EditorGUI.h>
 #include <cmath>
 #include <iostream>
+#include <FileDialog.h>
 
 struct Node
 {
@@ -15,6 +16,9 @@ void AnimatorView::on_draw()
 {
     if (animator == nullptr)
         return;
+
+    static nlohmann::json animations_tree_save;
+    static nlohmann::json animations_data;
 
     std::string new_name = "Animator##" + std::to_string(window_id);
 
@@ -53,9 +57,6 @@ void AnimatorView::on_draw()
         {
             if (ImGui::MenuItem("Save"))
             {
-                nlohmann::json animations_tree_save;
-                nlohmann::json animations_data;
-
                 animations_tree_save["animator_name"] = animator->_name;
                 for (int i = 0; i < (int)animator->animations.size(); i++)
                 {
@@ -91,23 +92,42 @@ void AnimatorView::on_draw()
                 }
                 animations_tree_save["animations_data"] = animations_data;
 
-                std::string file_name = FileManager::get_project_path() + "assets/" + animator->_name + ".animation";
-                if (!file_name.empty())
-                {
-                    FileManager::write_file(file_name, animations_tree_save.dump(4));
-                    std::cout << "Animation data saved to: " << file_name << std::endl;
-                }
-                else
-                {
-                    std::cerr << "Error: Invalid file name." << std::endl;
-                }
+                is_saving = true;
 
-                animator->clean();
-                animator->init();
+                // std::string file_name = FileManager::get_project_path() + "assets/" + animator->_name + ".animation";
+                // if (!file_name.empty())
+                // {
+                //     FileManager::write_file(file_name, animations_tree_save.dump(4));
+                //     std::cout << "Animation data saved to: " << file_name << std::endl;
+                // }
+                // else
+                // {
+                //     std::cerr << "Error: Invalid file name." << std::endl;
+                // }
             }
             ImGui::EndMenu();
         }
         ImGui::EndMenuBar();
+    }
+
+    if (is_saving)
+    {
+        static std::string file_save;
+
+        std::string view_name = "Save Animation##" + std::to_string(window_id);
+
+        if (FileDialog::save_file(view_name.c_str(), file_save, FileManager::get_project_path().c_str(), ".animation", animations_tree_save.dump(4)))
+        {
+            is_saving = false;
+
+            animations_tree_save = nullptr;
+            animations_data = nullptr;
+
+            animator->clean();
+            animator->init();
+
+            std::cout << "Animation Saved" << std::endl;
+        }
     }
 
     float left_panel_width = ImGui::GetContentRegionAvail().x * 0.4f;

@@ -171,137 +171,126 @@ public:
 
     static bool save_file(const char *title, std::string &outputPath, const char *startPath, const char *extension, std::string to_write)
     {
-        static const char *defaultFileName = "";
-        static bool open = false;
-        static std::string currentPath;
-        static std::string selectedFilename;
-        static std::vector<fs::directory_entry> entries;
-        static std::string fileExtension;
-        static char inputFilename[256];
-        static bool initialized = false;
-        static bool selectionMade = false;
-        static fs::path lastClickedDir;
-        static double lastClickTime = 0.0;
-
-        // Inicialización al llamar la función
-        if (!initialized)
+        // Make these persistent but not static, so they're initialized properly each call
+        static struct
         {
-            initialized = true;
-            open = true;
-            selectionMade = false;
+            bool open = true;
+            std::string currentPath;
+            std::string selectedFilename;
+            std::vector<fs::directory_entry> entries;
+            std::string fileExtension;
+            char inputFilename[256] = "new_file";
+            bool initialized = false;
+            bool selectionMade = false;
+            fs::path lastClickedDir;
+            double lastClickTime = 0.0;
+        } state;
 
-            // Establecer la ruta inicial
+        // Initialize on first call or when reopening
+        if (!state.initialized || !state.open)
+        {
+            state.open = true;
+            state.initialized = true;
+            state.selectionMade = false;
+
+            // Set initial path
             if (startPath && fs::exists(startPath) && fs::is_directory(startPath))
             {
-                currentPath = startPath;
+                state.currentPath = startPath;
             }
             else
             {
-                currentPath = fs::current_path().string();
+                state.currentPath = fs::current_path().string();
             }
 
-            // // Establecer la extensión deseada
-            // if (extension && strcmp(extension, "any") != 0)
+            // // Set default filename
+            // if (extension && *extension)
             // {
-            //     fileExtension = extension;
-            //     // Aseguramos que la extensión comience con punto
-            //     if (!fileExtension.empty() && fileExtension[0] != '.')
+            //     state.fileExtension = extension;
+
+            //     // Only append extension if inputFilename doesn't already have it
+            //     std::string tempName = state.inputFilename;
+            //     if (tempName.length() <= strlen(extension) ||
+            //         tempName.substr(tempName.length() - strlen(extension)) != extension)
             //     {
-            //         fileExtension = "." + fileExtension;
+            //         strncat(state.inputFilename, extension, sizeof(state.inputFilename) - strlen(state.inputFilename) - 1);
             //     }
             // }
-            // else
-            // {
-            //     fileExtension = ""; // "any" o vacío significa cualquier extensión
-            // }
 
-            // Establecer el nombre de archivo predeterminado
-            if (defaultFileName && strlen(defaultFileName) > 0)
-            {
-                strncpy(inputFilename, defaultFileName, sizeof(inputFilename) - 1);
-                inputFilename[sizeof(inputFilename) - 1] = '\0';
-            }
-            else
-            {
-                strcpy(inputFilename, "new_file");
-                if (!fileExtension.empty())
-                {
-                    strncat(inputFilename, fileExtension.c_str(), sizeof(inputFilename) - strlen(inputFilename) - 1);
-                }
-            }
-
-            selectedFilename = "";
-            refreshFiles(currentPath, fileExtension, entries);
+            state.selectedFilename = "";
+            refreshFiles(state.currentPath, state.fileExtension, state.entries);
         }
 
-        // Si la ventana no está abierta, reiniciamos el estado
-        if (!open)
+        // Return early if dialog should be closed
+        if (!state.open)
         {
-            initialized = false;
-            return selectionMade;
+            bool result = state.selectionMade;
+            // Reset state for next opening, but keep initialized true
+            state.initialized = false;
+            return result;
         }
 
         ImGui::SetNextWindowSize(ImVec2(550, 400));
-        if (ImGui::Begin(title, &open, ImGuiWindowFlags_NoCollapse))
+        if (ImGui::Begin(title, &state.open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDocking))
         {
-            // Mostrar la ruta actual
-            ImGui::Text("Ruta actual: %s", currentPath.c_str());
+            // Show current path
+            ImGui::Text("Ruta actual: %s", state.currentPath.c_str());
             ImGui::SameLine();
 
-            // Botón para subir un nivel
+            // Button to go up one level
             if (ImGui::Button("Subir nivel"))
             {
-                fs::path parentPath = fs::path(currentPath).parent_path();
-                if (parentPath != currentPath)
+                fs::path parentPath = fs::path(state.currentPath).parent_path();
+                if (parentPath != state.currentPath)
                 {
-                    currentPath = parentPath.string();
-                    refreshFiles(currentPath, fileExtension, entries);
-                    selectedFilename = "";
+                    state.currentPath = parentPath.string();
+                    refreshFiles(state.currentPath, state.fileExtension, state.entries);
+                    state.selectedFilename = "";
                 }
             }
 
-            // Mostrar filtro actual
-            ImGui::Text("Filtro: %s", fileExtension.empty() ? "Todos los archivos" : fileExtension.c_str());
+            // Show current filter
+            ImGui::Text("Filtro: %s", state.fileExtension.empty() ? "Todos los archivos" : state.fileExtension.c_str());
 
-            // Crear una zona de scroll para los archivos y carpetas
+            // Create scrolling region for files and folders
             ImGui::BeginChild("ScrollingRegion", ImVec2(0, -ImGui::GetFrameHeightWithSpacing() * 3), true, ImGuiWindowFlags_HorizontalScrollbar);
 
-            // Mostrar carpetas primero
-            for (const auto &entry : entries)
+            // Show directories first
+            for (const auto &entry : state.entries)
             {
                 if (entry.is_directory())
                 {
                     std::string entryName = entry.path().filename().string();
                     std::string label = entryName;
 
-                    if (ImGui::Selectable(label.c_str(), selectedFilename == entryName))
+                    if (ImGui::Selectable(label.c_str(), state.selectedFilename == entryName))
                     {
-                        selectedFilename = entryName;
+                        state.selectedFilename = entryName;
                         fs::path clickedPath = entry.path();
 
+                        // Handle double-click on directory
                         if (ImGui::IsMouseDoubleClicked(0))
                         {
-                            currentPath = clickedPath.string();
-                            refreshFiles(currentPath, fileExtension, entries);
-                            selectedFilename = "";
-                            lastClickedDir = fs::path(); // Resetear
+                            state.currentPath = clickedPath.string();
+                            refreshFiles(state.currentPath, state.fileExtension, state.entries);
+                            state.selectedFilename = "";
                         }
                     }
                 }
             }
 
-            // Luego mostrar archivos
-            for (const auto &entry : entries)
+            // Then show files
+            for (const auto &entry : state.entries)
             {
                 if (!entry.is_directory())
                 {
                     std::string entryName = entry.path().filename().string();
                     std::string label = "- " + entryName;
 
-                    if (ImGui::Selectable(label.c_str(), selectedFilename == entryName))
+                    if (ImGui::Selectable(label.c_str(), state.selectedFilename == entryName))
                     {
-                        selectedFilename = entryName;
-                        strcpy(inputFilename, selectedFilename.c_str());
+                        state.selectedFilename = entryName;
+                        strcpy(state.inputFilename, entryName.c_str());
                     }
                 }
             }
@@ -310,107 +299,103 @@ public:
 
             if (ImGui::Button("Open Select Folder", ImVec2(120, 0)))
             {
-                if (!selectedFilename.empty())
+                if (!state.selectedFilename.empty())
                 {
-                    fs::path selectedPath = fs::path(currentPath) / selectedFilename;
+                    fs::path selectedPath = fs::path(state.currentPath) / state.selectedFilename;
                     if (fs::is_directory(selectedPath))
                     {
-                        currentPath = selectedPath.string();
-                        refreshFiles(currentPath, fileExtension, entries);
-                        selectedFilename = "";
+                        state.currentPath = selectedPath.string();
+                        refreshFiles(state.currentPath, state.fileExtension, state.entries);
+                        state.selectedFilename = "";
                     }
                 }
             }
 
             ImGui::SameLine();
 
-            // Botón para crear una nueva carpeta
+            // Button to create new folder
             if (ImGui::Button("Nueva carpeta", ImVec2(120, 0)))
             {
-                static bool showNewFolderInput = false;
-                static char newFolderName[256] = "New Folder";
+                ImGui::OpenPopup("NuevaCarpeta");
+            }
 
-                showNewFolderInput = !showNewFolderInput;
-                if (showNewFolderInput)
+            // New folder popup
+            static char newFolderName[256] = "New Folder";
+            if (ImGui::BeginPopup("NuevaCarpeta"))
+            {
+                ImGui::Text("Nombre de la nueva carpeta:");
+                ImGui::InputText("##newfolder", newFolderName, sizeof(newFolderName));
+
+                if (ImGui::Button("Crear"))
                 {
-                    ImGui::OpenPopup("NuevaCarpeta");
+                    fs::path newFolderPath = fs::path(state.currentPath) / newFolderName;
+                    try
+                    {
+                        if (fs::create_directory(newFolderPath))
+                        {
+                            refreshFiles(state.currentPath, state.fileExtension, state.entries);
+                        }
+                    }
+                    catch (const std::exception &e)
+                    {
+                        printf("Error al crear carpeta: %s\n", e.what());
+                    }
+                    ImGui::CloseCurrentPopup();
                 }
 
-                if (ImGui::BeginPopup("NuevaCarpeta"))
+                ImGui::SameLine();
+
+                if (ImGui::Button("Cancelar"))
                 {
-                    ImGui::Text("Nombre de la nueva carpeta:");
-                    ImGui::InputText("##newfolder", newFolderName, sizeof(newFolderName));
-
-                    if (ImGui::Button("Crear"))
-                    {
-                        fs::path newFolderPath = fs::path(currentPath) / newFolderName;
-                        try
-                        {
-                            if (fs::create_directory(newFolderPath))
-                            {
-                                refreshFiles(currentPath, fileExtension, entries);
-                            }
-                        }
-                        catch (const std::exception &e)
-                        {
-                            printf("Error al crear carpeta: %s\n", e.what());
-                        }
-                        ImGui::CloseCurrentPopup();
-                    }
-
-                    ImGui::SameLine();
-
-                    if (ImGui::Button("Cancelar"))
-                    {
-                        ImGui::CloseCurrentPopup();
-                    }
-
-                    ImGui::EndPopup();
+                    ImGui::CloseCurrentPopup();
                 }
+
+                ImGui::EndPopup();
             }
 
             ImGui::Separator();
 
-            // Campo para introducir el nombre del archivo
+            // File name input field
             ImGui::Text("Nombre del archivo:");
             ImGui::SameLine();
             ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
-            ImGui::InputText("##filename", inputFilename, sizeof(inputFilename));
+            ImGui::InputText("##filename", state.inputFilename, sizeof(state.inputFilename));
             ImGui::PopItemWidth();
 
-            // Botones para guardar o cancelar
+            // Save and cancel buttons
             if (ImGui::Button("Guardar", ImVec2(120, 0)))
             {
-                if (strlen(inputFilename) > 0)
+                if (strlen(state.inputFilename) > 0)
                 {
-                    std::string filename = inputFilename;
+                    std::string filename = state.inputFilename;
 
-                    // Añadir la extensión si no la tiene y hay una extensión establecida
-                    if (!fileExtension.empty() &&
-                        (filename.length() <= fileExtension.length() ||
-                         filename.substr(filename.length() - fileExtension.length()) != fileExtension))
+                    // Add extension if missing
+                    if (!state.fileExtension.empty() &&
+                        (filename.length() <= state.fileExtension.length() ||
+                         filename.substr(filename.length() - state.fileExtension.length()) != state.fileExtension))
                     {
-                        filename += fileExtension;
+                        filename += state.fileExtension;
                     }
 
-                    fs::path selectedPath = fs::path(currentPath) / filename;
+                    fs::path selectedPath = fs::path(state.currentPath) / filename;
 
-                    // Comprobar si el archivo ya existe
+                    // Check if file exists
                     bool shouldSave = true;
                     if (fs::exists(selectedPath))
                     {
-                        // En una implementación real, aquí se mostraría un diálogo de confirmación
-                        // Por ahora, simplemente sobrescribimos
+                        // In a real implementation, show a confirmation dialog
+                        // For now, we just overwrite
                     }
 
                     if (shouldSave)
                     {
-                        outputPath = selectedPath.string();
-                        selectionMade = true;
-                        open = false;
+                        outputPath = selectedPath.string() + extension;
+                        state.selectionMade = true;
+                        state.open = false;
                     }
 
-                    FileManager::write_file(outputPath + defaultFileName + extension, to_write);
+                    // Write the file - fixed to use correct path
+                    FileManager::write_file(outputPath, to_write);
                 }
             }
 
@@ -418,12 +403,12 @@ public:
 
             if (ImGui::Button("Cancelar", ImVec2(120, 0)))
             {
-                open = false;
+                state.open = false;
             }
         }
         ImGui::End();
 
-        return selectionMade;
+        return state.selectionMade;
     }
 
 private:

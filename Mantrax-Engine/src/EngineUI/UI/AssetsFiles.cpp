@@ -472,7 +472,6 @@ void AssetsFiles::drawer_files_drag(std::string extension,
     }
     else if (extension == ".png" || extension == ".jpg")
     {
-        std::cout << "Current Path: " << complete_path << std::endl;
         EditorGUI::Drag("IMAGECLASS", GarinIO::GetWithAfterAssetDir(complete_path));
     }
     else if (extension == ".material" || extension == ".mtl")

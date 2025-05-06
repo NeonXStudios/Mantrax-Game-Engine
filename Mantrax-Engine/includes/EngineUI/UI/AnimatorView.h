@@ -9,6 +9,7 @@ public:
     int selected_animation = -1;
     int edit_animation = -1;
     int current_frame = 0;
+    bool is_saving = false;
     bool is_playing = false;
 
     void on_draw() override;
