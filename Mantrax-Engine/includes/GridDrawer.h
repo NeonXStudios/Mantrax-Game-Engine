@@ -68,7 +68,7 @@ public:
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
-        float axisLineWidth = 5.0f;
+        float axisLineWidth = 1.2f;
         GLfloat currentLineWidth;
         glGetFloatv(GL_LINE_WIDTH, &currentLineWidth);
         glLineWidth(axisLineWidth);

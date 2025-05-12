@@ -28,16 +28,16 @@ using Group = std::size_t;
 
 inline GARINLIBS_API ComponentID getNewComponentTypeID()
 {
-	static ComponentID lastID = 0u;
-	return lastID++;
+    static ComponentID lastID = 0u;
+    return lastID++;
 }
 
 template <typename T>
 inline GARINLIBS_API ComponentID getComponentTypeID() noexcept
 {
-	static_assert(std::is_base_of<Component, T>::value, "");
-	static ComponentID typeID = getNewComponentTypeID();
-	return typeID;
+    static_assert(std::is_base_of<Component, T>::value, "");
+    static ComponentID typeID = getNewComponentTypeID();
+    return typeID;
 }
 
 constexpr std::size_t maxComponents = 1024;
@@ -51,62 +51,69 @@ using ComponentArray = std::array<Component *, maxComponents>;
 class GARINLIBS_API Component
 {
 public:
-	std::map<std::string, std::any> variableMap;
+    std::map<std::string, std::any> variableMap;
 
-	int component_id;
-	std::string _name;
-	Entity *entity = nullptr;
-	TransformComponent *transform = nullptr;
-	bool enabled = true;
+    int component_id;
+    std::string _name;
+    Entity *entity = nullptr;
+    TransformComponent *transform = nullptr;
+    bool enabled = true;
 
-	virtual ~Component()
-	{
-		clear_vars();
-	}
+    virtual ~Component()
+    {
+        clear_vars();
+    }
 
-	void clear_vars()
-	{
-		for (auto &pair : variableMap)
-		{
-			delete &pair.second;
-		}
+    void clear_vars()
+    {
+        for (auto &pair : variableMap)
+        {
+            delete &pair.second;
+        }
 
-		variableMap.clear();
-	}
+        variableMap.clear();
+    }
 
-	Component()
-	{
-		// component_id = IDGenerator::generate_id_component();
-	}
+    Component()
+    {
+        // component_id = IDGenerator::generate_id_component();
+    }
 
-	TransformComponent *get_transform()
-	{
-		return transform;
-	}
+    TransformComponent *get_transform()
+    {
+        return transform;
+    }
 
-	template <typename T>
-	void set_var(const std::string& name, const T& value) {
-		variableMap[name] = value;
-	}
+    template <typename T>
+    void set_var(const std::string &name, const T &value)
+    {
+        variableMap[name] = value;
+    }
 
-	template <typename T>
-	T get_var(const std::string& name) {
-		try {
-			return std::any_cast<T>(variableMap.at(name));
-		} catch (const std::out_of_range& e) {
-			throw std::runtime_error("Variable not found: " + name);
-		} catch (const std::bad_any_cast& e) {
-			throw std::runtime_error("Incorrect type for variable: " + name);
-		}
-	}
+    template <typename T>
+    T get_var(const std::string &name)
+    {
+        try
+        {
+            return std::any_cast<T>(variableMap.at(name));
+        }
+        catch (const std::out_of_range &e)
+        {
+            throw std::runtime_error("Variable not found: " + name);
+        }
+        catch (const std::bad_any_cast &e)
+        {
+            throw std::runtime_error("Incorrect type for variable: " + name);
+        }
+    }
 
-	virtual void defines() {}
-	virtual void init() {}
-	virtual void update() {}
-	virtual void draw() {}
-	virtual void clean() {}
-	virtual std::string serialize() { return ""; }
-	virtual void deserialize(std::string g, std::string path = "") {}
+    virtual void defines() {}
+    virtual void init() {}
+    virtual void update() {}
+    virtual void draw() {}
+    virtual void clean() {}
+    virtual std::string serialize() { return ""; }
+    virtual void deserialize(std::string g, std::string path = "") {}
 };
 
 class GARINLIBS_API TransformComponent
@@ -130,7 +137,7 @@ public:
     bool adapt_rotation = true;
     bool adapt_scale = false;
 
-    void attach_to(TransformComponent* new_parent, bool keep_world_position = true)
+    void attach_to(TransformComponent *new_parent, bool keep_world_position = true)
     {
         // Always keep world position by default for better predictability
         if (new_parent == parent)
@@ -144,7 +151,7 @@ public:
         // Remove from current parent
         if (parent)
         {
-            auto& siblings = parent->childrens;
+            auto &siblings = parent->childrens;
             siblings.erase(std::remove(siblings.begin(), siblings.end(), this), siblings.end());
         }
 
@@ -188,7 +195,7 @@ public:
         update();
 
         // Update all children recursively
-        for (auto* child : childrens)
+        for (auto *child : childrens)
         {
             child->update();
         }
@@ -203,7 +210,7 @@ public:
         glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), Scale);
         glm::mat4 rotationMatrix = glm::mat4_cast(rotation);
         glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), Position);
-        
+
         // FIXED: Proper order of transformations
         MatrixLocal = translationMatrix * rotationMatrix * scaleMatrix;
 
@@ -211,38 +218,38 @@ public:
         {
             // Get parent matrix ONCE
             parent_matrix = parent->get_matrix();
-            
+
             if (!adapt_position || !adapt_rotation || !adapt_scale)
             {
                 // FIXED: Build a customized parent matrix based on flags
                 glm::mat4 adaptedParentMatrix = glm::mat4(1.0f);
-                
+
                 // Extract components from parent matrix
                 glm::vec3 parentPos = glm::vec3(0.0f);
                 glm::quat parentRot = glm::quat(1.0f, 0.0f, 0.0f, 0.0f); // Identity
                 glm::vec3 parentScale = glm::vec3(1.0f);
-                
+
                 if (adapt_position)
                 {
                     parentPos = parent->getPosition();
                 }
-                
+
                 if (adapt_rotation)
                 {
                     parentRot = parent->getRotation();
                 }
-                
+
                 if (adapt_scale)
                 {
                     parentScale = parent->getScale();
                 }
-                
+
                 // Rebuild parent matrix with adaptations
                 // FIXED: Ensure correct transform order
                 adaptedParentMatrix = glm::translate(glm::mat4(1.0f), parentPos);
                 adaptedParentMatrix = adaptedParentMatrix * glm::mat4_cast(parentRot);
                 adaptedParentMatrix = glm::scale(adaptedParentMatrix, parentScale);
-                
+
                 Matrix = adaptedParentMatrix * MatrixLocal;
             }
             else
@@ -257,14 +264,29 @@ public:
         }
     }
 
-    void setAdaptPosition(bool adapt) { adapt_position = adapt; update(); updateChildren(); }
-    void setAdaptRotation(bool adapt) { adapt_rotation = adapt; update(); updateChildren(); }
-    void setAdaptScale(bool adapt) { adapt_scale = adapt; update(); updateChildren(); }
+    void setAdaptPosition(bool adapt)
+    {
+        adapt_position = adapt;
+        update();
+        updateChildren();
+    }
+    void setAdaptRotation(bool adapt)
+    {
+        adapt_rotation = adapt;
+        update();
+        updateChildren();
+    }
+    void setAdaptScale(bool adapt)
+    {
+        adapt_scale = adapt;
+        update();
+        updateChildren();
+    }
 
     // FIXED: Added helper function to update children recursively
     void updateChildren()
     {
-        for (auto* child : childrens)
+        for (auto *child : childrens)
         {
             child->update();
             child->updateChildren();
@@ -288,7 +310,7 @@ public:
             Position = glm::vec3(worldMatrix[3]);
             rotation = glm::quat_cast(worldMatrix);
             rotation = glm::normalize(rotation); // FIXED: Normalize after extraction
-            
+
             // Extract scale from world matrix columns
             Scale = glm::vec3(
                 glm::length(glm::vec3(worldMatrix[0])),
@@ -296,7 +318,7 @@ public:
                 glm::length(glm::vec3(worldMatrix[2])));
 
             update();
-            
+
             // Update children
             updateChildren();
         }
@@ -307,15 +329,15 @@ public:
         return Matrix;
     }
 
-    void set_rotation(const glm::vec3& eulerAngles)
+    void set_rotation(const glm::vec3 &eulerAngles)
     {
         glm::vec3 radians = glm::radians(eulerAngles);
-        
+
         // FIXED: Create quaternions for each axis
         glm::quat quatX = glm::angleAxis(radians.x, glm::vec3(1, 0, 0));
         glm::quat quatY = glm::angleAxis(radians.y, glm::vec3(0, 1, 0));
         glm::quat quatZ = glm::angleAxis(radians.z, glm::vec3(0, 0, 1));
-        
+
         // FIXED: Ensure proper Euler angle order (ZYX convention)
         glm::quat newRotation = quatZ * quatY * quatX;
         newRotation = glm::normalize(newRotation); // FIXED: Normalize
@@ -326,7 +348,7 @@ public:
     {
         // Get world rotation quaternion
         glm::quat worldRot = getRotation();
-        
+
         // Convert to Euler angles
         glm::vec3 eulerRotation = glm::degrees(glm::eulerAngles(worldRot));
 
@@ -360,7 +382,7 @@ public:
             Position = pos;
         }
         update();
-        
+
         // Update children
         updateChildren();
     }
@@ -379,7 +401,7 @@ public:
             rotation = glm::normalize(rot); // FIXED: Normalize
         }
         update();
-        
+
         // Update children
         updateChildren();
     }
@@ -394,15 +416,14 @@ public:
             Scale = glm::vec3(
                 parentScale.x != 0.0f ? scale.x / parentScale.x : scale.x,
                 parentScale.y != 0.0f ? scale.y / parentScale.y : scale.y,
-                parentScale.z != 0.0f ? scale.z / parentScale.z : scale.z
-            );
+                parentScale.z != 0.0f ? scale.z / parentScale.z : scale.z);
         }
         else
         {
             Scale = scale;
         }
         update();
-        
+
         // Update children
         updateChildren();
     }
@@ -411,7 +432,7 @@ public:
     {
         Position = pos;
         update();
-        
+
         // Update children
         updateChildren();
     }
@@ -420,7 +441,7 @@ public:
     {
         rotation = glm::normalize(rot); // FIXED: Normalize
         update();
-        
+
         // Update children
         updateChildren();
     }
@@ -429,7 +450,7 @@ public:
     {
         Scale = scale;
         update();
-        
+
         // Update children
         updateChildren();
     }
@@ -475,20 +496,20 @@ public:
     {
         // Calculate world position directly
         glm::vec3 worldPos = getPosition();
-        
+
         // Calculate world position through matrix
         glm::vec3 matrixPos = glm::vec3(Matrix[3]);
-        
+
         // Compare and log if there's a significant difference
         float distance = glm::distance(worldPos, matrixPos);
         if (distance > 0.001f)
         {
-            std::cout << "Transform position mismatch: " 
-                    << "Calculated world pos: (" << worldPos.x << ", " << worldPos.y << ", " << worldPos.z << ") " 
-                    << "Matrix position: (" << matrixPos.x << ", " << matrixPos.y << ", " << matrixPos.z << ") "
-                    << "Distance: " << distance << std::endl;
+            std::cout << "Transform position mismatch: "
+                      << "Calculated world pos: (" << worldPos.x << ", " << worldPos.y << ", " << worldPos.z << ") "
+                      << "Matrix position: (" << matrixPos.x << ", " << matrixPos.y << ", " << matrixPos.z << ") "
+                      << "Distance: " << distance << std::endl;
         }
-        
+
         // Check rotation
         glm::quat worldRot = getRotation();
         glm::quat matrixRot = glm::quat_cast(Matrix);
@@ -497,9 +518,9 @@ public:
         {
             std::cout << "Transform rotation mismatch! Difference: " << rotDiff << std::endl;
         }
-        
+
         // Do the same for children
-        for (auto* child : childrens)
+        for (auto *child : childrens)
         {
             child->validateTransforms();
         }
@@ -509,248 +530,248 @@ public:
 class GARINLIBS_API Entity
 {
 private:
-	bool active = true;
+    bool active = true;
 
-	ComponentArray components_array;
-	ComponentBitSet components_bitset;
-	GroupBitset group_bitset;
+    ComponentArray components_array;
+    ComponentBitSet components_bitset;
+    GroupBitset group_bitset;
 
 public:
-	std::vector<Component *> components;
-	int Layer = LAYER_1;
-	std::string name_object = "New Entity";
-	std::string object_tag = "None";
-	std::string object_string_id = "0";
-	int object_int_id = 1;
-	TransformComponent *transform_component = new TransformComponent();
+    std::vector<Component *> components;
+    int Layer = LAYER_1;
+    std::string name_object = "New Entity";
+    std::string object_tag = "None";
+    std::string object_string_id = "0";
+    int object_int_id = 1;
+    TransformComponent *transform_component = new TransformComponent();
 
-	Entity *entity = nullptr;
-	Entity *parent = nullptr;
+    Entity *entity = nullptr;
+    Entity *parent = nullptr;
 
-	vector<Entity *> childrens;
+    vector<Entity *> childrens;
 
-	Entity()
-	{
-		entity = this;
-		transform_component->entity = this;
-	}
+    Entity()
+    {
+        entity = this;
+        transform_component->entity = this;
+    }
 
-	void addChild(Entity *newChild)
-	{
-		childrens.push_back(newChild);
-	}
+    void addChild(Entity *newChild)
+    {
+        childrens.push_back(newChild);
+    }
 
-	void update()
-	{
-		for (auto it = childrens.begin(); it != childrens.end();)
-		{
-			Entity *g = *it;
-			if (g != nullptr && g->parent != this)
-			{
-				it = std::find(childrens.begin(), childrens.end(), g);
-				if (it != childrens.end())
-				{
-					delete g;
-					it = childrens.erase(it);
-				}
-			}
-			else
-			{
-				++it;
-			}
-		}
+    void update()
+    {
+        for (auto it = childrens.begin(); it != childrens.end();)
+        {
+            Entity *g = *it;
+            if (g != nullptr && g->parent != this)
+            {
+                it = std::find(childrens.begin(), childrens.end(), g);
+                if (it != childrens.end())
+                {
+                    delete g;
+                    it = childrens.erase(it);
+                }
+            }
+            else
+            {
+                ++it;
+            }
+        }
 
-		for (auto &c : components)
-		{
-			if (c->enabled)
-				c->update();
-		}
+        for (auto &c : components)
+        {
+            if (c->enabled)
+                c->update();
+        }
 
-		transform_component->update();
-	}
+        transform_component->update();
+    }
 
-	void on_draw()
-	{
-		for (auto &c : components)
-		{
-			if (c->enabled)
-				c->draw();
-		}
-	}
+    void on_draw()
+    {
+        for (auto &c : components)
+        {
+            if (c->enabled)
+                c->draw();
+        }
+    }
 
-	bool isActive() const { return active; }
-	void destroy() { active = false; }
+    bool isActive() const { return active; }
+    void destroy() { active = false; }
 
-	bool hasGroup(Group mGroup)
-	{
-		return group_bitset[mGroup];
-	}
+    bool hasGroup(Group mGroup)
+    {
+        return group_bitset[mGroup];
+    }
 
-	void addGroup(Group mGroup);
-	void delGroup(Group mGroup)
-	{
-		group_bitset[mGroup] = false;
-	}
+    void addGroup(Group mGroup);
+    void delGroup(Group mGroup)
+    {
+        group_bitset[mGroup] = false;
+    }
 
-	template <typename T, typename... TArgs>
-	T &addComponent(TArgs &&...mArgs)
-	{
-		T *c = new T(std::forward<TArgs>(mArgs)...);
-		c->entity = this;
-		c->transform = transform_component;
-		c->component_id = IDGenerator::generate_id_component();
-		components.emplace_back(c);
+    template <typename T, typename... TArgs>
+    T &addComponent(TArgs &&...mArgs)
+    {
+        T *c = new T(std::forward<TArgs>(mArgs)...);
+        c->entity = this;
+        c->transform = transform_component;
+        c->component_id = IDGenerator::generate_id_component();
+        components.emplace_back(c);
 
-		components_array[c->component_id] = c;
-		components_bitset[c->component_id] = true;
+        components_array[c->component_id] = c;
+        components_bitset[c->component_id] = true;
 
-		if (c->enabled)
-		{
-			c->defines();
-		}
-		return *c;
-	}
+        if (c->enabled)
+        {
+            c->defines();
+        }
+        return *c;
+    }
 
-	TransformComponent *get_transform()
-	{
-		return transform_component;
-	}
+    TransformComponent *get_transform()
+    {
+        return transform_component;
+    }
 
-	template <typename T>
-	T &getComponent() const
-	{
-		for (auto &component : components)
-		{
-			if (auto derived = dynamic_cast<T *>(component))
-			{
-				return *derived;
-			}
-		}
+    template <typename T>
+    T &getComponent() const
+    {
+        for (auto &component : components)
+        {
+            if (auto derived = dynamic_cast<T *>(component))
+            {
+                return *derived;
+            }
+        }
 
-		std::cout << "Object Name" << name_object << std::endl;
-		std::cout << "Object Components" << components.size() << std::endl;
+        std::cout << "Object Name" << name_object << std::endl;
+        std::cout << "Object Components" << components.size() << std::endl;
 
-		throw std::runtime_error(std::string("Component not found: ") + typeid(T).name());
-	}
+        throw std::runtime_error(std::string("Component not found: ") + typeid(T).name());
+    }
 
-	template <typename T>
-	std::vector<T *> getComponents() const
-	{
-		std::vector<T *> result;
-		for (auto &c : components)
-		{
-			T *component = dynamic_cast<T *>(c);
-			if (component)
-			{
-				result.push_back(component);
-			}
-		}
-		return result;
-	}
+    template <typename T>
+    std::vector<T *> getComponents() const
+    {
+        std::vector<T *> result;
+        for (auto &c : components)
+        {
+            T *component = dynamic_cast<T *>(c);
+            if (component)
+            {
+                result.push_back(component);
+            }
+        }
+        return result;
+    }
 
-	std::vector<Component *> GetAllComponent()
-	{
-		return components;
-	}
+    std::vector<Component *> GetAllComponent()
+    {
+        return components;
+    }
 
-	template <typename T>
-	bool hasComponent() const
-	{
-		static_assert(std::is_base_of<Component, T>::value, "T debe heredar de Component");
-		return std::any_of(components.begin(), components.end(), [](Component *c)
-						   { return dynamic_cast<T *>(c) != nullptr; });
-	}
+    template <typename T>
+    bool hasComponent() const
+    {
+        static_assert(std::is_base_of<Component, T>::value, "T debe heredar de Component");
+        return std::any_of(components.begin(), components.end(), [](Component *c)
+                           { return dynamic_cast<T *>(c) != nullptr; });
+    }
 
-	template <typename T>
-	bool removeComponent()
-	{
-		if (hasComponent<T>())
-		{
-			for (auto &component : components)
-			{
-				if (T *comp = dynamic_cast<T *>(component))
-				{
-					comp->clean();
-				}
-			}
+    template <typename T>
+    bool removeComponent()
+    {
+        if (hasComponent<T>())
+        {
+            for (auto &component : components)
+            {
+                if (T *comp = dynamic_cast<T *>(component))
+                {
+                    comp->clean();
+                }
+            }
 
-			auto it = std::remove_if(components.begin(), components.end(),
-									 [](const Component *c)
-									 {
-										 return dynamic_cast<const T *>(c) != nullptr;
-									 });
+            auto it = std::remove_if(components.begin(), components.end(),
+                                     [](const Component *c)
+                                     {
+                                         return dynamic_cast<const T *>(c) != nullptr;
+                                     });
 
-			components.erase(it, components.end());
+            components.erase(it, components.end());
 
-			components_array[getComponentTypeID<T>()] = nullptr;
-			components_bitset[getComponentTypeID<T>()] = false;
+            components_array[getComponentTypeID<T>()] = nullptr;
+            components_bitset[getComponentTypeID<T>()] = false;
 
-			return true;
-		}
-		return false;
-	}
+            return true;
+        }
+        return false;
+    }
 
-	bool removeComponentByPointer(Component *targetComponent)
-	{
-		if (targetComponent == nullptr)
-		{
-			return false;
-		}
+    bool removeComponentByPointer(Component *targetComponent)
+    {
+        if (targetComponent == nullptr)
+        {
+            return false;
+        }
 
-		for (auto &component : components)
-		{
-			if (component == targetComponent)
-			{
-				component->clean();
-				break;
-			}
-		}
+        for (auto &component : components)
+        {
+            if (component == targetComponent)
+            {
+                component->clean();
+                break;
+            }
+        }
 
-		auto it = std::remove(components.begin(), components.end(), targetComponent);
+        auto it = std::remove(components.begin(), components.end(), targetComponent);
 
-		if (it != components.end())
-		{
-			components.erase(it, components.end());
+        if (it != components.end())
+        {
+            components.erase(it, components.end());
 
-			for (std::size_t i = 0; i < components_array.size(); ++i)
-			{
-				if (components_array[i] == targetComponent)
-				{
-					components_array[i] = nullptr;
-					components_bitset[i] = false;
-					break;
-				}
-			}
+            for (std::size_t i = 0; i < components_array.size(); ++i)
+            {
+                if (components_array[i] == targetComponent)
+                {
+                    components_array[i] = nullptr;
+                    components_bitset[i] = false;
+                    break;
+                }
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	void ClearAllComponentes()
-	{
-		for (auto &component : components)
-		{
-			if (component)
-			{
-				try
-				{
-					component->enabled = false;
-					component->clean();
-				}
-				catch (const std::exception &e)
-				{
-					std::cerr << "Error during clean(): " << e.what() << std::endl;
-				}
-			}
-		}
+    void ClearAllComponentes()
+    {
+        for (auto &component : components)
+        {
+            if (component)
+            {
+                try
+                {
+                    component->enabled = false;
+                    component->clean();
+                }
+                catch (const std::exception &e)
+                {
+                    std::cerr << "Error during clean(): " << e.what() << std::endl;
+                }
+            }
+        }
 
-		components.clear();
+        components.clear();
 
-		std::fill(components_array.begin(), components_array.end(), nullptr);
-		components_bitset.reset();
-	}
+        std::fill(components_array.begin(), components_array.end(), nullptr);
+        components_bitset.reset();
+    }
 };
 
 #define GVAR(name, value, type) variableMap[#name] = static_cast<type>(value)

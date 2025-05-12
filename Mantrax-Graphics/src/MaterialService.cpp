@@ -65,6 +65,13 @@ void MaterialService::start_services()
 
 void MaterialService::reset_material_services()
 {
+    for (auto mat : materials)
+    {
+        delete mat;
+    }
+    materials.clear();
+
+    start_services();
 }
 
 void MaterialService::delete_material(GMaterial *p_reference)

@@ -3,11 +3,10 @@
 #include <IDGenerator.h>
 #include <ServiceLocator.h>
 
-
 void RenderPipeline::init()
 {
     RenderPipeline::canvas = new CanvasManager();
-    //RenderPipeline::canvas->init_ui();
+    // RenderPipeline::canvas->init_ui();
 
     if (Gfx::main_render == nullptr)
     {
@@ -19,24 +18,27 @@ void RenderPipeline::init()
 
 void RenderPipeline::render(std::function<void(void)> additional_Render)
 {
-    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
 
     if (sceneM == nullptr || sceneM->get_current_scene() == nullptr)
     {
         return;
     }
 
-    for (Scene* get_data_from_scene : sceneM->opened_scenes) {
-        if (get_data_from_scene->main_camera == nullptr) {
+    for (Scene *get_data_from_scene : sceneM->opened_scenes)
+    {
+        if (get_data_from_scene->main_camera == nullptr)
+        {
             std::cerr << "Error: main_camera es nullptr para la escena" << std::endl;
             continue;
         }
 
         get_data_from_scene->main_camera->update();
         GLuint render_id = get_data_from_scene->main_camera->render_id;
-        TextureTarget* target_global = find_target_by_id(render_id);
+        TextureTarget *target_global = find_target_by_id(render_id);
 
-        if (target_global == nullptr) {
+        if (target_global == nullptr)
+        {
             std::cerr << "Error: No se encontró TextureTarget para main_camera con render_id " << render_id << std::endl;
             continue;
         }
@@ -49,8 +51,10 @@ void RenderPipeline::render(std::function<void(void)> additional_Render)
             get_data_from_scene,
             additional_Render);
 
-        for (Camera* camera : RenderPipeline::camera_targets) {
-            if (camera == nullptr) {
+        for (Camera *camera : RenderPipeline::camera_targets)
+        {
+            if (camera == nullptr)
+            {
                 std::cerr << "Error: camera es nullptr en camera_targets" << std::endl;
                 continue;
             }
@@ -58,9 +62,10 @@ void RenderPipeline::render(std::function<void(void)> additional_Render)
             camera->update();
             GLuint render_id_local = camera->render_id;
 
-            TextureTarget* target = find_target_by_id(render_id_local);
+            TextureTarget *target = find_target_by_id(render_id_local);
 
-            if (target == nullptr) {
+            if (target == nullptr)
+            {
                 std::cerr << "Error: No se encontró un TextureTarget con render_id " << render_id_local << std::endl;
                 continue;
             }
@@ -71,40 +76,39 @@ void RenderPipeline::render(std::function<void(void)> additional_Render)
                 camera->GetView(),
                 camera->cameraPosition,
                 get_data_from_scene,
-                nullptr
-            );
+                nullptr);
         }
     }
 }
 
-void RenderPipeline::render_all_data(Scene* scene, glm::mat4 camera_matrix, glm::mat4 projection_matrix, glm::mat4 view_matrix, glm::vec3 camera_position)
+void RenderPipeline::render_all_data(Scene *scene, glm::mat4 camera_matrix, glm::mat4 projection_matrix, glm::mat4 view_matrix, glm::vec3 camera_position)
 {
     try
     {
-        SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+        SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
 
-        //RenderPipeline::canvas->render_ui();
+        // RenderPipeline::canvas->render_ui();
 
         for (ModelComponent *cmp : renderables)
         {
             if (cmp->entity->hasComponent<GMaterial>())
             {
-                GMaterial* materialPtr = p_materials->get_material(cmp->get_var<int>("MaterialID"));
+                GMaterial *materialPtr = p_materials->get_material(cmp->get_var<int>("MaterialID"));
 
-                if (!materialPtr) {
+                if (!materialPtr)
+                {
 
                     continue;
                 }
-                
-                GMaterial& material = *materialPtr;
-                
-                
+
+                GMaterial &material = *materialPtr;
+
                 if (scene->verify_if_entity_is_from_this_scene(cmp->entity))
                 {
                     if (layers_to_render.find(cmp->entity->Layer) != layers_to_render.end() && material.enabled)
                     {
                         material.p_shader->use();
-                        
+
                         material.get_texture("BASE")->use_texture(material.p_shader->ID);
 
                         material.p_shader->setMat4("model", cmp->get_transform()->get_matrix());
@@ -117,8 +121,8 @@ void RenderPipeline::render_all_data(Scene* scene, glm::mat4 camera_matrix, glm:
                         // material.p_shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
                         // material.p_shader->setFloat("lightIntensity", 1.0f);
 
-                        set_lights_in_shader(material.p_shader->ID, 
-                                             sceneM->get_current_scene()->direction_lights, 
+                        set_lights_in_shader(material.p_shader->ID,
+                                             sceneM->get_current_scene()->direction_lights,
                                              sceneM->get_current_scene()->point_lights,
                                              sceneM->get_current_scene()->spot_lights);
 
@@ -134,7 +138,10 @@ void RenderPipeline::render_all_data(Scene* scene, glm::mat4 camera_matrix, glm:
                         material.p_shader->setFloat("SinTime", glm::sin(Timer::delta_time));
                         material.p_shader->setFloat("CosTime", glm::acos(Timer::delta_time));
 
-                        cmp->model->Draw();
+                        for (size_t i = 0; i < cmp->model->meshes.size(); i++)
+                        {
+                            cmp->model->meshes[i].Draw(materialPtr->p_shader->ID);
+                        }
                     }
                 }
             }
@@ -191,11 +198,14 @@ Camera *RenderPipeline::add_camera()
     }
 }
 
-TextureTarget* RenderPipeline::find_target_by_id(GLuint render_id_local) {
-    for (TextureTarget* target : RenderPipeline::render_targets) {
-        if (target != nullptr && target->texture == render_id_local) {
-            return target; 
+TextureTarget *RenderPipeline::find_target_by_id(GLuint render_id_local)
+{
+    for (TextureTarget *target : RenderPipeline::render_targets)
+    {
+        if (target != nullptr && target->texture == render_id_local)
+        {
+            return target;
         }
     }
-    return nullptr; 
+    return nullptr;
 }

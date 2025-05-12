@@ -3,6 +3,8 @@
 #include <nlohmann/json.hpp>
 #include <IDGenerator.h>
 #include <FileDialog.h>
+#include <ServiceLocator.h>
+#include <MaterialService.h>
 
 using namespace nlohmann;
 
@@ -53,6 +55,7 @@ void MaterialMaker::on_draw()
 
         if (FileDialog::save_file("Save Material", file_save, FileManager::get_project_path().c_str(), ".mat", mat_object.dump(4)))
         {
+            ServiceLocator::get<MaterialService>().get()->reset_material_services();
             opened_menu_to_save = false;
         }
     }
