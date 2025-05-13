@@ -9,8 +9,9 @@ void AudioManager::StartSystem()
 {
     int numDrivers = 0;
     system->getNumDrivers(&numDrivers);
-    
-    if (numDrivers == 0) {
+
+    if (numDrivers == 0)
+    {
         std::cout << "No audio output devices found. Running without audio." << std::endl;
         return;
     }
@@ -19,8 +20,8 @@ void AudioManager::StartSystem()
 
     if (result != FMOD_OK)
     {
-        std::cout << "FMOD initialization warning: (" << result << ") " 
-                  << FMOD_ErrorString(result) 
+        std::cout << "FMOD initialization warning: (" << result << ") "
+                  << FMOD_ErrorString(result)
                   << ". Continuing without audio." << std::endl;
         return;
     }
@@ -32,7 +33,7 @@ void AudioManager::StartSystem()
 
 void AudioManager::Update()
 {
-    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
 
     if (sceneM->get_current_scene() == nullptr)
     {

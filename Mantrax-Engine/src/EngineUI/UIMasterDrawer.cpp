@@ -21,7 +21,7 @@ void UIMasterDrawer::register_uis()
     ADD_UI_BEHAVIOUR(MaterialMaker);
 
     get_component<CompilerView>()->is_open = false;
-    get_component<MaterialMaker>()->is_open = true;
+    get_component<MaterialMaker>()->is_open = false;
     get_component<FileBar>()->is_open = false;
     get_component<Hierarchy>()->is_open = true;
     get_component<AssetsFiles>()->is_open = true;

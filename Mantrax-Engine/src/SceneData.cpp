@@ -89,21 +89,25 @@ void SceneData::save_scene(Scene *current_scene, std::string extension)
                         datavar["value"] = {val.x, val.y, val.z};
                         datavar["type"] = "v3";
                     }
-                    else if (value.type() == typeid(std::vector<std::string>))
+                    else if (value.type() == typeid(std::vector<MaterialSetter *>))
                     {
-                        std::vector<std::string> val = std::any_cast<std::vector<std::string>>(value);
-
-                        std::cout << "First Val: " << val[0] << std::endl;
+                        std::vector<MaterialSetter *> val = std::any_cast<std::vector<MaterialSetter *>>(value);
 
                         datavar["name"] = key;
-
                         datavar["value"] = nlohmann::json::array();
-                        for (const auto &str : val)
+
+                        for (const auto *setter : val)
                         {
-                            datavar["value"].push_back(str);
+                            if (setter)
+                            {
+                                nlohmann::json setterJson;
+                                setterJson["material_id"] = setter->material_id;
+                                setterJson["mesh_index"] = setter->mesh_index;
+                                datavar["value"].push_back(setterJson);
+                            }
                         }
 
-                        datavar["type"] = "string_array";
+                        datavar["type"] = "MaterialSetter_array";
                     }
 
                     varsdata.push_back(datavar);

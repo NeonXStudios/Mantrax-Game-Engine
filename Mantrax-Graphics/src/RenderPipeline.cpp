@@ -87,69 +87,76 @@ void RenderPipeline::render_all_data(Scene *scene, glm::mat4 camera_matrix, glm:
     {
         SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
 
-        // RenderPipeline::canvas->render_ui();
-
         for (ModelComponent *cmp : renderables)
         {
-            if (cmp->entity->hasComponent<GMaterial>())
+            if (!scene->verify_if_entity_is_from_this_scene(cmp->entity))
+                continue;
+
+            std::vector<MaterialSetter *> mt_indexer;
+            try
             {
-                GMaterial *materialPtr = p_materials->get_material(cmp->get_var<int>("MaterialID"));
+                mt_indexer = cmp->get_var<std::vector<MaterialSetter *>>("MaterialIndexer");
+            }
+            catch (...)
+            {
+                continue; // No existe o está mal, skip
+            }
 
-                if (!materialPtr)
-                {
+            if (mt_indexer.empty())
+                continue;
 
+            for (size_t i = 0; i < cmp->model->meshes.size(); i++)
+            {
+                if (i >= mt_indexer.size() || !mt_indexer[i])
                     continue;
-                }
 
-                GMaterial &material = *materialPtr;
+                MaterialSetter *setter = mt_indexer[i];
+                if (setter->mesh_index != static_cast<int>(i))
+                    continue;
 
-                if (scene->verify_if_entity_is_from_this_scene(cmp->entity))
-                {
-                    if (layers_to_render.find(cmp->entity->Layer) != layers_to_render.end() && material.enabled)
-                    {
-                        material.p_shader->use();
+                GMaterial *material = p_materials->get_material(setter->material_id);
+                if (!material || !material->enabled)
+                    continue;
 
-                        material.get_texture("BASE")->use_texture(material.p_shader->ID);
+                if (layers_to_render.find(cmp->entity->Layer) == layers_to_render.end())
+                    continue;
 
-                        material.p_shader->setMat4("model", cmp->get_transform()->get_matrix());
-                        material.p_shader->setVec3("viewPos", camera_position);
+                Shader *shader = material->p_shader;
+                if (!shader)
+                    continue;
 
-                        material.p_shader->setVec3("ambientColor", glm::vec3(1.0f, 1.0f, 1.0f));
-                        material.p_shader->setFloat("ambientStrength", 0.1f);
+                auto *base_texture = material->get_texture("BASE");
+                if (!base_texture)
+                    continue;
 
-                        // material.p_shader->setVec3("lightDir", glm::vec3(-0.2f, -1.0f, -0.3f));
-                        // material.p_shader->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-                        // material.p_shader->setFloat("lightIntensity", 1.0f);
+                shader->use();
+                base_texture->use_texture(shader->ID);
 
-                        set_lights_in_shader(material.p_shader->ID,
-                                             sceneM->get_current_scene()->direction_lights,
-                                             sceneM->get_current_scene()->point_lights,
-                                             sceneM->get_current_scene()->spot_lights);
+                shader->setMat4("model", cmp->get_transform()->get_matrix());
+                shader->setVec3("viewPos", camera_position);
+                shader->setVec3("ambientColor", glm::vec3(1.0f));
+                shader->setFloat("ambientStrength", 0.1f);
 
-                        // material.p_shader->setBool("showBothSides", false);
+                set_lights_in_shader(shader->ID,
+                                     sceneM->get_current_scene()->direction_lights,
+                                     sceneM->get_current_scene()->point_lights,
+                                     sceneM->get_current_scene()->spot_lights);
 
-                        // INFO CAMERA TO SHADER
-                        material.p_shader->setMat4("Projection", projection_matrix);
-                        material.p_shader->setMat4("View", view_matrix);
-                        material.p_shader->setMat4("CameraMatrix", camera_matrix);
+                shader->setMat4("Projection", projection_matrix);
+                shader->setMat4("View", view_matrix);
+                shader->setMat4("CameraMatrix", camera_matrix);
 
-                        // TIME INFO TO SHADER
-                        material.p_shader->setFloat("DeltaTime", Timer::delta_time);
-                        material.p_shader->setFloat("SinTime", glm::sin(Timer::delta_time));
-                        material.p_shader->setFloat("CosTime", glm::acos(Timer::delta_time));
+                shader->setFloat("DeltaTime", Timer::delta_time);
+                shader->setFloat("SinTime", glm::sin(Timer::delta_time));
+                shader->setFloat("CosTime", glm::acos(Timer::delta_time));
 
-                        for (size_t i = 0; i < cmp->model->meshes.size(); i++)
-                        {
-                            cmp->model->meshes[i].Draw(materialPtr->p_shader->ID);
-                        }
-                    }
-                }
+                cmp->model->meshes[i].Draw(shader->ID);
             }
         }
     }
     catch (const std::exception &e)
     {
-        std::cerr << e.what() << '\n';
+        std::cerr << "[RenderPipeline Error] " << e.what() << '\n';
     }
 }
 

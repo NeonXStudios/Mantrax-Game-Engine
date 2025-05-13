@@ -48,7 +48,7 @@ void EngineUI::on_start()
 
 void EngineUI::on_edition_mode(float delta_time)
 {
-    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
 
     sceneM->get_current_scene()->main_camera->update();
 
@@ -65,7 +65,7 @@ void EngineUI::on_edition_mode(float delta_time)
             float deltaX = -InputSystem::get_mouse_x() * configs->camera_speed_sens * delta_time;
             float deltaY = -InputSystem::get_mouse_y() * configs->camera_speed_sens * delta_time;
 
-            if (camera->use_projection) 
+            if (camera->use_projection)
             {
                 if (InputSystem::on_key_pressed(GLFW_KEY_Q))
                 {
@@ -135,12 +135,10 @@ void EngineUI::on_edition_mode(float delta_time)
             entity->getComponent<GLightSpot>().update();
         }
 
-
         if (entity->hasComponent<GLightDirectional>())
         {
             entity->getComponent<GLightDirectional>().update();
         }
-
 
         for (Entity *transform : entity->childrens)
         {
@@ -171,7 +169,7 @@ void EngineUI::on_update(float delta_time)
 
 void EngineUI::on_draw()
 {
-    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
 
     if (select_obj != nullptr && select_obj->hasComponent<GCollision>())
     {
@@ -217,22 +215,23 @@ void EngineUI::on_draw()
                               select_obj->get_transform()->get_euler_angles());
     }
 
-    if (select_obj != nullptr && select_obj->hasComponent<GCamera>() || 
-        select_obj != nullptr && select_obj->hasComponent<GLightSpot>() || 
+    if (select_obj != nullptr && select_obj->hasComponent<GCamera>() ||
+        select_obj != nullptr && select_obj->hasComponent<GLightSpot>() ||
         select_obj != nullptr && select_obj->hasComponent<GLightDirectional>())
     {
         camera_gizmo->render(sceneM->get_current_scene()->main_camera->GetView(),
                              sceneM->get_current_scene()->main_camera->GetProjectionMatrix(),
-                              select_obj->get_transform()->get_matrix(),
-                              glm::vec3(3.0f));
+                             select_obj->get_transform()->get_matrix(),
+                             glm::vec3(3.0f));
     }
 
-
-    if (UIMasterDrawer::get_instance().get_component<SceneView>() != nullptr){
-        if (UIMasterDrawer::get_instance().get_component<SceneView>()->found_object != nullptr){
+    if (UIMasterDrawer::get_instance().get_component<SceneView>() != nullptr)
+    {
+        if (UIMasterDrawer::get_instance().get_component<SceneView>()->found_object != nullptr)
+        {
             enhanced_cube->render(sceneM->get_current_scene()->main_camera->GetView(),
                                   sceneM->get_current_scene()->main_camera->GetProjectionMatrix(),
-                                  UIMasterDrawer::get_instance().get_component<SceneView>()->found_object->get_transform()->get_matrix(), 
+                                  UIMasterDrawer::get_instance().get_component<SceneView>()->found_object->get_transform()->get_matrix(),
                                   glm::vec3(1.1f), glm::vec3(0.8f));
         }
     }
@@ -241,13 +240,13 @@ void EngineUI::on_draw()
     model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     grid->draw(sceneM->get_current_scene()->main_camera->GetProjectionMatrix(),
                sceneM->get_current_scene()->main_camera->GetView(),
-            model,
-            glm::vec3(0.5f, 0.5f, 0.5f));
+               model,
+               glm::vec3(0.5f, 0.5f, 0.5f));
 }
 
 void EngineUI::draw_ui()
 {
-    SceneManager* sceneM = ServiceLocator::get<SceneManager>().get();
+    SceneManager *sceneM = ServiceLocator::get<SceneManager>().get();
 
     GarinUI::get_ui_manager()->render_new_frame_ui_context(true);
 

@@ -19,7 +19,7 @@ TextureManager::TextureManager(const std::string &texture_path)
 
     int width, height, nrChannels;
     unsigned char *data = stbi_load(texture_path.c_str(), &width, &height, &nrChannels, 4);
-    
+
     if (data)
     {
         // std::cout << "Loading texture: " << texture_path << std::endl;
@@ -27,16 +27,17 @@ TextureManager::TextureManager(const std::string &texture_path)
         // std::cout << "Dimensions: " << width << "x" << height << std::endl;
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        
+
         glGenerateMipmap(GL_TEXTURE_2D);
 
         GLenum err = glGetError();
-        if (err != GL_NO_ERROR) {
+        if (err != GL_NO_ERROR)
+        {
             std::cerr << "OpenGL error while loading texture " << texture_path << ": " << err << std::endl;
         }
     }
     else
-    { 
+    {
         std::cerr << "Error loading texture: " << texture_path << std::endl;
         std::cerr << "STB Error: " << stbi_failure_reason() << std::endl;
         glDeleteTextures(1, &texture_maked);
@@ -45,8 +46,9 @@ TextureManager::TextureManager(const std::string &texture_path)
 
     stbi_image_free(data);
 
-    if (texture_maked == 0) {
-        std::cerr << "Critical error: Texture ID is 0 after initialization for: "<< texture_path << std::endl;
+    if (texture_maked == 0)
+    {
+        std::cerr << "Critical error: Texture ID is 0 after initialization for: " << texture_path << std::endl;
     }
 }
 
@@ -58,14 +60,15 @@ void TextureManager::use_texture(GLuint shaderID) const
         return;
     }
 
-    GLenum err = glGetError(); 
-    
+    GLenum err = glGetError();
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_maked);
     glUniform1i(glGetUniformLocation(shaderID, "_MainTexture"), 0);
 
     err = glGetError();
-    if (err != GL_NO_ERROR) {
+    if (err != GL_NO_ERROR)
+    {
         std::cerr << "OpenGL error in use_texture: " << err << std::endl;
     }
 }
@@ -78,13 +81,14 @@ void TextureManager::active(int texture_index) const
         return;
     }
 
-    GLenum err = glGetError(); 
+    GLenum err = glGetError();
 
     glActiveTexture(GL_TEXTURE0 + texture_index);
     glBindTexture(GL_TEXTURE_2D, texture_maked);
 
     err = glGetError();
-    if (err != GL_NO_ERROR) {
+    if (err != GL_NO_ERROR)
+    {
         std::cerr << "OpenGL error in active: " << err << std::endl;
     }
 }

@@ -207,16 +207,19 @@ Scene *SceneManager::load_scene(std::string scene_name_new, bool is_additive, st
                             {
                                 cmpGet->set_var<bool>(var_object["name"], (bool)var_object["value"]);
                             }
-                            else if (var_object["type"] == "string_array")
+                            else if (var_object["type"] == "MaterialSetter_array")
                             {
-                                std::vector<std::string> val;
+                                std::vector<MaterialSetter *> val;
 
                                 for (const auto &item : var_object["value"])
                                 {
-                                    val.push_back(item.get<std::string>());
+                                    auto *setter = new MaterialSetter();
+                                    setter->material_id = item["material_id"].get<int>();
+                                    setter->mesh_index = item["mesh_index"].get<int>();
+                                    val.push_back(setter);
                                 }
 
-                                cmpGet->set_var<std::vector<std::string>>(var_object["name"], val);
+                                cmpGet->set_var<std::vector<MaterialSetter *>>(var_object["name"], val);
                             }
                         }
                     }

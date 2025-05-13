@@ -10,6 +10,12 @@
 #include "Core.h"
 #include <FBXModelComponent.h>
 
+struct GARINLIBS_API MaterialSetter
+{
+    int material_id;
+    int mesh_index;
+};
+
 class GARINLIBS_API ModelComponent : public Component
 {
 public:
@@ -18,6 +24,7 @@ public:
     Model *model = nullptr;
     Shader *get_mesh_shader();
     void set_model(string path_load);
+    void apply_new_material_to_sub_mesh(MaterialSetter *new_mat);
 
     void defines() override;
     void init() override;

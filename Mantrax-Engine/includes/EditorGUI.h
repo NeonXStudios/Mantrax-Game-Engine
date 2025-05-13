@@ -298,68 +298,74 @@ public:
 
             if (componentName == "ModelComponent")
             {
-                ImVec2 windowSize = ImVec2(ImGui::GetContentRegionAvail().x, 150);
                 ModelComponent *model_component = &owner->getComponent<ModelComponent>();
                 MaterialService *mat_service = ServiceLocator::get<MaterialService>().get();
-                GMaterial *current_material = mat_service->get_material(model_component->get_var<int>("MaterialID"));
 
-                if (current_material)
+                if (model_component->model->HasSubmeshes())
                 {
-                    ImTextureID current_texture_id = (void *)(intptr_t)current_material->get_texture("BASE")->get_texture();
-                    ImGui::Image(current_texture_id, ImVec2(32, 32));
-                }
-
-                if (ImGui::Button("Select Material", ImVec2(-1, 30)))
-                {
-                    ImGui::OpenPopup("MaterialSelectorPopup");
-                }
-
-                ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-                ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
-                if (ImGui::BeginPopup("MaterialSelectorPopup"))
-                {
-                    ImGui::Text("Select Material:");
-                    ImGui::Separator();
-
-                    float popupWidth = ImGui::GetContentRegionAvail().x;
-                    int columns = std::max(1, (int)(popupWidth / 110));
-
-                    if (columns > 1)
+                    if (ImGui::Button("Assign Material to Submesh", ImVec2(-1, 30)))
                     {
-                        ImGui::Columns(columns, nullptr, false);
+                        ImGui::OpenPopup("SubmeshMaterialSelectorPopup");
                     }
 
-                    for (GMaterial *mat_get : mat_service->materials)
+                    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+                    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+                    static int selectedSubmesh = 0;
+
+                    if (ImGui::BeginPopup("SubmeshMaterialSelectorPopup"))
                     {
-                        ImTextureID texture_id = (void *)(intptr_t)mat_get->get_texture("BASE")->get_texture();
+                        ImGui::Text("Assign Material to Submesh");
+                        ImGui::Separator();
 
-                        ImGui::PushID(mat_get);
+                        ImGui::InputInt("Submesh Index", &selectedSubmesh);
+                        ImGui::Separator();
 
-                        if (ImGui::ImageButton(texture_id, ImVec2(100, 100)))
-                        {
-                            int material_id = mat_get->get_var<int>("MaterialID");
-                            model_component->set_var<int>("MaterialID", material_id);
-
-                            ImGui::CloseCurrentPopup();
-                        }
-
-                        ImGui::PopID();
+                        float popupWidth = ImGui::GetContentRegionAvail().x;
+                        int columns = std::max(1, (int)(popupWidth / 110));
 
                         if (columns > 1)
                         {
-                            ImGui::NextColumn();
+                            ImGui::Columns(columns, nullptr, false);
                         }
-                    }
 
-                    if (columns > 1)
-                    {
-                        ImGui::Columns(1);
-                    }
+                        for (GMaterial *mat_get : mat_service->materials)
+                        {
+                            ImTextureID texture_id = (void *)(intptr_t)mat_get->get_texture("BASE")->get_texture();
 
-                    ImGui::EndPopup();
+                            ImGui::PushID(mat_get);
+
+                            if (ImGui::ImageButton(texture_id, ImVec2(100, 100)))
+                            {
+                                int material_id = mat_get->get_var<int>("MaterialID");
+
+                                auto *setter = new MaterialSetter();
+                                setter->material_id = material_id;
+                                setter->mesh_index = selectedSubmesh;
+
+                                model_component->apply_new_material_to_sub_mesh(setter);
+
+                                ImGui::CloseCurrentPopup();
+                            }
+
+                            ImGui::PopID();
+
+                            if (columns > 1)
+                            {
+                                ImGui::NextColumn();
+                            }
+                        }
+
+                        if (columns > 1)
+                        {
+                            ImGui::Columns(1);
+                        }
+
+                        ImGui::EndPopup();
+                    }
                 }
             }
+
             if (componentName == "GAnimator")
             {
                 if (ImGui::Button("Open Animator", ImVec2(-1, 20)))

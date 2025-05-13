@@ -12,7 +12,7 @@ void MaterialMaker::on_draw()
 {
     ImGui::SetNextWindowSize(ImVec2(300, 400));
 
-    ImGui::Begin("Material Maker");
+    ImGui::Begin("Material Maker", &is_open);
     mat_struct.main_path = EditorGUI::InputText("MAIN", mat_struct.main_path);
     auto result = EditorGUI::Drag_Objetive("IMAGECLASS");
     if (result.has_value())
@@ -34,6 +34,20 @@ void MaterialMaker::on_draw()
         mat_struct.height_path = resulta.value();
     }
 
+    mat_struct.vertex_path = EditorGUI::InputText("VERTEX SHADER", mat_struct.vertex_path);
+    auto resultvert = EditorGUI::Drag_Objetive("SHADERCLASS");
+    if (resultvert.has_value())
+    {
+        mat_struct.vertex_path = resultvert.value();
+    }
+
+    mat_struct.fragment_path = EditorGUI::InputText("FRAGMENT SHADER", mat_struct.fragment_path);
+    auto resultfrag = EditorGUI::Drag_Objetive("SHADERCLASS");
+    if (resultfrag.has_value())
+    {
+        mat_struct.fragment_path = resultfrag.value();
+    }
+
     static json mat_object;
 
     if (ImGui::Button("Save Material", ImVec2(-1, 25)))
@@ -43,6 +57,8 @@ void MaterialMaker::on_draw()
         mat_object["BaseMap"] = mat_struct.main_path;
         mat_object["NormalMap"] = mat_struct.normal_path;
         mat_object["HeightMap"] = mat_struct.height_path;
+        mat_object["VertexShader"] = mat_struct.vertex_path;
+        mat_object["FragmentShader"] = mat_struct.fragment_path;
 
         opened_menu_to_save = true;
     }

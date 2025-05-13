@@ -36,12 +36,32 @@ void MaterialService::start_services()
 
         if (!FileManager::check_file_if_exist(FileManager::get_project_path() + (std::string)data_loaded["BaseMap"]))
         {
+            if (data_loaded.find("VertexShader") != data_loaded.end())
+            {
+                mat->set_var<std::string>("VertexPath", (std::string)data_loaded["VertexShader"]);
+            }
+
+            if (data_loaded.find("FragmentShader") != data_loaded.end())
+            {
+                mat->set_var<std::string>("FragmentPath", (std::string)data_loaded["FragmentShader"]);
+            }
+
             mat->create_texture("BASE", "");
             mat->get_texture("BASE")->set_texture(IconsManager::TEXTURE_ERROR());
             std::cout << "Texture Not Found Starting With Grid" << std::endl;
         }
         else
         {
+            if (data_loaded.find("VertexShader") != data_loaded.end())
+            {
+                mat->set_var<std::string>("VertexPath", (std::string)data_loaded["VertexShader"]);
+            }
+
+            if (data_loaded.find("FragmentShader") != data_loaded.end())
+            {
+                mat->set_var<std::string>("FragmentPath", (std::string)data_loaded["FragmentShader"]);
+            }
+
             mat->create_texture("BASE", (FileManager::get_project_path() + (std::string)data_loaded["BaseMap"]));
             std::cout << "Material Loaded: " << (FileManager::get_project_path() + (std::string)data_loaded["BaseMap"]) << std::endl;
         }
@@ -57,6 +77,7 @@ void MaterialService::start_services()
 
         mat->create_texture("BASE", (FileManager::get_project_path() + (std::string)data_loaded["BaseMap"]));
 
+        mat->init();
         std::cout << "Debug ID: " << mat->get_var<int>("MaterialID") << std::endl;
     }
 

@@ -108,6 +108,10 @@ void MainBar::on_draw()
             {
                 UIMasterDrawer::get_instance().get_component<CompilerView>()->is_open = true;
             }
+            if (ImGui::MenuItem("Material Maker"))
+            {
+                UIMasterDrawer::get_instance().get_component<MaterialMaker>()->is_open = true;
+            }
             ImGui::EndMenu();
         }
 

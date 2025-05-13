@@ -24,7 +24,7 @@ void GMaterial::update()
     }
 }
 
-void GMaterial::create_texture(const std::string& name, std::string texture_path)
+void GMaterial::create_texture(const std::string &name, std::string texture_path)
 {
     if (textures.find(name) == textures.end())
     {
@@ -32,7 +32,7 @@ void GMaterial::create_texture(const std::string& name, std::string texture_path
     }
 }
 
-TextureManager* GMaterial::get_texture(const std::string& name)
+TextureManager *GMaterial::get_texture(const std::string &name)
 {
     auto it = textures.find(name);
     if (it != textures.end())
@@ -44,5 +44,4 @@ TextureManager* GMaterial::get_texture(const std::string& name)
 
 void GMaterial::clean()
 {
-
 }
